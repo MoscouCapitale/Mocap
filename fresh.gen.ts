@@ -4,6 +4,11 @@
 
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
+import * as $admin_collection from "./routes/admin/collection.tsx";
+import * as $admin_pages from "./routes/admin/pages.tsx";
+import * as $admin_settings from "./routes/admin/settings.tsx";
+import * as $admin_stats from "./routes/admin/stats.tsx";
+import * as $admin_users from "./routes/admin/users.tsx";
 import * as $api_joke from "./routes/api/joke.ts";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
@@ -14,6 +19,11 @@ const manifest = {
   routes: {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
+    "./routes/admin/collection.tsx": $admin_collection,
+    "./routes/admin/pages.tsx": $admin_pages,
+    "./routes/admin/settings.tsx": $admin_settings,
+    "./routes/admin/stats.tsx": $admin_stats,
+    "./routes/admin/users.tsx": $admin_users,
     "./routes/api/joke.ts": $api_joke,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
