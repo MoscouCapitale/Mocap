@@ -4,14 +4,18 @@
 
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
+import * as $_middleware from "./routes/_middleware.ts";
 import * as $admin_collection from "./routes/admin/collection.tsx";
 import * as $admin_pages from "./routes/admin/pages.tsx";
 import * as $admin_settings from "./routes/admin/settings.tsx";
 import * as $admin_stats from "./routes/admin/stats.tsx";
 import * as $admin_users from "./routes/admin/users.tsx";
 import * as $api_joke from "./routes/api/joke.ts";
-import * as $greet_name_ from "./routes/greet/[name].tsx";
+import * as $auth_middleware from "./routes/auth/_middleware.ts";
+import * as $auth_login from "./routes/auth/login.tsx";
+import * as $auth_register from "./routes/auth/register.tsx";
 import * as $index from "./routes/index.tsx";
+import * as $test from "./routes/test.tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
@@ -19,14 +23,18 @@ const manifest = {
   routes: {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
+    "./routes/_middleware.ts": $_middleware,
     "./routes/admin/collection.tsx": $admin_collection,
     "./routes/admin/pages.tsx": $admin_pages,
     "./routes/admin/settings.tsx": $admin_settings,
     "./routes/admin/stats.tsx": $admin_stats,
     "./routes/admin/users.tsx": $admin_users,
     "./routes/api/joke.ts": $api_joke,
-    "./routes/greet/[name].tsx": $greet_name_,
+    "./routes/auth/_middleware.ts": $auth_middleware,
+    "./routes/auth/login.tsx": $auth_login,
+    "./routes/auth/register.tsx": $auth_register,
     "./routes/index.tsx": $index,
+    "./routes/test.tsx": $test,
   },
   islands: {
     "./islands/Counter.tsx": $Counter,
