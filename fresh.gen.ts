@@ -11,9 +11,8 @@ import * as $admin_settings from "./routes/admin/settings.tsx";
 import * as $admin_stats from "./routes/admin/stats.tsx";
 import * as $admin_users from "./routes/admin/users.tsx";
 import * as $api_joke from "./routes/api/joke.ts";
-import * as $auth_middleware from "./routes/auth/_middleware.ts";
-import * as $auth_login from "./routes/auth/login.tsx";
-import * as $auth_register from "./routes/auth/register.tsx";
+import * as $auth_signin from "./routes/auth/signin.tsx";
+import * as $auth_signup from "./routes/auth/signup.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $test from "./routes/test.tsx";
 import * as $Counter from "./islands/Counter.tsx";
@@ -30,9 +29,8 @@ const manifest = {
     "./routes/admin/stats.tsx": $admin_stats,
     "./routes/admin/users.tsx": $admin_users,
     "./routes/api/joke.ts": $api_joke,
-    "./routes/auth/_middleware.ts": $auth_middleware,
-    "./routes/auth/login.tsx": $auth_login,
-    "./routes/auth/register.tsx": $auth_register,
+    "./routes/auth/signin.tsx": $auth_signin,
+    "./routes/auth/signup.tsx": $auth_signup,
     "./routes/index.tsx": $index,
     "./routes/test.tsx": $test,
   },

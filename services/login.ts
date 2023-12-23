@@ -1,0 +1,1 @@
+import supa from '@services/client.ts';

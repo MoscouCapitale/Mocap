@@ -19,6 +19,11 @@ export default {
       success: "#40C057",
       warning: "#F19B4B",
       error: "#EA5959"
+    },
+    extend: {
+      outline: {
+        inputerror: ['2px solid #EA5959', '2px'],
+      }
     }
   },
 } satisfies Config;
