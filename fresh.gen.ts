@@ -10,12 +10,15 @@ import * as $admin_pages from "./routes/admin/pages.tsx";
 import * as $admin_settings from "./routes/admin/settings.tsx";
 import * as $admin_stats from "./routes/admin/stats.tsx";
 import * as $admin_users from "./routes/admin/users.tsx";
+import * as $api_auth from "./routes/api/auth.ts";
+import * as $api_auth_signup from "./routes/api/auth/signup.ts";
 import * as $api_joke from "./routes/api/joke.ts";
 import * as $auth_signin from "./routes/auth/signin.tsx";
 import * as $auth_signup from "./routes/auth/signup.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $test from "./routes/test.tsx";
 import * as $Counter from "./islands/Counter.tsx";
+import * as $SignupForm from "./islands/SignupForm.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -28,6 +31,8 @@ const manifest = {
     "./routes/admin/settings.tsx": $admin_settings,
     "./routes/admin/stats.tsx": $admin_stats,
     "./routes/admin/users.tsx": $admin_users,
+    "./routes/api/auth.ts": $api_auth,
+    "./routes/api/auth/signup.ts": $api_auth_signup,
     "./routes/api/joke.ts": $api_joke,
     "./routes/auth/signin.tsx": $auth_signin,
     "./routes/auth/signup.tsx": $auth_signup,
@@ -36,6 +41,7 @@ const manifest = {
   },
   islands: {
     "./islands/Counter.tsx": $Counter,
+    "./islands/SignupForm.tsx": $SignupForm,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

@@ -1,7 +1,11 @@
-import SignupForm from "../../components/authentication/SignupForm.tsx";
+import SignupForm from "@islands/SignupForm.tsx";
 import { Handlers } from "$fresh/server.ts";
-import { PageProps } from "$fresh/server.ts";
-import { InputError } from "@models/Form.ts";
+
+import {
+  verifyEmailIntegrity,
+  verifyPasswordIntegrity,
+  verifySamePassword,
+} from "@utils/login.ts";
 
 type formDatas = {
   email: string;
@@ -10,23 +14,27 @@ type formDatas = {
 };
 
 export const handler: Handlers = {
-  GET(req, ctx) {
-    const url = new URL(req.url);
-    const query = url.searchParams.get("q") || "";
-    return ctx.render({ query });
-  },
-
   async POST(req, ctx) {
     const form = await req.formData();
-
-    if (form.get("password")?.toString() !== form.get("confirmpassword")?.toString()) {
-        return ctx.render({ error: true, field: "password", message: "Passwords don't match" });
+    const formData: formDatas = {
+      email: form.get("email")?.toString() as string,
+      password: form.get("password")?.toString() as string,
+      confirmpassword: form.get("confirmpassword")?.toString() as string
     }
+    
+    if (!formData.email || !verifyEmailIntegrity(formData.email)) return ctx.render();
+    if (!formData.password || !verifyPasswordIntegrity(formData.password)) return ctx.render();
+    if (!formData.confirmpassword || !verifySamePassword(formData.password, formData.confirmpassword)) return ctx.render();
 
-    return await ctx.render();
+    let res = await fetch("http://localhost:8000/api/auth/signup", {
+      method: "POST",
+      body: JSON.stringify(formData),
+    });
+    console.log("res", res);
+    return ctx.render({});
   },
 };
 
-export default function Signup(data?: PageProps<InputError>) {
-  return <SignupForm {...data}/>;
+export default function Signup() {
+  return <SignupForm/>;
 }

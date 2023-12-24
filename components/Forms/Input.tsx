@@ -13,7 +13,6 @@ type Props = {
 export default function Input(
   { formType, type, name, placeholder, value, onChange, error }: Props,
 ) {
-  console.log(error);
   return (
     <input
       className={`w-full border-b-2 rounded-none border-text bg-background py-1 text-text focus:border-main transition-all duration-200 ease-in-out outline-none ${

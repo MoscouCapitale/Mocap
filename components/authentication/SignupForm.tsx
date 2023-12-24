@@ -1,13 +1,25 @@
-import { useSignal } from "@preact/signals";
-import { PageProps } from "$fresh/server.ts";
-import Input from "@components/Forms/Input.tsx";
-import { InputError } from "@models/Form.ts";
+import { useState, useEffect } from "preact/hooks";
+import {
+  verifyEmailIntegrity,
+  verifyPasswordIntegrity,
+  verifySamePassword,
+} from "@utils/login.ts";
 
-export default function SignupForm(data?: PageProps<InputError>) {
-  const error = useSignal(data?.data as InputError);
-  const email = useSignal("");
-  const password = useSignal("");
-  const confirmpassword = useSignal("");
+export default function SignupForm() {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmpassword, setConfirmPassword] = useState<string>("");
+
+  const [validForm, setValidForm] = useState({
+    email: false,
+    password: false,
+    confirmpassword: false,
+  });
+
+  useEffect(() => {
+    console.log("validForm", validForm);
+  }
+  , [validForm]);
 
   return (
     <div class="w-lg max-w-lg mx-auto">
@@ -15,43 +27,59 @@ export default function SignupForm(data?: PageProps<InputError>) {
         class="w-full h-screen flex flex-col justify-center items-center gap-10 p-10"
         method="post"
       >
-        <Input
-          formType="auth"
+        <input
+          className={`w-full border-b-2 rounded-none border-text bg-background py-1 text-text focus:border-main transition-all duration-200 ease-in-out outline-none
+          ${validForm.email ? "border-error" : ""}
+          `}
           type="email"
           name="email"
-          placeholder={email.value ? "" : "Email *"}
-          value={email.value}
-          onChange={(e) => email.value = (e.target as HTMLInputElement)?.value}
-          error={error?.value.field === "email" ? error.value : undefined}
-        />
-        <Input
-          formType="auth"
+          placeholder={"Email *"}
+          value={email}
+          onChange={(e) => {
+            setEmail((e.target as HTMLInputElement)?.value);
+          }}
+          onBlur={() => email && setValidForm({...validForm, email: verifyEmailIntegrity(email)})
+          }
+        >
+          {validForm.email && email && <span class="text-error">Email invalide</span>}
+        </input>
+        <input
+          className={`w-full border-b-2 rounded-none border-text bg-background py-1 text-text focus:border-main transition-all duration-200 ease-in-out outline-none`}
           type="password"
           name="password"
-          placeholder={password.value ? "" : "Password *"}
-          value={password.value}
-          onChange={(e) => {
-            password.value = (e.target as HTMLInputElement)?.value;
-          }}
-          error={error?.value.field === "password" ? error.value : undefined}
+          placeholder={"Password *"}
+          value={password}
+          onChange={(e) => setPassword((e.target as HTMLInputElement)?.value) }
+          onBlur={() => password && setValidForm({...validForm, password: verifyPasswordIntegrity(password)})}
         />
-        <Input
-          formType="auth"
+        <input
+          className={`w-full border-b-2 rounded-none border-text bg-background py-1 text-text focus:border-main transition-all duration-200 ease-in-out outline-none `}
           type="password"
           name="confirmpassword"
-          placeholder={confirmpassword.value ? "" : "Confirm password *"}
-          value={confirmpassword.value}
-          onChange={(e) => {
-            confirmpassword.value = (e.target as HTMLInputElement)?.value;
-          }}
-          error={error?.value.field === "password" ? error.value : undefined}
+          placeholder={"Confirm password *"}
+          value={confirmpassword}
+          onChange={(e) => setConfirmPassword((e.target as HTMLInputElement)?.value)}
+          onBlur={() => confirmpassword && setValidForm({...validForm, confirmpassword: verifySamePassword(password, confirmpassword)})}
         />
-        <button
-          class="bg-background text-text border-2 rounded-xl border-text w-fit px-10 py-2.5"
-          type={"submit"}
-        >
-          Demander des accès
-        </button>
+        {!Object.values(validForm).every(Boolean) &&
+          (
+            <button
+              class="bg-background text-text border-2 rounded-xl border-text w-fit px-10 py-2.5"
+              disabled={true}
+            >
+              Demander des accès
+            </button>
+          )}
+        {Object.values(validForm).every(Boolean) &&
+          (
+            <button
+              class="bg-background text-text border-2 rounded-xl border-text w-fit px-10 py-2.5"
+              disabled={false}
+              type={"submit"}
+            >
+              Demander des accès
+            </button>
+          )}
       </form>
     </div>
   );

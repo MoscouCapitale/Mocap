@@ -1,16 +1,8 @@
 import { useSignal } from "@preact/signals";
 import Counter from "../islands/Counter.tsx";
 
-import supa from "@services/client.ts";
-
 export default function Home() {
   const count = useSignal(3);
-
-  supa
-    .from("users")
-    .select()
-    .then((data: any) => console.log(data))
-    .catch((err: any) => console.log(err));
 
   return (
     <div class="px-4 py-8 mx-auto bg-[#86efac]">
