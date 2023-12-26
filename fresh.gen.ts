@@ -5,19 +5,21 @@
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
+import * as $admin_middleware from "./routes/admin/_middleware.ts";
 import * as $admin_collection from "./routes/admin/collection.tsx";
 import * as $admin_pages from "./routes/admin/pages.tsx";
 import * as $admin_settings from "./routes/admin/settings.tsx";
 import * as $admin_stats from "./routes/admin/stats.tsx";
-import * as $admin_users from "./routes/admin/users.tsx";
-import * as $api_auth from "./routes/api/auth.ts";
-import * as $api_auth_signup from "./routes/api/auth/signup.ts";
-import * as $api_joke from "./routes/api/joke.ts";
+import * as $admin_users_index from "./routes/admin/users/index.tsx";
+import * as $admin_users_requests from "./routes/admin/users/requests.tsx";
+import * as $auth_callback from "./routes/auth/callback.ts";
+import * as $auth_confirm from "./routes/auth/confirm.ts";
 import * as $auth_signin from "./routes/auth/signin.tsx";
 import * as $auth_signup from "./routes/auth/signup.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $test from "./routes/test.tsx";
 import * as $Counter from "./islands/Counter.tsx";
+import * as $SigninForm from "./islands/SigninForm.tsx";
 import * as $SignupForm from "./islands/SignupForm.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
@@ -26,14 +28,15 @@ const manifest = {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
     "./routes/_middleware.ts": $_middleware,
+    "./routes/admin/_middleware.ts": $admin_middleware,
     "./routes/admin/collection.tsx": $admin_collection,
     "./routes/admin/pages.tsx": $admin_pages,
     "./routes/admin/settings.tsx": $admin_settings,
     "./routes/admin/stats.tsx": $admin_stats,
-    "./routes/admin/users.tsx": $admin_users,
-    "./routes/api/auth.ts": $api_auth,
-    "./routes/api/auth/signup.ts": $api_auth_signup,
-    "./routes/api/joke.ts": $api_joke,
+    "./routes/admin/users/index.tsx": $admin_users_index,
+    "./routes/admin/users/requests.tsx": $admin_users_requests,
+    "./routes/auth/callback.ts": $auth_callback,
+    "./routes/auth/confirm.ts": $auth_confirm,
     "./routes/auth/signin.tsx": $auth_signin,
     "./routes/auth/signup.tsx": $auth_signup,
     "./routes/index.tsx": $index,
@@ -41,6 +44,7 @@ const manifest = {
   },
   islands: {
     "./islands/Counter.tsx": $Counter,
+    "./islands/SigninForm.tsx": $SigninForm,
     "./islands/SignupForm.tsx": $SignupForm,
   },
   baseUrl: import.meta.url,
