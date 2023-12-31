@@ -6,9 +6,15 @@ export default {
   ],
   theme: {
     colors: {
-      background: "#060606",
+      black: "#000000",
+      background: "#0C0C0C",
       text: "#F9F9F9",
       text_grey: {
+        light: "#A3A3A3",
+        DEFAULT: "#A3A3A3",
+        dark: "#A3A3A3",
+      },
+      grey: {
         light: "#A3A3A3",
         DEFAULT: "#A3A3A3",
         dark: "#A3A3A3",
@@ -18,7 +24,7 @@ export default {
       second: "#4476AB",
       success: "#40C057",
       warning: "#F19B4B",
-      error: "#EA5959"
+      error: "#EA5959",
     },
     extend: {
       outline: {

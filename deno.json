@@ -39,7 +39,8 @@
     "@utils/": "./utils/",
     "tailwindcss": "npm:tailwindcss@3.3.5",
     "tailwindcss/": "npm:/tailwindcss@3.3.5/",
-    "tailwindcss/plugin": "npm:/tailwindcss@3.3.5/plugin.js"
+    "tailwindcss/plugin": "npm:/tailwindcss@3.3.5/plugin.js",
+    "lucide-icons": "npm:lucide-preact@0.302.0"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

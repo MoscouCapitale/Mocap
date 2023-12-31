@@ -5,20 +5,26 @@
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
+import * as $admin_layout from "./routes/admin/_layout.tsx";
 import * as $admin_middleware from "./routes/admin/_middleware.ts";
 import * as $admin_collection from "./routes/admin/collection.tsx";
 import * as $admin_pages from "./routes/admin/pages.tsx";
-import * as $admin_settings from "./routes/admin/settings.tsx";
+import * as $admin_settings_layout from "./routes/admin/settings/_layout.tsx";
+import * as $admin_settings_index from "./routes/admin/settings/index.tsx";
+import * as $admin_settings_medias from "./routes/admin/settings/medias.tsx";
+import * as $admin_settings_misc from "./routes/admin/settings/misc.tsx";
+import * as $admin_settings_styles from "./routes/admin/settings/styles.tsx";
+import * as $admin_settings_users from "./routes/admin/settings/users.tsx";
 import * as $admin_stats from "./routes/admin/stats.tsx";
 import * as $admin_users_index from "./routes/admin/users/index.tsx";
 import * as $admin_users_requests from "./routes/admin/users/requests.tsx";
 import * as $auth_callback from "./routes/auth/callback.ts";
-import * as $auth_confirm from "./routes/auth/confirm.ts";
 import * as $auth_signin from "./routes/auth/signin.tsx";
 import * as $auth_signup from "./routes/auth/signup.tsx";
 import * as $index from "./routes/index.tsx";
-import * as $test from "./routes/test.tsx";
 import * as $Counter from "./islands/Counter.tsx";
+import * as $Layout_Navbar from "./islands/Layout/Navbar.tsx";
+import * as $Layout_NavbarItem from "./islands/Layout/NavbarItem.tsx";
 import * as $SigninForm from "./islands/SigninForm.tsx";
 import * as $SignupForm from "./islands/SignupForm.tsx";
 import { type Manifest } from "$fresh/server.ts";
@@ -28,22 +34,28 @@ const manifest = {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
     "./routes/_middleware.ts": $_middleware,
+    "./routes/admin/_layout.tsx": $admin_layout,
     "./routes/admin/_middleware.ts": $admin_middleware,
     "./routes/admin/collection.tsx": $admin_collection,
     "./routes/admin/pages.tsx": $admin_pages,
-    "./routes/admin/settings.tsx": $admin_settings,
+    "./routes/admin/settings/_layout.tsx": $admin_settings_layout,
+    "./routes/admin/settings/index.tsx": $admin_settings_index,
+    "./routes/admin/settings/medias.tsx": $admin_settings_medias,
+    "./routes/admin/settings/misc.tsx": $admin_settings_misc,
+    "./routes/admin/settings/styles.tsx": $admin_settings_styles,
+    "./routes/admin/settings/users.tsx": $admin_settings_users,
     "./routes/admin/stats.tsx": $admin_stats,
     "./routes/admin/users/index.tsx": $admin_users_index,
     "./routes/admin/users/requests.tsx": $admin_users_requests,
     "./routes/auth/callback.ts": $auth_callback,
-    "./routes/auth/confirm.ts": $auth_confirm,
     "./routes/auth/signin.tsx": $auth_signin,
     "./routes/auth/signup.tsx": $auth_signup,
     "./routes/index.tsx": $index,
-    "./routes/test.tsx": $test,
   },
   islands: {
     "./islands/Counter.tsx": $Counter,
+    "./islands/Layout/Navbar.tsx": $Layout_Navbar,
+    "./islands/Layout/NavbarItem.tsx": $Layout_NavbarItem,
     "./islands/SigninForm.tsx": $SigninForm,
     "./islands/SignupForm.tsx": $SignupForm,
   },

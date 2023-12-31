@@ -4,8 +4,9 @@ import {
   decodeBase64 as decode,
   encodeBase64 as encode,
 } from "$std/encoding/base64.ts";
+import { Database } from '@models/database.ts'
 
-export const supabase = createClient(
+export const supabase = createClient<Database>(
   Deno.env.get("SUPABASE_URL") as string,
   Deno.env.get("SUPABASE_KEY") as string
 );

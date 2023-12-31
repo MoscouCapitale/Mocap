@@ -21,8 +21,8 @@ export async function handler(
   let user = await getUserFromSession(req);
   let session: Session | null = null;
 
-  console.log("user", user);
-  console.log("session", session);
+  // console.log("user", user);
+  // console.log("session", session);
 
   // check if access token is expired
   if (!user && accessTokenExpired(req)) {
