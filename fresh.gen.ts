@@ -19,9 +19,11 @@ import * as $admin_stats from "./routes/admin/stats.tsx";
 import * as $admin_users_index from "./routes/admin/users/index.tsx";
 import * as $admin_users_requests from "./routes/admin/users/requests.tsx";
 import * as $auth_callback from "./routes/auth/callback.ts";
+import * as $auth_index from "./routes/auth/index.tsx";
 import * as $auth_signin from "./routes/auth/signin.tsx";
 import * as $auth_signup from "./routes/auth/signup.tsx";
 import * as $index from "./routes/index.tsx";
+import * as $AuthForm from "./islands/AuthForm.tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $Layout_Navbar from "./islands/Layout/Navbar.tsx";
 import * as $Layout_NavbarItem from "./islands/Layout/NavbarItem.tsx";
@@ -48,11 +50,13 @@ const manifest = {
     "./routes/admin/users/index.tsx": $admin_users_index,
     "./routes/admin/users/requests.tsx": $admin_users_requests,
     "./routes/auth/callback.ts": $auth_callback,
+    "./routes/auth/index.tsx": $auth_index,
     "./routes/auth/signin.tsx": $auth_signin,
     "./routes/auth/signup.tsx": $auth_signup,
     "./routes/index.tsx": $index,
   },
   islands: {
+    "./islands/AuthForm.tsx": $AuthForm,
     "./islands/Counter.tsx": $Counter,
     "./islands/Layout/Navbar.tsx": $Layout_Navbar,
     "./islands/Layout/NavbarItem.tsx": $Layout_NavbarItem,
