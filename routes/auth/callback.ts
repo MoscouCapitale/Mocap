@@ -17,7 +17,7 @@ export const handler: Handlers = {
         return new Response("", {
           status: 303,
           headers: {
-            Location: `/auth/signin${redirectURL ? `?redirect=${redirectURL}` : ""}`,
+            Location: `/auth${redirectURL ? `?redirect=${redirectURL}` : ""}`,
           },
         });
       }

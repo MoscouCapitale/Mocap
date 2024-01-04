@@ -8,15 +8,15 @@ import { handleSignIn, handleSignUp } from "@services/authentication.ts";
 
 export const handler: Handlers<FormType> = {
   async GET(req: Request, ctx: FreshContext) {
-    // const user = await getUserFromSession(req);
-    // if (user) {
-    //   return new Response("", {
-    //     status: 303,
-    //     headers: {
-    //       Location: "/admin/pages",
-    //     },
-    //   });
-    // }
+    const user = await getUserFromSession(req);
+    if (user) {
+      return new Response("", {
+        status: 303,
+        headers: {
+          Location: "/admin/pages",
+        },
+      });
+    }
 
     return ctx.render({ type: "default" });
   },

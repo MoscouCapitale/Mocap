@@ -3,10 +3,11 @@ import { useEffect } from "preact/hooks";
 import { useState } from "preact/hooks";
 import { verifyEmailIntegrity, verifyPasswordIntegrity, verifySamePassword } from "@utils/login.ts";
 import { Send } from "lucide-icons";
+import Alert from "@components/Misc/Alert.tsx";
 
 export default function AuthForm({ type, additional_data, error }: FormType) {
   const [email, setEmail] = useState<string>(additional_data?.email ? additional_data.email : "");
-  const [password, setPassword] = useState<string>("");
+  const [password, setPassword] = useState<string>(additional_data?.password ? additional_data.password : "");
   const [confirmpassword, setConfirmPassword] = useState<string>("");
 
   const [validForm, setValidForm] = useState({
@@ -92,7 +93,7 @@ export default function AuthForm({ type, additional_data, error }: FormType) {
           )}
         </form>
       </div>
-      {error && <p>{error.message}</p>}
+      {error && <Alert message={error.message} error={true} />}
     </>
   );
 }

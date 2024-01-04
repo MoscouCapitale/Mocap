@@ -19,12 +19,29 @@ export const handleSignIn = async (
       shouldCreateUser: false,
     },
   });
-  if (error.status === 400) {
+  console.log(error);
+  if (error?.status === 400) {
     const render = await ctx.render({
       type: "signup",
-      additional_data: email,
+      additional_data: {
+        email: email,
+      },
       error: {
         message: "This email is not registered yet, please signup first",
+      },
+    });
+    return new Response(render.body, {
+      headers: res.headers,
+    });
+  }
+  if (error?.status === 429) {
+    const render = await ctx.render({
+      type: "default",
+      additional_data: {
+        email: email,
+      },
+      error: {
+        message: "Please wait 60 seconds before requesting a new OTP",
       },
     });
     return new Response(render.body, {
@@ -55,7 +72,10 @@ export const handleSignUp = async (
   if (!password || !verifyPasswordIntegrity(password)) {
     const render = await ctx.render({
       type: "signup",
-      additional_data: email,
+      additional_data: {
+        email: email,
+        password: password,
+      },
       error: {
         message: "This password is not strong enough",
       },
@@ -67,7 +87,10 @@ export const handleSignUp = async (
   if (!confirmpassword || !verifySamePassword(password, confirmpassword)) {
     const render = await ctx.render({
       type: "signup",
-      additional_data: email,
+      additional_data: {
+        email: email,
+        password: password,
+      },
       error: {
         message: "The passwords do not match",
       },
