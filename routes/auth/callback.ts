@@ -24,7 +24,7 @@ export const handler: Handlers = {
 
       const session = data?.session;
       if (session?.access_token && session.refresh_token) {
-        const user = await supabase.auth.getUser(session.access_token);
+        const user = await sup.auth.getUser(session.access_token);
         if (!user.error) {
           const resp = new Response("", {
             status: 303,

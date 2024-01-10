@@ -8,11 +8,15 @@ import {
   getUserFromSession,
   refreshAccessToken,
   setAuthCookie,
+  updateAuthorizations,
 } from "@services/supabase.ts";
 
 export interface AppState {
   user: User;
 }
+
+// TODO: find better way to do this
+const authorizedRoles = ["authenticated", "mocap_admin", "supabase_admin"];
 
 export async function handler(
   req: Request,
@@ -21,7 +25,7 @@ export async function handler(
   let user = await getUserFromSession(req);
   let session: Session | null = null;
 
-  //console.log("user", user);
+  console.log("user", user);
   // console.log("session", session);
 
   // check if access token is expired
@@ -49,6 +53,18 @@ export async function handler(
 
   if (!user) {
     console.log("unable to get user");
+    return new Response("", {
+      status: 303,
+      headers: {
+        Location: `/auth?redirect=${req.url}`,
+      },
+    });
+  }
+
+  if(user.user_metadata.is_authorised === undefined) updateAuthorizations(user);
+
+  if (!authorizedRoles.includes(user.role) || user.user_metadata?.is_authorised === false) {
+    console.log("user is not authorized");
     return new Response("", {
       status: 303,
       headers: {

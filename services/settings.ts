@@ -26,7 +26,7 @@ const retrieveMisc = async () => {
 };
 
 const retrieveColumns = async (columns: string) => {
-    const res = await sup.from("Website_Settings")
+    const res = await sup(true).from("Website_Settings")
         .select(columns);
     return res.data;
 };
