@@ -9,6 +9,7 @@ import * as $admin_layout from "./routes/admin/_layout.tsx";
 import * as $admin_middleware from "./routes/admin/_middleware.ts";
 import * as $admin_collection from "./routes/admin/collection.tsx";
 import * as $admin_pages from "./routes/admin/pages.tsx";
+import * as $admin_requests from "./routes/admin/requests.tsx";
 import * as $admin_settings_layout from "./routes/admin/settings/_layout.tsx";
 import * as $admin_settings_index from "./routes/admin/settings/index.tsx";
 import * as $admin_settings_medias from "./routes/admin/settings/medias.tsx";
@@ -24,6 +25,10 @@ import * as $index from "./routes/index.tsx";
 import * as $AuthForm from "./islands/AuthForm.tsx";
 import * as $Layout_Navbar from "./islands/Layout/Navbar.tsx";
 import * as $Layout_NavbarItem from "./islands/Layout/NavbarItem.tsx";
+import * as $Settings_Main_APIInput from "./islands/Settings/Main/APIInput.tsx";
+import * as $Settings_Main_EmailMatrix from "./islands/Settings/Main/EmailMatrix.tsx";
+import * as $Settings_Main_Index from "./islands/Settings/Main/Index.tsx";
+import * as $Settings_Main_MiscInput from "./islands/Settings/Main/MiscInput.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -35,6 +40,7 @@ const manifest = {
     "./routes/admin/_middleware.ts": $admin_middleware,
     "./routes/admin/collection.tsx": $admin_collection,
     "./routes/admin/pages.tsx": $admin_pages,
+    "./routes/admin/requests.tsx": $admin_requests,
     "./routes/admin/settings/_layout.tsx": $admin_settings_layout,
     "./routes/admin/settings/index.tsx": $admin_settings_index,
     "./routes/admin/settings/medias.tsx": $admin_settings_medias,
@@ -52,6 +58,10 @@ const manifest = {
     "./islands/AuthForm.tsx": $AuthForm,
     "./islands/Layout/Navbar.tsx": $Layout_Navbar,
     "./islands/Layout/NavbarItem.tsx": $Layout_NavbarItem,
+    "./islands/Settings/Main/APIInput.tsx": $Settings_Main_APIInput,
+    "./islands/Settings/Main/EmailMatrix.tsx": $Settings_Main_EmailMatrix,
+    "./islands/Settings/Main/Index.tsx": $Settings_Main_Index,
+    "./islands/Settings/Main/MiscInput.tsx": $Settings_Main_MiscInput,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

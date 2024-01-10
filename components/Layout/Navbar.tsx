@@ -43,7 +43,6 @@ export default function Navbar(path: { path: string }) {
       icon: Wrench,
     },
   ];
-  console.log("===== Collapsed ", collapsed.value);
   navItems.map((item) => path.path == item.path && (item.active = true));
 
   return (

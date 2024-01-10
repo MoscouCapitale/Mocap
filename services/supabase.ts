@@ -61,6 +61,10 @@ export const getUserFromSession = async (request: Request) => {
 
   if (access) {
     const { data } = await supabase.auth.getUser(access);
+    if (data?.user?.id){
+      const additionnal_infos = await supabase.from('Users').select().eq('id', data.user.id)
+      return { ...data.user, ...additionnal_infos.data[0] }
+    }
     return data.user;
   }
 

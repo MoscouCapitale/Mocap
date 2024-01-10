@@ -1,13 +1,13 @@
 import { FreshContext } from "$fresh/server.ts";
 import {
-  User,
   Session,
+  User,
 } from "https://esm.sh/v116/@supabase/gotrue-js@2.23.0/dist/module/index.js";
 import {
   accessTokenExpired,
   getUserFromSession,
   refreshAccessToken,
-  setAuthCookie
+  setAuthCookie,
 } from "@services/supabase.ts";
 
 export interface AppState {
@@ -16,12 +16,12 @@ export interface AppState {
 
 export async function handler(
   req: Request,
-  ctx: FreshContext<AppState>
+  ctx: FreshContext<AppState>,
 ) {
   let user = await getUserFromSession(req);
   let session: Session | null = null;
 
-  // console.log("user", user);
+  //console.log("user", user);
   // console.log("session", session);
 
   // check if access token is expired
@@ -33,7 +33,7 @@ export async function handler(
       return new Response("", {
         status: 303,
         headers: {
-          Location: `/auth/signin?redirect=${req.url}`,
+          Location: `/auth?redirect=${req.url}`,
         },
       });
     }
@@ -48,14 +48,15 @@ export async function handler(
   }
 
   if (!user) {
-    console.log("un-authed user trying to access protected -admin- route");
+    console.log("unable to get user");
     return new Response("", {
       status: 303,
       headers: {
-        Location: `/auth/signin?redirect=${req.url}`,
+        Location: `/auth?redirect=${req.url}`,
       },
     });
   }
+
   ctx.state.user = user;
 
   const next = await ctx.next();

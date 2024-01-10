@@ -3,6 +3,9 @@ type UserRequestType = {
     note: string;
 }
 
+type Role = 'anon' | 'authenticated' | 'mocap_admin' | 'supabase_admin';
+
 export type {
-    UserRequestType
+    UserRequestType,
+    Role,
 }
