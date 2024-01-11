@@ -29,6 +29,8 @@ import * as $Settings_Main_APIInput from "./islands/Settings/Main/APIInput.tsx";
 import * as $Settings_Main_EmailMatrix from "./islands/Settings/Main/EmailMatrix.tsx";
 import * as $Settings_Main_Index from "./islands/Settings/Main/Index.tsx";
 import * as $Settings_Main_MiscInput from "./islands/Settings/Main/MiscInput.tsx";
+import * as $Settings_Users_RequestButton from "./islands/Settings/Users/RequestButton.tsx";
+import * as $Settings_Users_RequestSingle from "./islands/Settings/Users/RequestSingle.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -62,6 +64,8 @@ const manifest = {
     "./islands/Settings/Main/EmailMatrix.tsx": $Settings_Main_EmailMatrix,
     "./islands/Settings/Main/Index.tsx": $Settings_Main_Index,
     "./islands/Settings/Main/MiscInput.tsx": $Settings_Main_MiscInput,
+    "./islands/Settings/Users/RequestButton.tsx": $Settings_Users_RequestButton,
+    "./islands/Settings/Users/RequestSingle.tsx": $Settings_Users_RequestSingle,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

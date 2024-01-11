@@ -7,13 +7,10 @@ import {
 import { Database } from "@models/database.ts";
 
 // TODO: find a way to avoid using the service key
-export const supabase = (backendService = false) =>
-  createClient<Database>(
-    Deno.env.get("SUPABASE_URL") as string,
-    backendService
-      ? Deno.env.get("SUPABASE_SERVICE_KEY") as string
-      : Deno.env.get("SUPABASE_KEY") as string,
-  );
+export const supabase = createClient<Database>(
+  Deno.env.get("SUPABASE_URL") as string,
+  Deno.env.get("SUPABASE_KEY") as string,
+);
 export const supabaseSSR = (req: Request, res: Response) =>
   createClient(
     Deno.env.get("SUPABASE_URL") as string,
@@ -64,9 +61,9 @@ export const getUserFromSession = async (request: Request) => {
   const access = cookies.token;
 
   if (access) {
-    const { data } = await supabase().auth.getUser(access);
+    const { data } = await supabase.auth.getUser(access);
     if (data?.user?.id) {
-      const additionnal_infos = await supabase().from("Users").select().eq(
+      const additionnal_infos = await supabase.from("Users").select().eq(
         "id",
         data.user.id,
       );
@@ -95,7 +92,7 @@ export const refreshAccessToken = async (request: Request) => {
   const refresh = cookies.refresh;
 
   if (refresh) {
-    const { data } = await supabase().auth.refreshSession({
+    const { data } = await supabase.auth.refreshSession({
       refresh_token: refresh,
     });
     return data;
@@ -127,18 +124,12 @@ export const setAuthCookie = (
 };
 
 export const updateAuthorizations = async (user: any) => {
-  //TODO: why the fuck is this not working
-  const user_additional_infos = await supabase(true).from("Users").select().eq(
+  const user_additional_infos = await supabase.from("Users").select().eq(
     "id",
     user.id,
   );
   if (user_additional_infos.data.length === 0) return;
-  console.log("user_additional_infos", user_additional_infos);
   const user_infos = user_additional_infos.data[0];
-  const res = await supabase(true).auth.admin.updateUserById(user.id, {
-    raw_user_metadata: JSON.stringify({
-      is_authorised: !user_infos.requested && user_infos.accepted,
-    }),
-  });
-  console.log("updateAuthorizations", res);
+  await supabase.auth.admin.updateUserById(user.id, 
+    { user_metadata: { is_authorised: !user_infos.requested && user_infos.accepted } });
 };

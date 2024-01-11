@@ -11,6 +11,7 @@ import {
   Pencil,
   UserRoundCog,
   Wrench,
+  MailOpen
 } from "lucide-icons";
 
 //TODO: use Fresh Partials to render all admin pages
@@ -41,6 +42,12 @@ export default function Navbar(path: { path: string }) {
       path: "/admin/settings",
       label: "Paramètres",
       icon: Wrench,
+    },
+    {
+      name: "requests",
+      path: "/admin/requests",
+      label: "Demandes",
+      icon: MailOpen,
     },
   ];
   navItems.map((item) => path.path == item.path && (item.active = true));

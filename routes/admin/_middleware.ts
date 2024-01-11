@@ -64,11 +64,10 @@ export async function handler(
   if(user.user_metadata.is_authorised === undefined) updateAuthorizations(user);
 
   if (!authorizedRoles.includes(user.role) || user.user_metadata?.is_authorised === false) {
-    console.log("user is not authorized");
     return new Response("", {
       status: 303,
       headers: {
-        Location: `/auth?redirect=${req.url}`,
+        Location: `/auth?redirect=${req.url}&error=user_not_authorized`,
       },
     });
   }
