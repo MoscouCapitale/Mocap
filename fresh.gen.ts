@@ -18,7 +18,6 @@ import * as $admin_settings_styles from "./routes/admin/settings/styles.tsx";
 import * as $admin_settings_users from "./routes/admin/settings/users.tsx";
 import * as $admin_stats from "./routes/admin/stats.tsx";
 import * as $admin_users_index from "./routes/admin/users/index.tsx";
-import * as $admin_users_requests from "./routes/admin/users/requests.tsx";
 import * as $auth_callback from "./routes/auth/callback.ts";
 import * as $auth_index from "./routes/auth/index.tsx";
 import * as $index from "./routes/index.tsx";
@@ -29,8 +28,10 @@ import * as $Settings_Main_APIInput from "./islands/Settings/Main/APIInput.tsx";
 import * as $Settings_Main_EmailMatrix from "./islands/Settings/Main/EmailMatrix.tsx";
 import * as $Settings_Main_Index from "./islands/Settings/Main/Index.tsx";
 import * as $Settings_Main_MiscInput from "./islands/Settings/Main/MiscInput.tsx";
+import * as $Settings_MainInputs from "./islands/Settings/MainInputs.tsx";
 import * as $Settings_Users_RequestButton from "./islands/Settings/Users/RequestButton.tsx";
 import * as $Settings_Users_RequestSingle from "./islands/Settings/Users/RequestSingle.tsx";
+import * as $Settings_Users_UsersList from "./islands/Settings/Users/UsersList.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -51,7 +52,6 @@ const manifest = {
     "./routes/admin/settings/users.tsx": $admin_settings_users,
     "./routes/admin/stats.tsx": $admin_stats,
     "./routes/admin/users/index.tsx": $admin_users_index,
-    "./routes/admin/users/requests.tsx": $admin_users_requests,
     "./routes/auth/callback.ts": $auth_callback,
     "./routes/auth/index.tsx": $auth_index,
     "./routes/index.tsx": $index,
@@ -64,8 +64,10 @@ const manifest = {
     "./islands/Settings/Main/EmailMatrix.tsx": $Settings_Main_EmailMatrix,
     "./islands/Settings/Main/Index.tsx": $Settings_Main_Index,
     "./islands/Settings/Main/MiscInput.tsx": $Settings_Main_MiscInput,
+    "./islands/Settings/MainInputs.tsx": $Settings_MainInputs,
     "./islands/Settings/Users/RequestButton.tsx": $Settings_Users_RequestButton,
     "./islands/Settings/Users/RequestSingle.tsx": $Settings_Users_RequestSingle,
+    "./islands/Settings/Users/UsersList.tsx": $Settings_Users_UsersList,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

@@ -1330,18 +1330,24 @@ export interface Database {
       }
       Users: {
         Row: {
+          accepted: boolean
           content_created: number | null
           id: string
+          requested: boolean
           username: string | null
         }
         Insert: {
+          accepted?: boolean
           content_created?: number | null
           id: string
+          requested?: boolean
           username?: string | null
         }
         Update: {
+          accepted?: boolean
           content_created?: number | null
           id?: string
+          requested?: boolean
           username?: string | null
         }
         Relationships: [
@@ -1559,6 +1565,232 @@ export interface Database {
             referencedColumns: ["id"]
           }
         ]
+      }
+      Website_Settings_Main_APIs: {
+        Row: {
+          api_amazon_music: string | null
+          api_deezer: string | null
+          api_soundcloud: string | null
+          api_spotify: string | null
+          api_tidal: string | null
+          api_youtube_music: string | null
+          created_at: string | null
+          id: number
+          modified_at: string | null
+        }
+        Insert: {
+          api_amazon_music?: string | null
+          api_deezer?: string | null
+          api_soundcloud?: string | null
+          api_spotify?: string | null
+          api_tidal?: string | null
+          api_youtube_music?: string | null
+          created_at?: string | null
+          id?: number
+          modified_at?: string | null
+        }
+        Update: {
+          api_amazon_music?: string | null
+          api_deezer?: string | null
+          api_soundcloud?: string | null
+          api_spotify?: string | null
+          api_tidal?: string | null
+          api_youtube_music?: string | null
+          created_at?: string | null
+          id?: number
+          modified_at?: string | null
+        }
+        Relationships: []
+      }
+      Website_Settings_Main_Emails: {
+        Row: {
+          created_at: string | null
+          email_administrator: number
+          email_contact: number
+          email_default_sender: string
+          email_logging: number
+          email_user_creator: number
+          id: number
+          modified_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email_administrator: number
+          email_contact: number
+          email_default_sender: string
+          email_logging: number
+          email_user_creator: number
+          id?: number
+          modified_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email_administrator?: number
+          email_contact?: number
+          email_default_sender?: string
+          email_logging?: number
+          email_user_creator?: number
+          id?: number
+          modified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "website_settings_email_administrator_fkey"
+            columns: ["email_administrator"]
+            isOneToOne: false
+            referencedRelation: "Mail_Pairing"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "website_settings_email_contact_fkey"
+            columns: ["email_contact"]
+            isOneToOne: false
+            referencedRelation: "Mail_Pairing"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "website_settings_email_logging_fkey"
+            columns: ["email_logging"]
+            isOneToOne: false
+            referencedRelation: "Mail_Pairing"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "website_settings_email_user_creator_fkey"
+            columns: ["email_user_creator"]
+            isOneToOne: false
+            referencedRelation: "Mail_Pairing"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      Website_Settings_Main_Misc: {
+        Row: {
+          created_at: string | null
+          id: number
+          modified_at: string | null
+          website_icone: number | null
+          website_keywords: string | null
+          website_language: number
+          website_title: string | null
+          website_url: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          modified_at?: string | null
+          website_icone?: number | null
+          website_keywords?: string | null
+          website_language: number
+          website_title?: string | null
+          website_url: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          modified_at?: string | null
+          website_icone?: number | null
+          website_keywords?: string | null
+          website_language?: number
+          website_title?: string | null
+          website_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "website_settings_website_language_fkey"
+            columns: ["website_language"]
+            isOneToOne: false
+            referencedRelation: "Available_Languages"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      Website_Settings_Medias: {
+        Row: {
+          created_at: string | null
+          id: number
+          media_auto_optimize: boolean | null
+          media_lazyload: boolean | null
+          media_max_size_height: number | null
+          media_max_size_mb: number | null
+          modified_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          media_auto_optimize?: boolean | null
+          media_lazyload?: boolean | null
+          media_max_size_height?: number | null
+          media_max_size_mb?: number | null
+          modified_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          media_auto_optimize?: boolean | null
+          media_lazyload?: boolean | null
+          media_max_size_height?: number | null
+          media_max_size_mb?: number | null
+          modified_at?: string | null
+        }
+        Relationships: []
+      }
+      Website_Settings_Misc: {
+        Row: {
+          created_at: string | null
+          id: number
+          misc_confidentiality: string | null
+          modified_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          misc_confidentiality?: string | null
+          modified_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          misc_confidentiality?: string | null
+          modified_at?: string | null
+        }
+        Relationships: []
+      }
+      Website_Settings_Styles: {
+        Row: {
+          created_at: string | null
+          id: number
+          modified_at: string | null
+          style_color_auto: boolean | null
+          style_color_main: string | null
+          style_color_secondary: string | null
+          style_font_main: string | null
+          style_font_secondary: string | null
+          style_theme_toggle: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          modified_at?: string | null
+          style_color_auto?: boolean | null
+          style_color_main?: string | null
+          style_color_secondary?: string | null
+          style_font_main?: string | null
+          style_font_secondary?: string | null
+          style_theme_toggle?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          modified_at?: string | null
+          style_color_auto?: boolean | null
+          style_color_main?: string | null
+          style_color_secondary?: string | null
+          style_font_main?: string | null
+          style_font_secondary?: string | null
+          style_theme_toggle?: boolean | null
+        }
+        Relationships: []
       }
     }
     Views: {

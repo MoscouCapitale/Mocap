@@ -1,4 +1,11 @@
-export default function APIInput(props: {title: string, name: string, value: string, onUpdate: (data: Record<string, string>) => void}) {
+type APIInputProps = {
+  title: string;
+  name: string;
+  value: string | null;
+  onUpdate: (data: Record<string, string>) => void;
+};
+
+export default function APIInput(props: APIInputProps) {
   const title = props.title;
   const name = props.name;
   const value = props.value;
@@ -9,7 +16,7 @@ export default function APIInput(props: {title: string, name: string, value: str
       <input
         className={"w-80 px-1.5 py-1 rounded text-text border border-text_grey justify-start items-center gap-2.5 inline-flex bg-background focus:outline-none focus:ring-2 focus:ring-main focus:border-transparent"}
         type={"text"}
-        value={value}
+        value={value ?? ''}
         onInput={(e) => props.onUpdate({ [name]: (e.target as HTMLInputElement).value })}
       ></input>
       <div>
