@@ -4,15 +4,7 @@ import { NavItemType } from "@models/Layout.ts";
 import NavbarItem from "@components/Layout/NavbarItem.tsx";
 import { getAppStorage, saveAppStorage } from "@utils/localStorage.ts";
 
-// import {
-//   ChevronLeft,
-//   Library,
-//   LineChart,
-//   Pencil,
-//   UserRoundCog,
-//   Wrench,
-//   MailOpen
-// } from "lucide-icons";
+import { IconChevronLeft, IconPhotoPlus, IconChartDonut, IconPencilStar, IconUsers, IconSettings2, IconMailbox } from "@utils/icons.ts";
 
 //TODO: use Fresh Partials to render all admin pages
 export default function Navbar(path: { path: string }) {
@@ -22,32 +14,32 @@ export default function Navbar(path: { path: string }) {
       name: "pages",
       path: "/admin/pages",
       label: "Pages",
-      // icon: Pencil,
+      icon: IconPencilStar,
     },
     {
       name: "collection",
       path: "/admin/collection",
       label: "Collection",
-      // icon: Library,
+      icon: IconPhotoPlus,
     },
-    { name: "stats", path: "/admin/stats", label: "Stats", /*icon: LineChart*/ },
+    { name: "stats", path: "/admin/stats", label: "Stats", icon: IconChartDonut },
     {
       name: "users",
       path: "/admin/users",
       label: "Utilisateurs",
-      // icon: UserRoundCog,
+      icon: IconUsers,
     },
     {
       name: "settings",
       path: "/admin/settings",
       label: "Paramètres",
-      // icon: Wrench,
+      icon: IconSettings2,
     },
     {
       name: "requests",
       path: "/admin/requests",
       label: "Demandes",
-      // icon: MailOpen,
+      icon: IconMailbox,
     },
   ];
   navItems.map((item) => path.path == item.path && (item.active = true));
@@ -55,17 +47,19 @@ export default function Navbar(path: { path: string }) {
   return (
     <nav class="bg-black min-h-screen p-[30px] flex-col justify-between items-start inline-flex">
       <div class="flex-col justify-start items-start gap-10 inline-flex">
-        {navItems.map((item) => <NavbarItem {...item} collapsed={collapsed.value} />)}
+        {navItems.map((item) => (
+          <NavbarItem {...item} collapsed={collapsed.value} />
+        ))}
       </div>
       <div class="w-full justify-end items-center inline-flex">
-        {/* <ChevronLeft
+        <IconChevronLeft
           class="hover:cursor-pointer"
           color="white"
           onClick={() => 
             {saveAppStorage({ navbarCollapsed: !collapsed.value })
             collapsed.value = !collapsed.value}
           }
-        /> */}
+        />
       </div>
     </nav>
   );

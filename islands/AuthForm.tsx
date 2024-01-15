@@ -2,7 +2,7 @@ import { FormType } from "@models/Authentication.ts";
 import { useEffect } from "preact/hooks";
 import { useState } from "preact/hooks";
 import { verifyEmailIntegrity, verifyPasswordIntegrity, verifySamePassword } from "@utils/login.ts";
-// import { Send } from "lucide-icons";
+import {IconSend} from "@utils/icons.ts";
 import Alert from "@components/Misc/Alert.tsx";
 
 export default function AuthForm({ type, additional_data, error }: FormType) {
@@ -46,8 +46,7 @@ export default function AuthForm({ type, additional_data, error }: FormType) {
           />
           {type === "default" && validForm.email && (
             <button class="absolute left-[calc(100%+1rem)]" type={"submit"}>
-              {/* <Send color={"white"} /> */}
-              <div className={"w-5 h-5 bg-main rounded-full"}></div>
+              <IconSend color={"white"} />
             </button>
           )}
           {type === "signup" && (

@@ -1,5 +1,5 @@
 import { PageProps } from "$fresh/server.ts";
-import Navbar from "@components/Layout/Navbar.tsx";
+import Navbar from "@islands/Layout/Navbar.tsx";
 
 export default function Layout({ Component, state, route }: PageProps) {
   return (

@@ -24,11 +24,6 @@ import * as $index from "./routes/index.tsx";
 import * as $AuthForm from "./islands/AuthForm.tsx";
 import * as $Layout_Navbar from "./islands/Layout/Navbar.tsx";
 import * as $Layout_NavbarItem from "./islands/Layout/NavbarItem.tsx";
-import * as $Settings_Main_APIInput from "./islands/Settings/Main/APIInput.tsx";
-import * as $Settings_Main_EmailMatrix from "./islands/Settings/Main/EmailMatrix.tsx";
-import * as $Settings_Main_Index from "./islands/Settings/Main/Index.tsx";
-import * as $Settings_Main_MiscInput from "./islands/Settings/Main/MiscInput.tsx";
-import * as $Settings_MainInputs from "./islands/Settings/MainInputs.tsx";
 import * as $Settings_Users_RequestButton from "./islands/Settings/Users/RequestButton.tsx";
 import * as $Settings_Users_RequestSingle from "./islands/Settings/Users/RequestSingle.tsx";
 import * as $Settings_Users_UsersList from "./islands/Settings/Users/UsersList.tsx";
@@ -60,11 +55,6 @@ const manifest = {
     "./islands/AuthForm.tsx": $AuthForm,
     "./islands/Layout/Navbar.tsx": $Layout_Navbar,
     "./islands/Layout/NavbarItem.tsx": $Layout_NavbarItem,
-    "./islands/Settings/Main/APIInput.tsx": $Settings_Main_APIInput,
-    "./islands/Settings/Main/EmailMatrix.tsx": $Settings_Main_EmailMatrix,
-    "./islands/Settings/Main/Index.tsx": $Settings_Main_Index,
-    "./islands/Settings/Main/MiscInput.tsx": $Settings_Main_MiscInput,
-    "./islands/Settings/MainInputs.tsx": $Settings_MainInputs,
     "./islands/Settings/Users/RequestButton.tsx": $Settings_Users_RequestButton,
     "./islands/Settings/Users/RequestSingle.tsx": $Settings_Users_RequestSingle,
     "./islands/Settings/Users/UsersList.tsx": $Settings_Users_UsersList,
