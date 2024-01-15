@@ -23,7 +23,6 @@ import * as $auth_index from "./routes/auth/index.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $AuthForm from "./islands/AuthForm.tsx";
 import * as $Layout_Navbar from "./islands/Layout/Navbar.tsx";
-import * as $Layout_NavbarItem from "./islands/Layout/NavbarItem.tsx";
 import * as $Settings_Users_RequestButton from "./islands/Settings/Users/RequestButton.tsx";
 import * as $Settings_Users_RequestSingle from "./islands/Settings/Users/RequestSingle.tsx";
 import * as $Settings_Users_UsersList from "./islands/Settings/Users/UsersList.tsx";
@@ -54,7 +53,6 @@ const manifest = {
   islands: {
     "./islands/AuthForm.tsx": $AuthForm,
     "./islands/Layout/Navbar.tsx": $Layout_Navbar,
-    "./islands/Layout/NavbarItem.tsx": $Layout_NavbarItem,
     "./islands/Settings/Users/RequestButton.tsx": $Settings_Users_RequestButton,
     "./islands/Settings/Users/RequestSingle.tsx": $Settings_Users_RequestSingle,
     "./islands/Settings/Users/UsersList.tsx": $Settings_Users_UsersList,
