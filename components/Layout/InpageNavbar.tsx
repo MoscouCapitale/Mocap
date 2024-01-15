@@ -1,6 +1,6 @@
 import { useSignal } from "@preact/signals";
 
-import { ChevronDown, ChevronRight } from "lucide-icons";
+// import { ChevronDown, ChevronRight } from "lucide-icons";
 
 type InpageNavbarProps = {
   items: InpageNavbarItem[];
@@ -24,10 +24,10 @@ export default function InpageNavbar(items: InpageNavbarProps) {
           href={item.path}
         >
           {item.label}
-          {item.active &&
+          {/* {item.active &&
             <ChevronDown color="white" />}
           {!item.active &&
-            <ChevronRight color="grey" />}
+            <ChevronRight color="grey" />} */}
         </a>
       ))}
     </nav>
