@@ -1,6 +1,6 @@
 import { supabase as sup, updateAuthorizations } from "@services/supabase.ts";
 import { FreshContext, Handlers, PageProps, RouteConfig } from "$fresh/server.ts";
-import RequestSingle from "@islands/Settings/Users/RequestSingle.tsx";
+import RequestSingle from "@islands/Users/RequestSingle.tsx";
 
 import { User } from "https://esm.sh/v116/@supabase/gotrue-js@2.23.0/dist/module/index.js";
 import { RequestedUser, Role } from "@models/User.ts";

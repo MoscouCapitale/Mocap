@@ -1,6 +1,6 @@
 import { RequestedUser, Role } from "@models/User.ts";
 
-import RequestButton from "@islands/Settings/Users/RequestButton.tsx";
+import RequestButton from "@islands/Users/RequestButton.tsx";
 import { useEffect, useState } from "preact/hooks";
 
 const ROLES: Role[] = ["anon", "authenticated", "mocap_admin", "supabase_admin"];

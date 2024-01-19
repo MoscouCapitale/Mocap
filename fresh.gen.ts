@@ -25,16 +25,12 @@ import * as $index from "./routes/index.tsx";
 import * as $AuthForm from "./islands/AuthForm.tsx";
 import * as $ConfirmationModal from "./islands/ConfirmationModal.tsx";
 import * as $Layout_Navbar from "./islands/Layout/Navbar.tsx";
-import * as $Layout_NavbarItem from "./islands/Layout/NavbarItem.tsx";
-import * as $Settings_Main_APIInput from "./islands/Settings/Main/APIInput.tsx";
-import * as $Settings_Main_EmailMatrix from "./islands/Settings/Main/EmailMatrix.tsx";
-import * as $Settings_Main_Index from "./islands/Settings/Main/Index.tsx";
-import * as $Settings_Main_MiscInput from "./islands/Settings/Main/MiscInput.tsx";
-import * as $Settings_MainInputs from "./islands/Settings/MainInputs.tsx";
-import * as $Settings_Users_RequestButton from "./islands/Settings/Users/RequestButton.tsx";
-import * as $Settings_Users_RequestSingle from "./islands/Settings/Users/RequestSingle.tsx";
-import * as $Settings_Users_UsersList from "./islands/Settings/Users/UsersList.tsx";
-import * as $Settings_Users_UsersList_UserActions from "./islands/Settings/Users/UsersList/UserActions.tsx";
+import * as $Settings_MainSettings from "./islands/Settings/MainSettings.tsx";
+import * as $Settings_SettingsChilds_InlineDoubleInput from "./islands/Settings/SettingsChilds/InlineDoubleInput.tsx";
+import * as $Settings_SettingsChilds_InlineSingleInput from "./islands/Settings/SettingsChilds/InlineSingleInput.tsx";
+import * as $Users_RequestButton from "./islands/Users/RequestButton.tsx";
+import * as $Users_RequestSingle from "./islands/Users/RequestSingle.tsx";
+import * as $Users_UsersList from "./islands/Users/UsersList.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -64,17 +60,14 @@ const manifest = {
     "./islands/AuthForm.tsx": $AuthForm,
     "./islands/ConfirmationModal.tsx": $ConfirmationModal,
     "./islands/Layout/Navbar.tsx": $Layout_Navbar,
-    "./islands/Layout/NavbarItem.tsx": $Layout_NavbarItem,
-    "./islands/Settings/Main/APIInput.tsx": $Settings_Main_APIInput,
-    "./islands/Settings/Main/EmailMatrix.tsx": $Settings_Main_EmailMatrix,
-    "./islands/Settings/Main/Index.tsx": $Settings_Main_Index,
-    "./islands/Settings/Main/MiscInput.tsx": $Settings_Main_MiscInput,
-    "./islands/Settings/MainInputs.tsx": $Settings_MainInputs,
-    "./islands/Settings/Users/RequestButton.tsx": $Settings_Users_RequestButton,
-    "./islands/Settings/Users/RequestSingle.tsx": $Settings_Users_RequestSingle,
-    "./islands/Settings/Users/UsersList.tsx": $Settings_Users_UsersList,
-    "./islands/Settings/Users/UsersList/UserActions.tsx":
-      $Settings_Users_UsersList_UserActions,
+    "./islands/Settings/MainSettings.tsx": $Settings_MainSettings,
+    "./islands/Settings/SettingsChilds/InlineDoubleInput.tsx":
+      $Settings_SettingsChilds_InlineDoubleInput,
+    "./islands/Settings/SettingsChilds/InlineSingleInput.tsx":
+      $Settings_SettingsChilds_InlineSingleInput,
+    "./islands/Users/RequestButton.tsx": $Users_RequestButton,
+    "./islands/Users/RequestSingle.tsx": $Users_RequestSingle,
+    "./islands/Users/UsersList.tsx": $Users_UsersList,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

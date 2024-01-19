@@ -1,37 +1,44 @@
-import { useSignal } from "@preact/signals";
+import { useState } from "preact/hooks";
 
 import { NavItemType } from "@models/Layout.ts";
 import { getAppStorage, saveAppStorage } from "@utils/localStorage.ts";
 
-import { ChevronLeft, Library, LineChart, Pencil, UserRoundCog, Wrench } from "lucide-icons";
+import { IconChevronLeft, IconPhotoPlus, IconChartDonut, IconPencilStar, IconUsers, IconSettings2, IconMailbox } from "@utils/icons.ts";
 
+//TODO: use Fresh Partials to render all admin pages
 export default function Navbar(path: { path: string }) {
-  const collapsed = useSignal<boolean>(getAppStorage()?.navbarCollapsed || false);
+  const [collapsed, setCollapsed] = useState<boolean>(getAppStorage()?.navbarCollapsed || false);
   const navItems: NavItemType[] = [
     {
       name: "pages",
       path: "/admin/pages",
       label: "Pages",
-      icon: Pencil,
+      icon: IconPencilStar,
     },
     {
       name: "collection",
       path: "/admin/collection",
       label: "Collection",
-      icon: Library,
+      icon: IconPhotoPlus,
     },
-    { name: "stats", path: "/admin/stats", label: "Stats", icon: LineChart },
+    { name: "stats", path: "/admin/stats", label: "Stats", icon: IconChartDonut },
     {
       name: "users",
       path: "/admin/users",
       label: "Utilisateurs",
-      icon: UserRoundCog,
+      icon: IconUsers,
     },
     {
       name: "settings",
       path: "/admin/settings",
       label: "Paramètres",
-      icon: Wrench,
+      icon: IconSettings2,
+    },
+    {
+      name: "requests",
+      path: "/admin/requests",
+      label: "Demandes",
+      icon: IconMailbox,
     },
   ];
   navItems.map((item) => path.path == item.path && (item.active = true));
@@ -43,20 +50,18 @@ export default function Navbar(path: { path: string }) {
           return (
             <a href={item.path} class="w-full justify-start items-center gap-5 inline-flex">
               <item.icon color={item.active ? "white" : "grey"} />
-              <span class={`text-base transition-all ${item.active ? "text-text" : "text-text_grey"} ${
-                collapsed.value ? "hidden" : "block"
-              }`}>{item.label}</span>
+              {collapsed && <span class={`text-base ${item.active ? "text-text" : "text-text_grey"}`}>{item.label}</span>}
             </a>
           );
         })}
       </div>
       <div class="w-full justify-end items-center inline-flex">
-        <ChevronLeft
-          class={`hover:cursor-pointer transition-transform duration-300 ease-in-out ${collapsed.value ? "rotate-180" : "rotate-0"}`}
+        <IconChevronLeft
+          className={`hover:cursor-pointer ${!collapsed && "transform rotate-180"}`}
           color="white"
           onClick={() => {
-            saveAppStorage({ navbarCollapsed: !collapsed.value });
-            collapsed.value = !collapsed.value;
+            saveAppStorage({ navbarCollapsed: !collapsed });
+            setCollapsed(!collapsed);
           }}
         />
       </div>

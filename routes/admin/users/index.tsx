@@ -1,7 +1,7 @@
 import { supabase as sup } from "@services/supabase.ts";
 import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
 import { Role } from "@models/User.ts";
-import UsersList from "@islands/Settings/Users/UsersList.tsx";
+import UsersList from "@islands/Users/UsersList.tsx";
 
 // TODO: add types
 export const handler: Handlers<any> = {
