@@ -17,11 +17,13 @@ import * as $admin_settings_misc from "./routes/admin/settings/misc.tsx";
 import * as $admin_settings_styles from "./routes/admin/settings/styles.tsx";
 import * as $admin_settings_users from "./routes/admin/settings/users.tsx";
 import * as $admin_stats from "./routes/admin/stats.tsx";
+import * as $admin_users_id_ from "./routes/admin/users/[id].tsx";
 import * as $admin_users_index from "./routes/admin/users/index.tsx";
 import * as $auth_callback from "./routes/auth/callback.ts";
 import * as $auth_index from "./routes/auth/index.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $AuthForm from "./islands/AuthForm.tsx";
+import * as $ConfirmationModal from "./islands/ConfirmationModal.tsx";
 import * as $Layout_Navbar from "./islands/Layout/Navbar.tsx";
 import * as $Layout_NavbarItem from "./islands/Layout/NavbarItem.tsx";
 import * as $Settings_Main_APIInput from "./islands/Settings/Main/APIInput.tsx";
@@ -32,6 +34,7 @@ import * as $Settings_MainInputs from "./islands/Settings/MainInputs.tsx";
 import * as $Settings_Users_RequestButton from "./islands/Settings/Users/RequestButton.tsx";
 import * as $Settings_Users_RequestSingle from "./islands/Settings/Users/RequestSingle.tsx";
 import * as $Settings_Users_UsersList from "./islands/Settings/Users/UsersList.tsx";
+import * as $Settings_Users_UsersList_UserActions from "./islands/Settings/Users/UsersList/UserActions.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -51,6 +54,7 @@ const manifest = {
     "./routes/admin/settings/styles.tsx": $admin_settings_styles,
     "./routes/admin/settings/users.tsx": $admin_settings_users,
     "./routes/admin/stats.tsx": $admin_stats,
+    "./routes/admin/users/[id].tsx": $admin_users_id_,
     "./routes/admin/users/index.tsx": $admin_users_index,
     "./routes/auth/callback.ts": $auth_callback,
     "./routes/auth/index.tsx": $auth_index,
@@ -58,6 +62,7 @@ const manifest = {
   },
   islands: {
     "./islands/AuthForm.tsx": $AuthForm,
+    "./islands/ConfirmationModal.tsx": $ConfirmationModal,
     "./islands/Layout/Navbar.tsx": $Layout_Navbar,
     "./islands/Layout/NavbarItem.tsx": $Layout_NavbarItem,
     "./islands/Settings/Main/APIInput.tsx": $Settings_Main_APIInput,
@@ -68,6 +73,8 @@ const manifest = {
     "./islands/Settings/Users/RequestButton.tsx": $Settings_Users_RequestButton,
     "./islands/Settings/Users/RequestSingle.tsx": $Settings_Users_RequestSingle,
     "./islands/Settings/Users/UsersList.tsx": $Settings_Users_UsersList,
+    "./islands/Settings/Users/UsersList/UserActions.tsx":
+      $Settings_Users_UsersList_UserActions,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

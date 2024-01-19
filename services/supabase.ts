@@ -61,7 +61,8 @@ export const getUserFromSession = async (request: Request) => {
   const access = cookies.token;
 
   if (access) {
-    const { data } = await supabase.auth.getUser(access);
+    const { error, data } = await supabase.auth.getUser(access);
+    if (error) console.log("Error with getUserFromSession", error);
     if (data?.user?.id) {
       const additionnal_infos = await supabase.from("Users").select().eq(
         "id",
@@ -130,6 +131,16 @@ export const updateAuthorizations = async (user: any) => {
   );
   if (user_additional_infos.data.length === 0) return;
   const user_infos = user_additional_infos.data[0];
-  await supabase.auth.admin.updateUserById(user.id, 
-    { user_metadata: { is_authorised: !user_infos.requested && user_infos.accepted } });
+  await updateUserMetadata(user.id, {
+    is_authorised: !user_infos.requested && user_infos.accepted,
+  });
+};
+
+export const updateUserMetadata = async (user_id: string, metadata: any) => {
+  const current_user = await supabase.auth.admin.getUserById(user_id);
+
+  const res = await supabase.auth.admin.updateUserById(user_id, {
+    user_metadata: { ...current_user.user_metadata, ...metadata },
+  });
+  return res;
 };

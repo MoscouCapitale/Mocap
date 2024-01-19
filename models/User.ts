@@ -9,8 +9,11 @@ type RequestedUser = Database["public"]["Tables"]["Users"]["Row"] & { email?: st
 
 type Role = 'anon' | 'authenticated' | 'mocap_admin' | 'supabase_admin';
 
+type UserAdminActions = 'unblock' | 'free' | 'block' | 'revoke'
+
 export type {
     UserRequestType,
     Role,
     RequestedUser,
+    UserAdminActions
 }
