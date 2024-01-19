@@ -1,6 +1,7 @@
 import { Database } from "@models/database.ts";
 import { Handlers, FreshContext, PageProps } from "$fresh/server.ts";
 import { retrieveMain } from "@services/settings.ts";
+import MainSettings from "@islands/Settings/MainSettings.tsx";
 
 type SettingsMain = Database["public"]["Tables"]["Website_Settings_Main_Emails"]["Row"];
 type SettingsAPIs = Database["public"]["Tables"]["Website_Settings_Main_APIs"]["Row"];
@@ -17,5 +18,9 @@ export const handler: Handlers<mainSettings> = {
 
 export default function Settings({ data }: PageProps<Record<string, mainSettings>>) {
   const { mainSettings } = data;
-  return <main className={"flex-col justify-center items-start gap-14 inline-flex"}></main>;
+  return (
+    <main className={"flex-col justify-center items-start gap-14 inline-flex"}>
+      <MainSettings mainSettings={mainSettings} />
+    </main>
+  );
 }

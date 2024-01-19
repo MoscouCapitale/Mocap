@@ -23,9 +23,12 @@ import * as $auth_index from "./routes/auth/index.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $AuthForm from "./islands/AuthForm.tsx";
 import * as $Layout_Navbar from "./islands/Layout/Navbar.tsx";
-import * as $Settings_Users_RequestButton from "./islands/Settings/Users/RequestButton.tsx";
-import * as $Settings_Users_RequestSingle from "./islands/Settings/Users/RequestSingle.tsx";
-import * as $Settings_Users_UsersList from "./islands/Settings/Users/UsersList.tsx";
+import * as $Settings_MainSettings from "./islands/Settings/MainSettings.tsx";
+import * as $Settings_SettingsChilds_InlineDoubleInput from "./islands/Settings/SettingsChilds/InlineDoubleInput.tsx";
+import * as $Settings_SettingsChilds_InlineSingleInput from "./islands/Settings/SettingsChilds/InlineSingleInput.tsx";
+import * as $Users_RequestButton from "./islands/Users/RequestButton.tsx";
+import * as $Users_RequestSingle from "./islands/Users/RequestSingle.tsx";
+import * as $Users_UsersList from "./islands/Users/UsersList.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -53,9 +56,14 @@ const manifest = {
   islands: {
     "./islands/AuthForm.tsx": $AuthForm,
     "./islands/Layout/Navbar.tsx": $Layout_Navbar,
-    "./islands/Settings/Users/RequestButton.tsx": $Settings_Users_RequestButton,
-    "./islands/Settings/Users/RequestSingle.tsx": $Settings_Users_RequestSingle,
-    "./islands/Settings/Users/UsersList.tsx": $Settings_Users_UsersList,
+    "./islands/Settings/MainSettings.tsx": $Settings_MainSettings,
+    "./islands/Settings/SettingsChilds/InlineDoubleInput.tsx":
+      $Settings_SettingsChilds_InlineDoubleInput,
+    "./islands/Settings/SettingsChilds/InlineSingleInput.tsx":
+      $Settings_SettingsChilds_InlineSingleInput,
+    "./islands/Users/RequestButton.tsx": $Users_RequestButton,
+    "./islands/Users/RequestSingle.tsx": $Users_RequestSingle,
+    "./islands/Users/UsersList.tsx": $Users_UsersList,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
