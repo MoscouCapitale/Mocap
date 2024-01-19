@@ -2,7 +2,7 @@ import { Role, UserAdminActions } from "@models/User.ts";
 import { useEffect, useState } from "preact/hooks";
 import ConfirmationModal from "@islands/ConfirmationModal.tsx";
 
-import { Info } from "lucide-icons";
+// import { Info } from "lucide-icons";
 import UserActions from "@islands/Settings/Users/UsersList/UserActions.tsx";
 
 export default function UsersList(props: { users: any; currentUser: any; roles: Role[] }) {
@@ -38,7 +38,7 @@ export default function UsersList(props: { users: any; currentUser: any; roles: 
             <div className={"grow max-w-[250px] whitespace-nowrap overflow-hidden overflow-ellipsis"}>
               {user.email}
               {/* TODO: set hint on hover */}
-              {currentUser.id === user.id && <Info className={"ml-2 inline"} size={14} />}
+              {/* {currentUser.id === user.id && <Info className={"ml-2 inline"} size={14} />} */}
             </div>
             <div className={"grow max-w-[200px]"}>
               {/* TODO: proper select component */}
