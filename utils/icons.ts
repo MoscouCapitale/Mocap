@@ -9,6 +9,8 @@ import IconPencilStar from "@tabler-icons-url/pencil-star.tsx"
 import IconUsers from "@tabler-icons-url/users.tsx"
 import IconSettings2 from "@tabler-icons-url/settings-2.tsx"
 import IconMailbox from "@tabler-icons-url/mailbox.tsx"
+import IconInfoSquareRounded from "@tabler-icons-url/info-square-rounded.tsx"
+import IconLogout from "@tabler-icons-url/logout.tsx"
 
 export {
     IconSend,
@@ -21,5 +23,7 @@ export {
     IconPencilStar,
     IconUsers,
     IconSettings2,
-    IconMailbox
+    IconMailbox,
+    IconInfoSquareRounded,
+    IconLogout
 }

@@ -42,7 +42,7 @@ export default function UserActions(props: { user: any; onBlockUnblock: (action:
               class="text-text font-semibold"
               onClick={() =>
                 setShowConfirmationModal({
-                  message: "Êtes-vous sûr de vouloir autoriser cet utilisateur ?",
+                  message: "Êtes-vous sûr de vouloir débloquer cet utilisateur ?",
                   onConfirm: () => {
                     props.onBlockUnblock("unblock");
                     setShowConfirmationModal(null);
@@ -53,7 +53,7 @@ export default function UserActions(props: { user: any; onBlockUnblock: (action:
                 })
               }
             >
-              Autoriser l&apos;utilisateur
+              D&eacute;bloquer l&apos;utilisateur
             </button>
           )}
         </div>

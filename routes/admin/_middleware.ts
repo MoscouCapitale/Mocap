@@ -18,6 +18,8 @@ export interface AppState {
 // TODO: find better way to do this
 const authorizedRoles = ["authenticated", "mocap_admin", "supabase_admin"];
 
+// TODO: bug: why is user able to see admin page when not authorized and first connexion from confirmation email?
+
 export async function handler(
   req: Request,
   ctx: FreshContext<AppState>,
@@ -63,7 +65,7 @@ export async function handler(
 
   if(user.user_metadata.is_authorised === undefined) updateAuthorizations(user);
 
-  if (!authorizedRoles.includes(user.role) || user.user_metadata?.is_authorised === false) {
+  if (user.role && !authorizedRoles.includes(user.role) || user.user_metadata?.is_authorised === false) {
     return new Response("", {
       status: 303,
       headers: {

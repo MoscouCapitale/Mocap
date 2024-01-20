@@ -9,6 +9,7 @@ import { handleSignIn, handleSignUp } from "@services/authentication.ts";
 export const handler: Handlers<FormType> = {
   async GET(req: Request, ctx: FreshContext) {
     const params = new URL(req.url).searchParams;
+    const redirectURL = params.get("redirect");
     const error = params.get("error");
 
     const user = await getUserFromSession(req);
@@ -26,6 +27,10 @@ export const handler: Handlers<FormType> = {
         type: "action_done",
         additional_data: {
           message: "Your account has not been accepted or you don't have the right to access this page.\n\n\nIf you think this is an error, please contact the administrator.",
+          link: {
+            href: redirectURL || "/",
+            text: "Try again",
+          }
         },
       });
     }
@@ -71,7 +76,7 @@ export default function AuthPage({ data }: PageProps<FormType>) {
   return (
     <>
       {type !== "action_done" && <AuthForm {...data} />}
-      {type === "action_done" && <SimpleMessage message={additional_data?.message} />}
+      {type === "action_done" && <SimpleMessage message={additional_data?.message} link={additional_data?.link} />}
     </>
   );
 }

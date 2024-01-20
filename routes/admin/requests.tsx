@@ -5,9 +5,9 @@ import RequestSingle from "@islands/Users/RequestSingle.tsx";
 import { User } from "https://esm.sh/v116/@supabase/gotrue-js@2.23.0/dist/module/index.js";
 import { RequestedUser, Role } from "@models/User.ts";
 
-export const config: RouteConfig = {
-  skipInheritedLayouts: true,
-};
+// export const config: RouteConfig = {
+//   skipInheritedLayouts: true,
+// };
 
 export const handler: Handlers<User | null> = {
   async GET(req: Request, ctx: FreshContext) {

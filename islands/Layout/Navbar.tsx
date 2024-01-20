@@ -2,6 +2,7 @@ import { useState } from "preact/hooks";
 
 import { NavItemType } from "@models/Layout.ts";
 import { getAppStorage, saveAppStorage } from "@utils/localStorage.ts";
+import LogoutButton from "@islands/Misc/LogoutButton.tsx";
 
 import { IconChevronLeft, IconPhotoPlus, IconChartDonut, IconPencilStar, IconUsers, IconSettings2, IconMailbox } from "@utils/icons.ts";
 
@@ -55,7 +56,7 @@ export default function Navbar(path: { path: string }) {
           );
         })}
       </div>
-      <div class="w-full justify-end items-center inline-flex">
+      <div class="w-full justify-end items-center inline-flex flex-col gap-5">
         <IconChevronLeft
           className={`hover:cursor-pointer ${!collapsed && "transform rotate-180"}`}
           color="white"
@@ -64,6 +65,7 @@ export default function Navbar(path: { path: string }) {
             setCollapsed(!collapsed);
           }}
         />
+        <LogoutButton />
       </div>
     </nav>
   );
