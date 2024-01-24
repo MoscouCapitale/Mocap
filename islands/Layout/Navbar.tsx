@@ -45,6 +45,7 @@ export default function Navbar(path: { path: string }) {
   navItems.map((item) => path.path == item.path && (item.active = true));
 
   return (
+    // TODO: fix nav, should be sticking in a fixed position
     <nav class="bg-black min-h-screen p-[30px] flex-col justify-between items-start inline-flex">
       <div class="flex-col justify-start items-start gap-10 inline-flex">
         {navItems.map((item) => {

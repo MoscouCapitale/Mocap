@@ -1669,7 +1669,7 @@ export interface Database {
           created_at: string | null
           id: number
           modified_at: string | null
-          website_icone: number | null
+          website_icon: number | null
           website_keywords: string | null
           website_language: number
           website_title: string | null
@@ -1679,9 +1679,9 @@ export interface Database {
           created_at?: string | null
           id?: number
           modified_at?: string | null
-          website_icone?: number | null
+          website_icon?: number | null
           website_keywords?: string | null
-          website_language: number
+          website_language?: number
           website_title?: string | null
           website_url: string
         }
@@ -1689,7 +1689,7 @@ export interface Database {
           created_at?: string | null
           id?: number
           modified_at?: string | null
-          website_icone?: number | null
+          website_icon?: number | null
           website_keywords?: string | null
           website_language?: number
           website_title?: string | null
@@ -1697,7 +1697,7 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "website_settings_website_language_fkey"
+            foreignKeyName: "Website_Settings_Main_Misc_website_language_fkey"
             columns: ["website_language"]
             isOneToOne: false
             referencedRelation: "Available_Languages"

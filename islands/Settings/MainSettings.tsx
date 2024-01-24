@@ -1,181 +1,272 @@
-import { useState } from "preact/hooks";
-import { Database } from "@models/database.ts";
+import { useEffect, useState } from "preact/hooks";
+import { mainSettings } from "@models/App.ts";
 import { JSX } from "preact/jsx-runtime";
+import InlineSingleInput from "@islands/Settings/SettingsChilds/InlineSingleInput.tsx";
+import InlineDoubleInput from "@islands/Settings/SettingsChilds/InlineDoubleInput.tsx";
+import Button from "@islands/Button.tsx";
 
-type Modify<T, R> = Omit<T, keyof R> & R;
+export default function MainSettings() {
+  const [emails, setEmails] = useState<mainSettings[0] | null>(null);
+  const [apis, setAPIs] = useState<mainSettings[1] | null>(null);
+  const [misc, setMisc] = useState<mainSettings[2] | null>(null);
+  const [modified, setModified] = useState<boolean>(false);
+  const [defaultSettings, setDefaultSettings] = useState<mainSettings | null>(null);
 
-type Default_SettingsMain = Database["public"]["Tables"]["Website_Settings_Main_Emails"]["Row"];
-type SettingsMain = Modify<
-  Default_SettingsMain,
-  {
-    email_contact: {
-      recipient: string;
-      sender: string;
-    };
-    email_administrator: {
-      recipient: string;
-      sender: string;
-    };
-    email_logging: {
-      recipient: string;
-      sender: string;
-    };
-    email_user_creator: {
-      recipient: string;
-      sender: string;
-    };
-  }
->;
-type SettingsAPIs = Database["public"]["Tables"]["Website_Settings_Main_APIs"]["Row"];
-type Default_SettingsMisc = Database["public"]["Tables"]["Website_Settings_Main_Misc"]["Row"];
-type SettingsMisc = Modify<
-  Default_SettingsMisc,
-  {
-    website_language: 'fr' | 'en';
-  }>;
+  useEffect(() => {
+    if (emails !== null && apis !== null && misc !== null) {
+      if (defaultSettings === null) setDefaultSettings([emails, apis, misc]);
+      if (defaultSettings?.[0] !== emails || defaultSettings?.[1] !== apis || defaultSettings?.[2] !== misc) setModified(true);
+      else setModified(false);
+    }
+    if (emails === null && apis === null && misc === null) {
+      fetchEmails();
+      fetchAPIs();
+      fetchMisc();
+    }
+  }, [emails, apis, misc]);
 
-type mainSettings = [SettingsMain, SettingsAPIs, SettingsMisc];
+  useEffect(() => {
+    console.log("modified", modified);
+  }, [modified]);
 
-export default function MainSettings(props: { mainSettings: mainSettings }) {
-  const [emails, setEmails] = useState(props.mainSettings[0]);
-  const [apis, setAPIs] = useState<SettingsAPIs>(props.mainSettings[1]);
-  const [misc, setMisc] = useState<SettingsMisc>(props.mainSettings[2]);
+  const fetchEmails = () => {
+    fetch("/api/settings/main/emails", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data[0]);
+        setEmails(data[0] ?? {});
+      });
+  };
 
-  const updateState = (setState: (value: any) => void, key: string, value: string) => {
-    setState({
-      ...setState,
-      [key]: value,
-    });
-  }
+  const fetchAPIs = () => {
+    fetch("/api/settings/main/apis", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setAPIs(data[0] ?? {});
+      });
+  };
+
+  const fetchMisc = () => {
+    fetch("/api/settings/main/general", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setMisc(data[0] ?? {});
+      });
+  };
 
   const testApiButton = (api: string): JSX.Element => {
-    return <button onClick={() => testApi(api)}>Test</button>
-  }
+    return <button onClick={() => testApi(api)}>Test</button>;
+  };
 
   const testApi = (api: string) => {
-    return
+    return;
+  };
+
+  const updateSettings = (): void => {
+    fetch("/api/settings/main/emails", {
+      method: "PUT",
+      body: JSON.stringify({
+        emails
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('post result of emails', data);
+      });
+
+    fetch("/api/settings/main/apis", {
+      method: "PUT",
+      body: JSON.stringify({
+        apis
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('post result of apis', data);
+      });
+
+    fetch("/api/settings/main/general", {
+      method: "PUT",
+      body: JSON.stringify({
+        misc
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('post result of misc', data);
+      });
+
+      // TODO: add a toast to confirm the update
+      // TODO: add a toast component
   }
 
   return (
     <>
-      <section>
-        <div>
-          <div>Envoi mails</div>
-          <div>correspondant</div>
-          <div>expéditeur</div>
-        </div>
+      {modified && (
+        <Button text={"Sauvegarder"} onClick={updateSettings} className={{ wrapper: "absolute top-[calc(2.5rem+0.625rem)] right-[2.5rem]" }} />
+      )}
+      {emails && apis && misc && (
+        <>
+          <section className={`flex-col justify-center items-start gap-5 inline-flex`}>
+            <InlineDoubleInput
+              label={"Envoi mails"}
+              value_first={"Correspondant"}
+              onChange_first={() => {}}
+              value_second={"Expéditeur"}
+              onChange_second={() => {}}
+              // TODO: fix visible border with tailwind
+              className={{ label: "w-[200px]", input_first: "w-[200px] border-0 text-text_grey", input_second: "w-[200px] border-0 text-text_grey" }}
+            />
 
-        <div>
-          <div>Contact</div>
-          <div>
-            <input value={emails.email_contact.recipient ?? ""}></input>
-          </div>
-          <div>
-            <input value={emails.email_contact.sender ?? ""}></input>
-          </div>
-        </div>
+            <section className={`flex-col justify-start items-center gap-2.5 inline-flex`}>
+              <InlineDoubleInput
+                label={"Contact"}
+                value_first={emails.email_contact?.email_recipient ?? ""}
+                onChange_first={(value) => setEmails({ ...emails, email_contact: { ...emails.email_contact, email_recipient: value } })}
+                value_second={emails.email_contact?.email_sender ?? ""}
+                onChange_second={(value) => setEmails({ ...emails, email_contact: { ...emails.email_contact, email_sender: value } })}
+                className={{ label: "w-[200px]", input_first: "w-[200px]", input_second: "w-[200px]" }}
+              />
+              <InlineDoubleInput
+                label={"Administrateur"}
+                value_first={emails.email_administrator?.email_recipient ?? ""}
+                onChange_first={(value) => setEmails({ ...emails, email_administrator: { ...emails.email_administrator, email_recipient: value } })}
+                value_second={emails.email_administrator?.email_sender ?? ""}
+                onChange_second={(value) => setEmails({ ...emails, email_administrator: { ...emails.email_administrator, email_sender: value } })}
+                className={{ label: "w-[200px]", input_first: "w-[200px]", input_second: "w-[200px]" }}
+              />
 
-        <div>
-          <div>Administrateur</div>
-          <div>
-            <input value={emails.email_administrator.recipient ?? ""}></input>
-          </div>
-          <div>
-            <input value={emails.email_administrator.sender ?? ""}></input>
-          </div>
-        </div>
+              <InlineDoubleInput
+                label={"Logging"}
+                value_first={emails.email_logging?.email_recipient ?? ""}
+                onChange_first={(value) => setEmails({ ...emails, email_logging: { ...emails.email_logging, email_recipient: value } })}
+                value_second={emails.email_logging?.email_sender ?? ""}
+                onChange_second={(value) => setEmails({ ...emails, email_logging: { ...emails.email_logging, email_sender: value } })}
+                className={{ label: "w-[200px]", input_first: "w-[200px]", input_second: "w-[200px]" }}
+              />
 
-        <div>
-          <div>Logging</div>
-          <div>
-            <input value={emails.email_logging.recipient ?? ""}></input>
-          </div>
-          <div>
-            <input value={emails.email_logging.sender ?? ""}></input>
-          </div>
-        </div>
+              <InlineDoubleInput
+                label={"Création utilisateur"}
+                value_first={emails.email_user_creator?.email_recipient ?? ""}
+                onChange_first={(value) => setEmails({ ...emails, email_user_creator: { ...emails.email_user_creator, email_recipient: value } })}
+                value_second={emails.email_user_creator?.email_sender ?? ""}
+                onChange_second={(value) => setEmails({ ...emails, email_user_creator: { ...emails.email_user_creator, email_sender: value } })}
+                className={{ label: "w-[200px]", input_first: "w-[200px]", input_second: "w-[200px]" }}
+              />
+            </section>
 
-        <div>
-          <div>Création utilisateur</div>
-          <div>
-            <input value={emails.email_user_creator.recipient ?? ""}></input>
-          </div>
-          <div>
-            <input value={emails.email_user_creator.sender ?? ""}></input>
-          </div>
-        </div>
+            <InlineSingleInput
+              value={emails.email_default_sender ?? ""}
+              onChange={(value) => setEmails({ ...emails, email_default_sender: value })}
+              label={"Adresse mail d'envoi par défaut"}
+              type={"text"}
+              className={{ input: "w-[250px]" }}
+            />
+          </section>
 
-        <div>
-          <div>Adresse mail d'envoi par défaut</div>
-          <div>
-            <input value={emails.email_default_sender ?? ""}></input>
-          </div>
-        </div>
-      </section>
+          <section className={`flex-col justify-center items-start gap-5 inline-flex`}>
+            <p className={"underline"}>Clés API</p>
 
-      <section>
-        <p>Clés API</p>
-        <div>
-          <p>Spotify</p>
-          <input value={apis.api_spotify ?? ""}></input>
-          <button>Test</button>
-        </div>
+            <InlineSingleInput
+              value={apis.api_spotify ?? ""}
+              onChange={(value) => setAPIs({ ...apis, api_spotify: value })}
+              label={"Spotify"}
+              type={"text"}
+              addedButton={testApiButton("api_spotify")}
+              className={{ label: "w-[200px]", input: "w-[250px]" }}
+            />
 
-        <div>
-          <p>Soundcloud</p>
-          <input value={apis.api_soundcloud ?? ""}></input>
-          <button>Test</button>
-        </div>
+            <InlineSingleInput
+              value={apis.api_soundcloud ?? ""}
+              onChange={(value) => setAPIs({ ...apis, api_soundcloud: value })}
+              label={"Soundcloud"}
+              type={"text"}
+              addedButton={testApiButton("api_soundcloud")}
+              className={{ label: "w-[200px]", input: "w-[250px]" }}
+            />
 
-        <div>
-          <p>Deezer</p>
-          <input value={apis.api_deezer ?? ""}></input>
-          <button>Test</button>
-        </div>
+            <InlineSingleInput
+              value={apis.api_deezer ?? ""}
+              onChange={(value) => setAPIs({ ...apis, api_deezer: value })}
+              label={"Deezer"}
+              type={"text"}
+              addedButton={testApiButton("api_deezer")}
+              className={{ label: "w-[200px]", input: "w-[250px]" }}
+            />
 
-        <div>
-          <p>Youtube Music</p>
-          <input value={apis.api_youtube_music ?? ""}></input>
-          <button>Test</button>
-        </div>
-        <div>
-          <p>Amazon Music</p>
-          <input value={apis.api_amazon_music ?? ""}></input>
-          <button>Test</button>
-        </div>
-        <div>
-          <p>Tidal</p>
-          <input value={apis.api_tidal ?? ""}></input>
-          <button>Test</button>
-        </div>
-      </section>
+            <InlineSingleInput
+              value={apis.api_youtube_music ?? ""}
+              onChange={(value) => setAPIs({ ...apis, api_youtube_music: value })}
+              label={"Youtube Music"}
+              type={"text"}
+              addedButton={testApiButton("api_youtube_music")}
+              className={{ label: "w-[200px]", input: "w-[250px]" }}
+            />
 
-      <section>
-        <p>Paramètres généraux du site</p>
-        <div>
-          <p>Titre</p>
-          <input value={misc.website_title ?? ""}></input>
-        </div>
-        <div>
-          <p>URL du site</p>
-          <input value={misc.website_url ?? ""}></input>
-        </div>
-        <div>
-          <p>Icon</p>
-          <input type={'file'} value={misc.website_icone ?? ""}></input>
-        </div>
-        <div>
-          <p>Mot-clés</p>
-          <input type={'text'} value={misc.website_keywords ?? ""}></input>
-        </div>  
-        <div>
-          <p>Langue</p>
-          <select value={misc.website_language ?? ""}>
-            <option value="fr">Français</option>
-            <option value="en">English</option>
-          </select>
-        </div>
-      </section>
+            <InlineSingleInput
+              value={apis.api_amazon_music ?? ""}
+              onChange={(value) => setAPIs({ ...apis, api_amazon_music: value })}
+              label={"Amazon Music"}
+              type={"text"}
+              addedButton={testApiButton("api_amazon_music")}
+              className={{ label: "w-[200px]", input: "w-[250px]" }}
+            />
+
+            <InlineSingleInput
+              value={apis.api_tidal ?? ""}
+              onChange={(value) => setAPIs({ ...apis, api_tidal: value })}
+              label={"Tidal"}
+              type={"text"}
+              addedButton={testApiButton("api_tidal")}
+              className={{ label: "w-[200px]", input: "w-[250px]" }}
+            />
+          </section>
+
+          <section className={`flex-col justify-center items-start gap-5 inline-flex`}>
+            <p className={"underline"}>Paramètres généraux du site</p>
+            <InlineSingleInput
+              value={misc.website_title ?? ""}
+              onChange={(value) => setMisc({ ...misc, website_title: value })}
+              label={"Titre"}
+              type={"text"}
+              className={{ label: "w-[200px]", input: "w-[250px]" }}
+            />
+
+            <InlineSingleInput
+              value={misc.website_url ?? ""}
+              onChange={(value) => setMisc({ ...misc, website_url: value })}
+              label={"URL du site"}
+              type={"text"}
+              className={{ label: "w-[200px]", input: "w-[250px]" }}
+            />
+
+            <InlineSingleInput
+              value={misc.website_icon ?? ""}
+              onChange={(value) => setMisc({ ...misc, website_icon: parseInt(value) })}
+              label={"Icon"}
+              type={"file"}
+              className={{ label: "w-[200px]", input: "w-[250px]" }}
+            />
+
+            <InlineSingleInput
+              value={misc.website_keywords ?? ""}
+              onChange={(value) => setMisc({ ...misc, website_keywords: value })}
+              label={"Mot-clés"}
+              type={"text"}
+              className={{ label: "w-[200px]", input: "w-[250px]" }}
+            />
+
+            {/* TODO: website language & internationalization */}
+
+          </section>
+        </>
+      )}
     </>
   );
 }
