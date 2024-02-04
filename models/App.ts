@@ -38,5 +38,7 @@ type SettingsMisc = Modify<
 
 type mainSettings = [SettingsMain, SettingsAPIs, SettingsMisc];
 
+type mediasSettings = Database["public"]["Tables"]["Website_Settings_Medias"]["Row"];
 
-export type { AppStorage, mainSettings };
+
+export type { AppStorage, mainSettings, mediasSettings };

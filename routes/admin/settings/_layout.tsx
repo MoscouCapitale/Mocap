@@ -17,8 +17,8 @@ export default function Layout({ Component, state, route }: PageProps) {
         },
         {
             name: "users",
-            label: "Utilisateurs",
-            path: "/admin/settings/users"
+            label: "Utilisateur",
+            path: "/admin/settings/user"
         },
         {
             name: "medias",
@@ -41,7 +41,7 @@ export default function Layout({ Component, state, route }: PageProps) {
 
 
   return (
-    <div class="w-full p-10 flex-col justify-start items-start gap-[30px] inline-flex">
+    <div class="w-full min-h-screen p-10 flex-col justify-start items-start gap-[30px] inline-flex">
         <InpageNavbar items={navItems} />
         <Component />
     </div>

@@ -45,7 +45,7 @@ export default function Navbar(path: { path: string }) {
   navItems.map((item) => path.path == item.path && (item.active = true));
 
   return (
-    // TODO: fix nav, should be sticking in a fixed position
+    // TODO: fix nav, should be sticking in a fixed position if you scroll down
     <nav class="bg-black min-h-screen p-[30px] flex-col justify-between items-start inline-flex">
       <div class="flex-col justify-start items-start gap-10 inline-flex">
         {navItems.map((item) => {
@@ -57,16 +57,19 @@ export default function Navbar(path: { path: string }) {
           );
         })}
       </div>
-      <div class="w-full justify-end items-center inline-flex flex-col gap-5">
-        <IconChevronLeft
-          className={`hover:cursor-pointer ${!collapsed && "transform rotate-180"}`}
-          color="white"
-          onClick={() => {
-            saveAppStorage({ navbarCollapsed: !collapsed });
-            setCollapsed(!collapsed);
-          }}
-        />
+      <div class="w-full items-start inline-flex flex-col gap-5">
         <LogoutButton />
+        <a class="w-full justify-start items-center gap-5 inline-flex">
+          <IconChevronLeft
+            className={`hover:cursor-pointer ${!collapsed && "transform rotate-180"}`}
+            color="white"
+            onClick={() => {
+              saveAppStorage({ navbarCollapsed: !collapsed });
+              setCollapsed(!collapsed);
+            }}
+          />
+          {collapsed && <span class={`text-base text-text`}>Fermer</span>}
+        </a>
       </div>
     </nav>
   );
