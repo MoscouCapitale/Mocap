@@ -23,14 +23,9 @@ export default function Medias() {
       fetch("/api/settings/medias")
         .then((res) => res.json())
         .then((data) => {
-          console.log(data[0]);
           if (data[0]) setSettings(data[0]);
         });
   }, []);
-
-  useEffect(() => {
-    console.log("settings arte: ", settings);
-  }, [settings]);
 
   const updateSettings = () => {
     fetch("/api/settings/medias", {
@@ -68,14 +63,14 @@ export default function Medias() {
             subLabel="(recommandé)"
             type={"checkbox"}
             value={settings?.media_auto_optimize ?? false}
-            onChange={(value) => setSettings({ ...settings, media_auto_optimize: value })}
+            onChange={(value) => setSettings({ ...settings, media_auto_optimize: value === 'true' ? true : false })}
           />
           <InlineSingleInput
             label={"Chargement différé"}
             subLabel="(recommandé)"
             type={"checkbox"}
             value={settings?.media_lazyload ?? false}
-            onChange={(value) => setSettings({ ...settings, media_lazyload: value })}
+            onChange={(value) => setSettings({ ...settings, media_lazyload: value === 'true' ? true : false })}
           />
         </section>
       )}

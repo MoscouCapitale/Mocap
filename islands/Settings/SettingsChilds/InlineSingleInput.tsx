@@ -33,6 +33,7 @@ export default function InlineSingleInput(props: Props) {
         type={props.type ?? "text"}
         placeholder={props.placeholder ?? ""}
         value={value === true ? "true" : value === false ? "false" : value}
+        checked={props.type === "checkbox" ? value === true : undefined}
         onChange={(e) => {
           const val = (e.target as HTMLInputElement).value;
           setValue(val);

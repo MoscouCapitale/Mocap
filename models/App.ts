@@ -40,5 +40,9 @@ type mainSettings = [SettingsMain, SettingsAPIs, SettingsMisc];
 
 type mediasSettings = Database["public"]["Tables"]["Website_Settings_Medias"]["Row"];
 
+type stylesSettings = Database["public"]["Tables"]["Website_Settings_Styles"]["Row"];
 
-export type { AppStorage, mainSettings, mediasSettings };
+type miscSettings = Database["public"]["Tables"]["Website_Settings_Misc"]["Row"];
+
+
+export type { AppStorage, mainSettings, mediasSettings, stylesSettings, miscSettings };

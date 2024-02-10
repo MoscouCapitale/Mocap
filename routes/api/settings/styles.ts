@@ -1,12 +1,12 @@
 import { FreshContext, Handlers } from "$fresh/server.ts";
-import { mediasSettings } from "@models/App.ts";
+import { stylesSettings } from "@models/App.ts";
 import { supabase as sup } from "@services/supabase.ts";
 
 export const handler: Handlers<
-  mediasSettings | []
+  stylesSettings | []
 > = {
   async GET(req: Request, ctx: FreshContext) {
-    const res = await sup.from("Website_Settings_Medias").select();
+    const res = await sup.from("Website_Settings_Styles").select();
     return new Response(JSON.stringify(res.data), {
       headers: { "content-type": "application/json" },
     });
@@ -15,17 +15,17 @@ export const handler: Handlers<
   async POST(req: Request) {
     let body = await req.json();
     body = { ...body, modified_at: new Date().toISOString() };
-    const fetchedMedias = await sup.from("Website_Settings_Medias").select()
+    const fetchedMedias = await sup.from("Website_Settings_Styles").select()
       .eq("id", body.id);
     let res;
     if (fetchedMedias.data && fetchedMedias.data.length > 0) { // extrem case, if no data
       res = await sup
-        .from("Website_Settings_Medias")
+        .from("Website_Settings_Styles")
         .update(body)
         .eq("id", body.id);
     } else {
       res = await sup
-        .from("Website_Settings_Medias")
+        .from("Website_Settings_Styles")
         .insert(body);
     }
     return new Response(
