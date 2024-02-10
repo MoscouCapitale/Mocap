@@ -17,15 +17,15 @@ export default defineRoute((req, ctx) => {
   const collectionTypes: CollectionType[] = [
     {
       title: "Photos",
-      apiRoute: "/admin/collection/photos",
+      apiRoute: "photos",
     },
     {
       title: "Videos",
-      apiRoute: "/admin/collection/videos",
+      apiRoute: "videos",
     },
     {
       title: "Audios & Misc",
-      apiRoute: "/admin/collection/audios",
+      apiRoute: "misc",
     },
   ];
 

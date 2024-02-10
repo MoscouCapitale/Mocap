@@ -1,15 +1,9 @@
+import { Media } from "@models/Medias.ts";
 
-interface MediaInfos {
-    src: string,
-    type: string, // TODO: really typed
-    alt: string,
-    metadata?: null
-}
-
-export default function CollectionTile({ src, type, alt, metadata }: MediaInfos) {
+export default function CollectionTile({ src, type, alt, metadata }: Media) {
     return (
         <div class="h-[100px] flex bg-text">
-            {src} {type} {alt} {metadata}
+            <img className={"h-full object-cover"} src={src} alt={alt} />
         </div>
     );
 }

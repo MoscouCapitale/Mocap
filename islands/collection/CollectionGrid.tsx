@@ -1,16 +1,31 @@
 import CollectionTile from "@islands/collection/CollectionTile.tsx";
-import { useState } from "preact/hooks";
+import { Media } from "@models/Medias.ts";
+import { useEffect, useState } from "preact/hooks";
 
 interface GridProps {
-  fetchingRoute: string
+  fetchingRoute: string;
 }
 
 export default function CollectionGrid({ fetchingRoute }: GridProps) {
-  const [collection, setCollection] = useState<any[]>([]);
+  const [collection, setCollection] = useState<Media[] | null>([]);
+
+  useEffect(() => {
+    fetch(`/api/medias/${fetchingRoute}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setCollection(data);
+      });
+  }, [fetchingRoute]);
 
   return (
     <>
-      {collection?.length > 0 ? (
+      {!collection && (
+        <div class="w-full flex justify-center items-center">
+          <div class="text-text">Loading...</div>
+        </div>
+      )}
+      {collection && collection.length > 0 && (
         <div
           style={{
             width: "100%",
@@ -18,10 +33,15 @@ export default function CollectionGrid({ fetchingRoute }: GridProps) {
             gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
             gap: "1rem",
           }}
-        ></div>
-      ) : (
-        <div class="w-full flex justify-center items-center">
-          <div class="text-text">Loading...</div>
+        >
+          {collection.map((media: Media) => (
+            <CollectionTile src={media.src} type={media.type} alt={media.alt} metadata={media.metadata} />
+          ))}
+        </div>
+      )}
+      {collection && collection.length === 0 && (
+        <div class="w-full flex justify-left items-center">
+          <div class="text-text">No media found</div>
         </div>
       )}
     </>
