@@ -10,12 +10,14 @@ export default function CollectionGrid({ fetchingRoute }: GridProps) {
   const [collection, setCollection] = useState<Media[] | null>([]);
 
   useEffect(() => {
-    fetch(`/api/medias/${fetchingRoute}`)
+    fetch(`/api/medias/all/${fetchingRoute}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
         setCollection(data);
       });
+
+      fetch(`/api/medias/${fetchingRoute}`)
   }, [fetchingRoute]);
 
   return (
@@ -30,12 +32,12 @@ export default function CollectionGrid({ fetchingRoute }: GridProps) {
           style={{
             width: "100%",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
             gap: "1rem",
           }}
         >
           {collection.map((media: Media) => (
-            <CollectionTile src={media.src} type={media.type} alt={media.alt} metadata={media.metadata} />
+            <CollectionTile media={media} />
           ))}
         </div>
       )}

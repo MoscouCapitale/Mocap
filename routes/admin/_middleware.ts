@@ -32,6 +32,7 @@ export async function handler(
 
   // check if access token is expired
   if (!user && accessTokenExpired(req)) {
+    console.log("access token expired");
     const refresh = await refreshAccessToken(req);
 
     if (!refresh?.session) {
