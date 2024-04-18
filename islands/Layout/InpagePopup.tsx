@@ -10,23 +10,24 @@ interface InpagePopupProps {
 export default function InpagePopup({ children, closePopup }: InpagePopupProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        closePopup();
-      }
-    };
-    document.addEventListener("click", handleClick);
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
-  }, [containerRef.current, closePopup]);
+  // TODO: refactor this, because if you click on another inpagepopup, it will close the first one (because of the event listener on the document)
+  // useEffect(() => {
+  //   const handleClick = (e: MouseEvent) => {
+  //     if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+  //       closePopup();
+  //     }
+  //   };
+  //   document.addEventListener("click", handleClick);
+  //   return () => {
+  //     document.removeEventListener("click", handleClick);
+  //   };
+  // }, [containerRef.current, closePopup]);
 
   return (
-    <div class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+    <div class="z-20 fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex justify-center items-center">
       <div
         ref={containerRef}
-        class="relative bg-background p-7 rounded-2xl"
+        class="relative bg-background p-7 m-7 rounded-2xl"
         // TODO: fix shadow
         style={{
           boxShadow:

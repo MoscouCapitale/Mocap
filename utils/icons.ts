@@ -13,6 +13,7 @@ import IconInfoSquareRounded from "@tabler-icons-url/info-square-rounded.tsx"
 import IconLogout from "@tabler-icons-url/logout.tsx"
 import IconTrash from "@tabler-icons-url/trash.tsx"
 import IconX from "@tabler-icons-url/x.tsx"
+import IconPlus from "@tabler-icons-url/plus.tsx"
 
 export {
     IconSend,
@@ -29,5 +30,6 @@ export {
     IconInfoSquareRounded,
     IconLogout,
     IconTrash,
-    IconX
+    IconX,
+    IconPlus
 }

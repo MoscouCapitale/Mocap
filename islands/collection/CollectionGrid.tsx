@@ -1,28 +1,38 @@
 import CollectionTile from "@islands/collection/CollectionTile.tsx";
-import { Media } from "@models/Medias.ts";
+import { DatabaseMedia, MediaByType } from "@models/Medias.ts";
+import { Media, MediaType, Image, Video, Audio, Misc } from "@models/Medias.ts";
 import { useEffect, useState } from "preact/hooks";
+import { filterOutNonValideAttributes } from "@utils/database.ts";
 
 interface GridProps {
-  fetchingRoute: string;
+  fetchingRoute: MediaType;
 }
 
+type FetchingRouteMap = {
+  [MediaType.Images]: Image[];
+  [MediaType.Videos]: Video[];
+  [MediaType.Audios]: Audio[];
+  [MediaType.Misc]: Misc[];
+};
+
+type CollectionType<T extends MediaType> = FetchingRouteMap[T];
+
 export default function CollectionGrid({ fetchingRoute }: GridProps) {
-  const [collection, setCollection] = useState<Media[] | null>([]);
+  const [collection, setCollection] = useState<CollectionType<typeof fetchingRoute>>();
 
   useEffect(() => {
     fetch(`/api/medias/all/${fetchingRoute}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setCollection(data);
+      .then((res) => {
+        return res.status === 200 ? res.json() : setCollection([]);
+      })
+      .then((data: DatabaseMedia[]) => {
+        data && setCollection(data.map((media: DatabaseMedia) => filterOutNonValideAttributes(media)) as CollectionType<MediaType>);
       });
-
-      fetch(`/api/medias/${fetchingRoute}`)
   }, [fetchingRoute]);
 
   return (
     <>
-      {!collection && (
+      {collection === undefined && (
         <div class="w-full flex justify-center items-center">
           <div class="text-text">Loading...</div>
         </div>
@@ -36,7 +46,7 @@ export default function CollectionGrid({ fetchingRoute }: GridProps) {
             gap: "1rem",
           }}
         >
-          {collection.map((media: Media) => (
+          {collection.map((media) => (
             <CollectionTile media={media} />
           ))}
         </div>

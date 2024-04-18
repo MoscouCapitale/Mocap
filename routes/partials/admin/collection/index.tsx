@@ -2,6 +2,8 @@ import { defineRoute, RouteConfig } from "$fresh/server.ts";
 import { Partial } from "$fresh/runtime.ts";
 
 import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
+import AddButton from "@islands/collection/AddButton.tsx";
+import { MediaType } from "@models/Medias.ts";
 
 export const config: RouteConfig = {
   skipAppWrapper: true,
@@ -11,21 +13,25 @@ export const config: RouteConfig = {
 export default defineRoute((req, ctx) => {
   interface CollectionType {
     title: string;
-    apiRoute: string;
+    apiRoute: MediaType;
   }
 
   const collectionTypes: CollectionType[] = [
     {
       title: "Photos",
-      apiRoute: "photos",
+      apiRoute: MediaType.Images,
     },
     {
       title: "Videos",
-      apiRoute: "videos",
+      apiRoute: MediaType.Videos,
     },
     {
-      title: "Audios & Misc",
-      apiRoute: "misc",
+      title: "Audios",
+      apiRoute: MediaType.Audios,
+    },
+    {
+      title: "Misc",
+      apiRoute: MediaType.Misc,
     },
   ];
 
@@ -38,6 +44,7 @@ export default defineRoute((req, ctx) => {
             <CollectionGrid fetchingRoute={type.apiRoute} />
           </div>
         ))}
+        <AddButton />
       </div>
     </Partial>
   );

@@ -6,7 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       Artist: {
@@ -44,7 +44,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Artist_Track: {
@@ -74,7 +74,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Track"
             referencedColumns: ["artist"]
-          }
+          },
         ]
       }
       Audio: {
@@ -143,26 +143,12 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "Audio_media_cover_fkey"
-            columns: ["media_cover"]
-            isOneToOne: false
-            referencedRelation: "Image"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Audio_media_cover_fkey1"
-            columns: ["media_cover"]
-            isOneToOne: false
-            referencedRelation: "Video"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "Audio_type_fkey"
             columns: ["type"]
             isOneToOne: false
             referencedRelation: "Audio_Type"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Audio_Controls: {
@@ -206,7 +192,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Audio_Link: {
@@ -244,7 +230,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Audio_Type: {
@@ -326,20 +312,6 @@ export interface Database {
             referencedRelation: "Tracklist"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "Brick_Album_media_fkey"
-            columns: ["media"]
-            isOneToOne: false
-            referencedRelation: "Image"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Brick_Album_media_fkey1"
-            columns: ["media"]
-            isOneToOne: false
-            referencedRelation: "Video"
-            referencedColumns: ["id"]
-          }
         ]
       }
       Brick_Album_Brick_Tile: {
@@ -369,7 +341,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Brick_Tile"
             referencedColumns: ["bricks"]
-          }
+          },
         ]
       }
       Brick_Main: {
@@ -417,20 +389,6 @@ export interface Database {
             referencedRelation: "Users"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "Brick_Main_media_fkey"
-            columns: ["media"]
-            isOneToOne: false
-            referencedRelation: "Image"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Brick_Main_media_fkey1"
-            columns: ["media"]
-            isOneToOne: false
-            referencedRelation: "Video"
-            referencedColumns: ["id"]
-          }
         ]
       }
       Brick_Single: {
@@ -475,20 +433,6 @@ export interface Database {
             referencedRelation: "Users"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "Brick_Single_media_fkey"
-            columns: ["media"]
-            isOneToOne: false
-            referencedRelation: "Image"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Brick_Single_media_fkey1"
-            columns: ["media"]
-            isOneToOne: false
-            referencedRelation: "Video"
-            referencedColumns: ["id"]
-          }
         ]
       }
       Brick_Single_Brick_Tile: {
@@ -518,7 +462,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Brick_Tile"
             referencedColumns: ["bricks"]
-          }
+          },
         ]
       }
       Brick_Socials: {
@@ -556,7 +500,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Brick_Socials_Brick_Tile: {
@@ -586,7 +530,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Brick_Tile"
             referencedColumns: ["bricks"]
-          }
+          },
         ]
       }
       Brick_Text: {
@@ -624,7 +568,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Brick_Text_Brick_Tile: {
@@ -654,7 +598,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Brick_Tile"
             referencedColumns: ["bricks"]
-          }
+          },
         ]
       }
       Brick_Tile: {
@@ -692,7 +636,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Brickable: {
@@ -750,7 +694,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Brick_Socials"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Content: {
@@ -790,13 +734,6 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "Content_content_fkey1"
-            columns: ["content"]
-            isOneToOne: false
-            referencedRelation: "Media"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "Content_content_fkey2"
             columns: ["content"]
             isOneToOne: false
@@ -809,7 +746,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Content_Users: {
@@ -839,55 +776,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["content_created"]
-          }
-        ]
-      }
-      Image: {
-        Row: {
-          adjustement: number
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
-          id: number
-          modified_at: string | null
-          name: string | null
-          url: string | null
-        }
-        Insert: {
-          adjustement: number
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          name?: string | null
-          url?: string | null
-        }
-        Update: {
-          adjustement?: number
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          name?: string | null
-          url?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Image_adjustement_fkey"
-            columns: ["adjustement"]
-            isOneToOne: false
-            referencedRelation: "Media_Adjustement"
-            referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "Image_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          }
         ]
       }
       Mail_Pairing: {
@@ -907,65 +796,6 @@ export interface Database {
           id?: number
         }
         Relationships: []
-      }
-      Media: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
-          id: number
-          media_type: number
-          modified_at: string | null
-          name: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          media_type: number
-          modified_at?: string | null
-          name?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          media_type?: number
-          modified_at?: string | null
-          name?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Media_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Media_media_type_fkey"
-            columns: ["media_type"]
-            isOneToOne: false
-            referencedRelation: "Image"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Media_media_type_fkey1"
-            columns: ["media_type"]
-            isOneToOne: false
-            referencedRelation: "Video"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Media_media_type_fkey2"
-            columns: ["media_type"]
-            isOneToOne: false
-            referencedRelation: "Audio"
-            referencedColumns: ["id"]
-          }
-        ]
       }
       Media_Adjustement: {
         Row: {
@@ -1003,13 +833,92 @@ export interface Database {
             referencedRelation: "Brick_Tile"
             referencedColumns: ["bricks"]
           },
+        ]
+      }
+      Medias: {
+        Row: {
+          alt: string | null
+          autodetect_source: boolean | null
+          autoplay: boolean | null
+          controls: number | null
+          cover: string | null
+          created_at: string
+          cta: number | null
+          display_name: string
+          extension: string | null
+          filesize: number | null
+          id: string
+          name: string
+          object_fit: number | null
+          public_src: string | null
+          type: Database["public"]["Enums"]["media_type"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          alt?: string | null
+          autodetect_source?: boolean | null
+          autoplay?: boolean | null
+          controls?: number | null
+          cover?: string | null
+          created_at?: string
+          cta?: number | null
+          display_name: string
+          extension?: string | null
+          filesize?: number | null
+          id: string
+          name: string
+          object_fit?: number | null
+          public_src?: string | null
+          type?: Database["public"]["Enums"]["media_type"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          alt?: string | null
+          autodetect_source?: boolean | null
+          autoplay?: boolean | null
+          controls?: number | null
+          cover?: string | null
+          created_at?: string
+          cta?: number | null
+          display_name?: string
+          extension?: string | null
+          filesize?: number | null
+          id?: string
+          name?: string
+          object_fit?: number | null
+          public_src?: string | null
+          type?: Database["public"]["Enums"]["media_type"] | null
+          updated_at?: string | null
+        }
+        Relationships: [
           {
-            foreignKeyName: "Media_Brick_Tile_Media_id_fkey"
-            columns: ["Media_id"]
+            foreignKeyName: "medias_controls_fkey"
+            columns: ["controls"]
             isOneToOne: false
-            referencedRelation: "Media"
+            referencedRelation: "Audio_Controls"
             referencedColumns: ["id"]
-          }
+          },
+          {
+            foreignKeyName: "medias_cover_fkey"
+            columns: ["cover"]
+            isOneToOne: false
+            referencedRelation: "Medias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medias_cta_fkey"
+            columns: ["cta"]
+            isOneToOne: false
+            referencedRelation: "Audio_Link"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medias_object_fit_fkey"
+            columns: ["object_fit"]
+            isOneToOne: false
+            referencedRelation: "Media_Adjustement"
+            referencedColumns: ["id"]
+          },
         ]
       }
       Plateform: {
@@ -1048,13 +957,6 @@ export interface Database {
             referencedRelation: "Users"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "Plateform_image_fkey"
-            columns: ["image"]
-            isOneToOne: false
-            referencedRelation: "Image"
-            referencedColumns: ["id"]
-          }
         ]
       }
       Plateform_Link: {
@@ -1099,7 +1001,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Plateform"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Plateform_Link_Brick_Album: {
@@ -1129,7 +1031,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Plateform_Link"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Plateform_Link_Brick_Single: {
@@ -1159,7 +1061,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Plateform_Link"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Plateform_Link_Brick_Socials: {
@@ -1189,7 +1091,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Plateform_Link"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Plateform_Link_Track: {
@@ -1219,7 +1121,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Track"
             referencedColumns: ["link"]
-          }
+          },
         ]
       }
       Track: {
@@ -1260,7 +1162,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Track_Tracklist: {
@@ -1290,7 +1192,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Tracklist"
             referencedColumns: ["track"]
-          }
+          },
         ]
       }
       Tracklist: {
@@ -1325,7 +1227,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Users: {
@@ -1357,58 +1259,7 @@ export interface Database {
             isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
-          }
-        ]
-      }
-      Video: {
-        Row: {
-          adjustement: number
-          autoplay: boolean | null
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
-          id: number
-          modified_at: string | null
-          name: string | null
-          url: string | null
-        }
-        Insert: {
-          adjustement: number
-          autoplay?: boolean | null
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          name?: string | null
-          url?: string | null
-        }
-        Update: {
-          adjustement?: number
-          autoplay?: boolean | null
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          name?: string | null
-          url?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Video_adjustement_fkey"
-            columns: ["adjustement"]
-            isOneToOne: false
-            referencedRelation: "Media_Adjustement"
-            referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "Video_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          }
         ]
       }
       Website_Settings: {
@@ -1551,19 +1402,12 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "Website_Settings_website_icone_fkey"
-            columns: ["website_icone"]
-            isOneToOne: false
-            referencedRelation: "Media"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "Website_Settings_website_language_fkey"
             columns: ["website_language"]
             isOneToOne: false
             referencedRelation: "Available_Languages"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Website_Settings_Main_APIs: {
@@ -1661,7 +1505,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Mail_Pairing"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Website_Settings_Main_Misc: {
@@ -1702,7 +1546,7 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "Available_Languages"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       Website_Settings_Medias: {
@@ -1800,7 +1644,7 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      media_type: "Audios" | "Videos" | "Images" | "Misc"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1808,14 +1652,16 @@ export interface Database {
   }
 }
 
+type PublicSchema = Database[Extract<keyof Database, "public">]
+
 export type Tables<
   PublicTableNameOrOptions extends
-    | keyof (Database["public"]["Tables"] & Database["public"]["Views"])
+    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
         Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never = never
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
@@ -1823,67 +1669,67 @@ export type Tables<
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (Database["public"]["Tables"] &
-      Database["public"]["Views"])
-  ? (Database["public"]["Tables"] &
-      Database["public"]["Views"])[PublicTableNameOrOptions] extends {
-      Row: infer R
-    }
-    ? R
+  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
     : never
-  : never
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
-    | keyof Database["public"]["Tables"]
+    | keyof PublicSchema["Tables"]
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
-  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
-      Insert: infer I
-    }
-    ? I
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
     : never
-  : never
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
-    | keyof Database["public"]["Tables"]
+    | keyof PublicSchema["Tables"]
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
-  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
-      Update: infer U
-    }
-    ? U
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
     : never
-  : never
 
 export type Enums<
   PublicEnumNameOrOptions extends
-    | keyof Database["public"]["Enums"]
+    | keyof PublicSchema["Enums"]
     | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
-    : never = never
+    : never = never,
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
-  ? Database["public"]["Enums"][PublicEnumNameOrOptions]
-  : never
+  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
+    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never

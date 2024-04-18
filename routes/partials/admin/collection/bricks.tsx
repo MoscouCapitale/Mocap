@@ -19,7 +19,7 @@ export default defineRoute((req, ctx) => {
   return (
     <Partial name="collection-content">
       <div class="w-full min-h-screen flex-col justify-start items-start gap-10 inline-flex">
-        <CollectionGrid fetchingRoute="/admin/collection/bricks" />
+        {/* <CollectionGrid fetchingRoute={''} /> */}
       </div>
     </Partial>
   );
