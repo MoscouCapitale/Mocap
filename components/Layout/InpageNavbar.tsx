@@ -8,6 +8,7 @@ type InpageNavbarItem = {
   name: string;
   label: string;
   path: string;
+  fpath?: string;
   active?: boolean;
 };
 
@@ -20,6 +21,7 @@ export default function InpageNavbar(items: InpageNavbarProps) {
             item.active ? "text-text" : "text-text_grey"
           }`}
           href={item.path}
+          f-partial={item.fpath}
         >
           {item.label}
           {item.active &&

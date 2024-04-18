@@ -68,7 +68,7 @@ export const getUserFromSession = async (request: Request) => {
         "id",
         data.user.id,
       );
-      return { ...data.user, ...additionnal_infos.data[0] };
+      return additionnal_infos.data && { ...data.user, ...additionnal_infos.data[0] };
     }
     return data.user;
   }
@@ -129,7 +129,7 @@ export const updateAuthorizations = async (user: any) => {
     "id",
     user.id,
   );
-  if (user_additional_infos.data.length === 0) return;
+  if (!user_additional_infos.data || user_additional_infos.data.length === 0) return;
   const user_infos = user_additional_infos.data[0];
   await updateUserMetadata(user.id, {
     is_authorised: !user_infos.requested && user_infos.accepted,
@@ -137,7 +137,8 @@ export const updateAuthorizations = async (user: any) => {
 };
 
 export const updateUserMetadata = async (user_id: string, metadata: any) => {
-  const current_user = await supabase.auth.admin.getUserById(user_id);
+  //TODO: replace any with custom type
+  const current_user: any = await supabase.auth.admin.getUserById(user_id);
 
   const res = await supabase.auth.admin.updateUserById(user_id, {
     user_metadata: { ...current_user.user_metadata, ...metadata },

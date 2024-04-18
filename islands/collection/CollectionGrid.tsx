@@ -1,0 +1,61 @@
+import CollectionTile from "@islands/collection/CollectionTile.tsx";
+import { DatabaseMedia, MediaByType } from "@models/Medias.ts";
+import { Media, MediaType, Image, Video, Audio, Misc } from "@models/Medias.ts";
+import { useEffect, useState } from "preact/hooks";
+import { filterOutNonValideAttributes } from "@utils/database.ts";
+
+interface GridProps {
+  fetchingRoute: MediaType;
+}
+
+type FetchingRouteMap = {
+  [MediaType.Images]: Image[];
+  [MediaType.Videos]: Video[];
+  [MediaType.Audios]: Audio[];
+  [MediaType.Misc]: Misc[];
+};
+
+type CollectionType<T extends MediaType> = FetchingRouteMap[T];
+
+export default function CollectionGrid({ fetchingRoute }: GridProps) {
+  const [collection, setCollection] = useState<CollectionType<typeof fetchingRoute>>();
+
+  useEffect(() => {
+    fetch(`/api/medias/all/${fetchingRoute}`)
+      .then((res) => {
+        return res.status === 200 ? res.json() : setCollection([]);
+      })
+      .then((data: DatabaseMedia[]) => {
+        data && setCollection(data.map((media: DatabaseMedia) => filterOutNonValideAttributes(media)) as CollectionType<MediaType>);
+      });
+  }, [fetchingRoute]);
+
+  return (
+    <>
+      {collection === undefined && (
+        <div class="w-full flex justify-center items-center">
+          <div class="text-text">Loading...</div>
+        </div>
+      )}
+      {collection && collection.length > 0 && (
+        <div
+          style={{
+            width: "100%",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+            gap: "1rem",
+          }}
+        >
+          {collection.map((media) => (
+            <CollectionTile media={media} />
+          ))}
+        </div>
+      )}
+      {collection && collection.length === 0 && (
+        <div class="w-full flex justify-left items-center">
+          <div class="text-text">No media found</div>
+        </div>
+      )}
+    </>
+  );
+}

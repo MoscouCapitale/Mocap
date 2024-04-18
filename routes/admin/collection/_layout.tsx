@@ -1,40 +1,29 @@
 import { PageProps } from "$fresh/server.ts";
 import InpageNavbar from "@components/Layout/InpageNavbar.tsx";
+import { Partial } from "$fresh/runtime.ts";
 
 type InpageNavbarItem = {
     name: string;
     label: string;
     path: string;
+    fpath?: string;
     active?: boolean;
 }
 
 export default function Layout({ Component, state, route }: PageProps) {
     const navItems: InpageNavbarItem[] = [
         {
-            name: "general",
-            label: "Général",
-            path: "/admin/settings"
-        },
-        {
-            name: "users",
-            label: "Utilisateur",
-            path: "/admin/settings/user"
-        },
-        {
             name: "medias",
             label: "Médias",
-            path: "/admin/settings/medias"
+            path: "/admin/collection",
+            fpath: "/partials/admin/collection"
         },
         {
-            name: "styles",
-            label: "Styles",
-            path: "/admin/settings/styles"
-        },
-        {
-            name: "misc",
-            label: "Autres",
-            path: "/admin/settings/misc"
-        },
+            name: "bricks",
+            label: "Briques",
+            path: "/admin/collection/bricks",
+            fpath: "/partials/admin/collection/bricks"
+        }
     ];
 
     navItems.map((item) => route == item.path && (item.active = true));
@@ -43,7 +32,9 @@ export default function Layout({ Component, state, route }: PageProps) {
   return (
     <div class="w-full min-h-screen p-10 flex-col justify-start items-start gap-[30px] inline-flex">
         <InpageNavbar items={navItems} />
-        <Component />
+        <Partial name="collection-content">
+            <Component />
+        </Partial>
     </div>
   );
 }

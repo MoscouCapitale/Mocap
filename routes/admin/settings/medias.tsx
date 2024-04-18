@@ -1,3 +1,9 @@
+import MediasSettings from '@islands/Settings/MediasSettings.tsx';
+
 export default function Medias() {
-    return <h1>Medias</h1>
+    return (
+        <main className={"flex-col justify-center items-start gap-14 inline-flex"}>
+            <MediasSettings />
+        </main>
+    );
 }

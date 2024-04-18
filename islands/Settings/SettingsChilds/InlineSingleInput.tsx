@@ -1,10 +1,13 @@
 import { useEffect, useState } from "preact/hooks";
 import { JSX } from "preact/jsx-runtime";
 
+type acceptedTypes = string | number | boolean;
+
 type Props = {
-  value: string | number;
-  onChange: (value: string) => void;
+  value: acceptedTypes;
+  onChange: (value: acceptedTypes) => void;
   label: string;
+  subLabel?: string;
   type: string;
   addedButton?: JSX.Element;
   placeholder?: string;
@@ -12,7 +15,7 @@ type Props = {
     wrapper?: string;
     label?: string;
     input?: string;
-  }
+  };
 };
 
 export default function InlineSingleInput(props: Props) {
@@ -20,12 +23,17 @@ export default function InlineSingleInput(props: Props) {
 
   return (
     <div className={`justify-center items-center gap-10 inline-flex ${props.className?.wrapper ?? ""}`}>
-      <p className={`text-text text-[15px] ${props.className?.label ?? ""}`}>{props.label}</p>
+      <p className={`text-text text-[15px] ${props.className?.label ?? ""}`}>
+        {props.label} {props.subLabel ? <span className={"text-text_grey text-[12px]"}>{props.subLabel}</span> : ""}
+      </p>
       <input
-        className={`bg-background text-[15px] rounded px-[5px] py-[3px] border border-2 border-text justify-start items-center gap-2.5 inline-flex text-text focus:border-main focus:outline-none focus:ring-0 ${props.className?.input ?? ""}`}
+        className={`bg-background text-[15px] rounded px-[5px] py-[3px] border border-2 border-text justify-start items-center gap-2.5 inline-flex text-text focus:border-main focus:outline-none focus:ring-0 ${
+          props.className?.input ?? ""
+        }`}
         type={props.type ?? "text"}
         placeholder={props.placeholder ?? ""}
-        value={value}
+        value={value === true ? "true" : value === false ? "false" : value}
+        checked={props.type === "checkbox" ? value === true : undefined}
         onChange={(e) => {
           const val = (e.target as HTMLInputElement).value;
           setValue(val);

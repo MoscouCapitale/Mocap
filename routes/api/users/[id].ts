@@ -14,7 +14,7 @@ export const handler: Handlers<any | null> = {
         perPage: 100,
       });
       user = res?.data?.users;
-    } else user = await supa.auth.admin.getUser(id);
+    } else user = await supa.auth.admin.getUserById(id);
     return new Response(JSON.stringify(user), { status: 200 });
   },
 
