@@ -1,19 +1,16 @@
-"use client"
-
 // Inspired by react-hot-toast library
-import type {
-  ToastActionElement,
-  ToastProps,
-} from "../islands/UI/Toast/Toast.tsx"
-import { useState, useEffect } from "preact/hooks";
+import * as React from "preact/compat"
+
+import { ToastActionElement, type ToastProps } from "@components/UI/Toast/Toast.tsx"
+import { VNode } from "preact";
 
 const TOAST_LIMIT = 1
 const TOAST_REMOVE_DELAY = 1000000
 
 type ToasterToast = ToastProps & {
   id: string
-  title?: React.ReactNode
-  description?: React.ReactNode
+  title?: VNode | string
+  description?: VNode | string
   action?: ToastActionElement
 }
 
@@ -27,7 +24,7 @@ const actionTypes = {
 let count = 0
 
 function genId() {
-  count = (count + 1) % Number.MAX_SAFE_INTEGER
+  count = (count + 1) % Number.MAX_VALUE
   return count.toString()
 }
 
@@ -139,7 +136,8 @@ function dispatch(action: Action) {
   })
 }
 
-type Toast = Omit<ToasterToast, "id">
+// deno-lint-ignore no-empty-interface
+interface Toast extends Omit<ToasterToast, "id"> {}
 
 function toast({ ...props }: Toast) {
   const id = genId()
@@ -157,7 +155,7 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
-      onOpenChange: (open: boolean) => {
+      onOpenChange: (open) => {
         if (!open) dismiss()
       },
     },
@@ -171,9 +169,9 @@ function toast({ ...props }: Toast) {
 }
 
 function useToast() {
-  const [state, setState] = useState<State>(memoryState)
+  const [state, setState] = React.useState<State>(memoryState)
 
-  useEffect(() => {
+  React.useEffect(() => {
     listeners.push(setState)
     return () => {
       const index = listeners.indexOf(setState)
