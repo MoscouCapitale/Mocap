@@ -32,12 +32,12 @@
     "tailwindcss": "npm:tailwindcss@3.3.5",
     "tailwindcss/": "npm:/tailwindcss@3.3.5/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.3.5/plugin.js",
-    "@radix-ui/react-toast": "npm:@radix-ui/react-toast",
     "tailwindcss-animate": "npm:tailwindcss-animate",
-    "class-variance-authority": "npm:class-variance-authority",
-    "clsx": "npm:clsx",
-    "tailwind-merge": "npm:tailwind-merge",
-    "@tabler-icons-url/": "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/"
+    "class-variance-authority": "https://esm.sh/class-variance-authority@0.7.0",
+    "clsx": "https://esm.sh/clsx@2.0.0",
+    "tailwind-merge": "https://esm.sh/tailwind-merge@1.14.0",
+    "@tabler-icons-url/": "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/",
+    "@radix-ui/react-toast" : "https://esm.sh/v135/@radix-ui/react-toast@latest?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat"
   },
   "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
   "deploy": {
