@@ -28,8 +28,20 @@ export default {
     },
     extend: {
       outline: {
-        inputerror: ['2px solid #EA5959', '2px'],
-      }
-    }
+        inputerror: ["2px solid #EA5959", "2px"],
+      },
+      backgroundImage: {
+        "radial-gradient": "radial-gradient(#A3A3A3 1px, transparent 0)",
+      },
+      backgroundSize: {
+        "40": "40px 40px",
+        "20": "20px 20px",
+        "10": "10px 10px",
+      },
+      backgroundPosition: {
+        "20": "-20px -20px",
+        "10": "-10px -10px",
+      },
+    },
   },
 } satisfies Config;

@@ -31,6 +31,8 @@ Tasks :
   - [ ] Error management
     - [ ] 429 too many request
     - [ ] 403 token expired after too much time on app, and it does not renew itself (it should tho)
+    - [ ] ? AuthRetryableFetchError if no internet connection, it returns to the login page
+  - [ ] Middleware on api ??? 
 - [ ] Collection
   - [x] Supabase init
   - [x] List collection
@@ -63,6 +65,8 @@ Tasks :
 - [ ] Settings
   - [ ] Refacto settings following the same pattern as collections
 - [ ] UI
+  - [ ] Info icon with tooltip on hover
+    - [ ] tell that bricks names are unique
   - [ ] Cursor
   - [ ] Navbar
     - [ ] Smooth animation on expand
@@ -77,6 +81,7 @@ Tasks :
         - [ ] Confirm popup
     - [ ] inputs (text, email, password, etc...)
       - [ ] Read only input
+      - [ ] Better multi option dropdown UI
     - [ ] Alerts
       - [ ] Modals
         - [ ] Globale confirmation modal
@@ -92,9 +97,14 @@ Tasks :
 - [ ] Bricks
   - [ ] Research on how to implement
   - [ ] UI
+  - [ ] Implement tiles bricks
+  - [ ] Manage saved bricks
+  - [ ] Error management
+      - [ ] Brick with this name already exists
 - [ ] Misc
   - [ ] Request service object instead of js native `fetch()`
     - [ ] Make an optionnal parameter to show (or not) the result of the fetch
   - [ ] Add a global error handler
     - [x] Error handler on side (what response on supa {data, error}) -- started in `utils/api.ts`
   - [ ] Set partial content displayed on page load, instead of click (because for now it is only on subnav items, and specifically on the content page. It should be global, for each "page")
+  - [ ] Set every database id as uuid

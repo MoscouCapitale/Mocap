@@ -1,7 +1,8 @@
 import Dropdown from "@islands/Dropdown.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { ConfirmationModalProps, DropdownItem } from "@models/App.ts";
-import { MediaAttributesModifiableAttributes, MediaSettingsAttributes } from "@models/Medias.ts";
+import { MediaSettingsAttributes } from "@models/Medias.ts";
+import { DatabaseAttributes } from "@models/App.ts";
 import { IconPlus, IconTrash } from "@utils/icons.ts";
 import InpagePopup from "@islands/Layout/InpagePopup.tsx";
 import { renderMediaInputs } from "@utils/inputs.tsx";
@@ -10,31 +11,31 @@ import ConfirmationModal from "@islands/ConfirmationModal.tsx";
 
 type ObjectDropdownProps = {
   table: string;
-  currentItem: {
-    id: number;
-    label?: string;
-  };
+  currentItem: number | number[];
   changeCurrentItem: (item: any) => void;
+  allowZero?: boolean;
+  multiInput?: boolean;
 };
 
-export default function ObjectDropdown({ table, currentItem, changeCurrentItem }: ObjectDropdownProps) {
+export default function ObjectDropdown({ table, currentItem, changeCurrentItem, allowZero, multiInput }: ObjectDropdownProps) {
   // const [rawItems, setRawItems] = useState<MediaSettingsAttributes[]>();
   const [dropdownItems, setDropdownItems] = useState<DropdownItem[]>();
-  const [itemDetail, setItemDetail] = useState<MediaSettingsAttributes>();
+  // TODO: any because it was tied to medias, it should be universal (media, brick, settings, etc.)
+  const [itemDetail, setItemDetail] = useState<any>();
   const [showConfirmationModal, setShowConfirmationModal] = useState<ConfirmationModalProps | null>(null);
   const [updating, setUpdating] = useState<boolean>(false);
+  const [refetchItems, setRefetchItems] = useState<boolean>(true);
 
-  function createEmptyItem(type: string): MediaSettingsAttributes {
+  // TODO: any because it was tied to medias, it should be universal (media, brick, settings, etc.)
+  function createEmptyItem(type: string): any {
     switch (type) {
       case "cta":
         return {
-          id: 0,
           label: "",
           url: "",
         };
       case "controls":
         return {
-          id: 0,
           name: "",
           play: false,
           progress: false,
@@ -43,18 +44,40 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem }
         };
       case "object_fit":
         return {
-          id: 0,
           value: "best",
+        };
+      case "platforms":
+        return {
+          name: "",
+          url: "",
+          platform: {},
+        };
+      case "platform":
+        return {
+          name: "",
+          icon: "",
+        };
+      case "tracklist":
+      case "track":
+        return {
+          name: "",
+          artist: [{}],
+          platforms: [{}],
+        };
+      case "artist":
+        return {
+          name: "",
+          url: "",
         };
       default:
         return {
-          id: 0,
           value: "best",
         };
     }
   }
 
-  const convertItemToDropdownItem = (item: MediaSettingsAttributes): DropdownItem => {
+
+  const convertItemToDropdownItem = (item: MediaSettingsAttributes, multiSelect?: boolean): DropdownItem => {
     // @ts-ignore - Yes, they does not exist on some types, but this is the whole point : if they do, use them.
     const itemLabel = item.label || item.value || item.name || "default";
     return {
@@ -62,7 +85,7 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem }
       label: (
         <div className="w-full inline-flex items-center justify-between gap-3 ">
           {itemLabel}
-          {Object.keys(MediaAttributesModifiableAttributes).includes(table) && (
+          {DatabaseAttributes[table]?.modifiable && (
             <button className="group gap-[3px] inline-flex top-0 right-0 p-2 rounded-bl" onClick={() => setItemDetail(item)}>
               {Array.from({ length: 3 }).map(() => (
                 <span className={`block w-2 h-2 rounded-full border-2 border-text group-hover:border-main`} />
@@ -73,7 +96,7 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem }
       ),
       // @ts-ignore - Yes, they does not exist on some types, but this is the whole point : if they do, use them.
       value: item.value || item.id,
-      isActive: item.id === currentItem.id,
+      isActive: item.id === (Array.isArray(currentItem) ? currentItem.includes(item.id) : currentItem),
       onClick: () => selectItem(item),
     };
   };
@@ -82,18 +105,35 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem }
     changeCurrentItem(item);
   };
 
+  const updateItemDetail = (k: any, v: any) => {
+    if (!itemDetail) return;
+    setItemDetail((prev: any) => {
+      const prevVal = (prev as any)[k];
+      let newValue = v;
+      if (DatabaseAttributes[k]?.multiple) {
+        if (prevVal.find((e: any) => e.id === v.id)) newValue = [...prevVal.filter((e: any) => e.id !== v.id)];
+        else newValue = [...prevVal.filter((v: any) => v.name), v] || [{}];
+      }
+      return { ...prev, [k]: newValue };
+    });
+  };
+
   const upsertAttribute = () => {
     setUpdating(true);
-    if (itemDetail?.id) {
-      fetch(`/api/content/attributes/${table}`, { method: "PUT", body: JSON.stringify(itemDetail) })
-        .then((res) => res.json())
-        .then((data: MediaSettingsAttributes[]) => {
-          setItemDetail(undefined);
-          dropdownItems && setDropdownItems(dropdownItems.map((item) => (item.id === data[0].id ? convertItemToDropdownItem(data[0]) : item)));
-          selectItem(data[0]);
-        });
-    }
-    setUpdating(false);
+    Object.keys(itemDetail).forEach(key => {
+      if (typeof itemDetail[key] === "object" && itemDetail[key].id) itemDetail[key] = itemDetail[key].id;
+    });
+    fetch(`/api/content/attributes/${table}`, { method: "PUT", body: JSON.stringify(itemDetail) })
+      .then((res) => res.json())
+      .then((data: MediaSettingsAttributes[]) => {
+        setItemDetail(undefined);
+        dropdownItems && setDropdownItems(dropdownItems.map((item) => (item.id === data[0].id ? convertItemToDropdownItem(data[0]) : item)));
+        selectItem(data[0]);
+      })
+      .finally(() => {
+        setUpdating(false);
+        setRefetchItems(true);
+      });
   };
 
   const deleteAttribute = () => {
@@ -101,11 +141,13 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem }
       message: "Êtes-vous sûr de vouloir supprimer cet attribut ? Cette action est irréversible.",
       onConfirm: () => {
         itemDetail?.id &&
-          fetch(`/api/content/attributes/${table}`, { method: "PUT", body: JSON.stringify(itemDetail) }).then(() => {
-            setItemDetail(undefined);
-            setDropdownItems(dropdownItems?.filter((item) => item.id !== itemDetail.id));
-            selectItem(createEmptyItem(table));
-          });
+          fetch(`/api/content/attributes/${table}`, { method: "DELETE", body: JSON.stringify(itemDetail) })
+            .then(() => {
+              setItemDetail(undefined);
+              setDropdownItems(dropdownItems?.filter((item) => item.id !== itemDetail.id));
+              selectItem(createEmptyItem(table));
+            })
+            .finally(() => setRefetchItems(true));
         setShowConfirmationModal(null);
       },
       onCancel: () => {
@@ -115,27 +157,46 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem }
   };
 
   useEffect(() => {
-    fetch(`/api/content/attributes/${table}`)
-      .then((res) => res.json())
-      .then((data: MediaSettingsAttributes[]) => {
-        // setRawItems(data);
-        setDropdownItems(data.map((item) => convertItemToDropdownItem(item)));
-      });
-  }, []);
+    if (refetchItems) {
+      fetch(`/api/content/attributes/${table}`)
+        .then((res) => (res.status !== 204 ? res.json() : []))
+        .then((data: MediaSettingsAttributes[]) => {
+          // setRawItems(data);
+          // console.log(`data for ${table}: `, data)
+          setDropdownItems(data.map((item) => convertItemToDropdownItem(item)));
+        })
+        .finally(() => setRefetchItems(false));
+    }
+  }, [refetchItems]);
 
   useEffect(() => {
-    if (dropdownItems && dropdownItems.find((item) => item.isActive)?.id !== currentItem.id) {
-      setDropdownItems(dropdownItems.map((item) => ({ ...item, isActive: item.id === currentItem.id })));
+    if (Array.isArray(currentItem)) {
+      // @ts-ignore - Is is a number[], so it IS an array of numbers
+      setDropdownItems(dropdownItems?.map((item) => ({ ...item, isActive: currentItem.includes(item.id) })));
+    } else {
+      if (dropdownItems && dropdownItems.find((item) => item.isActive)?.id !== currentItem) {
+        setDropdownItems(dropdownItems.map((item) => ({ ...item, isActive: item.id === currentItem })));
+      }
     }
   }, [currentItem]);
 
+  useEffect(() => {
+    if (dropdownItems) {
+      //console.log("dropdown items: ", dropdownItems)
+    }
+  }, [dropdownItems])
+
+  useEffect(() => {
+    itemDetail && console.log("itemDetail changed: ", itemDetail)
+  }, [itemDetail])
+
   return (
     <>
-      {dropdownItems && (
+      {(allowZero || dropdownItems) && (
         <Dropdown
-          items={dropdownItems}
+          items={dropdownItems || []}
           additionalItem={
-            Object.keys(MediaAttributesModifiableAttributes).includes(table)
+            DatabaseAttributes[table]?.modifiable
               ? {
                   id: 0,
                   label: <IconPlus color="white" />,
@@ -145,16 +206,19 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem }
               : undefined
           }
           activeInDropdown
+          multiSelect={Array.isArray(currentItem)}
         />
       )}
       {itemDetail && (
         <InpagePopup closePopup={() => setItemDetail(undefined)}>
           <div class="w-full flex flex-col gap-5">
-            {renderMediaInputs(itemDetail, (k, v) => {
-              console.log("updating ", k, ' with ', v);
-              setItemDetail({ ...itemDetail, [k]: v })})}
+            {renderMediaInputs(itemDetail, updateItemDetail)}
             <div class="text-text flex align-center gap-4">
-              <Button text={`${updating ? "..." : "Modifier"}`} onClick={upsertAttribute} className={{ wrapper: "grow justify-center" }} />{" "}
+              <Button
+                text={`${updating ? "Enregistrement..." : `${itemDetail.id ? "Modifier" : "Créer"}`}`}
+                onClick={upsertAttribute}
+                className={{ wrapper: "grow justify-center" }}
+              />{" "}
               <IconTrash className={"text-error cursor-pointer"} onClick={deleteAttribute} />
             </div>
           </div>

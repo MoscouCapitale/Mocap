@@ -5,7 +5,13 @@ import MediaDetail from "@islands/collection/MediaDetail.tsx";
 import { MediaType } from "@models/Medias.ts";
 import MediaPreview from "@islands/collection/MediaPreview.tsx";
 
-export default function CollectionTile({ media }: { media: Image | Video | Audio | Misc }) {
+export default function CollectionTile({
+  media,
+  mediaClick,
+}: {
+  media: Image | Video | Audio | Misc;
+  mediaClick?: (media: Image | Video | Audio | Misc) => void;
+}) {
   const [active, setActive] = useState(false);
 
   const specialType = media.type === MediaType.Misc || media.type === MediaType.Audios;
@@ -16,7 +22,9 @@ export default function CollectionTile({ media }: { media: Image | Video | Audio
   return (
     <>
       <div className={`relative ${specialType && "w-fit"}`}>
-        <MediaPreview media={media} from={"collection"} />
+        <div onClick={() => mediaClick && mediaClick(media)}>
+          <MediaPreview media={media} from={"collection"} />
+        </div>
         <button className={activeBtnStyle} onClick={() => setActive(true)}>
           {Array.from({ length: 3 }).map(() => (
             <span className={`block w-2 h-2 bg-background rounded-full border-2 border-text`}></span>
