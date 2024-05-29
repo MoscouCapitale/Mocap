@@ -6,6 +6,8 @@ import { filterOutNonValideAttributes } from "@utils/database.ts";
 
 interface GridProps {
   fetchingRoute: MediaType;
+  mediaSize?: number;
+  onMediaClick?: (media: Media) => void;
 }
 
 type FetchingRouteMap = {
@@ -17,7 +19,7 @@ type FetchingRouteMap = {
 
 type CollectionType<T extends MediaType> = FetchingRouteMap[T];
 
-export default function CollectionGrid({ fetchingRoute }: GridProps) {
+export default function CollectionGrid({ fetchingRoute, mediaSize, onMediaClick }: GridProps) {
   const [collection, setCollection] = useState<CollectionType<typeof fetchingRoute>>();
 
   useEffect(() => {
@@ -42,12 +44,12 @@ export default function CollectionGrid({ fetchingRoute }: GridProps) {
           style={{
             width: "100%",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+            gridTemplateColumns: `repeat(auto-fill, minmax(${mediaSize || '200'}px, 1fr))`,
             gap: "1rem",
           }}
         >
           {collection.map((media) => (
-            <CollectionTile media={media} />
+            <CollectionTile media={media} mediaClick={() => onMediaClick && onMediaClick(media)} />
           ))}
         </div>
       )}

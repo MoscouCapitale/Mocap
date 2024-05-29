@@ -27,7 +27,7 @@ export default function InpagePopup({ children, closePopup }: InpagePopupProps) 
     <div class="z-20 fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 flex justify-center items-center">
       <div
         ref={containerRef}
-        class="relative bg-background p-7 m-7 rounded-2xl"
+        class="flex max-h-screen relative bg-background p-7 m-7 rounded-2xl"
         // TODO: fix shadow
         style={{
           boxShadow:

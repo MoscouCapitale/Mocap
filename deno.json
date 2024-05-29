@@ -31,7 +31,10 @@
     "tailwindcss": "npm:tailwindcss@3.3.5",
     "tailwindcss/": "npm:/tailwindcss@3.3.5/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.3.5/plugin.js",
-    "@tabler-icons-url/": "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/"
+    "@tabler-icons-url/": "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/",
+    "class-variance-authority": "https://esm.sh/class-variance-authority@0.7.0",
+    "clsx": "https://esm.sh/clsx@2.0.0",
+    "tailwind-merge": "https://esm.sh/tailwind-merge@1.14.0"
   },
   "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
   "deploy": {

@@ -3,7 +3,11 @@ import Button from "@islands/Button.tsx";
 import InpagePopup from "@islands/Layout/InpagePopup.tsx";
 import AddPopup from "@islands/collection/AddPopup.tsx";
 
-export default function AddButton() {
+type AddButtonProps = {
+  position?: string;
+};
+
+export default function AddButton({position}: AddButtonProps) {
   const [openAddMediaInterface, setOpenAddMediaInterface] = useState<boolean>(false);
 
   return (
@@ -13,7 +17,7 @@ export default function AddButton() {
         onClick={() => {
           setOpenAddMediaInterface(true);
         }}
-        className={{ wrapper: "absolute top-[calc(2.5rem+0.625rem)] right-10" }}
+        className={{ wrapper: position || "absolute top-[calc(2.5rem+0.625rem)] right-10" }}
       />
       {openAddMediaInterface && (
         <InpagePopup closePopup={() => setOpenAddMediaInterface(false)}>

@@ -110,11 +110,6 @@ const MediaModifiableAttributes = {
   autodetect_source: "Source auto.",
 };
 
-const MediaAttributesModifiableAttributes = {
-  controls: "Controles",
-  cta: "Lien",
-};
-
 const acceptedFileTypeMap: { [key in MediaType]: string[] } = {
   "Images": [
     "image/png",
@@ -170,11 +165,11 @@ export type {
   Misc,
   uploadFileObject,
   Video,
+  MediaCTA,
 };
 export {
   acceptedFileTypeMap,
   defaultPrivateFields,
-  MediaAttributesModifiableAttributes,
   MediaModifiableAttributes,
   MediaTableNames,
   MediaType,
