@@ -106,15 +106,6 @@ enum BricksType {
   // PLATFORM_LINK = "Plateforme",
 }
 
-interface BrickNode {
-  brick?: HeroSection | Single | Album | Text | PlateformLink;
-  x: Float32Array;
-  y: Float32Array;
-  width: Float32Array;
-  height: Float32Array;
-  locked: boolean;
-}
-
 export type { Album, HeroSection, PlateformLink, Single, Social, Text, Track };
 
 export { BrickModifiableAttributes, BricksType };

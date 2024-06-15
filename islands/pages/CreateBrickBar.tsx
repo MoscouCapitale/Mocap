@@ -66,16 +66,17 @@ export default function CreateBrickBar({ brickType, brickData }: CreateBrickBarP
     });
   };
 
-  const deleteBrick = () => {
-    if (!brick) return;
-    fetch("/api/brick", {
-      method: "DELETE",
-      body: JSON.stringify({
-        type: brickType,
-        data: brick,
-      }),
-    });
-  };
+  // TODO: to be implemented
+  // const deleteBrick = () => {
+  //   if (!brick) return;
+  //   fetch("/api/brick", {
+  //     method: "DELETE",
+  //     body: JSON.stringify({
+  //       type: brickType,
+  //       data: brick,
+  //     }),
+  //   });
+  // };
 
   const addBrickToCanvas = () => {
     console.log("adding brick to canvas", brick);
