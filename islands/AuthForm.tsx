@@ -2,19 +2,38 @@ import { FormType } from "@models/Authentication.ts";
 import { useEffect } from "preact/hooks";
 import { useState } from "preact/hooks";
 import { verifyEmailIntegrity, verifyPasswordIntegrity, verifySamePassword } from "@utils/login.ts";
-import {IconSend} from "@utils/icons.ts";
-import Alert from "@components/Misc/Alert.tsx";
+import {IconLoader, IconSend} from "@utils/icons.ts";
+
+import { Toaster } from "@components/UI/Toast/Toaster.tsx"
+import { useToast } from "@hooks/toast.tsx"
 
 export default function AuthForm({ type, additional_data, error }: FormType) {
+  const { toast } = useToast()
   const [email, setEmail] = useState<string>(additional_data?.email ? additional_data.email : "");
   const [password, setPassword] = useState<string>(additional_data?.password ? additional_data.password : "");
   const [confirmpassword, setConfirmPassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [validForm, setValidForm] = useState({
     email: false,
     password: false,
     confirmpassword: false,
   });
+
+  useEffect(() => {
+    console.log("Props: ", { type, additional_data, error });
+    if (error) {
+      toast({
+        title: "Erreur d'authentification",
+        description: error.message,
+      });
+    }
+    if (additional_data?.message) {
+      toast({
+        description: additional_data.message,
+      });
+    }
+  }, [error, additional_data?.message]);
 
   useEffect(() => {
     setValidForm({
@@ -31,6 +50,7 @@ export default function AuthForm({ type, additional_data, error }: FormType) {
           class={`max-w-md w-1/3 flex justify-center items-center ${type === "default" && `relative`}
       ${type === "signup" && `flex-col gap-10`}`}
           method={"POST"}
+          onSubmit={() => setIsLoading(true)}
         >
           <input
             className={`w-full border-b-2 rounded-none border-text bg-background py-1 focus:border-main transition-all duration-200 ease-in-out outline-none
@@ -45,8 +65,8 @@ export default function AuthForm({ type, additional_data, error }: FormType) {
             }}
           />
           {type === "default" && validForm.email && (
-            <button class="absolute left-[calc(100%+1rem)]" type={"submit"}>
-              <IconSend color={"white"} />
+            <button className={`absolute left-[calc(100%+1rem)] ${isLoading && 'animate-spin'}`} type={"submit"}>
+              {isLoading ? <IconLoader color={"white"} /> : <IconSend color={"white"} />}
             </button>
           )}
           {type === "signup" && (
@@ -93,7 +113,7 @@ export default function AuthForm({ type, additional_data, error }: FormType) {
           )}
         </form>
       </div>
-      {error && <Alert message={error.message} error={true} />}
+      <Toaster />
     </>
   );
 }

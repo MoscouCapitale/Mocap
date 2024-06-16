@@ -10,27 +10,21 @@ export const handler: Handlers<FormType> = {
   async GET(req: Request, ctx: FreshContext) {
     const params = new URL(req.url).searchParams;
     const redirectURL = params.get("redirect");
-    const error = params.get("error");
+
+
+    const error_code = params.get("error_code");
+    const error_message = params.get("error_message");
+
+    if (error_code) {
+      return ctx.render({ type: "default", error: { message: error_message } });
+    }
 
     const user = await getUserFromSession(req);
-    if (user && !error) {
+    if (user) {
       return new Response("", {
         status: 303,
         headers: {
           Location: "/admin/pages",
-        },
-      });
-    }
-
-    if (error == "user_not_authorized") {
-      return ctx.render({
-        type: "action_done",
-        additional_data: {
-          message: "Your account has not been accepted or you don't have the right to access this page.\n\n\nIf you think this is an error, please contact the administrator.",
-          link: {
-            href: redirectURL || "/",
-            text: "Try again",
-          }
         },
       });
     }
@@ -49,6 +43,18 @@ export const handler: Handlers<FormType> = {
     };
 
     const res = new Response();
+
+    setTimeout(async () => {
+      const render = await ctx.render({
+        type: "default",
+        additional_data: {
+          email: formData.email
+        },
+      });
+      return new Response(render.body, {
+        headers: res.headers,
+      });
+    }, 5000);
 
     if (!formData.email || !verifyEmailIntegrity(formData.email)) {
       const render = await ctx.render({ type: "default", error: "Invalid email" });
@@ -72,11 +78,9 @@ export const handler: Handlers<FormType> = {
 };
 
 export default function AuthPage({ data }: PageProps<FormType>) {
-  const { type, additional_data } = data;
   return (
     <>
-      {type !== "action_done" && <AuthForm {...data} />}
-      {type === "action_done" && <SimpleMessage message={additional_data?.message} link={additional_data?.link} />}
+      <AuthForm {...data} />
     </>
   );
 }

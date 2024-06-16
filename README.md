@@ -29,7 +29,7 @@ Tasks :
     - [ ] RLS
     - [ ] Role management
   - [ ] Error management
-    - [ ] 429 too many request
+    - [x] 429 too many request
     - [ ] 403 token expired after too much time on app, and it does not renew itself (it should tho)
     - [ ] ? AuthRetryableFetchError if no internet connection, it returns to the login page
   - [ ] Middleware on api ??? 
