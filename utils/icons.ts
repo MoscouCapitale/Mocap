@@ -14,6 +14,7 @@ import IconLogout from "@tabler-icons-url/logout.tsx"
 import IconTrash from "@tabler-icons-url/trash.tsx"
 import IconX from "@tabler-icons-url/x.tsx"
 import IconPlus from "@tabler-icons-url/plus.tsx"
+import IconLoader from "@tabler-icons-url/loader.tsx"
 
 export {
     IconSend,
@@ -31,5 +32,6 @@ export {
     IconLogout,
     IconTrash,
     IconX,
-    IconPlus
+    IconPlus,
+    IconLoader
 }

@@ -5,7 +5,7 @@ import { ToastActionElement, type ToastProps } from "@components/UI/Toast/Toast.
 import { VNode } from "preact";
 
 const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_REMOVE_DELAY = 40000
 
 type ToasterToast = ToastProps & {
   id: string
@@ -136,7 +136,6 @@ function dispatch(action: Action) {
   })
 }
 
-// deno-lint-ignore no-empty-interface
 interface Toast extends Omit<ToasterToast, "id"> {}
 
 function toast({ ...props }: Toast) {
