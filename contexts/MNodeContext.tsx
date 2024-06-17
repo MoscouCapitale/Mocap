@@ -1,11 +1,22 @@
 import { computed, effect, Signal, signal } from "@preact/signals-core";
 
 import { createContext, createRef, Ref, RefObject, VNode } from "preact";
-import { useContext, useMemo } from "preact/hooks";
+import { useContext, useEffect, useMemo } from "preact/hooks";
 import { MNode } from "@models/Canva.ts";
 import { getBaseUrl } from "@utils/pathHandler.ts";
 
-type MCViewBox = { x: number; y: number; scale: number };
+type MCViewBox = {
+  x: number;
+  y: number;
+  scale: number;
+  width?: number;
+  height?: number;
+};
+
+type isOverlappingType = {
+  isOverlapping: boolean;
+  overlappingNode?: MNode[];
+};
 
 type rectCollideProps = {
   id: string;
@@ -21,7 +32,7 @@ type MNodeContextType = {
   viewBox: Signal<MCViewBox>;
   setViewBox: (viewBox: MCViewBox) => void;
   MCNodes: Signal<MNode[]>;
-  isOverlapping: (a: rectCollideProps) => boolean | MNode | undefined;
+  isOverlapping: (a: rectCollideProps) => isOverlappingType;
   saveNode: (node: MNode) => void;
 };
 
@@ -48,9 +59,23 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   const setViewBox = (viewBoxVal: MCViewBox) => viewBox.value = viewBoxVal;
   const MCNodes = signal<MNode[]>([]);
 
+  useEffect(() => {
+    if (MCFrame.value.current && viewBox) {
+      const width = MCFrame.value.current?.clientWidth || 0;
+      const height = MCFrame.value.current?.clientHeight || 0;
+      viewBox.value = { ...viewBox.value, width: width, height: height };
+    }
+  }, [MCFrame.value]);
+
   effect(() => {
     fetch(getBaseUrl() + "/api/node/getAll")
-      .then((res) => res ? res.json() : []).then((data) => MCNodes.value = data).catch(
+      .then((res) => {
+        if (res) {
+          return res.json();
+        }
+        console.error("No response from server: ", res);
+        return [];
+      }).then((data) => MCNodes.value = data).catch(
         (e) => {
           console.error(e);
           return [];
@@ -59,17 +84,16 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   });
 
   const saveNode = (node: MNode) => {
-    const nodeIndex = MCNodes.value.findIndex(n => n.id === node.id)
-    if (nodeIndex !== -1){
-      MCNodes.value[nodeIndex] = node
+    const nodeIndex = MCNodes.value.findIndex((n) => n.id === node.id);
+    if (nodeIndex !== -1) {
+      MCNodes.value[nodeIndex] = node;
     } else {
-      MCNodes.value = [...MCNodes.value, node]
+      MCNodes.value = [...MCNodes.value, node];
     }
-  }
+  };
 
-  const isOverlapping = (a: rectCollideProps) => {
-    console.log(a, MCNodes.value);
-    const res = MCNodes.value.find((n) => {
+  const isOverlapping = (a: rectCollideProps): isOverlappingType => {
+    const nodes = MCNodes.value.filter((n) => {
       if (n.id === a.id) return false;
       const b = {
         x1: n.x,
@@ -78,10 +102,27 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
         y2: n.y + n.height,
       };
       return a.x1 < b.x2 && a.x2 > b.x1 && a.y1 < b.y2 && a.y2 > b.y1;
-    })
-    console.log(res);
-    return res;
-  }
+    });
+    return { isOverlapping: nodes.length > 0, overlappingNode: nodes };
+  };
+
+  // const getClosestFreePosition = (a: rectCollideProps, MNodes: MNode[], overlap: isOverlappingType) => {
+  //   let x = a.x1;
+  //   let y = a.y1;
+  //   while (MNodes.find((n) => {
+  //     const b = {
+  //       x1: n.x,
+  //       y1: n.y,
+  //       x2: n.x + n.width,
+  //       y2: n.y + n.height,
+  //     };
+  //     return x < b.x2 && x + a.x2 - a.x1 > b.x1 && y < b.y2 && y + a.y2 - a.y1 > b.y1;
+  //   })) {
+  //     x += 100;
+  //     y += 100;
+  //   }
+  //   return { x: x, y: y };
+  // };
 
   const value = {
     MCFrame: MCFrame,

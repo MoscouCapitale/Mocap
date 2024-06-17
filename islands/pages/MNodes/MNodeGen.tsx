@@ -34,36 +34,15 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
         type: "x,y",
         edgeResistance: 0.65,
         bounds: MCFrame,
-        // onDrag: function () {
-        //   console.log(
-        //     `dragging x: ${this.x} + ${MC.viewBox.value.x} = ${
-        //       this.x + MC.viewBox.value.x
-        //     }, y: ${this.y} + ${MC.viewBox.value.y} = ${
-        //       this.y + MC.viewBox.value.y
-        //     }`,
-        //   );
-        //   this.x = this.x + MC.viewBox.value.x;
-        //   this.y = this.y + MC.viewBox.value.y;
-        //   gsap.set(MNodeRef.current, {
-        //     css: {
-        //       x: this.x,
-        //       y: this.y,
-        //     },
-        //   });
-        //   setNode((prev) => ({ ...prev, x: this.x, y: this.y }));
-        //   // console.log("dragging after: ", this.x, this.y);
-        // },
         onDragEnd: function () {
-          if (
-            MC.isOverlapping({
-              id: node.id,
-              x1: this.x,
-              y1: this.y,
-              x2: this.x + node.width,
-              y2: this.y + node.height,
-            })
-          ) {
-            console.log("overlapping");
+          const overlap = MC.isOverlapping({
+            id: node.id,
+            x1: this.x,
+            y1: this.y,
+            x2: this.x + node.width,
+            y2: this.y + node.height,
+          });
+          if (overlap.isOverlapping) {
             // If overlapping, move the node 100px up
             this.y -= 100;
             gsap.set(MNodeRef.current, {
