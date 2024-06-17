@@ -24,7 +24,7 @@ export async function handler(
   req: Request,
   ctx: FreshContext<AppState>,
 ) {
-  let user = await getUserFromSession(req);
+  let { user, error: _error } = await getUserFromSession(req);
   let session: Session | null = null;
 
   // console.log("user", user);

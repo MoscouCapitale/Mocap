@@ -55,25 +55,31 @@ export const supabaseSSR = (req: Request, res: Response) =>
     },
   );
 
-export const getUserFromSession = async (request: Request) => {
+export const getUserFromSession = async (request: Request): Promise<{
+  user: any;
+  error: any;
+}> => {
   const cookies = getCookies(request.headers);
 
   const access = cookies.token;
 
   if (access) {
     const { error, data } = await supabase.auth.getUser(access);
-    if (error) console.log("Error with getUserFromSession", error);
+    if (error) {
+      console.log("Error with getUserFromSession", error);
+      return { user: null, error: error.status };
+    }
     if (data?.user?.id) {
       const additionnal_infos = await supabase.from("Users").select().eq(
         "id",
         data.user.id,
       );
-      return additionnal_infos.data && { ...data.user, ...additionnal_infos.data[0] };
+      return { user: additionnal_infos.data && { ...data.user, ...additionnal_infos.data[0] }, error: null };
     }
-    return data.user;
+    return { user: data.user, error: null };
   }
 
-  return null;
+  return { user: null, error: 500 };
 };
 
 export const accessTokenExpired = (request: Request) => {

@@ -18,8 +18,7 @@ export const handler: Handlers<FormType> = {
       return ctx.render({ type: "default", error: { message: error_message } });
     }
 
-    const user = await getUserFromSession(req);
-    console.log("User", user);
+    const { user, error } = await getUserFromSession(req);
     if (user) {
       return new Response("", {
         status: 303,
@@ -27,6 +26,16 @@ export const handler: Handlers<FormType> = {
           Location: "/admin/pages",
         },
       });
+    }
+
+    if (error) {
+      switch (error) {
+        case 403:
+          return ctx.render({ type: "default", error: { message: "Votre session a expiré, merci de vous ré-authentifier." } });
+        case 500:
+        default:
+          return ctx.render({ type: "default" });
+      }
     }
 
     return ctx.render({ type: "default" });

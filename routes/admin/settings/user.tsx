@@ -5,12 +5,15 @@ import UserChangePassword from "@components/settings/UserChangePassword.tsx";
 import UserRevokeAccount from "@components/settings/UserRevokeAccount.tsx";
 
 // TODO: replace all of these user types with the correct one
-import { User } from "https://esm.sh/v116/@supabase/gotrue-js@2.23.0/dist/module/index.js";
+import { User as UserType } from "https://esm.sh/v116/@supabase/gotrue-js@2.23.0/dist/module/index.js";
 
-export const handler: Handlers<User | null> = {
+export const handler: Handlers<UserType | null> = {
   async GET(req: Request, ctx: FreshContext) {
     let user = ctx.state.user;
-    if (!user) user = await getUserFromSession(req);
+    if (!user) {
+      const { user: res } = await getUserFromSession(req);
+      user = res;
+    }
     return ctx.render({ user });
   },
 
