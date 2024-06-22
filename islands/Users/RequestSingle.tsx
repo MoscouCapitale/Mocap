@@ -1,16 +1,12 @@
 import { RequestedUser, Role } from "@models/User.ts";
 
 import RequestButton from "@islands/Users/RequestButton.tsx";
-import { useEffect, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 
 const ROLES: Role[] = ["anon", "authenticated", "mocap_admin", "supabase_admin"];
 
 export default function RequestSingle(user: RequestedUser) {
   const [currentUser, setCurrentUser] = useState<RequestedUser>(user);
-
-  useEffect(() => {
-    console.log("currentUser", currentUser);
-  }, [currentUser]);
 
   return (
     <>
