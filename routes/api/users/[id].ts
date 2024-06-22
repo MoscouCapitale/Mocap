@@ -6,7 +6,6 @@ export const handler: Handlers<any | null> = {
   async GET(req: Request, ctx: FreshContext) {
     const id = ctx.params.id;
     let user;
-    console.log("ctx.state.user", ctx.state);
 
     if (id === "all") {
       const res = await supa.auth.admin.listUsers({

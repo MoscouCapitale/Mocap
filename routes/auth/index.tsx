@@ -9,7 +9,6 @@ import { handleSignIn, handleSignUp } from "@services/authentication.ts";
 export const handler: Handlers<FormType> = {
   async GET(req: Request, ctx: FreshContext) {
     const params = new URL(req.url).searchParams;
-    const redirectURL = params.get("redirect");
 
 
     const error_code = params.get("error_code");
@@ -20,6 +19,7 @@ export const handler: Handlers<FormType> = {
     }
 
     const user = await getUserFromSession(req);
+    console.log("User", user);
     if (user) {
       return new Response("", {
         status: 303,

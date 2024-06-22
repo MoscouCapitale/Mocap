@@ -1,3 +1,10 @@
+import IconSquare from "@tabler-icons-url/square.tsx";
+
+/**
+ * IconType is a type that represents a React component that takes the same props as IconSquare, which itself is a standard Icon representation.
+ */
+export type IconType = React.ComponentType<React.ComponentProps<typeof IconSquare>>;
+
 import IconSend from "@tabler-icons-url/send.tsx";
 import IconChevronLeft from "@tabler-icons-url/chevron-left.tsx";
 import IconChevronUp from "@tabler-icons-url/chevron-up.tsx";

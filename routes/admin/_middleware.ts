@@ -35,6 +35,8 @@ export async function handler(
     console.log("access token expired");
     const refresh = await refreshAccessToken(req);
 
+    console.log(`Refreshing access token. Has user: ${refresh?.user ? "yes" : "no"}, has session: ${refresh?.session ? "yes" : "no"}`);
+
     if (!refresh?.session) {
       console.log("unable to refresh session");
       return new Response("", {
@@ -55,7 +57,7 @@ export async function handler(
   }
 
   if (!user) {
-    console.log("unable to get user");
+    console.log("Unable to get user");
     return new Response("", {
       status: 303,
       headers: {
@@ -64,13 +66,22 @@ export async function handler(
     });
   }
 
-  if(user.user_metadata.is_authorised === undefined) updateAuthorizations(user);
+  if (user.user_metadata.is_authorised === undefined) {
+    user = await updateAuthorizations(user);
+  }
 
-  if (user.role && !authorizedRoles.includes(user.role) || user.user_metadata?.is_authorised === false) {
+  if (
+    user.role && !authorizedRoles.includes(user.role) ||
+    user.user_metadata?.is_authorised === false
+  ) {
     return new Response("", {
       status: 303,
       headers: {
-        Location: `/auth?redirect=${req.url}&error=user_not_authorized`,
+        Location: `/auth?redirect=${req.url}&error_code=401&error_message=${
+          encodeURIComponent(
+            "Votre compte n'est pas encore validé. Merci de patienter le temps qu'un administrateur valide votre compte.",
+          )
+        }`,
       },
     });
   }

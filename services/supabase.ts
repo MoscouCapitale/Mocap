@@ -131,9 +131,10 @@ export const updateAuthorizations = async (user: any) => {
   );
   if (!user_additional_infos.data || user_additional_infos.data.length === 0) return;
   const user_infos = user_additional_infos.data[0];
-  await updateUserMetadata(user.id, {
+  const res = await updateUserMetadata(user.id, {
     is_authorised: !user_infos.requested && user_infos.accepted,
   });
+  return res;
 };
 
 export const updateUserMetadata = async (user_id: string, metadata: any) => {

@@ -21,11 +21,6 @@ export default function UsersList() {
         .then((user) => setCurrentUser(user));
   }, [currentUser]);
 
-  useEffect(() => {
-    console.log(usersList);
-    console.log(currentUser);
-  }, [usersList, currentUser]);
-
   const updateUsersList = async () => {
     const res = await fetch("/api/users/all");
     const users = await res.json();
@@ -70,7 +65,7 @@ export default function UsersList() {
                     onChange={(e) =>
                       setUsersList({
                         ...usersList,
-                        [user.id]: { ...user, role: (e.target as HTMLSelectElement).value ? ((e.target as HTMLSelectElement).value as Role) : "anon" },
+                        [user.id]: { ...user, role: (e.target as HTMLSelectElement).value as Role ?? "anon" },
                       })
                     }
                   >
