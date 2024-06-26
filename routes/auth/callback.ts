@@ -9,6 +9,22 @@ export const handler: Handlers = {
     const code = url.searchParams.get("code");
     const redirectURL = url.searchParams.get("redirect");
 
+    const errorCode = url.searchParams.get("error_code");
+
+    if (errorCode) {
+      switch (errorCode) {
+        case "403":
+          return new Response("", {
+            status: 303,
+            headers: {
+              Location: `/auth?error_code=${errorCode}&error_message=${encodeURIComponent('Le lien a expiré ou à déjà été utilisé, merci de réessayer.')}`,
+            },
+          });
+        default:
+          return ctx.render({ type: "default" });
+      }
+    }
+
     if (typeof code == "string") {
       const { data, error } = await sup.auth.exchangeCodeForSession(code);
 

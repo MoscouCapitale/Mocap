@@ -1,4 +1,4 @@
-import { MNode } from "@models/Canva.ts";
+import { CANVA_GUTTER, MNode } from "@models/Canva.ts";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { useGSAP } from "@gsap/react";
@@ -7,11 +7,20 @@ import { computed, effect, signal } from "@preact/signals-core";
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import useRenderCount from "@hooks/useRenderCount.ts";
 
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as Popover from "@radix-ui/react-popover";
+
+import {
+  IconChartDonut,
+  IconHandGrab,
+  IconResize,
+  IconSettings2,
+} from "@utils/icons.ts";
+import Dropdown from "@islands/Dropdown.tsx";
+
 type MNodeGenProps = {
   nodeProp: MNode;
 };
-
-const SNAP_POINTS = 20;
 
 export default function MNodeGen({ nodeProp }: MNodeGenProps) {
   // debug
@@ -27,72 +36,57 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
 
   gsap.registerPlugin(useGSAP, Draggable);
   const MNodeRef = useRef<HTMLElement>(null);
+  const GrabberRef = useRef<HTMLDivElement>(null);
+
+  const [isToolbarOpened, setIsToolbarOpened] = useState<boolean>(false);
 
   useEffect(() => {
-    if (MNodeRef.current && MCFrame) {
+    if (MNodeRef.current && MCFrame && GrabberRef.current) {
       DraggableNode.value.create(MNodeRef.current, {
         type: "x,y",
         edgeResistance: 0.65,
         bounds: MCFrame,
-        // onDrag: function () {
-        //   console.log(
-        //     `dragging x: ${this.x} + ${MC.viewBox.value.x} = ${
-        //       this.x + MC.viewBox.value.x
-        //     }, y: ${this.y} + ${MC.viewBox.value.y} = ${
-        //       this.y + MC.viewBox.value.y
-        //     }`,
-        //   );
-        //   this.x = this.x + MC.viewBox.value.x;
-        //   this.y = this.y + MC.viewBox.value.y;
-        //   gsap.set(MNodeRef.current, {
-        //     css: {
-        //       x: this.x,
-        //       y: this.y,
-        //     },
-        //   });
-        //   setNode((prev) => ({ ...prev, x: this.x, y: this.y }));
-        //   // console.log("dragging after: ", this.x, this.y);
-        // },
+        trigger: GrabberRef.current,
         onDragEnd: function () {
-          if (
-            MC.isOverlapping({
-              id: node.id,
-              x1: this.x,
-              y1: this.y,
-              x2: this.x + node.width,
-              y2: this.y + node.height,
-            })
-          ) {
-            console.log("overlapping");
-            // If overlapping, move the node 100px up
-            this.y -= 100;
+          const nodePos = {
+            id: node.id,
+            x1: this.x,
+            y1: this.y,
+            x2: this.x + node.width,
+            y2: this.y + node.height,
+          };
+          const newPos = MC.getFreeSpace(nodePos);
+          if (newPos.x1 !== this.x || newPos.y1 !== this.y) {
+            this.x = newPos.x1;
+            this.y = newPos.y1;
             gsap.set(MNodeRef.current, {
               css: {
                 x: this.x,
                 y: this.y,
               },
             });
-          } else setNode((prev) => ({ ...prev, x: this.x, y: this.y }));
+          }
+          setNode((prev) => ({ ...prev, x: this.x, y: this.y }));
         },
         liveSnap: {
-          x: (x: number) => Math.round(x / SNAP_POINTS) * SNAP_POINTS,
-          y: (y: number) => Math.round(y / SNAP_POINTS) * SNAP_POINTS,
+          x: (x: number) => Math.round(x / CANVA_GUTTER) * CANVA_GUTTER,
+          y: (y: number) => Math.round(y / CANVA_GUTTER) * CANVA_GUTTER,
         },
       });
     }
-  }, [MNodeRef]);
+  }, []);
 
   useEffect(() => {
     MC.saveNode(node);
   }, [node]);
 
   const generateRandomColor = () => {
-    return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    return `#${Math.floor(Math.random() * 16777215).toString(16)}4f`;
   };
 
   return (
     <article
-      className={"absolute"}
+      className={"absolute z-30 group"}
       ref={MNodeRef}
       style={{
         width: `${node.width}px`,
@@ -103,6 +97,51 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
         }px, 0)`,
       }}
     >
+      <div
+        className={"w-full inline-flex justify-end bg-black z-10 nodeToolbar absolute top-0 left-0 transition-all duration-300 transform translate-y-0 opacity-0 group-hover:-translate-y-full group-hover:opacity-100"}
+      >
+        {node.sizes.length > 1 && (
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
+              <button
+                className="rounded-full w-[35px] h-[35px] inline-flex items-center justify-center text-text outline-none"
+                aria-label="Customise options"
+              >
+                <IconResize />
+              </button>
+            </DropdownMenu.Trigger>
+
+            <DropdownMenu.Portal>
+              <DropdownMenu.Content
+                className="bg-black rounded-md p-[5px]"
+                side="top"
+              >
+                {node.sizes.map((size) => (
+                  <DropdownMenu.Item
+                    className="group text-[13px] leading-none text-text rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:pointer-events-none"
+                    onSelect={() => {
+                      setNode((prev) => ({
+                        ...prev,
+                        width: size.width,
+                        height: size.height,
+                      }));
+                    }}
+                  >
+                    {size.width}x{size.height}
+                  </DropdownMenu.Item>
+                ))}
+              </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Root>
+        )}
+      </div>
+      <div ref={GrabberRef} className={"text-text absolute top-0 right-0"}>
+        <IconHandGrab />
+      </div>
+      <div>
+        {/* Node content here */}
+      </div>
+      {/* debug */}
       <p>{renderCount}</p>
       <p>id: {node.id.slice(0, 5)}</p>
       <p>x: {node.x}, y: {node.y}</p>

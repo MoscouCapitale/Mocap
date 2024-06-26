@@ -1,5 +1,6 @@
 import { FreshContext } from "$fresh/server.ts";
 import { verifyPasswordIntegrity, verifySamePassword } from "@utils/login.ts";
+import { handleErrorStatus } from "@services/authErrors.ts";
 
 export const handleSignIn = async (
   // deno-lint-ignore no-explicit-any
@@ -19,39 +20,14 @@ export const handleSignIn = async (
       shouldCreateUser: false,
     },
   });
-  console.log(error);
-  if (error?.status === 400) {
-    const render = await ctx.render({
-      type: "signup",
-      additional_data: {
-        email: email,
-      },
-      error: {
-        message: "This email is not registered yet, please signup first",
-      },
-    });
-    return new Response(render.body, {
-      headers: res.headers,
-    });
-  }
-  if (error?.status === 429) {
-    const render = await ctx.render({
-      type: "default",
-      additional_data: {
-        email: email,
-      },
-      error: {
-        message: "Please wait 60 seconds before requesting a new OTP",
-      },
-    });
-    return new Response(render.body, {
-      headers: res.headers,
-    });
-  }
+
+  error && console.log("====== signin error: \n\n\n\n", error);
+  if (error) return handleErrorStatus({ status: error.status, email, res, ctx });
+
   const render = await ctx.render({
-    type: "action_done",
+    type: "default",
     additional_data: {
-      message: "Check your email for the login link",
+      message: "Un lien de connexion a été envoyé à votre adresse email",
     },
   });
   return new Response(render.body, {

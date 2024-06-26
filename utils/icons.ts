@@ -1,3 +1,10 @@
+import IconSquare from "@tabler-icons-url/square.tsx";
+
+/**
+ * IconType is a type that represents a React component that takes the same props as IconSquare, which itself is a standard Icon representation.
+ */
+export type IconType = React.ComponentType<React.ComponentProps<typeof IconSquare>>;
+
 import IconSend from "@tabler-icons-url/send.tsx";
 import IconChevronLeft from "@tabler-icons-url/chevron-left.tsx";
 import IconChevronUp from "@tabler-icons-url/chevron-up.tsx";
@@ -14,6 +21,10 @@ import IconLogout from "@tabler-icons-url/logout.tsx"
 import IconTrash from "@tabler-icons-url/trash.tsx"
 import IconX from "@tabler-icons-url/x.tsx"
 import IconPlus from "@tabler-icons-url/plus.tsx"
+import IconLoader from "@tabler-icons-url/loader.tsx"
+import IconHandGrab from "@tabler-icons-url/hand-grab.tsx"
+import IconHandStop from "@tabler-icons-url/hand-stop.tsx"
+import IconResize from "@tabler-icons-url/resize.tsx"
 
 export {
     IconSend,
@@ -31,5 +42,9 @@ export {
     IconLogout,
     IconTrash,
     IconX,
-    IconPlus
+    IconPlus,
+    IconLoader,
+    IconHandGrab,
+    IconHandStop,
+    IconResize,
 }

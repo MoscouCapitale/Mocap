@@ -28,14 +28,14 @@ function CWrapperContent() {
   }, [MFrameRef]);
 
   const handleMouseMovement = (e: MouseEvent) => {
-    if (isDragging.value && e.ctrlKey) {
-      const { movementX, movementY } = e;
-      MC.setViewBox({
-        ...MC.viewBox.value,
-        x: MC.viewBox.value.x + movementX,
-        y: MC.viewBox.value.y + movementY,
-      });
-    }
+    // if (isDragging.value && e.ctrlKey) {
+    //   const { movementX, movementY } = e;
+    //   MC.setViewBox({
+    //     ...MC.viewBox.value,
+    //     x: MC.viewBox.value.x + movementX,
+    //     y: MC.viewBox.value.y + movementY,
+    //   });
+    // }
   };
 
   return (

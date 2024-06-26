@@ -55,25 +55,31 @@ export const supabaseSSR = (req: Request, res: Response) =>
     },
   );
 
-export const getUserFromSession = async (request: Request) => {
+export const getUserFromSession = async (request: Request): Promise<{
+  user: any;
+  error: any;
+}> => {
   const cookies = getCookies(request.headers);
 
   const access = cookies.token;
 
   if (access) {
     const { error, data } = await supabase.auth.getUser(access);
-    if (error) console.log("Error with getUserFromSession", error);
+    if (error) {
+      console.log("Error with getUserFromSession", error);
+      return { user: null, error: error.status };
+    }
     if (data?.user?.id) {
       const additionnal_infos = await supabase.from("Users").select().eq(
         "id",
         data.user.id,
       );
-      return additionnal_infos.data && { ...data.user, ...additionnal_infos.data[0] };
+      return { user: additionnal_infos.data && { ...data.user, ...additionnal_infos.data[0] }, error: null };
     }
-    return data.user;
+    return { user: data.user, error: null };
   }
 
-  return null;
+  return { user: null, error: 500 };
 };
 
 export const accessTokenExpired = (request: Request) => {
@@ -131,9 +137,10 @@ export const updateAuthorizations = async (user: any) => {
   );
   if (!user_additional_infos.data || user_additional_infos.data.length === 0) return;
   const user_infos = user_additional_infos.data[0];
-  await updateUserMetadata(user.id, {
+  const res = await updateUserMetadata(user.id, {
     is_authorised: !user_infos.requested && user_infos.accepted,
   });
+  return res;
 };
 
 export const updateUserMetadata = async (user_id: string, metadata: any) => {
