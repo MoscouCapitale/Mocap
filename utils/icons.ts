@@ -22,6 +22,9 @@ import IconTrash from "@tabler-icons-url/trash.tsx"
 import IconX from "@tabler-icons-url/x.tsx"
 import IconPlus from "@tabler-icons-url/plus.tsx"
 import IconLoader from "@tabler-icons-url/loader.tsx"
+import IconHandGrab from "@tabler-icons-url/hand-grab.tsx"
+import IconHandStop from "@tabler-icons-url/hand-stop.tsx"
+import IconResize from "@tabler-icons-url/resize.tsx"
 
 export {
     IconSend,
@@ -40,5 +43,8 @@ export {
     IconTrash,
     IconX,
     IconPlus,
-    IconLoader
+    IconLoader,
+    IconHandGrab,
+    IconHandStop,
+    IconResize,
 }

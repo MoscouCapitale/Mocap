@@ -11,240 +11,25 @@ export type Database = {
     Tables: {
       Artist: {
         Row: {
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
+          created_at: string
           id: number
-          modified_at: string | null
-          name: string
-          url: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id: number
-          modified_at?: string | null
-          name: string
-          url?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          name?: string
-          url?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Artist_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Artist_Track: {
-        Row: {
-          Artist_id: number
-          Track_artist: number
-        }
-        Insert: {
-          Artist_id: number
-          Track_artist: number
-        }
-        Update: {
-          Artist_id?: number
-          Track_artist?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Artist_Track_Artist_id_fkey"
-            columns: ["Artist_id"]
-            isOneToOne: false
-            referencedRelation: "Artist"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Artist_Track_Track_artist_fkey"
-            columns: ["Track_artist"]
-            isOneToOne: false
-            referencedRelation: "Track"
-            referencedColumns: ["artist"]
-          },
-        ]
-      }
-      Audio: {
-        Row: {
-          autodetect_source: boolean | null
-          controls: number | null
-          created_at: string | null
-          created_by: string | null
-          cta: number | null
-          hidden: boolean | null
-          id: number
-          media_cover: number
-          modified_at: string | null
           name: string | null
-          type: number
+          updated_at: string | null
           url: string | null
         }
         Insert: {
-          autodetect_source?: boolean | null
-          controls?: number | null
-          created_at?: string | null
-          created_by?: string | null
-          cta?: number | null
-          hidden?: boolean | null
+          created_at?: string
           id?: number
-          media_cover: number
-          modified_at?: string | null
           name?: string | null
-          type: number
+          updated_at?: string | null
           url?: string | null
         }
         Update: {
-          autodetect_source?: boolean | null
-          controls?: number | null
-          created_at?: string | null
-          created_by?: string | null
-          cta?: number | null
-          hidden?: boolean | null
+          created_at?: string
           id?: number
-          media_cover?: number
-          modified_at?: string | null
           name?: string | null
-          type?: number
+          updated_at?: string | null
           url?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Audio_controls_fkey"
-            columns: ["controls"]
-            isOneToOne: false
-            referencedRelation: "Audio_Controls"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Audio_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Audio_cta_fkey"
-            columns: ["cta"]
-            isOneToOne: false
-            referencedRelation: "Audio_Link"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Audio_type_fkey"
-            columns: ["type"]
-            isOneToOne: false
-            referencedRelation: "Audio_Type"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Audio_Controls: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          duration: boolean | null
-          hidden: boolean | null
-          id: number
-          modified_at: string | null
-          play: boolean | null
-          progress: boolean | null
-          volume: boolean | null
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          duration?: boolean | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          play?: boolean | null
-          progress?: boolean | null
-          volume?: boolean | null
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          duration?: boolean | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          play?: boolean | null
-          progress?: boolean | null
-          volume?: boolean | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Audio_Controls_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Audio_Link: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
-          id: number
-          label: string
-          modified_at: string | null
-          url: string
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          label: string
-          modified_at?: string | null
-          url: string
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          label?: string
-          modified_at?: string | null
-          url?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Audio_Link_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Audio_Type: {
-        Row: {
-          id: number
-          name: string
-        }
-        Insert: {
-          id?: number
-          name: string
-        }
-        Update: {
-          id?: number
-          name?: string
         }
         Relationships: []
       }
@@ -263,521 +48,324 @@ export type Database = {
         }
         Relationships: []
       }
-      Brick_Album: {
+      base_brick: {
         Row: {
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
+          created_at: string
           id: number
-          link: number | null
-          media: number
-          modified_at: string | null
-          name: string | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      Bricks_Album: {
+        Row: {
+          created_at: string
+          cta: number | null
+          hoverable: boolean
+          id: number
+          media: string | null
+          name: string
           title: string | null
+          updated_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
+          created_at?: string
+          cta?: number | null
+          hoverable?: boolean
           id?: number
-          link?: number | null
-          media: number
-          modified_at?: string | null
-          name?: string | null
+          media?: string | null
+          name: string
           title?: string | null
+          updated_at?: string | null
         }
         Update: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
+          created_at?: string
+          cta?: number | null
+          hoverable?: boolean
           id?: number
-          link?: number | null
-          media?: number
-          modified_at?: string | null
-          name?: string | null
+          media?: string | null
+          name?: string
           title?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "Brick_Album_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: "Bricks_Single_duplicate_cta_fkey"
+            columns: ["cta"]
             isOneToOne: false
-            referencedRelation: "Users"
+            referencedRelation: "CTA_Link"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "Brick_Album_link_fkey"
-            columns: ["link"]
-            isOneToOne: true
-            referencedRelation: "Tracklist"
+            foreignKeyName: "Bricks_Single_duplicate_media_fkey"
+            columns: ["media"]
+            isOneToOne: false
+            referencedRelation: "Medias"
             referencedColumns: ["id"]
           },
         ]
       }
-      Brick_Album_Brick_Tile: {
+      Bricks_Album_Platform_Link: {
         Row: {
-          Brick_Album_id: number
-          Brick_Tile_bricks: number
+          Album: number
+          Platform_Link: number
         }
         Insert: {
-          Brick_Album_id: number
-          Brick_Tile_bricks: number
+          Album: number
+          Platform_Link: number
         }
         Update: {
-          Brick_Album_id?: number
-          Brick_Tile_bricks?: number
+          Album?: number
+          Platform_Link?: number
         }
         Relationships: [
           {
-            foreignKeyName: "Brick_Album_Brick_Tile_Brick_Album_id_fkey"
-            columns: ["Brick_Album_id"]
+            foreignKeyName: "Bricks_Album_Platform_Link_Album_fkey"
+            columns: ["Album"]
             isOneToOne: false
-            referencedRelation: "Brick_Album"
+            referencedRelation: "Bricks_Album"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "Brick_Album_Brick_Tile_Brick_Tile_bricks_fkey"
-            columns: ["Brick_Tile_bricks"]
+            foreignKeyName: "Bricks_Album_Platform_Link_Platform_Link_fkey"
+            columns: ["Platform_Link"]
             isOneToOne: false
-            referencedRelation: "Brick_Tile"
-            referencedColumns: ["bricks"]
+            referencedRelation: "Platform_Link"
+            referencedColumns: ["id"]
           },
         ]
       }
-      Brick_Main: {
+      Bricks_Album_Track: {
         Row: {
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
+          Album: number
+          Track: number
+        }
+        Insert: {
+          Album: number
+          Track: number
+        }
+        Update: {
+          Album?: number
+          Track?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Bricks_Album_Track_Album_fkey"
+            columns: ["Album"]
+            isOneToOne: false
+            referencedRelation: "Bricks_Album"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Bricks_Album_Track_Track_fkey"
+            columns: ["Track"]
+            isOneToOne: false
+            referencedRelation: "Track"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Bricks_HeroSection: {
+        Row: {
+          created_at: string
+          cta: number | null
           id: number
-          media: number
-          modified_at: string | null
-          name: string | null
+          media: string | null
+          name: string
+          subtitle: string | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          cta?: number | null
+          id?: number
+          media?: string | null
+          name: string
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          cta?: number | null
+          id?: number
+          media?: string | null
+          name?: string
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Bricks_HeroSection_cta_fkey"
+            columns: ["cta"]
+            isOneToOne: false
+            referencedRelation: "CTA_Link"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Bricks_HeroSection_media_fkey"
+            columns: ["media"]
+            isOneToOne: false
+            referencedRelation: "Medias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Bricks_Single: {
+        Row: {
+          created_at: string
+          cta: number | null
+          hoverable: boolean
+          id: number
+          media: string | null
+          name: string
+          title: string | null
+          track: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          cta?: number | null
+          hoverable?: boolean
+          id?: number
+          media?: string | null
+          name: string
+          title?: string | null
+          track?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          cta?: number | null
+          hoverable?: boolean
+          id?: number
+          media?: string | null
+          name?: string
+          title?: string | null
+          track?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Bricks_Single_cta_fkey"
+            columns: ["cta"]
+            isOneToOne: false
+            referencedRelation: "CTA_Link"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Bricks_Single_media_fkey"
+            columns: ["media"]
+            isOneToOne: false
+            referencedRelation: "Medias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Bricks_Single_track_fkey"
+            columns: ["track"]
+            isOneToOne: false
+            referencedRelation: "Track"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Bricks_Single_Platform_Link: {
+        Row: {
+          Platform_Link: number
+          Single: number
+        }
+        Insert: {
+          Platform_Link: number
+          Single: number
+        }
+        Update: {
+          Platform_Link?: number
+          Single?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Bricks_Single_Platform_Link_Platform_Link_fkey"
+            columns: ["Platform_Link"]
+            isOneToOne: false
+            referencedRelation: "Platform_Link"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Bricks_Single_Platform_Link_Single_fkey"
+            columns: ["Single"]
+            isOneToOne: false
+            referencedRelation: "Bricks_Single"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Bricks_Text: {
+        Row: {
+          created_at: string
+          id: number
+          name: string
+          special: string | null
           text: string | null
-          title: string | null
-          url: string | null
+          updated_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
+          created_at?: string
           id?: number
-          media: number
-          modified_at?: string | null
-          name?: string | null
+          name: string
+          special?: string | null
           text?: string | null
-          title?: string | null
-          url?: string | null
+          updated_at?: string | null
         }
         Update: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
+          created_at?: string
           id?: number
-          media?: number
-          modified_at?: string | null
-          name?: string | null
+          name?: string
+          special?: string | null
           text?: string | null
-          title?: string | null
-          url?: string | null
+          updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "Brick_Main_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      Brick_Single: {
+      CTA_Link: {
         Row: {
           created_at: string | null
-          created_by: string | null
           hidden: boolean | null
           id: number
-          link: number | null
-          media: number
-          modified_at: string | null
-          name: string | null
-          title: string | null
+          label: string
+          updated_at: string | null
+          url: string
         }
         Insert: {
           created_at?: string | null
-          created_by?: string | null
           hidden?: boolean | null
           id?: number
-          link?: number | null
-          media: number
-          modified_at?: string | null
-          name?: string | null
-          title?: string | null
+          label?: string
+          updated_at?: string | null
+          url?: string
         }
         Update: {
           created_at?: string | null
-          created_by?: string | null
           hidden?: boolean | null
           id?: number
-          link?: number | null
-          media?: number
-          modified_at?: string | null
-          name?: string | null
-          title?: string | null
+          label?: string
+          updated_at?: string | null
+          url?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "Brick_Single_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Brick_Single_Brick_Tile: {
-        Row: {
-          Brick_Single_id: number
-          Brick_Tile_bricks: number
-        }
-        Insert: {
-          Brick_Single_id: number
-          Brick_Tile_bricks: number
-        }
-        Update: {
-          Brick_Single_id?: number
-          Brick_Tile_bricks?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Brick_Single_Brick_Tile_Brick_Single_id_fkey"
-            columns: ["Brick_Single_id"]
-            isOneToOne: false
-            referencedRelation: "Brick_Single"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Brick_Single_Brick_Tile_Brick_Tile_bricks_fkey"
-            columns: ["Brick_Tile_bricks"]
-            isOneToOne: false
-            referencedRelation: "Brick_Tile"
-            referencedColumns: ["bricks"]
-          },
-        ]
-      }
-      Brick_Socials: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
-          id: number
-          modified_at: string | null
-          name: string | null
-          plateform: number | null
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          name?: string | null
-          plateform?: number | null
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          name?: string | null
-          plateform?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Brick_Socials_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Brick_Socials_Brick_Tile: {
-        Row: {
-          Brick_Socials_id: number
-          Brick_Tile_bricks: number
-        }
-        Insert: {
-          Brick_Socials_id: number
-          Brick_Tile_bricks: number
-        }
-        Update: {
-          Brick_Socials_id?: number
-          Brick_Tile_bricks?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Brick_Socials_Brick_Tile_Brick_Socials_id_fkey"
-            columns: ["Brick_Socials_id"]
-            isOneToOne: false
-            referencedRelation: "Brick_Socials"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Brick_Socials_Brick_Tile_Brick_Tile_bricks_fkey"
-            columns: ["Brick_Tile_bricks"]
-            isOneToOne: false
-            referencedRelation: "Brick_Tile"
-            referencedColumns: ["bricks"]
-          },
-        ]
-      }
-      Brick_Text: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
-          id: number
-          modified_at: string | null
-          name: string | null
-          text: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          name?: string | null
-          text?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          name?: string | null
-          text?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Brick_Text_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Brick_Text_Brick_Tile: {
-        Row: {
-          Brick_Text_id: number
-          Brick_Tile_bricks: number
-        }
-        Insert: {
-          Brick_Text_id: number
-          Brick_Tile_bricks: number
-        }
-        Update: {
-          Brick_Text_id?: number
-          Brick_Tile_bricks?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Brick_Text_Brick_Tile_Brick_Text_id_fkey"
-            columns: ["Brick_Text_id"]
-            isOneToOne: false
-            referencedRelation: "Brick_Text"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Brick_Text_Brick_Tile_Brick_Tile_bricks_fkey"
-            columns: ["Brick_Tile_bricks"]
-            isOneToOne: false
-            referencedRelation: "Brick_Tile"
-            referencedColumns: ["bricks"]
-          },
-        ]
-      }
-      Brick_Tile: {
-        Row: {
-          bricks: number | null
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
-          id: number
-          modified_at: string | null
-          name: string | null
-        }
-        Insert: {
-          bricks?: number | null
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          name?: string | null
-        }
-        Update: {
-          bricks?: number | null
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          name?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Brick_Tile_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Brickable: {
-        Row: {
-          content: number
-          id: number
-        }
-        Insert: {
-          content: number
-          id?: number
-        }
-        Update: {
-          content?: number
-          id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Brickable_content_fkey"
-            columns: ["content"]
-            isOneToOne: false
-            referencedRelation: "Brick_Main"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Brickable_content_fkey1"
-            columns: ["content"]
-            isOneToOne: false
-            referencedRelation: "Brick_Single"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Brickable_content_fkey2"
-            columns: ["content"]
-            isOneToOne: false
-            referencedRelation: "Brick_Album"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Brickable_content_fkey3"
-            columns: ["content"]
-            isOneToOne: false
-            referencedRelation: "Brick_Tile"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Brickable_content_fkey4"
-            columns: ["content"]
-            isOneToOne: false
-            referencedRelation: "Brick_Text"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Brickable_content_fkey5"
-            columns: ["content"]
-            isOneToOne: false
-            referencedRelation: "Brick_Socials"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Content: {
-        Row: {
-          content: number | null
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
-          id: number
-          modified_at: string | null
-          name: string | null
-        }
-        Insert: {
-          content?: number | null
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          name?: string | null
-        }
-        Update: {
-          content?: number | null
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          name?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Content_content_fkey"
-            columns: ["content"]
-            isOneToOne: false
-            referencedRelation: "Brickable"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Content_content_fkey2"
-            columns: ["content"]
-            isOneToOne: false
-            referencedRelation: "Plateform"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Content_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Content_Users: {
-        Row: {
-          Content_id: number
-          Users_content_created: number
-        }
-        Insert: {
-          Content_id: number
-          Users_content_created: number
-        }
-        Update: {
-          Content_id?: number
-          Users_content_created?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Content_Users_Content_id_fkey"
-            columns: ["Content_id"]
-            isOneToOne: false
-            referencedRelation: "Content"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Content_Users_Users_content_created_fkey"
-            columns: ["Users_content_created"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["content_created"]
-          },
-        ]
+        Relationships: []
       }
       Mail_Pairing: {
         Row: {
@@ -811,29 +399,6 @@ export type Database = {
           name?: string
         }
         Relationships: []
-      }
-      Media_Brick_Tile: {
-        Row: {
-          Brick_Tile_bricks: number
-          Media_id: number
-        }
-        Insert: {
-          Brick_Tile_bricks: number
-          Media_id: number
-        }
-        Update: {
-          Brick_Tile_bricks?: number
-          Media_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Media_Brick_Tile_Brick_Tile_bricks_fkey"
-            columns: ["Brick_Tile_bricks"]
-            isOneToOne: false
-            referencedRelation: "Brick_Tile"
-            referencedColumns: ["bricks"]
-          },
-        ]
       }
       Medias: {
         Row: {
@@ -895,7 +460,7 @@ export type Database = {
             foreignKeyName: "medias_controls_fkey"
             columns: ["controls"]
             isOneToOne: false
-            referencedRelation: "Audio_Controls"
+            referencedRelation: "Medias_Controls"
             referencedColumns: ["id"]
           },
           {
@@ -909,7 +474,7 @@ export type Database = {
             foreignKeyName: "medias_cta_fkey"
             columns: ["cta"]
             isOneToOne: false
-            referencedRelation: "Audio_Link"
+            referencedRelation: "CTA_Link"
             referencedColumns: ["id"]
           },
           {
@@ -921,311 +486,262 @@ export type Database = {
           },
         ]
       }
-      Plateform: {
+      Medias_Controls: {
         Row: {
           created_at: string | null
-          created_by: string | null
+          duration: boolean | null
           hidden: boolean | null
           id: number
-          image: number
-          modified_at: string | null
           name: string | null
+          play: boolean | null
+          progress: boolean | null
+          updated_at: string | null
+          volume: boolean | null
         }
         Insert: {
           created_at?: string | null
-          created_by?: string | null
+          duration?: boolean | null
           hidden?: boolean | null
           id?: number
-          image: number
-          modified_at?: string | null
           name?: string | null
+          play?: boolean | null
+          progress?: boolean | null
+          updated_at?: string | null
+          volume?: boolean | null
         }
         Update: {
           created_at?: string | null
-          created_by?: string | null
+          duration?: boolean | null
           hidden?: boolean | null
           id?: number
-          image?: number
-          modified_at?: string | null
           name?: string | null
+          play?: boolean | null
+          progress?: boolean | null
+          updated_at?: string | null
+          volume?: boolean | null
+        }
+        Relationships: []
+      }
+      Node: {
+        Row: {
+          Album: number | null
+          created_at: string
+          height: number
+          HeroSection: number | null
+          id: string
+          locked: boolean
+          Platform_Link: number | null
+          Single: number | null
+          Text: number | null
+          type: Database["public"]["Enums"]["brick_type"] | null
+          width: number
+          x: number
+          y: number
+        }
+        Insert: {
+          Album?: number | null
+          created_at?: string
+          height: number
+          HeroSection?: number | null
+          id?: string
+          locked?: boolean
+          Platform_Link?: number | null
+          Single?: number | null
+          Text?: number | null
+          type?: Database["public"]["Enums"]["brick_type"] | null
+          width: number
+          x: number
+          y: number
+        }
+        Update: {
+          Album?: number | null
+          created_at?: string
+          height?: number
+          HeroSection?: number | null
+          id?: string
+          locked?: boolean
+          Platform_Link?: number | null
+          Single?: number | null
+          Text?: number | null
+          type?: Database["public"]["Enums"]["brick_type"] | null
+          width?: number
+          x?: number
+          y?: number
         }
         Relationships: [
           {
-            foreignKeyName: "Plateform_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: "Node_Album_fkey"
+            columns: ["Album"]
             isOneToOne: false
-            referencedRelation: "Users"
+            referencedRelation: "Bricks_Album"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Node_HeroSection_fkey"
+            columns: ["HeroSection"]
+            isOneToOne: false
+            referencedRelation: "Bricks_HeroSection"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Node_Platform_Link_fkey"
+            columns: ["Platform_Link"]
+            isOneToOne: false
+            referencedRelation: "Platform_Link"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Node_Single_fkey"
+            columns: ["Single"]
+            isOneToOne: false
+            referencedRelation: "Bricks_Single"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Node_Text_fkey"
+            columns: ["Text"]
+            isOneToOne: false
+            referencedRelation: "Bricks_Text"
             referencedColumns: ["id"]
           },
         ]
       }
-      Plateform_Link: {
+      Platform: {
         Row: {
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
+          created_at: string
+          icon: string | null
           id: number
-          modified_at: string | null
-          plateform: number | null
-          url: string
+          name: string
+          updated_at: string | null
         }
         Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
+          created_at?: string
+          icon?: string | null
           id?: number
-          modified_at?: string | null
-          plateform?: number | null
-          url: string
+          name: string
+          updated_at?: string | null
         }
         Update: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
+          created_at?: string
+          icon?: string | null
           id?: number
-          modified_at?: string | null
-          plateform?: number | null
-          url?: string
+          name?: string
+          updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "Plateform_Link_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Plateform_Link_plateform_fkey"
-            columns: ["plateform"]
-            isOneToOne: false
-            referencedRelation: "Plateform"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      Plateform_Link_Brick_Album: {
+      Platform_Link: {
         Row: {
-          Brick_Album_link: number
-          Plateform_Link_id: number
+          created_at: string
+          id: number
+          name: string
+          platform: number | null
+          updated_at: string | null
+          url: string | null
         }
         Insert: {
-          Brick_Album_link: number
-          Plateform_Link_id: number
+          created_at?: string
+          id?: number
+          name: string
+          platform?: number | null
+          updated_at?: string | null
+          url?: string | null
         }
         Update: {
-          Brick_Album_link?: number
-          Plateform_Link_id?: number
+          created_at?: string
+          id?: number
+          name?: string
+          platform?: number | null
+          updated_at?: string | null
+          url?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "Plateform_Link_Brick_Album_Brick_Album_link_fkey"
-            columns: ["Brick_Album_link"]
+            foreignKeyName: "Platform_Link_platform_fkey"
+            columns: ["platform"]
             isOneToOne: false
-            referencedRelation: "Brick_Album"
-            referencedColumns: ["link"]
-          },
-          {
-            foreignKeyName: "Plateform_Link_Brick_Album_Plateform_Link_id_fkey"
-            columns: ["Plateform_Link_id"]
-            isOneToOne: false
-            referencedRelation: "Plateform_Link"
+            referencedRelation: "Platform"
             referencedColumns: ["id"]
-          },
-        ]
-      }
-      Plateform_Link_Brick_Single: {
-        Row: {
-          Brick_Single_link: number
-          Plateform_Link_id: number
-        }
-        Insert: {
-          Brick_Single_link: number
-          Plateform_Link_id: number
-        }
-        Update: {
-          Brick_Single_link?: number
-          Plateform_Link_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Plateform_Link_Brick_Single_Brick_Single_link_fkey"
-            columns: ["Brick_Single_link"]
-            isOneToOne: false
-            referencedRelation: "Brick_Single"
-            referencedColumns: ["link"]
-          },
-          {
-            foreignKeyName: "Plateform_Link_Brick_Single_Plateform_Link_id_fkey"
-            columns: ["Plateform_Link_id"]
-            isOneToOne: false
-            referencedRelation: "Plateform_Link"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Plateform_Link_Brick_Socials: {
-        Row: {
-          Brick_Socials_plateform: number
-          Plateform_Link_id: number
-        }
-        Insert: {
-          Brick_Socials_plateform: number
-          Plateform_Link_id: number
-        }
-        Update: {
-          Brick_Socials_plateform?: number
-          Plateform_Link_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Plateform_Link_Brick_Socials_Brick_Socials_plateform_fkey"
-            columns: ["Brick_Socials_plateform"]
-            isOneToOne: false
-            referencedRelation: "Brick_Socials"
-            referencedColumns: ["plateform"]
-          },
-          {
-            foreignKeyName: "Plateform_Link_Brick_Socials_Plateform_Link_id_fkey"
-            columns: ["Plateform_Link_id"]
-            isOneToOne: false
-            referencedRelation: "Plateform_Link"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Plateform_Link_Track: {
-        Row: {
-          Plateform_Link_id: number
-          Track_link: number
-        }
-        Insert: {
-          Plateform_Link_id: number
-          Track_link: number
-        }
-        Update: {
-          Plateform_Link_id?: number
-          Track_link?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Plateform_Link_Track_Plateform_Link_id_fkey"
-            columns: ["Plateform_Link_id"]
-            isOneToOne: false
-            referencedRelation: "Plateform_Link"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Plateform_Link_Track_Track_link_fkey"
-            columns: ["Track_link"]
-            isOneToOne: false
-            referencedRelation: "Track"
-            referencedColumns: ["link"]
           },
         ]
       }
       Track: {
         Row: {
-          artist: number | null
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
+          created_at: string
           id: number
-          link: number | null
-          modified_at: string | null
           name: string
+          updated_at: string | null
         }
         Insert: {
-          artist?: number | null
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
+          created_at?: string
           id?: number
-          link?: number | null
-          modified_at?: string | null
           name: string
+          updated_at?: string | null
         }
         Update: {
-          artist?: number | null
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
+          created_at?: string
           id?: number
-          link?: number | null
-          modified_at?: string | null
           name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      Track_Artist: {
+        Row: {
+          artist: number
+          tracklist: number
+        }
+        Insert: {
+          artist: number
+          tracklist: number
+        }
+        Update: {
+          artist?: number
+          tracklist?: number
         }
         Relationships: [
           {
-            foreignKeyName: "Track_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: "Track_Artist_artist_fkey"
+            columns: ["artist"]
             isOneToOne: false
-            referencedRelation: "Users"
+            referencedRelation: "Artist"
             referencedColumns: ["id"]
           },
-        ]
-      }
-      Track_Tracklist: {
-        Row: {
-          Track_id: number
-          Tracklist_track: number
-        }
-        Insert: {
-          Track_id: number
-          Tracklist_track: number
-        }
-        Update: {
-          Track_id?: number
-          Tracklist_track?: number
-        }
-        Relationships: [
           {
-            foreignKeyName: "Track_Tracklist_Track_id_fkey"
-            columns: ["Track_id"]
+            foreignKeyName: "Track_Artist_tracklist_fkey"
+            columns: ["tracklist"]
             isOneToOne: false
             referencedRelation: "Track"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "Track_Tracklist_Tracklist_track_fkey"
-            columns: ["Tracklist_track"]
-            isOneToOne: false
-            referencedRelation: "Tracklist"
-            referencedColumns: ["track"]
-          },
         ]
       }
-      Tracklist: {
+      Track_Platform_Link: {
         Row: {
-          created_at: string | null
-          created_by: string | null
-          hidden: boolean | null
-          id: number
-          modified_at: string | null
-          track: number | null
+          platforms: number
+          tracklist: number
         }
         Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          track?: number | null
+          platforms: number
+          tracklist: number
         }
         Update: {
-          created_at?: string | null
-          created_by?: string | null
-          hidden?: boolean | null
-          id?: number
-          modified_at?: string | null
-          track?: number | null
+          platforms?: number
+          tracklist?: number
         }
         Relationships: [
           {
-            foreignKeyName: "Tracklist_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: "Track_Platform_Link_platforms_fkey"
+            columns: ["platforms"]
             isOneToOne: false
-            referencedRelation: "Users"
+            referencedRelation: "Platform_Link"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Track_Platform_Link_tracklist_fkey"
+            columns: ["tracklist"]
+            isOneToOne: false
+            referencedRelation: "Track"
             referencedColumns: ["id"]
           },
         ]
@@ -1233,21 +749,18 @@ export type Database = {
       Users: {
         Row: {
           accepted: boolean
-          content_created: number | null
           id: string
           requested: boolean
           username: string | null
         }
         Insert: {
           accepted?: boolean
-          content_created?: number | null
           id: string
           requested?: boolean
           username?: string | null
         }
         Update: {
           accepted?: boolean
-          content_created?: number | null
           id?: string
           requested?: boolean
           username?: string | null
@@ -1644,6 +1157,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      brick_type: "HeroSection" | "Single" | "Album" | "Text" | "Platform_Link"
       media_type: "Audios" | "Videos" | "Images" | "Misc"
     }
     CompositeTypes: {

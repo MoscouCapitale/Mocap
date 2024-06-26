@@ -21,9 +21,9 @@ Tasks :
   - [ ] One-page Magic Link Login
   - [ ] Magic Link email
   - [ ] Notifications on new user
-    - [ ] Find a notification service
+    - [x] Find a notification service
     - [ ] Notify admin on new request
-    - [ ] Add notification badge on admin UI
+    - [x] Add notification badge on admin UI
   - [ ] Roles
     - [ ] Role based access control
     - [ ] RLS
@@ -108,3 +108,5 @@ Tasks :
     - [x] Error handler on side (what response on supa {data, error}) -- started in `utils/api.ts`
   - [ ] Set partial content displayed on page load, instead of click (because for now it is only on subnav items, and specifically on the content page. It should be global, for each "page")
   - [ ] Set every database id as uuid
+  - [ ] Why is database fetching empty when first connexion ?
+  - [ ] Fix email notifications

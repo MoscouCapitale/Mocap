@@ -91,10 +91,7 @@ export default function Navbar(path: { path: string }) {
     // TODO: fix nav, should be sticking in a fixed position if you scroll down
     <nav class="bg-black min-h-screen p-[30px] flex-col justify-between items-start inline-flex">
       <div class="flex-col justify-start items-start gap-10 inline-flex">
-        {readyToRender && navItems.map((item) => {
-          console.log("item", item);
-          return NavbarItem(item, collapsed);
-        })}
+        {readyToRender && navItems.map((item) => NavbarItem(item, collapsed))}
       </div>
       <div class="w-full items-start inline-flex flex-col gap-5">
         <LogoutButton />
