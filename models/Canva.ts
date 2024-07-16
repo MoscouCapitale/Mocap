@@ -25,7 +25,25 @@ interface MNode {
     sizes: MNodeSize[];
 }
 
-export type { MNode };
+/**
+ * The MNode type you save in the database. The content and size are applied on api call.
+ */
+interface DBMNode {
+    id?: number;
+    locked?: boolean;
+    type: keyof typeof BricksType;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    HeroSection?: number;
+    Single?: number;
+    Album?: number;
+    Text?: number;
+    PlateformLink?: number;
+}
+
+export type { MNode, DBMNode };
 
 export const getAvailableSizes = (type: keyof typeof BricksType): MNodeSize[] => {
     switch (type) {

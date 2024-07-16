@@ -2,7 +2,7 @@ import { CANVA_GUTTER, MNode } from "@models/Canva.ts";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { useGSAP } from "@gsap/react";
-import { useEffect, useRef, useState } from "preact/hooks";
+import { Ref, useCallback, useEffect, useRef, useState } from "preact/hooks";
 import { computed, effect, signal } from "@preact/signals-core";
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import useRenderCount from "@hooks/useRenderCount.ts";
@@ -17,6 +17,8 @@ import {
   IconSettings2,
 } from "@utils/icons.ts";
 import Dropdown from "@islands/Dropdown.tsx";
+import { getBrickFromBrickType } from "@utils/bricks.tsx";
+import { RefObject, createRef } from "https://esm.sh/v128/preact@10.19.6/src/index.js";
 
 type MNodeGenProps = {
   nodeProp: MNode;
@@ -32,21 +34,28 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
 
   const DraggableNode = signal<typeof Draggable>(Draggable);
 
-  const MCFrame = computed(() => MC.MCFrame.value).value.current;
-
+  
   gsap.registerPlugin(useGSAP, Draggable);
   const MNodeRef = useRef<HTMLElement>(null);
-  const GrabberRef = useRef<HTMLDivElement>(null);
-
+  // const GrabberRef = useRef<HTMLDivElement>(null);
+  // const [GrabberRef, setGrabberRef] = useState<HTMLDivElement | null>(null);
+  const GrabberRef = signal<Ref<HTMLDivElement>>(createRef());
   const [isToolbarOpened, setIsToolbarOpened] = useState<boolean>(false);
+  
+  const MCFrame = computed(() => MC.MCFrame.value).value.current;
+  // const isPreview = computed(() => MC.isPreview).value
+
+  effect(() => console.log("MC preview updated to: ", MC.isPreview))
+  // effect(() => console.log("isPreview updated to: ", isPreview))
 
   useEffect(() => {
-    if (MNodeRef.current && MCFrame && GrabberRef.current) {
+    if (MNodeRef.current && MCFrame && GrabberRef.value.current) {
+      console.log("Creating draggable node");
       DraggableNode.value.create(MNodeRef.current, {
         type: "x,y",
         edgeResistance: 0.65,
         bounds: MCFrame,
-        trigger: GrabberRef.current,
+        trigger: GrabberRef.value.current,
         onDragEnd: function () {
           const nodePos = {
             id: node.id,
@@ -74,7 +83,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
         },
       });
     }
-  }, []);
+  }, [MNodeRef.current, MCFrame, GrabberRef.value]);
 
   useEffect(() => {
     MC.saveNode(node);
@@ -86,7 +95,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
 
   return (
     <article
-      className={"absolute z-30 group"}
+      className={"absolute z-30 group rounded-[20px]"}
       ref={MNodeRef}
       style={{
         width: `${node.width}px`,
@@ -97,50 +106,53 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
         }px, 0)`,
       }}
     >
-      <div
-        className={"w-full inline-flex justify-end bg-black z-10 nodeToolbar absolute top-0 left-0 transition-all duration-300 transform translate-y-0 opacity-0 group-hover:-translate-y-full group-hover:opacity-100"}
-      >
-        {node.sizes.length > 1 && (
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger asChild>
-              <button
-                className="rounded-full w-[35px] h-[35px] inline-flex items-center justify-center text-text outline-none"
-                aria-label="Customise options"
-              >
-                <IconResize />
-              </button>
-            </DropdownMenu.Trigger>
-
-            <DropdownMenu.Portal>
-              <DropdownMenu.Content
-                className="bg-black rounded-md p-[5px]"
-                side="top"
-              >
-                {node.sizes.map((size) => (
-                  <DropdownMenu.Item
-                    className="group text-[13px] leading-none text-text rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:pointer-events-none"
-                    onSelect={() => {
-                      setNode((prev) => ({
-                        ...prev,
-                        width: size.width,
-                        height: size.height,
-                      }));
-                    }}
+      {!MC.isPreview && (
+        <>
+          <div
+            className={"w-full inline-flex justify-end bg-black z-10 nodeToolbar absolute top-0 left-0 transition-all duration-300 transform translate-y-0 opacity-0 group-hover:-translate-y-full group-hover:opacity-100"}
+          >
+            {node.sizes.length > 1 && (
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger asChild>
+                  <button
+                    className="rounded-full w-[35px] h-[35px] inline-flex items-center justify-center text-text outline-none"
+                    aria-label="Customise options"
                   >
-                    {size.width}x{size.height}
-                  </DropdownMenu.Item>
-                ))}
-              </DropdownMenu.Content>
-            </DropdownMenu.Portal>
-          </DropdownMenu.Root>
-        )}
-      </div>
-      <div ref={GrabberRef} className={"text-text absolute top-0 right-0"}>
-        <IconHandGrab />
-      </div>
-      <div>
-        {/* Node content here */}
-      </div>
+                    <IconResize />
+                  </button>
+                </DropdownMenu.Trigger>
+
+                <DropdownMenu.Portal>
+                  <DropdownMenu.Content
+                    className="bg-black rounded-md p-[5px]"
+                    side="top"
+                  >
+                    {node.sizes.map((size) => (
+                      <DropdownMenu.Item
+                        className="group text-[13px] leading-none text-text rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:pointer-events-none"
+                        onSelect={() => {
+                          setNode((prev) => ({
+                            ...prev,
+                            width: size.width,
+                            height: size.height,
+                          }));
+                        }}
+                      >
+                        {size.width}x{size.height}
+                      </DropdownMenu.Item>
+                    ))}
+                  </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+              </DropdownMenu.Root>
+            )}
+          </div>
+          <div ref={GrabberRef.value}
+          className={"text-text absolute top-0 right-0"}>
+            <IconHandGrab />
+          </div>
+        </>
+      )}
+      {getBrickFromBrickType(node)}
       {/* debug */}
       <p>{renderCount}</p>
       <p>id: {node.id.slice(0, 5)}</p>

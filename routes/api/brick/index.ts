@@ -3,20 +3,26 @@ import { supabase as supa } from "@services/supabase.ts";
 import { DatabaseAttributes } from "@models/App.ts";
 import { evaluateSupabaseResponse } from "@utils/api.ts";
 import { BricksType, PlateformLink, Track } from "@models/Bricks.ts";
+import { createNodeFromBrick } from "@services/bricks.ts";
 
 export const handler: Handlers<any | null> = {
   async PUT(req: Request, ctx: FreshContext) {
     const body = await req.json();
 
     const type = body.type;
+    const withCanvaInsert = body.withCanvaInsert
 
+    
     if (!Object.keys(BricksType).includes(type)) {
       return new Response(`${type} is not a valid type`, { status: 400 });
     }
-
+    
     const brick = body.data;
     // console.log("raw brick is ", brick);
     const tableName = `Bricks_${BricksType[type as keyof typeof BricksType]}`;
+
+    // Remove some attributes that are not in the database
+    delete brick.isActive;
 
     // Save many-to-many relationships ids
     const linkedTables: ({ [key: string]: number[] } | undefined)[] = Object
@@ -83,7 +89,21 @@ export const handler: Handlers<any | null> = {
       console.error("Error while saving linked tables: ", e);
     }
 
-    return new Response(JSON.stringify(data[0]), {
+    const savedBrick = data[0];
+    console.log("Saved bricks. Finishing")
+
+    // Create a node for the brick
+    if (withCanvaInsert) {
+      console.log("Generating MNode from brick")
+      const node = await createNodeFromBrick(type as keyof typeof BricksType, savedBrick);
+      console.log("Node is ", node)
+      if (!node) {
+        console.error("Error while creating node for brick ", savedBrick);
+      }
+    }
+
+    console.log("Returning response")
+    return new Response(JSON.stringify(savedBrick), {
       status: 200,
       headers: {
         "content-type": "application/json",

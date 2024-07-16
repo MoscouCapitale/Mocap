@@ -24,6 +24,10 @@ export async function handler(
   req: Request,
   ctx: FreshContext<AppState>,
 ) {
+  // FIXME: temporary solution for slow internet
+  const nextStp = await ctx.next();
+  return nextStp;
+
   let { user, error: _error } = await getUserFromSession(req);
   let session: Session | null = null;
 

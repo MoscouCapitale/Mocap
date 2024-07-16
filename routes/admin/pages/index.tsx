@@ -1,14 +1,11 @@
 import { defineRoute } from "$fresh/server.ts";
 
 // import ContentWrapper from "@components/pages/ContentWrapper.tsx";
-import ContentWrapper from "@islands/pages/ContentWrapper.tsx";
+import CWrapper from "@islands/pages/ContentWrapper.tsx";
 import BrickSidebar from "@islands/pages/BrickSidebar.tsx";
+import { MNodeProvider } from "@contexts/MNodeContext.tsx";
+import MCPageWRapper from "@islands/pages/MCPageWrapper.tsx";
 
 export default defineRoute((req, ctx) => {
-  return (
-    <div className={"w-full h-full grow flex gap-8"}>
-      <ContentWrapper />
-      <BrickSidebar />
-    </div>
-  );
+  return <MCPageWRapper />;
 });

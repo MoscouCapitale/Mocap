@@ -5,6 +5,7 @@ interface Brick {
   name: string;
   created_at: string;
   updated_at: string;
+  type?: BricksType;
 }
 
 interface HeroSection extends Brick {
@@ -61,13 +62,9 @@ type Artist = {
   updated_at: string;
 };
 
-type PlateformLink = {
-  id: number;
-  name: string;
+interface PlateformLink extends Brick {
   platform: Platform;
   url: string;
-  created_at: string;
-  updated_at: string;
 };
 
 type Platform = {

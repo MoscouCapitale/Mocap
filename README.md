@@ -102,7 +102,9 @@ Tasks :
   - [ ] Error management
       - [ ] Brick with this name already exists
 - [ ] Misc
-  - [ ] Request service object instead of js native `fetch()`
+  - [ ] Learn & refacto whole effects states management with preact
+  - [ ] Add localstorage saving
+  - [ ] Request service object instead of js native `fetch()` (reast query with preact compat ?)
     - [ ] Make an optionnal parameter to show (or not) the result of the fetch
   - [ ] Add a global error handler
     - [x] Error handler on side (what response on supa {data, error}) -- started in `utils/api.ts`

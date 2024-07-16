@@ -1,7 +1,7 @@
 import { computed, effect, Signal, signal } from "@preact/signals-core";
 
 import { createContext, createRef, Ref, RefObject, VNode } from "preact";
-import { useContext, useEffect } from "preact/hooks";
+import { useContext, useEffect, useState } from "preact/hooks";
 import { CANVA_GUTTER, MNode } from "@models/Canva.ts";
 import { getBaseUrl } from "@utils/pathHandler.ts";
 
@@ -43,6 +43,7 @@ type MNodeContextType = {
   saveNode: (node: MNode) => void;
   isPreview: boolean;
   setPreview: (preview: boolean) => void;
+  refetchNodes: () => void;
 };
 
 // const asyncGnal = function<T>(defaultValue: T, callback: () => Promise<T>): ReadonlySignal<T> {
@@ -67,8 +68,13 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   const viewBox = signal<MCViewBox>({ x: 0, y: 0, scale: 1 });
   const setViewBox = (viewBoxVal: MCViewBox) => viewBox.value = viewBoxVal;
   const MCNodes = signal<MNode[]>([]);
-  const isPreview = signal<boolean>(false);
-  const setPreview = (preview: boolean) => isPreview.value = preview;
+  // const isPreview = signal<boolean>(false);
+  const [isPreview, setIsPreview] = useState<boolean>(false);
+  // const setPreview = (preview: boolean) => isPreview.value = preview;
+  const setPreview = (preview: boolean) => setIsPreview(preview);
+
+  effect(() => console.log("MCFrame updated to: ", MCFrame.value.current));
+  // effect(() => console.log("Is preview updated: ", isPreview))
 
   useEffect(() => {
     if (MCFrame.value.current && viewBox) {
@@ -94,7 +100,23 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
       );
   });
 
-  effect(() => Boolean(MCNodes.value.length) && console.log(MCNodes.value));
+  const refetchNodes = () => {
+    fetch(getBaseUrl() + "/api/node/getAll")
+      .then((res) => {
+        if (res) {
+          return res.json();
+        }
+        console.error("No response from server: ", res);
+        return [];
+      }).then((data: MNode[]) => MCNodes.value = data).catch(
+        (e) => {
+          console.error(e);
+          return [];
+        },
+      );
+  };
+
+  // effect(() => Boolean(MCNodes.value.length) && typeof window !== "undefined" && console.log(MCNodes.value));
 
   const saveNode = (node: MNode) => {
     const nodeIndex = MCNodes.value.findIndex((n) => n.id === node.id);
@@ -208,7 +230,9 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
         rectPos.y.dist === -1
       ) {
         const pos = {
-          x: a.x1 > b.x1 ? rectPos.x.pos + CANVA_GUTTER : rectPos.x.pos - (a.x2 - a.x1) - CANVA_GUTTER,
+          x: a.x1 > b.x1
+            ? rectPos.x.pos + CANVA_GUTTER
+            : rectPos.x.pos - (a.x2 - a.x1) - CANVA_GUTTER,
           y: a.y1,
         };
         // console.log("X is closer: ", pos);
@@ -216,7 +240,9 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
       }
       const pos = {
         x: a.x1,
-        y: a.y1 > b.y1 ? rectPos.y.pos + CANVA_GUTTER : rectPos.y.pos - (a.y2 - a.y1) - CANVA_GUTTER,
+        y: a.y1 > b.y1
+          ? rectPos.y.pos + CANVA_GUTTER
+          : rectPos.y.pos - (a.y2 - a.y1) - CANVA_GUTTER,
       };
       return pos;
     };
@@ -241,8 +267,9 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     getClosestFreePosition,
     getFreeSpace,
     saveNode: saveNode,
-    isPreview: isPreview.value,
+    isPreview: isPreview,
     setPreview: setPreview,
+    refetchNodes,
   };
 
   return (

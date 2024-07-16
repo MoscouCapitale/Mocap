@@ -9,6 +9,7 @@ import { HeroSection, Single, Album, Text, Social, PlateformLink, BricksType, cr
 import { renderMediaInputs } from "@utils/inputs.tsx";
 import { DatabaseAttributes } from "@models/App.ts";
 import Button from "@islands/Button.tsx";
+import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 
 type CreateBrickBarProps = {
   brickType: BricksType;
@@ -60,9 +61,16 @@ export default function CreateBrickBar({ brickType, brickData }: CreateBrickBarP
       body: JSON.stringify({
         type: brickType,
         data: brick,
+        withCanvaInsert: Boolean(withCanvaInsert)
       }),
-    }).finally(() => {
-      if (withCanvaInsert) addBrickToCanvas();
+    }).then((res) => {
+      console.log("Res put brick: ", res)
+      console.log("Insert canva ?: ", withCanvaInsert)
+      if (withCanvaInsert) {
+        console.log("Refetching nodes from sidebar...")
+        const MCctx = useMNodeContext();
+        MCctx.refetchNodes();
+      }
     });
   };
 
@@ -79,7 +87,9 @@ export default function CreateBrickBar({ brickType, brickData }: CreateBrickBarP
   // };
 
   const addBrickToCanvas = () => {
-    console.log("adding brick to canvas", brick);
+    console.log("Refetching nodes from sidebar...")
+    const MCctx = useMNodeContext();
+    MCctx.refetchNodes();
   };
 
   return brick ? (
@@ -87,8 +97,8 @@ export default function CreateBrickBar({ brickType, brickData }: CreateBrickBarP
       {/* <AddMediaZone handleFileUpload={() => setDisplayMedias(true)} /> */}
       <div className={"flex flex-col w-full gap-4"}>{renderMediaInputs(brick, updateBrick, BrickModifiableAttributes, () => setDisplayMedias(true))}</div>
       <div class="w-full gap-4 flex flex-col justify-center align-middle">
-        <Button text={`${isModifying ? 'Modifier et insérer' : 'Générer'}`} onClick={saveBrick} className={{ wrapper: "grow justify-center text-2xl" }} />
-        <Button variant="secondary" text={`${isModifying ? 'Modifier' : 'Enregistrer'} la brique`} onClick={() => saveBrick(true)} className={{ wrapper: "grow justify-center" }} />
+        <Button text={`${isModifying ? 'Modifier et insérer' : 'Générer'}`} onClick={() => saveBrick(true)} className={{ wrapper: "grow justify-center text-2xl" }} />
+        <Button variant="secondary" text={`${isModifying ? 'Modifier' : 'Enregistrer'} la brique`} onClick={() => saveBrick()} className={{ wrapper: "grow justify-center" }} />
       </div>
       {displayMedias && (
         <InpagePopup closePopup={() => setDisplayMedias(false)}>

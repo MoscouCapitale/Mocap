@@ -70,18 +70,19 @@ export default function Navbar(path: { path: string }) {
             : { ...item, active: false }
         )
       );
-      let requestNb = 0;
-      const res = await fetch("/api/request/getNotifications");
-      if (res.ok && res.status !== 204) requestNb = await res.json();
-      if (requestNb) {
-        setNavItems((prev) =>
-          prev.map((item) =>
-            item.name == "requests"
-              ? { ...item, badge: { count: requestNb, color: "error" } }
-              : item
-          )
-        );
-      }
+      // FIXME: temp disable for slow internet
+      // let requestNb = 0;
+      // const res = await fetch("/api/request/getNotifications");
+      // if (res.ok && res.status !== 204) requestNb = await res.json();
+      // if (requestNb) {
+      //   setNavItems((prev) =>
+      //     prev.map((item) =>
+      //       item.name == "requests"
+      //         ? { ...item, badge: { count: requestNb, color: "error" } }
+      //         : item
+      //     )
+      //   );
+      // }
     }
 
     init().then(() => setReadyToRender(true));
