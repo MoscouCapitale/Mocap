@@ -18,6 +18,8 @@ type DropdownItem = {
   value: string;
   isActive?: boolean;
   onClick: () => void;
+  onMouseEnter?: (e: MouseEvent, id: number | string) => void;
+  onMouseLeave?: (e: MouseEvent, id: number | string) => void;
 };
 
 type Modify<T, R> = Omit<T, keyof R> & R;

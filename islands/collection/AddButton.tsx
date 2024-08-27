@@ -19,11 +19,9 @@ export default function AddButton({position}: AddButtonProps) {
         }}
         className={{ wrapper: position || "absolute top-[calc(2.5rem+0.625rem)] right-10" }}
       />
-      {openAddMediaInterface && (
-        <InpagePopup closePopup={() => setOpenAddMediaInterface(false)}>
-          <AddPopup />
-        </InpagePopup>
-      )}
+      <InpagePopup isOpen={openAddMediaInterface} closePopup={() => setOpenAddMediaInterface(false)}>
+        <AddPopup />
+      </InpagePopup>      
     </>
   );
 }

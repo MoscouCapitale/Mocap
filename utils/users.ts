@@ -1,12 +1,11 @@
 import { supabase as supa } from "@services/supabase.ts";
-import { evaluateSupabaseResponse } from "@utils/api.ts";
+import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
 import { sendEMail } from "@services/emailer.ts";
 
 export const sendUserRequestNotification = async (userId: string) => {
   const { data, error } = await supa.auth.admin.getUserById(userId);
 
-  const badRes = evaluateSupabaseResponse(data, error);
-  if (badRes) return badRes;
+  if (evaluateSupabaseResponse(data, error)) return returnErrorReponse(data, error);
 
   const { data: adminEmail } = await supa.from("Website_Settings_Main_Emails")
     .select("email_user_creator(*)");

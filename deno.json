@@ -14,7 +14,7 @@
   "exclude": ["**/_fresh/*"],
   "nodeModulesDir": true,
   "imports": {
-    "$fresh/": "https://deno.land/x/fresh@1.6.8/",
+    "$fresh/": "https://deno.land/x/fresh@1.7.1/",
     "preact": "https://esm.sh/preact@10.19.6",
     "preact/": "https://esm.sh/preact@10.19.6/",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
@@ -35,11 +35,13 @@
     "tailwindcss/": "npm:/tailwindcss@3.3.5/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.3.5/plugin.js",
     "tailwindcss-animate": "npm:tailwindcss-animate",
+    "tailwind-scrollbar": "npm:tailwind-scrollbar@3.1.0",
     "class-variance-authority": "https://esm.sh/class-variance-authority@0.7.0",
     "clsx": "https://esm.sh/clsx@2.0.0",
     "tailwind-merge": "https://esm.sh/tailwind-merge@1.14.0",
     "@tabler-icons-url/": "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/",
     "@babel/runtime/helpers/esm/extends": "https://esm.sh/@babel/runtime@7.23.1/helpers/esm/extends",
+
     "@radix-ui/react-toast": "https://esm.sh/*@radix-ui/react-toast@1.1.5?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
     "@radix-ui/primitive": "https://esm.sh/*@radix-ui/primitive@1.0.1",
     "@radix-ui/number": "https://esm.sh/@radix-ui/number@1.0.1",
@@ -75,7 +77,6 @@
     "@gsap/react": "npm:@gsap/react@2.1.1",
     "hotkeys-js": "https://esm.sh/hotkeys-js@3.13.7",
     "@radix-ui/react-popover": "https://esm.sh/*@radix-ui/react-popover@1.0.7?alias=react:preact/compat,@types/react:preact/compat",
-
     "aria-hidden": "https://esm.sh/aria-hidden@1.2.3",
     "detect-node-es": "https://esm.sh/detect-node-es@1.1.0?target=es2022",
     "get-nonce": "https://esm.sh/get-nonce@1.0.1",

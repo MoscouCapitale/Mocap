@@ -1,6 +1,7 @@
 import { type Config } from "tailwindcss";
 // tailwindcss-animate
 import * as twAnimate from "tailwindcss-animate";
+import * as twScrollbar from "tailwind-scrollbar";
 
 export default {
   content: [
@@ -77,6 +78,9 @@ export default {
         md: `calc(var(--radius) - 2px)`,
         sm: "calc(var(--radius) - 4px)",
       },
+      dropShadow: {
+        "platformIcon": "0px 0px 30px #FFFFFFFF",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -96,5 +100,19 @@ export default {
       },
     },
   },
-  plugins: [twAnimate],
+  plugins: [twAnimate, function ({ addUtilities }) {
+    const newUtilities = {
+      ".pos-center": {
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+      },
+      ".node-highlight": {
+        // TODO: better highlight, and using theme colors
+        boxShadow: "0px 0px 30px 10px #FFFFFF33",
+      },
+    };
+
+    addUtilities(newUtilities, ["responsive", "hover"]);
+  }, twScrollbar],
 } satisfies Config;

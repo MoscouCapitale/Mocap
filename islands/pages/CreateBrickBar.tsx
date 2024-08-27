@@ -1,25 +1,34 @@
-import AddMediaZone from "@islands/Misc/AddMediaZone.tsx";
-import { useEffect, useState } from "preact/hooks";
-import InpagePopup from "@islands/Layout/InpagePopup.tsx";
-import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
-import AddButton from "@islands/collection/AddButton.tsx";
-import { MediaType } from "@models/Medias.ts";
-import { Media } from "@models/Medias.ts";
-import { HeroSection, Single, Album, Text, Social, PlateformLink, BricksType, createDefaultBrick, BrickModifiableAttributes } from "@models/Bricks.ts";
-import { renderMediaInputs } from "@utils/inputs.tsx";
-import { DatabaseAttributes } from "@models/App.ts";
-import Button from "@islands/Button.tsx";
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
+import Button from "@islands/Button.tsx";
+import InpagePopup from "@islands/Layout/InpagePopup.tsx";
+import AddButton from "@islands/collection/AddButton.tsx";
+import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
+import { DatabaseAttributes } from "@models/App.ts";
+import {
+  availBricks,
+  BrickModifiableAttributes,
+  BricksType,
+  createDefaultBrick,
+} from "@models/Bricks.ts";
+import { Media, MediaType } from "@models/Medias.ts";
+import { renderMediaInputs } from "@utils/inputs.tsx";
+import { useEffect, useState } from "preact/hooks";
 
 type CreateBrickBarProps = {
-  brickType: BricksType;
-  brickData?: any;
+  brickType: BricksType; // The general type of the brick to create
+  brickData?: availBricks;
 };
 
-export default function CreateBrickBar({ brickType, brickData }: CreateBrickBarProps) {
+type brickState = "creating" | "modifying" | "alreadyInCanvas";
+
+export default function CreateBrickBar(
+  { brickType, brickData }: CreateBrickBarProps,
+) {
+  const MCctx = useMNodeContext();
+
   const [displayMedias, setDisplayMedias] = useState<boolean>(false);
-  const [isModifying, setIsModifying] = useState<boolean>(false);
-  const [brick, setBrick] = useState<HeroSection | Single | Album | Text | Social | PlateformLink>(brickData);
+  const [brickState, setBrickState] = useState<brickState>("creating");
+  const [brick, setBrick] = useState<availBricks | null>();
 
   useEffect(() => {
     // if (!brick || globalThis.confirm("Etes-vous sûr ? Toute progression non sauvegardée sera perdue.")){
@@ -27,11 +36,24 @@ export default function CreateBrickBar({ brickType, brickData }: CreateBrickBarP
   }, [brickType]);
 
   useEffect(() => {
-    if (brickData?.id) {
-      brickData.id === -1 ? setBrick(createDefaultBrick(brickType)) : setBrick(brickData)
-      setIsModifying(brickData.id !== -1);
-    } 
-  }, [brickData])
+    if (brickData) {
+      setBrick(brickData);
+    } else {
+      setBrick(createDefaultBrick(brickType));
+    }
+  }, [brickData]);
+
+  useEffect(() => {
+    if (brickData) {
+      if (MCctx.MCNodes.find((n) => n.id === brickData.nodeId)) {
+        setBrickState("alreadyInCanvas");
+      } else {
+        setBrickState("modifying");
+      }
+    } else {
+      setBrickState("creating");
+    }
+  }, [MCctx.MCNodes, brickData]);
 
   const mediaClickHandler = (media: Media) => {
     if (!brick) return;
@@ -47,8 +69,9 @@ export default function CreateBrickBar({ brickType, brickData }: CreateBrickBarP
       const brickVal = (prev as any)[k];
       let newValue = v;
       if (DatabaseAttributes[k]?.multiple) {
-        if (brickVal.find((e: any) => e.id === v.id)) newValue = [...brickVal.filter((e: any) => e.id !== v.id)];
-        else newValue = [...brickVal.filter((v: any) => v.name), v] || [{}];
+        if (brickVal.find((e: any) => e.id === v.id)) {
+          newValue = [...brickVal.filter((e: any) => e.id !== v.id)];
+        } else newValue = [...brickVal.filter((v: any) => v.name), v] || [{}];
       }
       return { ...prev, [k]: newValue };
     });
@@ -61,58 +84,75 @@ export default function CreateBrickBar({ brickType, brickData }: CreateBrickBarP
       body: JSON.stringify({
         type: brickType,
         data: brick,
-        withCanvaInsert: Boolean(withCanvaInsert)
+        withCanvaInsert: Boolean(withCanvaInsert),
       }),
-    }).then((res) => {
-      console.log("Res put brick: ", res)
-      console.log("Insert canva ?: ", withCanvaInsert)
-      if (withCanvaInsert) {
-        console.log("Refetching nodes from sidebar...")
-        const MCctx = useMNodeContext();
-        MCctx.refetchNodes();
-      }
+    }).then((res) => res && res.json()).then((res) => {
+      if (withCanvaInsert && res?.newNode) MCctx.saveNode(res.newNode, true);
     });
   };
 
-  // TODO: to be implemented
-  // const deleteBrick = () => {
-  //   if (!brick) return;
-  //   fetch("/api/brick", {
-  //     method: "DELETE",
-  //     body: JSON.stringify({
-  //       type: brickType,
-  //       data: brick,
-  //     }),
-  //   });
-  // };
-
-  const addBrickToCanvas = () => {
-    console.log("Refetching nodes from sidebar...")
-    const MCctx = useMNodeContext();
-    MCctx.refetchNodes();
+  const mainButtonText = () => {
+    switch (brickState) {
+      case "alreadyInCanvas":
+        return "Modifier et remplacer";
+      case "modifying":
+        return "Modifier et insérer";
+      case "creating":
+        return "Générer";
+    }
   };
 
-  return brick ? (
-    <>
-      {/* <AddMediaZone handleFileUpload={() => setDisplayMedias(true)} /> */}
-      <div className={"flex flex-col w-full gap-4"}>{renderMediaInputs(brick, updateBrick, BrickModifiableAttributes, () => setDisplayMedias(true))}</div>
-      <div class="w-full gap-4 flex flex-col justify-center align-middle">
-        <Button text={`${isModifying ? 'Modifier et insérer' : 'Générer'}`} onClick={() => saveBrick(true)} className={{ wrapper: "grow justify-center text-2xl" }} />
-        <Button variant="secondary" text={`${isModifying ? 'Modifier' : 'Enregistrer'} la brique`} onClick={() => saveBrick()} className={{ wrapper: "grow justify-center" }} />
-      </div>
-      {displayMedias && (
-        <InpagePopup closePopup={() => setDisplayMedias(false)}>
+  // TODO: implement node and brick deletion, and check node insert from brick in brick collection page
+
+  return brick
+    ? (
+      <>
+        <div className={"flex flex-col w-full gap-4"}>
+          {renderMediaInputs(
+            brick,
+            updateBrick,
+            BrickModifiableAttributes,
+            () => setDisplayMedias(true),
+          )}
+        </div>
+        <div class="w-full gap-4 flex flex-col justify-center align-middle">
+          <Button
+            text={mainButtonText()}
+            onClick={() => saveBrick(true)}
+            className={{ wrapper: "grow justify-center text-2xl" }}
+          />
+          <Button
+            variant="secondary"
+            text={`${
+              brickState === "modifying" ? "Modifier" : "Enregistrer"
+            } la brique`}
+            onClick={() => saveBrick()}
+            className={{ wrapper: "grow justify-center" }}
+          />
+        </div>
+        <InpagePopup
+          isOpen={displayMedias}
+          closePopup={() => setDisplayMedias(false)}
+        >
           <div class="w-full overflow-auto min-h-[0] flex-col justify-start items-start gap-10 inline-flex">
-            {Object.entries(MediaType)?.map(([key, val]: [string, MediaType]) => (
+            {Object.entries(MediaType)?.map((
+              [key, val]: [string, MediaType],
+            ) => (
               <div class="w-full flex-col justify-start items-start gap-2.5 inline-flex">
                 <div class="text-text font-bold">{val}</div>
-                <CollectionGrid onMediaClick={mediaClickHandler} fetchingRoute={val as MediaType} mediaSize={150} />
+                <CollectionGrid
+                  onMediaClick={mediaClickHandler}
+                  fetchingRoute={val as MediaType}
+                  mediaSize={150}
+                />
               </div>
             ))}
+            {/* TODO: add support to upload media here. For now nested modals are working properly */}
             <AddButton position="absolute top-3 right-7" />
           </div>
         </InpagePopup>
-      )}
-    </>
-  ) : null;
+        {/* <Toaster /> */}
+      </>
+    )
+    : null;
 }

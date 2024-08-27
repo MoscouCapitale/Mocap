@@ -1,5 +1,7 @@
 type AddMediaZoneProps = {
+  /** File types that are accepted */
   accept?: string;
+  /** Whether the zone is an input or a button */
   isInput?: boolean;
   handleFileUpload: (e: Event) => void;
   bgImage?: string;
@@ -16,7 +18,7 @@ export default function AddMediaZone({ accept, isInput, handleFileUpload, bgImag
       )}
       <div class="w-[200px] h-[200px] rounded-lg border border-text_grey justify-center items-center gap-2.5 inline-flex z-0">
         {bgImage ? (
-          <img src={bgImage} class="w-full h-full object-cover" />
+          <img src={bgImage} class="w-full h-full object-cover rounded-lg" />
         ) : (
           <>
             <div class="absolute break-all w-[238px] text-text text-opacity-10 text-[127px] z-0 leading-[110px]">media</div>

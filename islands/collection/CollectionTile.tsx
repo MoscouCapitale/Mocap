@@ -31,11 +31,9 @@ export default function CollectionTile({
           ))}
         </button>
       </div>
-      {active && (
-        <InpagePopup closePopup={() => setActive(false)}>
-          <MediaDetail media={media} />
-        </InpagePopup>
-      )}
+      <InpagePopup isOpen={active} closePopup={() => setActive(false)}>
+        <MediaDetail media={media} />
+      </InpagePopup>
     </>
   );
 }

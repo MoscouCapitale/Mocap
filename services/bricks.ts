@@ -1,33 +1,26 @@
-import {
-  Album,
-  BricksType,
-  HeroSection,
-  PlateformLink,
-  Single,
-  Text,
-} from "@models/Bricks.ts";
+import { availBricks, BricksType } from "@models/Bricks.ts";
 import { DatabaseAttributes } from "@models/App.ts";
 import { createQueryFromAttributesTables } from "@utils/api.ts";
 import { evaluateSupabaseResponse } from "@utils/api.ts";
 import { supabase as supa } from "@services/supabase.ts";
-import { DBMNode, MNode, getAvailableSizes } from "@models/Canva.ts";
+import { TableNames } from "@models/database.ts";
 
 export const getBrickFromType = async (
   type: keyof typeof BricksType,
   id?: number,
-): Promise<
-  HeroSection | Single | Album | Text | PlateformLink | {
-    error: string;
-    status: number;
-  }
-> => {
+  getNodeId?: boolean, // Get the associated node id for the Node table
+): Promise<{
+  data: [availBricks] | null;
+  error: string | null;
+}> => {
   if (!type || !Object.keys(BricksType).includes(type)) {
-    // return new Response(`${type} is not a valid type`, { status: 400 });
-    return { error: `${type} is not a valid type`, status: 400 };
+    return { data: null, error: `${type} is not a valid type` };
   }
 
   // const tableName = `Bricks_${BricksType[type as keyof typeof BricksType]}`;
-  const tableName = type === "Platform_Link" ? type : `Bricks_${type}`;
+  const tableName = type === "Platform_Link"
+    ? type
+    : `Bricks_${type}` as TableNames;
 
   // We need to go through the bricks attributes and create a query that will fetch all nested datas
   const nestedAttributes = Object.entries(DatabaseAttributes).filter(
@@ -40,59 +33,27 @@ export const getBrickFromType = async (
       createQueryFromAttributesTables(key, false, true)?.query;
   });
 
-  const { data, error } = id
+  const { data: rawData, error } = id
     ? await supa.from(tableName).select(nestedQuery).eq("id", id)
     : await supa.from(tableName).select(nestedQuery);
 
-  const badRes = evaluateSupabaseResponse(data, error);
-  if (badRes) return { error: badRes.statusText, status: badRes.status };
+  if (!rawData || !rawData.length) return { data: null, error: null };
+  if (evaluateSupabaseResponse(rawData, error)) return { data: null, error: "Error while fetching bricks" };
 
-  return data;
-};
-
-export const createNodeFromBrick = async (
-  type: keyof typeof BricksType,
-  brick: HeroSection | Single | Album | Text | PlateformLink,
-): Promise<MNode | null> => {
-  const sizes = getAvailableSizes(type);
-
-  if (!Object.keys(BricksType).includes(type) || !(brick.id)) {
-    console.error(`Could not find a suitable type for "${type}" in createNodeFromBrick`);
-    return null
+  const data = rawData as unknown as [availBricks];
+  if (getNodeId && data && data.length > 0) {
+    for (const d of data) {
+      if (d.id) {
+        const { data: node, error: nodeError } = await supa.from("Node").select(
+          "id",
+        ).eq("type", type).eq(type, d.id);
+        if (!nodeError && node && node.length > 0) {
+          d.nodeId = node[0].id;
+        }
+      }
+    }
   }
 
-  const savedNode: DBMNode = {
-    type,
-    x: 0,
-    y: 0,
-    width: sizes[0].width,
-    height: sizes[0].height,
-  };
-
-  switch (type) {
-    case "HeroSection":
-      savedNode.HeroSection = brick.id;
-      break;
-    case "Single":
-      savedNode.Single = brick.id;
-      break;
-    case "Album":
-      savedNode.Album = brick.id;
-      break;
-    case "Text":
-      savedNode.Text = brick.id;
-      break;
-    case "Platform_Link":
-      savedNode.PlateformLink = brick.id;
-      break;
-    default:
-      console.error(`Could not find a suitable type for "${type}" in createNodeFromBrick`);
-      return null;
-  }
-
-  const { data, error } = await supa.from("Node").upsert(savedNode).select();
-  if (error || !data[0].id) {
-    console.error("Error in createNodeFromBrick: ", error)
-  }
-  return data[0] as MNode
+  const typedData = data as unknown as [availBricks];
+  return { data: typedData, error: null };
 };

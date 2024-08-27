@@ -6,6 +6,7 @@ interface Brick {
   created_at: string;
   updated_at: string;
   type?: BricksType;
+  nodeId?: string;
 }
 
 interface HeroSection extends Brick {
@@ -13,6 +14,7 @@ interface HeroSection extends Brick {
   subtitle?: string;
   media: Image | Video | null;
   cta?: MediaCTA;
+  style?: HeroSectionStyle;
 }
 
 interface Single extends Brick {
@@ -91,25 +93,51 @@ const BrickModifiableAttributes = {
   icon: "Icone",
   track: "Track",
   artist: "Artistes",
+  style: "Style",
 };
 
 enum BricksType {
-  HeroSection = "Principale",
+  HeroSection = "HeroSection",
   Single = "Single",
   Album = "Album",
-  // TILES = "Tuiles",
-  Text = "Texte",
-  Platform_Link = "Réseaux sociaux",
-  // PLATFORM_LINK = "Plateforme",
+  Text = "Text",
+  Platform_Link = "Platform_Link",
 }
 
-export type { Album, HeroSection, PlateformLink, Single, Social, Text, Track };
+type HeroSectionStyle = "scrolling-hero";
 
-export { BrickModifiableAttributes, BricksType };
+const getBrickTypeLabel = (type: BricksType): string => {
+  switch (type) {
+    case BricksType.HeroSection:
+      return "Principale";
+    case BricksType.Single:
+      return "Single";
+    case BricksType.Album:
+      return "Album";
+    case BricksType.Text:
+      return "Texte";
+    case BricksType.Platform_Link:
+      return "Réseaux sociaux";
+    default:
+      console.error(`Unsupported label brick type: ${type}`);
+      return "";
+  }
+}
+
+type availBricks = HeroSection | Single | Album | Text | Social | PlateformLink;
+
+export type { Album, HeroSection, PlateformLink, Single, Social, Text, Track, availBricks };
+
+export { 
+  BrickModifiableAttributes, 
+  BricksType, 
+  getBrickTypeLabel,
+  // BricksEnum
+};
 
 export function createDefaultBrick(
   brickType: BricksType,
-): HeroSection | Single | Album | Text | Social | PlateformLink {
+): availBricks {
   switch (brickType) {
     case BricksType.HeroSection:
       return {
@@ -118,6 +146,7 @@ export function createDefaultBrick(
         subtitle: "",
         media: null,
         cta: {},
+        style: "scrolling-hero",
       } as HeroSection;
     case BricksType.Single:
       return {
@@ -147,16 +176,10 @@ export function createDefaultBrick(
       } as Text;
     case BricksType.Platform_Link:
       return {
-        name: "",
+        name: "",        
         url: "",
         platform: {},
       } as Social;
-    // case BricksType.PLATFORM_LINK:
-    //   return {
-    //     name: "",
-    //     url: "",
-    //     platform: {}
-    //   } as PlateformLink;
     default:
       throw new Error(`Unsupported brick type: ${brickType}`);
   }

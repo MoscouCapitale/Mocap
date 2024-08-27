@@ -2,7 +2,8 @@ import { JSX } from "preact/jsx-runtime";
 import ObjectDropdown from "@islands/ObjectDropdown.tsx";
 import { defaultPrivateFields } from "@models/Medias.ts";
 import AddMediaZone from "@islands/Misc/AddMediaZone.tsx";
-import { DatabaseAttributes, DatabaseAttributesKeys } from "@models/App.ts";
+import { DatabaseAttributes, DatabaseAttributesKeys, DropdownItem } from "@models/App.ts";
+import { cn } from "@utils/cn.ts";
 
 /**
  * Take as input an object, and return all fields as inputs.
@@ -16,35 +17,34 @@ export const renderMediaInputs = (
   modifiableAttributes?: Record<string, string>,
   onAddMediaClick?: () => void
 ): JSX.Element => {
+  if (!obj) return <></>
   return (
     <>
       {Object.entries(obj).map(([key, value]) => {
-        if (defaultPrivateFields.includes(key)) {
-          return null;
-        }
-        if (!modifiableAttributes) {
-          return (
-            <div key={key} class="flex flex-col gap-2">
-              <label>{key}</label>
-              {renderInput(key, value, onInputChange)}
-            </div>
-          );
-        }
-        if (Object.keys(modifiableAttributes).includes(key)) {
-          if (key === "media")
-            return (
-              <div key={key} class="flex flex-col gap-2">
-                {/* <label>{modifiableAttributes[key as keyof typeof modifiableAttributes]}</label> */}
+        if (defaultPrivateFields.includes(key)) return null;
+
+        return (
+          <div key={key} class="flex flex-col gap-2 flex-wrap">
+            {!modifiableAttributes && (
+              <>
+                <label>{key}</label>
+                {renderInput(key, value, onInputChange)}
+              </>
+            )}
+            {modifiableAttributes && Object.keys(modifiableAttributes).includes(key) && (
+              <>
+              {key === "media" ? (
                 <AddMediaZone handleFileUpload={() => onAddMediaClick && onAddMediaClick()} bgImage={value?.public_src || undefined} />
-              </div>
-            );
-          return (
-            <div key={key} class="flex flex-col gap-2">
-              <label>{modifiableAttributes[key as keyof typeof modifiableAttributes]}</label>
-              {renderInput(key, value, onInputChange)}
-            </div>
-          );
-        }
+              ) : (
+                <>
+                <label>{modifiableAttributes[key as keyof typeof modifiableAttributes]}</label>
+                {renderInput(key, value, onInputChange)}
+                </>
+              )}
+              </>
+            )}
+          </div>
+        )
       })}
     </>
   );
@@ -76,7 +76,10 @@ const renderInput = (key: string, value: any, inputChange: (k: any, v: any) => v
   return (
     <input
       type={inputType}
-      className={`bg-background text-[15px] rounded px-[5px] py-[3px] border-2 border-text justify-start items-center gap-2.5 inline-flex text-text focus:border-main focus:outline-none focus:ring-0`}
+      className={cn(
+        `bg-background text-[15px] rounded px-[5px] py-[3px] border-2 border-text justify-start items-center gap-2.5 inline-flex text-text focus:border-main focus:outline-none focus:ring-0`,
+        typeof value === "boolean" && "w-fit"
+      )}
       value={value}
       checked={typeof value === "boolean" ? value : undefined}
       onChange={(e) => {

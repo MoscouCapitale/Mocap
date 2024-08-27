@@ -1,28 +1,32 @@
 import { FreshContext, Handlers } from "$fresh/server.ts";
 import { supabase as supa } from "@services/supabase.ts";
 import { DatabaseAttributes } from "@models/App.ts";
-import { evaluateSupabaseResponse } from "@utils/api.ts";
-import { BricksType, PlateformLink, Track } from "@models/Bricks.ts";
+import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
+import { BricksType, PlateformLink, Track, availBricks } from "@models/Bricks.ts";
 import { createNodeFromBrick } from "@services/bricks.ts";
+import { TableNames } from "@models/database.ts";
+import { createOrUpdateNodeFromBrick } from "@services/nodes.ts";
 
 export const handler: Handlers<any | null> = {
   async PUT(req: Request, ctx: FreshContext) {
     const body = await req.json();
 
     const type = body.type;
-    const withCanvaInsert = body.withCanvaInsert
+    const withCanvaInsert = body.withCanvaInsert;
 
-    
-    if (!Object.keys(BricksType).includes(type)) {
+    if (!Object.values(BricksType).includes(type)) {
       return new Response(`${type} is not a valid type`, { status: 400 });
     }
-    
+
     const brick = body.data;
     // console.log("raw brick is ", brick);
-    const tableName = `Bricks_${BricksType[type as keyof typeof BricksType]}`;
+    const tableName = `Bricks_${BricksType[type as keyof typeof BricksType]}` as TableNames;
 
     // Remove some attributes that are not in the database
+    const attr_isActive = brick.isActive;
     delete brick.isActive;
+    let attr_nodeId = brick.nodeId ?? null;
+    delete brick.nodeId;
 
     // Save many-to-many relationships ids
     const linkedTables: ({ [key: string]: number[] } | undefined)[] = Object
@@ -53,8 +57,7 @@ export const handler: Handlers<any | null> = {
       updated_at: new Date(),
     }).select();
 
-    const badRes = evaluateSupabaseResponse(data, error);
-    if (badRes) return badRes;
+    if (evaluateSupabaseResponse(data, error)) return returnErrorReponse(data, error);
 
     const brickId = data[0].id;
     // Save linked tables
@@ -72,14 +75,14 @@ export const handler: Handlers<any | null> = {
           ) {
             const linkedTableName = `${tableName}_${
               DatabaseAttributes[ltkey].table
-            }`;
+            }` as TableNames;
             // first delete all the previous links
             await supa.from(linkedTableName).delete().eq(type, brickId);
 
             // then insert the new ones
             const bulkInsert = ltval.map((id: number) => (id && {
-              [type]: brickId,
-              [DatabaseAttributes[ltkey].table]: id,
+              [type]: brickId.toString(),
+              [DatabaseAttributes[ltkey].table]: id.toString(),
             }));
             await supa.from(linkedTableName).insert(bulkInsert);
           }
@@ -90,25 +93,31 @@ export const handler: Handlers<any | null> = {
     }
 
     const savedBrick = data[0];
-    console.log("Saved bricks. Finishing")
+    console.log("Saved bricks. Finishing");
 
     // Create a node for the brick
+    let newNode = null;
+    // TODO: I think it would be better to either create a dedicated endpoint for canva insert
     if (withCanvaInsert) {
-      console.log("Generating MNode from brick")
-      const node = await createNodeFromBrick(type as keyof typeof BricksType, savedBrick);
-      console.log("Node is ", node)
-      if (!node) {
-        console.error("Error while creating node for brick ", savedBrick);
-      }
+      newNode = await createOrUpdateNodeFromBrick(savedBrick as availBricks, attr_nodeId, type);
+      if (!newNode) console.error("Error while creating node for brick ", savedBrick);
     }
 
-    console.log("Returning response")
-    return new Response(JSON.stringify(savedBrick), {
-      status: 200,
-      headers: {
-        "content-type": "application/json",
+    console.log("Returning response");
+    return new Response(
+      JSON.stringify({
+        ...savedBrick,
+        isActive: attr_isActive,
+        nodeId: attr_nodeId,
+        newNode
+      }),
+      {
+        status: 200,
+        headers: {
+          "content-type": "application/json",
+        },
       },
-    });
+    );
   },
 
   async DELETE(req: Request, ctx: FreshContext) {
@@ -122,7 +131,7 @@ export const handler: Handlers<any | null> = {
 
     const brick = body.data;
 
-    const tableName = `Bricks_${BricksType[type as keyof typeof BricksType]}`;
+    const tableName = `Bricks_${BricksType[type as keyof typeof BricksType]}` as TableNames;
 
     const { data, error } = await supa.from(tableName).delete().eq(
       "id",
@@ -140,8 +149,7 @@ export const handler: Handlers<any | null> = {
     //   await supa.from(linkedTableName).delete().eq(type, brick.id);
     // }
 
-    const badRes = evaluateSupabaseResponse(data, error);
-    if (badRes) return badRes;
+    if (evaluateSupabaseResponse(data, error)) return returnErrorReponse(data, error);
 
     return new Response(JSON.stringify(data), {
       status: 200,

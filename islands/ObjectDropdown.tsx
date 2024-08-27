@@ -1,5 +1,5 @@
 import Dropdown from "@islands/Dropdown.tsx";
-import { useEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 import { ConfirmationModalProps, DropdownItem } from "@models/App.ts";
 import { MediaSettingsAttributes } from "@models/Medias.ts";
 import { DatabaseAttributes } from "@models/App.ts";
@@ -76,8 +76,7 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem, 
     }
   }
 
-
-  const convertItemToDropdownItem = (item: MediaSettingsAttributes, multiSelect?: boolean): DropdownItem => {
+  const convertItemToDropdownItem = useCallback((item: MediaSettingsAttributes, multiSelect?: boolean): DropdownItem => {
     // @ts-ignore - Yes, they does not exist on some types, but this is the whole point : if they do, use them.
     const itemLabel = item.label || item.value || item.name || "default";
     return {
@@ -86,7 +85,9 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem, 
         <div className="w-full inline-flex items-center justify-between gap-3 ">
           {itemLabel}
           {DatabaseAttributes[table]?.modifiable && (
-            <button className="group gap-[3px] inline-flex top-0 right-0 p-2 rounded-bl" onClick={() => setItemDetail(item)}>
+            <button className="group gap-[3px] inline-flex top-0 right-0 p-2 rounded-bl" onClick={(e) => {
+              e.stopPropagation()
+              setItemDetail(item)}}>
               {Array.from({ length: 3 }).map(() => (
                 <span className={`block w-2 h-2 rounded-full border-2 border-text group-hover:border-main`} />
               ))}
@@ -96,10 +97,10 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem, 
       ),
       // @ts-ignore - Yes, they does not exist on some types, but this is the whole point : if they do, use them.
       value: item.value || item.id,
-      isActive: item.id === (Array.isArray(currentItem) ? currentItem.includes(item.id) : currentItem),
+      isActive: Array.isArray(currentItem) ? currentItem.includes(item.id) : item.id === currentItem,
       onClick: () => selectItem(item),
     };
-  };
+  }, [currentItem]);
 
   const selectItem = (item: MediaSettingsAttributes) => {
     changeCurrentItem(item);
@@ -121,15 +122,9 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem, 
   const upsertAttribute = () => {
     setUpdating(true);
     Object.keys(itemDetail).forEach(key => {
-      if (typeof itemDetail[key] === "object" && itemDetail[key].id) itemDetail[key] = itemDetail[key].id;
+      if (itemDetail[key] && typeof itemDetail[key] === "object" && itemDetail[key].id) itemDetail[key] = itemDetail[key].id;
     });
     fetch(`/api/content/attributes/${table}`, { method: "PUT", body: JSON.stringify(itemDetail) })
-      .then((res) => res.json())
-      .then((data: MediaSettingsAttributes[]) => {
-        setItemDetail(undefined);
-        dropdownItems && setDropdownItems(dropdownItems.map((item) => (item.id === data[0].id ? convertItemToDropdownItem(data[0]) : item)));
-        selectItem(data[0]);
-      })
       .finally(() => {
         setUpdating(false);
         setRefetchItems(true);
@@ -161,8 +156,6 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem, 
       fetch(`/api/content/attributes/${table}`)
         .then((res) => (res.status !== 204 ? res.json() : []))
         .then((data: MediaSettingsAttributes[]) => {
-          // setRawItems(data);
-          // console.log(`data for ${table}: `, data)
           setDropdownItems(data.map((item) => convertItemToDropdownItem(item)));
         })
         .finally(() => setRefetchItems(false));
@@ -179,16 +172,6 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem, 
       }
     }
   }, [currentItem]);
-
-  useEffect(() => {
-    if (dropdownItems) {
-      //console.log("dropdown items: ", dropdownItems)
-    }
-  }, [dropdownItems])
-
-  useEffect(() => {
-    itemDetail && console.log("itemDetail changed: ", itemDetail)
-  }, [itemDetail])
 
   return (
     <>
@@ -210,7 +193,7 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem, 
         />
       )}
       {itemDetail && (
-        <InpagePopup closePopup={() => setItemDetail(undefined)}>
+        <InpagePopup isOpen={itemDetail} closePopup={() => setItemDetail(undefined)}>
           <div class="w-full flex flex-col gap-5">
             {renderMediaInputs(itemDetail, updateItemDetail)}
             <div class="text-text flex align-center gap-4">

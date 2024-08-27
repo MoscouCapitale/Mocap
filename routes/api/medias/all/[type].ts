@@ -1,7 +1,7 @@
 import { Handlers } from "$fresh/server.ts";
 import { supabase as supa } from "@services/supabase.ts";
 import { Media, MediaType } from "@models/Medias.ts";
-import { evaluateSupabaseResponse } from "@utils/api.ts";
+import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
 import { FileObject } from "https://esm.sh/v135/@supabase/storage-js@2.5.5/dist/module/index.js";
 
 // TODO: why is array sometime empty?
@@ -29,8 +29,7 @@ export const handler: Handlers<Media | null> = {
 
     if (data?.length === 0) console.log(`No media found in bucket '${type}' at ${new Date().toISOString} -- (error: ${error})`)
 
-    const badRes = evaluateSupabaseResponse(data, error);
-    if (badRes) return badRes;
+      if (evaluateSupabaseResponse(data, error)) return returnErrorReponse(data, error);
 
     // @ts-ignore: media is never null
     const media: Promise<Media>[] = data!.map(async (item: FileObject) => {

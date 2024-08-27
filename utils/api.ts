@@ -13,41 +13,61 @@ import { DatabaseAttributes } from "@models/App.ts";
 export const evaluateSupabaseResponse = (
   data: any,
   error: Error | PostgrestError | null,
-): Response | null => {
-  if (error) {
-    console.error("=========Error while fetching data=========\n", error);
-    return new Response("Server error", { status: 500 });
-  }
+): boolean => {
+  if (error || (!data || data.length === 0)) return true
+  return false;
+};
 
+// TODO: detail more the response message
+export const returnErrorReponse = (
+  data: any,
+  error: Error | PostgrestError | null,
+): Response => {
   if (!data || data.length === 0) {
     return new Response(null, { status: 204 });
   }
 
-  return null;
+  console.error(
+    "=========Error while fetching data=========\n",
+    "error: ",
+    error,
+    "\ndata: ",
+    data,
+  );
+
+  return new Response("Server error", { status: 500 });
 };
 
 export const createQueryFromAttributesTables = (
   attribute: string,
   isChild?: boolean,
-  getAttribute?: boolean
+  getAttribute?: boolean,
 ): { table: string; query: string } | null => {
   const attrMapEntry = DatabaseAttributes[attribute];
   if (!attrMapEntry) return null;
 
-  if (!attrMapEntry.linkedTables && !isChild && !getAttribute) return { table: attrMapEntry.table, query: '*' };
+  if (!attrMapEntry.linkedTables && !isChild && !getAttribute) {
+    return { table: attrMapEntry.table, query: "*" };
+  }
 
-  let query = !isChild || attrMapEntry.linkedTables ? '*,' : '';
-  if (!isChild && getAttribute) query = `${attribute}:${attrMapEntry.table} (*${attrMapEntry.linkedTables ? ',' : ''}`
+  let query = !isChild || attrMapEntry.linkedTables ? "*," : "";
+  if (!isChild && getAttribute) {
+    query = `${attribute}:${attrMapEntry.table} (*${
+      attrMapEntry.linkedTables ? "," : ""
+    }`;
+  }
 
   if (attrMapEntry.linkedTables) {
     query += attrMapEntry.linkedTables.map((lkTable) => {
-      const fetchedChild = createQueryFromAttributesTables(lkTable, true)
-      return fetchedChild ? ` ${lkTable}:${fetchedChild.table} (${fetchedChild.query})` : '';
-    }).filter(Boolean)
+      const fetchedChild = createQueryFromAttributesTables(lkTable, true);
+      return fetchedChild
+        ? ` ${lkTable}:${fetchedChild.table} (${fetchedChild.query})`
+        : "";
+    }).filter(Boolean);
   }
 
-  if (!isChild && getAttribute) query += ')'
-  if (!attrMapEntry.linkedTables && isChild) query += '*';
+  if (!isChild && getAttribute) query += ")";
+  if (!attrMapEntry.linkedTables && isChild) query += "*";
 
   return query ? { table: attrMapEntry.table, query: query } : null;
 };

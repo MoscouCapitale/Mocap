@@ -1,9 +1,23 @@
 import { computed, effect, Signal, signal } from "@preact/signals-core";
 
 import { createContext, createRef, Ref, RefObject, VNode } from "preact";
-import { useContext, useEffect, useState } from "preact/hooks";
-import { CANVA_GUTTER, MNode } from "@models/Canva.ts";
+import {
+  StateUpdater,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "preact/hooks";
+import {
+  CANVA_GUTTER,
+  MNode,
+  TRASH_DEADZONE_MULTIPLIER,
+} from "@models/Canva.ts";
 import { getBaseUrl } from "@utils/pathHandler.ts";
+import { canParse } from "https://deno.land/std@0.216.0/semver/can_parse.ts";
+import { BricksType } from "@models/Bricks.ts";
 
 type MCViewBox = {
   x: number;
@@ -26,24 +40,45 @@ type rectCollideProps = {
   y2: number;
 };
 
+type trashPosType = {
+  x: number;
+  y: number;
+  isReady: boolean;
+  nodeOverTrash?: string;
+};
+
+type autoSaveType = {
+  timeout: number;
+  triggerTimeout: boolean;
+  savedMessage?: string;
+  currentTimer?: any; // TODO: find this type
+};
+
 type getClosestFreePositionReturnType = (
   a: rectCollideProps,
   overlap: isOverlappingType,
 ) => rectCollideProps;
 
 type MNodeContextType = {
-  MCFrame: Signal<RefObject<HTMLElement>>;
-  setMCFrame: (ref: Ref<HTMLElement>) => void;
-  viewBox: Signal<MCViewBox>;
+  MCFrame: RefObject<HTMLElement>;
+  viewBox: MCViewBox;
   setViewBox: (viewBox: MCViewBox) => void;
-  MCNodes: Signal<MNode[]>;
+  MCNodes: MNode[];
   isOverlapping: (a: rectCollideProps) => isOverlappingType;
   getClosestFreePosition: getClosestFreePositionReturnType;
   getFreeSpace: (a: rectCollideProps) => rectCollideProps;
-  saveNode: (node: MNode) => void;
+  saveNode: (node: MNode, rerender?: boolean) => void;
+  deleteNode: (nodeId: string) => void;
   isPreview: boolean;
   setPreview: (preview: boolean) => void;
   refetchNodes: () => void;
+  trashPos: trashPosType;
+  setNodeOverTrash: (nodeId: string) => void; // TODO: use it for animation ?
+  autoSaveMessage?: Signal<string | undefined>;
+  writeNodes: () => void;
+  nodesChanged: boolean;
+  hasPendingChanges: boolean;
+  getHeroSectionXPos: () => { x1: number; x2: number };
 };
 
 // const asyncGnal = function<T>(defaultValue: T, callback: () => Promise<T>): ReadonlySignal<T> {
@@ -51,6 +86,20 @@ type MNodeContextType = {
 //   effect(() => callback().then((v) => s.value = v));
 //   return computed(() => s.value);
 // };
+
+// /**
+//  * Updates the state using the provided state updater function.
+//  * If a value is provided, it sets the state to that value.
+//  * If an apply function is provided, it applies the function to the previous state before updating.
+//  *
+//  * @param stateUpdater - The state updater function.
+//  * @param val - The value to set the state to.
+//  * @param applyFunc - The function to apply to the previous state before updating.
+//  */
+// function setState<T>(stateUpdater: StateUpdater<T>, val?: T, applyFunc?: (prev: T) => T) {
+//   if (applyFunc) stateUpdater(applyFunc);
+//   if (val) stateUpdater(val);
+// }
 
 // Create the MNode context
 const MNodeContext = createContext<MNodeContextType>(
@@ -62,53 +111,94 @@ export const useMNodeContext = () => {
 };
 
 export const MNodeProvider = ({ children }: { children: VNode }) => {
-  const MCFrame = signal<RefObject<HTMLElement>>(createRef());
-  const setMCFrame = (ref: Ref<HTMLElement>) =>
-    MCFrame.value = ref as RefObject<HTMLElement>;
-  const viewBox = signal<MCViewBox>({ x: 0, y: 0, scale: 1 });
-  const setViewBox = (viewBoxVal: MCViewBox) => viewBox.value = viewBoxVal;
-  const MCNodes = signal<MNode[]>([]);
-  // const isPreview = signal<boolean>(false);
+  const MCFrame = useRef<HTMLElement>(null);
+  const [viewBox, setViewBox] = useState<MCViewBox>({ x: 0, y: 0, scale: 1 });
+  const [MCNodes, setMCNodes] = useState<MNode[]>([]);
   const [isPreview, setIsPreview] = useState<boolean>(false);
-  // const setPreview = (preview: boolean) => isPreview.value = preview;
+  const [hasPendingChanges, setHasPendingChanges] = useState(false);
   const setPreview = (preview: boolean) => setIsPreview(preview);
+  const [trashPos, setTrashPos] = useState<trashPosType>({
+    x: 0,
+    y: 0,
+    isReady: false,
+  });
 
-  effect(() => console.log("MCFrame updated to: ", MCFrame.value.current));
-  // effect(() => console.log("Is preview updated: ", isPreview))
+  // Trigger a nodesChanged when a node is added/removed
+  const [nodesChanged, setNodesChanged] = useState(false);
+  effect(() => setTimeout(() => nodesChanged && setNodesChanged(false), 100));
+
+  const applyAdditionalMNodeLogic = (data: MNode[]): MNode[] => {
+    return data.map((node) => {
+      if (node.type === BricksType.HeroSection) {
+        const size = getHeroSectionXPos(data);
+        node.x = size.x1;
+        node.width = size.x2 - size.x1;
+        node.height = 400; // TODO: better way to handle this, instead of hardcoded height
+      }
+      return node;
+    });
+  }
+
+  const autoSave = signal<autoSaveType>({
+    timeout: 30 * 1000, // 30 seconds
+    triggerTimeout: false,
+  });
+  const autoSaveMessage = signal<string | undefined>(undefined);
+
+  const getHeroSectionXPos = useCallback((nodes?: MNode[]) => {
+    const dimensions = { x1: Infinity, x2: -Infinity };
+    (nodes ?? MCNodes).forEach((n) => {
+      if (n.x > 0 && n.x < dimensions.x1) dimensions.x1 = n.x;
+      if (n.x + n.width > dimensions.x2) dimensions.x2 = n.x + n.width;
+    });
+    return dimensions;
+  }, [MCNodes]);
 
   useEffect(() => {
-    if (MCFrame.value.current && viewBox) {
-      const width = MCFrame.value.current?.clientWidth || 0;
-      const height = MCFrame.value.current?.clientHeight || 0;
-      viewBox.value = { ...viewBox.value, width: width, height: height };
+    if (MCFrame.current && viewBox) {
+      const width = MCFrame.current?.clientWidth || 0;
+      const height = MCFrame.current?.clientHeight || 0;
+      setViewBox({ ...viewBox, width: width, height: height });
     }
-  }, [MCFrame.value]);
+  }, [MCFrame]);
 
-  effect(() => {
-    fetch(getBaseUrl() + "/api/node/getAll")
+  useEffect(() => {
+    let isMounted = true;
+
+    fetch(getBaseUrl() + "/api/node/getAll?force=true")
       .then((res) => {
         if (res) {
           return res.json();
         }
         console.error("No response from server: ", res);
         return [];
-      }).then((data: MNode[]) => MCNodes.value = data).catch(
+      }).then((data: MNode[]) => {
+        if (isMounted && MCNodes.length === 0) {
+          setMCNodes(applyAdditionalMNodeLogic(data));
+        }
+      }).catch(
         (e) => {
           console.error(e);
           return [];
         },
       );
-  });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const refetchNodes = () => {
-    fetch(getBaseUrl() + "/api/node/getAll")
+    fetch(getBaseUrl() + "/api/node/getAll?force=true")
       .then((res) => {
         if (res) {
           return res.json();
         }
         console.error("No response from server: ", res);
         return [];
-      }).then((data: MNode[]) => MCNodes.value = data).catch(
+      }).then((data: MNode[]) => {
+        setMCNodes(applyAdditionalMNodeLogic(data));
+      }).catch(
         (e) => {
           console.error(e);
           return [];
@@ -116,14 +206,122 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
       );
   };
 
-  // effect(() => Boolean(MCNodes.value.length) && typeof window !== "undefined" && console.log(MCNodes.value));
+  useEffect(() => {
+    if (
+      MCFrame.current?.offsetWidth && MCFrame.current?.offsetHeight &&
+      !trashPos.isReady
+    ) {
+      const trash = {
+        x: MCFrame.current.offsetWidth -
+          (MCFrame.current.offsetWidth * TRASH_DEADZONE_MULTIPLIER),
+        y: MCFrame.current.offsetHeight -
+          (MCFrame.current.offsetHeight * TRASH_DEADZONE_MULTIPLIER),
+      };
+      setTrashPos({ x: trash.x, y: trash.y, isReady: true });
+    }
+  }, [MCFrame.current]);
 
-  const saveNode = (node: MNode) => {
-    const nodeIndex = MCNodes.value.findIndex((n) => n.id === node.id);
-    if (nodeIndex !== -1) {
-      MCNodes.value[nodeIndex] = node;
+  const setNodeOverTrash = (nodeId: string) => {
+    setTrashPos((prev) => {
+      return { ...prev, nodeOverTrash: nodeId };
+    });
+  };
+
+  /**
+   * Save a single node to the context MCNode
+   *
+   * @param {MNode} node - The node to save
+   * @param {boolean} rerender - Whether to rerender the node. If true, all nodes w<ill be re-render. If false, the state will be updated in a non-reactive way. Default is false.
+   */
+  const saveNode = (node: MNode, rerender = false) => {
+    if (!hasPendingChanges) setHasPendingChanges(true);
+    if (rerender) {
+      const nodeIndex = MCNodes.findIndex((n) => n.id === node.id);
+      if (nodeIndex !== -1) {
+        setMCNodes((prev) => [
+          ...prev.slice(0, nodeIndex),
+          node,
+          ...prev.slice(nodeIndex + 1),
+        ]);
+      } else {
+        setMCNodes((prev) => [...prev, node]);
+        setNodesChanged(true);
+      }
     } else {
-      MCNodes.value = [...MCNodes.value, node];
+      setMCNodes((prev) => {
+        const nodeIndex = prev.findIndex((n) => n.id === node.id);
+        if (nodeIndex !== -1) {
+          prev[nodeIndex] = node;
+        } else {
+          setNodesChanged(true);
+          return [...prev, node];
+        }
+        return prev;
+      });
+    }
+    autoSave.value = { ...autoSave.value, triggerTimeout: true };
+  };
+
+  const getNode = useCallback(
+    (nodeId: string) => MCNodes.find((n) => n.id === nodeId),
+    [MCNodes],
+  );
+
+  const deleteNode = (nodeId: string) => {
+    const nodeIndex = MCNodes.findIndex((n) => n.id === nodeId);
+    if (hasPendingChanges) setHasPendingChanges(false);
+    if (nodeIndex !== -1) {
+      fetch(`/api/node/${nodeId}`, { method: "DELETE" }).then((res) => {
+        if (res.status === 204) {
+          setMCNodes([
+            ...MCNodes.slice(0, nodeIndex),
+            ...MCNodes.slice(nodeIndex + 1),
+          ]);
+          setNodesChanged(true);
+        } else throw new Error(`Generic error while deleting node ${nodeId}`);
+      }).catch((e) => console.error(e));
+    }
+  };
+
+  const writeNodes = (nodes?: MNode[]) => {
+    const nodesToSave = nodes || MCNodes;
+    if (hasPendingChanges) setHasPendingChanges(false);
+    fetch(getBaseUrl() + "/api/node", {
+      method: "PUT",
+      body: JSON.stringify({ nodes: nodesToSave }),
+    }).then((res) => {
+      if (res.status) {
+        autoSave.value = {
+          ...autoSave.value,
+          triggerTimeout: false,
+        };
+        autoSaveMessage.value =
+          `${MCNodes.length} bricks have been saved to the database`;
+      }
+    });
+  };
+
+  // Save nodes on autoSave trigger
+  // effect(() => {
+  //   if (autoSave.value.triggerTimeout) createSavingDelay();
+  // });
+
+  const timeoutSaveNodes = () => {
+    autoSave.value = {
+      ...autoSave.value,
+      currentTimer: setTimeout(() => {
+        writeNodes();
+      }, autoSave.value.timeout),
+    };
+  };
+
+  const createSavingDelay = () => {
+    autoSave.value = { ...autoSave.value, triggerTimeout: false };
+    if (autoSave.value.currentTimer) {
+      clearTimeout(autoSave.value.currentTimer);
+      timeoutSaveNodes();
+    } else {
+      timeoutSaveNodes();
     }
   };
 
@@ -144,11 +342,11 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   };
 
   const isOverlapping = (a: rectCollideProps): isOverlappingType => {
-    const nodes = MCNodes.value.filter((n) => {
+    const nodes = MCNodes.filter((n) => {
       if (n.id === a.id) return false;
       const b = {
-        x1: n.x - CANVA_GUTTER,
-        y1: n.y - CANVA_GUTTER,
+        x1: n.x > n.x + CANVA_GUTTER ? n.x - CANVA_GUTTER : n.x,
+        y1: n.y > n.y + CANVA_GUTTER ? n.y - CANVA_GUTTER : n.y,
         x2: n.x + n.width + CANVA_GUTTER,
         y2: n.y + n.height + CANVA_GUTTER,
       };
@@ -257,20 +455,35 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     };
   };
 
-  const value = {
-    MCFrame: MCFrame,
-    setMCFrame: setMCFrame,
-    viewBox: viewBox,
-    setViewBox: setViewBox,
-    MCNodes: computed(() => MCNodes.value),
+  const value = useMemo(() => ({
+    MCFrame,
+    viewBox,
+    setViewBox,
+    MCNodes,
     isOverlapping,
     getClosestFreePosition,
     getFreeSpace,
-    saveNode: saveNode,
-    isPreview: isPreview,
-    setPreview: setPreview,
+    saveNode,
+    deleteNode,
+    isPreview,
+    setPreview,
     refetchNodes,
-  };
+    trashPos,
+    setNodeOverTrash,
+    autoSaveMessage,
+    writeNodes,
+    nodesChanged,
+    hasPendingChanges,
+    getHeroSectionXPos,
+  }), [
+    MCFrame,
+    viewBox,
+    MCNodes,
+    isPreview,
+    trashPos,
+    nodesChanged,
+    hasPendingChanges,
+  ]);
 
   return (
     <MNodeContext.Provider value={value}>

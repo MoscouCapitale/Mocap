@@ -82,6 +82,8 @@ Tasks :
     - [ ] inputs (text, email, password, etc...)
       - [ ] Read only input
       - [ ] Better multi option dropdown UI
+        - [ ] Make dropdown zone better
+        - [ ] In bricks, make the dropdown display the items choosen (ex in tracklist, show the label "tracklist", at the right a dropdown to select the tracklist, and below the selected tracklist)
     - [ ] Alerts
       - [ ] Modals
         - [ ] Globale confirmation modal
@@ -95,12 +97,15 @@ Tasks :
   - [ ] Animations...
   - [ ] Misc
 - [ ] Bricks
+  - [ ] on preview click it disable the sidebar
   - [ ] Research on how to implement
   - [ ] UI
   - [ ] Implement tiles bricks
   - [ ] Manage saved bricks
   - [ ] Error management
       - [ ] Brick with this name already exists
+  - [ ] Texte
+    - [ ] Markdown support
 - [ ] Misc
   - [ ] Learn & refacto whole effects states management with preact
   - [ ] Add localstorage saving
@@ -112,3 +117,4 @@ Tasks :
   - [ ] Set every database id as uuid
   - [ ] Why is database fetching empty when first connexion ?
   - [ ] Fix email notifications
+  - [ ] Make a bootstrap function to init the database and all misc settings of the supabase instance, to make it possible to run it from an empty project

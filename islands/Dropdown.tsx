@@ -54,6 +54,8 @@ export default function Dropdown({ items, customLabel, additionalItem, activeInD
                   onClick={item.onClick}
                   className="inline-flex align-center justify-center w-full text-left px-4 py-2 text-sm text-text hover:bg-main/10"
                   role="menuitem"
+                  onMouseEnter={(e) => { if(item.onMouseEnter) item.onMouseEnter(e, item.id)} }
+                  onMouseLeave={(e) => { if(item.onMouseLeave) item.onMouseLeave(e, item.id)} }
                 >
                   {multiSelect ? (
                     <div className="inline-flex items-center">

@@ -25,6 +25,8 @@ import IconLoader from "@tabler-icons-url/loader.tsx"
 import IconHandGrab from "@tabler-icons-url/hand-grab.tsx"
 import IconHandStop from "@tabler-icons-url/hand-stop.tsx"
 import IconResize from "@tabler-icons-url/resize.tsx"
+import IconArrowDownRight from "@tabler-icons-url/arrow-down-right.tsx"
+import IconArrowUpRight from "@tabler-icons-url/arrow-up-right.tsx"
 
 export {
     IconSend,
@@ -47,4 +49,6 @@ export {
     IconHandGrab,
     IconHandStop,
     IconResize,
+    IconArrowDownRight,
+    IconArrowUpRight,
 }
