@@ -32,6 +32,7 @@ Tasks :
     - [x] 429 too many request
     - [ ] 403 token expired after too much time on app, and it does not renew itself (it should tho)
     - [ ] ? AuthRetryableFetchError if no internet connection, it returns to the login page
+    - [ ] 422 (Signups not allowed for otp) AuthApiError otp_disabled
   - [ ] Middleware on api ??? 
 - [ ] Collection
   - [x] Supabase init
@@ -68,6 +69,7 @@ Tasks :
   - [ ] Info icon with tooltip on hover
     - [ ] tell that bricks names are unique
   - [ ] Cursor
+    - [ ] Hover card state
   - [ ] Navbar
     - [ ] Smooth animation on expand
     - [ ] Set the position as fixed, to have the navbar always displayed same on page scroll
