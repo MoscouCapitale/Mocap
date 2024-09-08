@@ -11,13 +11,14 @@ import {
   IconPencilStar,
   IconPhotoPlus,
   IconSettings2,
-  IconUsers
+  IconUsers,
 } from "@utils/icons.ts";
+import { cn } from "@utils/cn.ts";
 
 //TODO: use Fresh Partials to render all admin pages
 export default function Navbar(path: { path: string }) {
-  const [collapsed, setCollapsed] = useState<boolean>(
-    getAppStorage()?.navbarCollapsed || false,
+  const [isExpanded, setIsExpanded] = useState<boolean>(
+    getAppStorage()?.navbarExpanded || false,
   );
 
   const [readyToRender, setReadyToRender] = useState(false);
@@ -89,45 +90,61 @@ export default function Navbar(path: { path: string }) {
   }, []);
 
   return (
-    // TODO: fix nav, should be sticking in a fixed position if you scroll down
-    <nav class="bg-black min-h-screen p-[30px] flex-col justify-between items-start inline-flex">
+    <nav
+      className={cn(
+        "bg-black h-screen p-[30px] flex-col justify-between items-start inline-flex transition-all duration-300 ease-in-out overflow-hidden shrink-0",
+        isExpanded ? "w-[190px]" : "w-[84px]",
+      )}
+    >
       <div class="flex-col justify-start items-start gap-10 inline-flex">
-        {readyToRender && navItems.map((item) => NavbarItem(item, collapsed))}
+        {readyToRender && navItems.map((item) => NavbarItem(item, isExpanded))}
       </div>
       <div class="w-full items-start inline-flex flex-col gap-5">
         <LogoutButton />
         <a class="w-full justify-start items-center gap-5 inline-flex">
           <IconChevronLeft
-            className={`hover:cursor-pointer ${
-              !collapsed && "transform rotate-180"
-            }`}
+            className={cn(
+              "hover:cursor-pointer",
+              !isExpanded && "transform rotate-180",
+            )}
             color="white"
             onClick={() => {
-              saveAppStorage({ navbarCollapsed: !collapsed });
-              setCollapsed(!collapsed);
+              saveAppStorage({ navbarExpanded: !isExpanded });
+              setIsExpanded((p) => !p);
             }}
           />
-          {collapsed && <span class={`text-base text-text`}>Fermer</span>}
+          <span
+            class={cn("text-base text-text", isExpanded ? "visible" : "hidden")}
+          >
+            Fermer
+          </span>
         </a>
       </div>
     </nav>
   );
 }
 
-function NavbarItem(item: NavItemType, collapsed: boolean) {
+function NavbarItem(item: NavItemType, isExpanded: boolean) {
   return (
     <a
       href={item.path}
       class="w-full justify-start items-center gap-5 inline-flex relative"
     >
-      {item.icon  && <item.icon color={item.active ? "white" : "grey"} className={`${item.badge && "z-20"}`} />}
-      {collapsed && (
-        <span
-          class={`text-base ${item.active ? "text-text" : "text-text_grey"}`}
-        >
-          {item.label}
-        </span>
+      {item.icon && (
+        <item.icon
+          color={item.active ? "white" : "grey"}
+          className={cn(item.badge && "z-20")}
+        />
       )}
+      <span
+        class={cn(
+          "text-base",
+          item.active ? "text-text" : "text-text_grey",
+          isExpanded ? "visible" : "hidden",
+        )}
+      >
+        {item.label}
+      </span>
       {item.badge && (
         <span
           class={`absolute bg-${item.badge.color} rounded-full text-white text-xs w-[20px] h-[20px] flex justify-center items-center top-[-7px] right-[-7px] z-10`}

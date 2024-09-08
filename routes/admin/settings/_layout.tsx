@@ -41,9 +41,9 @@ export default function Layout({ Component, state, route }: PageProps) {
 
 
   return (
-    <div class="w-full min-h-screen p-10 flex-col justify-start items-start gap-[30px] inline-flex">
+    <>
         <InpageNavbar items={navItems} />
         <Component />
-    </div>
+    </>
   );
 }

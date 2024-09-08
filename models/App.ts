@@ -3,7 +3,7 @@ import { JSX } from "https://esm.sh/v128/preact@10.19.6/src/index.js";
 import { BricksType } from "@models/Bricks.ts";
 
 interface AppStorage {
-  navbarCollapsed?: boolean;
+  navbarExpanded?: boolean;
 }
 
 type ConfirmationModalProps = {
