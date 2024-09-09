@@ -4,6 +4,7 @@ import InpagePopup from "@islands/Layout/InpagePopup.tsx";
 import MediaDetail from "@islands/collection/MediaDetail.tsx";
 import { MediaType } from "@models/Medias.ts";
 import MediaPreview from "@islands/collection/MediaPreview.tsx";
+import ContextualDots from "@islands/UI/ContextualDots.tsx";
 
 export default function CollectionTile({
   media,
@@ -25,11 +26,7 @@ export default function CollectionTile({
         <div onClick={() => mediaClick && mediaClick(media)}>
           <MediaPreview media={media} from={"collection"} />
         </div>
-        <button className={activeBtnStyle} onClick={() => setActive(true)}>
-          {Array.from({ length: 3 }).map(() => (
-            <span className={`block w-2 h-2 bg-background rounded-full border-2 border-text`}></span>
-          ))}
-        </button>
+        <ContextualDots onClick={() => setActive(true)} />
       </div>
       {active && (
         <InpagePopup closePopup={() => setActive(false)}>

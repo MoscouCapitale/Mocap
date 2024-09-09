@@ -72,7 +72,7 @@ Tasks :
     - [ ] Hover card state
   - [ ] Navbar
     - [ ] Smooth animation on expand
-    - [ ] Set the position as fixed, to have the navbar always displayed same on page scroll
+    - [x] Set the position as fixed, to have the navbar always displayed same on page scroll
   - [ ] Global form
     - [ ] Client-side validation
     - [ ] Error handling
@@ -90,10 +90,10 @@ Tasks :
       - [ ] Toasts (https://www.npmjs.com/package/react-toastify)
         - [ ] Themes (error, success, info, warning)
     - [ ] Misc
-      - [ ] Loader
+      - [x] Loader
       - [ ] InpagePopup
         - [ ] If you quit one popup showed on top of another, only the last one should be closed
-      - [ ] The 3 little dots as reusable component
+      - [x] The 3 little dots as reusable component
   - [ ] Animations...
   - [ ] Misc
 - [ ] Bricks

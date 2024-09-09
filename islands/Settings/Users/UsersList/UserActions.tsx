@@ -14,7 +14,7 @@ export default function UserActions(props: { user: any; onBlockUnblock: (action:
     <>
       <div
         className={
-          "absolute top-[200%] p-[15px] bg-neutral-950 rounded-[10px] z-50 border border-text_grey bg-background flex-col justify-center items-start gap-[15px] inline-flex "
+          "p-[15px] bg-black rounded-[10px] border border-text_grey bg-background flex-col justify-center items-start gap-[15px] inline-flex "
         }
       >
         <div class="px-2.5 py-1.5 bg-warning rounded-[10px] justify-center items-center gap-2.5 inline-flex">
