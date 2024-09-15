@@ -19,12 +19,13 @@ import { getBaseUrl } from "@utils/pathHandler.ts";
 import { canParse } from "https://deno.land/std@0.216.0/semver/can_parse.ts";
 import { BricksType } from "@models/Bricks.ts";
 
-type MCViewBox = {
+export type MCViewBox = {
   x: number;
   y: number;
-  scale: number;
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
+  frameWidth: number; // Width of the svg frame. Is clientWidth
+  frameHeight: number; // Height of the svg frame. Is clientHeight
 };
 
 type isOverlappingType = {
@@ -60,8 +61,8 @@ type getClosestFreePositionReturnType = (
 ) => rectCollideProps;
 
 type MNodeContextType = {
-  MCFrame: RefObject<HTMLElement>;
-  viewBox: MCViewBox;
+  MCFrame: RefObject<SVGSVGElement>;
+  viewBox?: MCViewBox;
   setViewBox: (viewBox: MCViewBox) => void;
   MCNodes: MNode[];
   isOverlapping: (a: rectCollideProps) => isOverlappingType;
@@ -111,8 +112,8 @@ export const useMNodeContext = () => {
 };
 
 export const MNodeProvider = ({ children }: { children: VNode }) => {
-  const MCFrame = useRef<HTMLElement>(null);
-  const [viewBox, setViewBox] = useState<MCViewBox>({ x: 0, y: 0, scale: 1 });
+  const MCFrame = useRef<SVGSVGElement>(null);
+  const [viewBox, setViewBox] = useState<MCViewBox>();
   const [MCNodes, setMCNodes] = useState<MNode[]>([]);
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const [hasPendingChanges, setHasPendingChanges] = useState(false);
@@ -137,7 +138,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
       }
       return node;
     });
-  }
+  };
 
   const autoSave = signal<autoSaveType>({
     timeout: 30 * 1000, // 30 seconds
@@ -155,10 +156,17 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   }, [MCNodes]);
 
   useEffect(() => {
-    if (MCFrame.current && viewBox) {
+    if (MCFrame.current) {
       const width = MCFrame.current?.clientWidth || 0;
       const height = MCFrame.current?.clientHeight || 0;
-      setViewBox({ ...viewBox, width: width, height: height });
+      setViewBox({ 
+        x: 0,
+        y: 0,
+        width,
+        height,
+        frameWidth: width, 
+        frameHeight: height 
+      });
     }
   }, [MCFrame]);
 
@@ -208,14 +216,14 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
 
   useEffect(() => {
     if (
-      MCFrame.current?.offsetWidth && MCFrame.current?.offsetHeight &&
+      MCFrame.current?.clientWidth && MCFrame.current?.clientHeight &&
       !trashPos.isReady
     ) {
       const trash = {
-        x: MCFrame.current.offsetWidth -
-          (MCFrame.current.offsetWidth * TRASH_DEADZONE_MULTIPLIER),
-        y: MCFrame.current.offsetHeight -
-          (MCFrame.current.offsetHeight * TRASH_DEADZONE_MULTIPLIER),
+        x: MCFrame.current.clientWidth -
+          (MCFrame.current.clientWidth * TRASH_DEADZONE_MULTIPLIER),
+        y: MCFrame.current.clientHeight -
+          (MCFrame.current.clientHeight * TRASH_DEADZONE_MULTIPLIER),
       };
       setTrashPos({ x: trash.x, y: trash.y, isReady: true });
     }

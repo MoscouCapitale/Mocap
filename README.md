@@ -96,7 +96,7 @@ Tasks :
       - [ ] The 3 little dots as reusable component
   - [ ] Animations...
   - [ ] Misc
-- [ ] Bricks
+- [ ] Bricks/Nodes
   - [ ] on preview click it disable the sidebar
   - [ ] Research on how to implement
   - [ ] UI
@@ -106,6 +106,7 @@ Tasks :
       - [ ] Brick with this name already exists
   - [ ] Texte
     - [ ] Markdown support
+  - [ ] Save canva/nodes state to localstorage
 - [ ] Misc
   - [ ] Learn & refacto whole effects states management with preact
   - [ ] Add localstorage saving

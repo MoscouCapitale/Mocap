@@ -35,7 +35,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
 
   gsap.registerPlugin(useGSAP, Draggable);
 
-  const MNodeRef = signal<Ref<HTMLElement>>(createRef());
+  const MNodeRef = signal<Ref<SVGForeignObjectElement>>(createRef());
   const GrabberRef = signal<Ref<HTMLDivElement>>(createRef());
 
   useEffect(() => {
@@ -47,31 +47,35 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
       Draggable.create(MNodeRef.value.current, {
         type: "x,y",
         edgeResistance: 0.65,
-        bounds: MC.MCFrame.current,
+        // bounds: MC.MCFrame.current,
         trigger: GrabberRef.value.current,
         onDrag: function () {
           isOverTrash.value = (this.x + node.width >= MC.trashPos.x) &&
             (this.y + node.height >= MC.trashPos.y);
+          console.log(`over x: ${this.x} y: ${this.y}`);
         },
         onDragEnd: function () {
-          const nodePos = {
-            id: node.id,
-            x1: this.x,
-            y1: this.y,
-            x2: this.x + node.width,
-            y2: this.y + node.height,
-          };
-          const newPos = MC.getFreeSpace(nodePos);
-          if (newPos.x1 !== this.x || newPos.y1 !== this.y) {
-            this.x = newPos.x1;
-            this.y = newPos.y1;
-            gsap.set(MNodeRef.value.current, {
-              css: {
-                x: this.x,
-                y: this.y,
-              },
-            });
-          }
+          // console.log(`end x: ${this.x} y: ${this.y}`);
+          // const nodePos = {
+          //   id: node.id,
+          //   x1: this.x,
+          //   y1: this.y,
+          //   x2: this.x + node.width,
+          //   y2: this.y + node.height,
+          // };
+          // const newPos = MC.getFreeSpace(nodePos);
+          // if (newPos.x1 !== this.x || newPos.y1 !== this.y) {
+          //   this.x = newPos.x1;
+          //   this.y = newPos.y1;
+          //   console.log(`calculate new after overlap x: ${this.x}, y: ${this.y}`);
+          //   gsap.set(MNodeRef.value.current, {
+          //     css: {
+          //       x: this.x,
+          //       y: this.y,
+          //     },
+          //   });
+          // }
+          console.log(`calculate new x: ${this.x}, y: ${this.y}`);
           updateNode({ ...node, x: this.x, y: this.y }, true);
           if (
             isOverTrash.value &&
@@ -85,9 +89,26 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
           y: (y: number) => Math.round(y / CANVA_GUTTER) * CANVA_GUTTER,
         },
       });
+      gsap.set(MNodeRef.value.current, {
+        css: {
+          x: node.x,
+          y: node.y,
+        },
+      });
     }
   }, []);
 
+  useEffect(() => {
+    const ref = MNodeRef.value.current
+    if (!ref) return
+    const drag = Draggable.get(ref)
+    drag.update()
+    console.log("Node draggable: ", drag)
+  }, [node]);
+
+  /* TODO: il faut laisser gsap gérer le drag, et update la node sans re-render, mais en updatant le contexte 
+  (je sais pas si possible  'est possible)
+  */
   const updateNode = (
     newNode: MNode,
     saveToContext = false,
@@ -98,17 +119,13 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
   };
 
   return (
-    <article
-      className={"absolute z-30 group"}
+    <foreignObject
+      className={"group"}
       ref={MNodeRef.value}
-      style={{
-        width: `${node.width}px`,
-        height: `${node.height}px`,
-        // backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(16)}4f`,
-        transform: `translate3d(${node.x + MC.viewBox.x}px, ${
-          node.y + MC.viewBox.y
-        }px, 0)`,
-      }}
+      x={node.x}
+      y={node.y}
+      width={node.width}
+      height={node.height}
     >
       <div className={cn("", MC.isPreview ? "hidden" : "block")}>
         <div
@@ -157,12 +174,12 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
       {getBrickFromBrickType(node, { isMovable: !MC.isPreview })}
       {/* debug */}
       {!MC.isPreview && (
-        <>
+        <div className={"absolute bottom-0 right-0 bg-black text-white"}>
           <p>{renderCount}</p>
           <p>id: {node.id.slice(0, 5)}</p>
           <p>x: {node.x}, y: {node.y}</p>
-        </>
+        </div>
       )}
-    </article>
+    </foreignObject>
   );
 }
