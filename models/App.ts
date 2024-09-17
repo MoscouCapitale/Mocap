@@ -1,4 +1,4 @@
-import { Database } from "@models/database.ts";
+import { Database } from "@models/supabase.ts";
 import { JSX } from "https://esm.sh/v128/preact@10.19.6/src/index.js";
 import { BricksType } from "@models/Bricks.ts";
 

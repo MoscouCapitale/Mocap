@@ -4,7 +4,7 @@ import {
   decodeBase64 as decode,
   encodeBase64 as encode,
 } from "$std/encoding/base64.ts";
-import { Database } from "@models/database.ts";
+import { Database } from "@models/supabase.ts";
 
 // TODO: find a way to avoid using the service key
 export const supabase = createClient<Database>(

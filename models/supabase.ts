@@ -184,6 +184,7 @@ export type Database = {
           id: number
           media: string | null
           name: string
+          style: Database["public"]["Enums"]["herosection_style"]
           subtitle: string | null
           title: string | null
           updated_at: string | null
@@ -194,6 +195,7 @@ export type Database = {
           id?: number
           media?: string | null
           name: string
+          style?: Database["public"]["Enums"]["herosection_style"]
           subtitle?: string | null
           title?: string | null
           updated_at?: string | null
@@ -204,6 +206,7 @@ export type Database = {
           id?: number
           media?: string | null
           name?: string
+          style?: Database["public"]["Enums"]["herosection_style"]
           subtitle?: string | null
           title?: string | null
           updated_at?: string | null
@@ -634,6 +637,7 @@ export type Database = {
         Row: {
           created_at: string
           id: number
+          in_footer: boolean
           name: string
           platform: number | null
           updated_at: string | null
@@ -642,6 +646,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: number
+          in_footer?: boolean
           name: string
           platform?: number | null
           updated_at?: string | null
@@ -650,6 +655,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: number
+          in_footer?: boolean
           name?: string
           platform?: number | null
           updated_at?: string | null
@@ -661,6 +667,47 @@ export type Database = {
             columns: ["platform"]
             isOneToOne: false
             referencedRelation: "Platform"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Settings: {
+        Row: {
+          created_at: string
+          id: number
+          main: Json | null
+          medias: Json | null
+          misc: Json | null
+          styles: Json | null
+          updated_at: string | null
+          user: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          main?: Json | null
+          medias?: Json | null
+          misc?: Json | null
+          styles?: Json | null
+          updated_at?: string | null
+          user?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          main?: Json | null
+          medias?: Json | null
+          misc?: Json | null
+          styles?: Json | null
+          updated_at?: string | null
+          user?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Settings_user_fkey"
+            columns: ["user"]
+            isOneToOne: false
+            referencedRelation: "Users"
             referencedColumns: ["id"]
           },
         ]
@@ -775,380 +822,6 @@ export type Database = {
           },
         ]
       }
-      Website_Settings: {
-        Row: {
-          api_amazon_music: string | null
-          api_deezer: string | null
-          api_soundcloud: string | null
-          api_spotify: string | null
-          api_tidal: string | null
-          api_youtube_music: string | null
-          created_at: string | null
-          created_by: string | null
-          email_administrator: number
-          email_contact: number
-          email_default_sender: string
-          email_logging: number
-          email_user_creator: number
-          hidden: boolean | null
-          id: number
-          media_auto_optimize: boolean | null
-          media_lazyload: boolean | null
-          media_max_size_height: number | null
-          media_max_size_mb: number | null
-          misc_confidentiality: string | null
-          modified_at: string | null
-          style_color_auto: boolean | null
-          style_color_main: string | null
-          style_color_secondary: string | null
-          style_font_main: string | null
-          style_font_secondary: string | null
-          style_theme_toggle: boolean | null
-          website_icone: number | null
-          website_keywords: string | null
-          website_language: number
-          website_title: string | null
-          website_url: string
-        }
-        Insert: {
-          api_amazon_music?: string | null
-          api_deezer?: string | null
-          api_soundcloud?: string | null
-          api_spotify?: string | null
-          api_tidal?: string | null
-          api_youtube_music?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          email_administrator: number
-          email_contact: number
-          email_default_sender: string
-          email_logging: number
-          email_user_creator: number
-          hidden?: boolean | null
-          id?: number
-          media_auto_optimize?: boolean | null
-          media_lazyload?: boolean | null
-          media_max_size_height?: number | null
-          media_max_size_mb?: number | null
-          misc_confidentiality?: string | null
-          modified_at?: string | null
-          style_color_auto?: boolean | null
-          style_color_main?: string | null
-          style_color_secondary?: string | null
-          style_font_main?: string | null
-          style_font_secondary?: string | null
-          style_theme_toggle?: boolean | null
-          website_icone?: number | null
-          website_keywords?: string | null
-          website_language: number
-          website_title?: string | null
-          website_url: string
-        }
-        Update: {
-          api_amazon_music?: string | null
-          api_deezer?: string | null
-          api_soundcloud?: string | null
-          api_spotify?: string | null
-          api_tidal?: string | null
-          api_youtube_music?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          email_administrator?: number
-          email_contact?: number
-          email_default_sender?: string
-          email_logging?: number
-          email_user_creator?: number
-          hidden?: boolean | null
-          id?: number
-          media_auto_optimize?: boolean | null
-          media_lazyload?: boolean | null
-          media_max_size_height?: number | null
-          media_max_size_mb?: number | null
-          misc_confidentiality?: string | null
-          modified_at?: string | null
-          style_color_auto?: boolean | null
-          style_color_main?: string | null
-          style_color_secondary?: string | null
-          style_font_main?: string | null
-          style_font_secondary?: string | null
-          style_theme_toggle?: boolean | null
-          website_icone?: number | null
-          website_keywords?: string | null
-          website_language?: number
-          website_title?: string | null
-          website_url?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Website_Settings_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Website_Settings_email_administrator_fkey"
-            columns: ["email_administrator"]
-            isOneToOne: false
-            referencedRelation: "Mail_Pairing"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Website_Settings_email_contact_fkey"
-            columns: ["email_contact"]
-            isOneToOne: false
-            referencedRelation: "Mail_Pairing"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Website_Settings_email_logging_fkey"
-            columns: ["email_logging"]
-            isOneToOne: false
-            referencedRelation: "Mail_Pairing"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Website_Settings_email_user_creator_fkey"
-            columns: ["email_user_creator"]
-            isOneToOne: false
-            referencedRelation: "Mail_Pairing"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "Website_Settings_website_language_fkey"
-            columns: ["website_language"]
-            isOneToOne: false
-            referencedRelation: "Available_Languages"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Website_Settings_Main_APIs: {
-        Row: {
-          api_amazon_music: string | null
-          api_deezer: string | null
-          api_soundcloud: string | null
-          api_spotify: string | null
-          api_tidal: string | null
-          api_youtube_music: string | null
-          created_at: string | null
-          id: number
-          modified_at: string | null
-        }
-        Insert: {
-          api_amazon_music?: string | null
-          api_deezer?: string | null
-          api_soundcloud?: string | null
-          api_spotify?: string | null
-          api_tidal?: string | null
-          api_youtube_music?: string | null
-          created_at?: string | null
-          id?: number
-          modified_at?: string | null
-        }
-        Update: {
-          api_amazon_music?: string | null
-          api_deezer?: string | null
-          api_soundcloud?: string | null
-          api_spotify?: string | null
-          api_tidal?: string | null
-          api_youtube_music?: string | null
-          created_at?: string | null
-          id?: number
-          modified_at?: string | null
-        }
-        Relationships: []
-      }
-      Website_Settings_Main_Emails: {
-        Row: {
-          created_at: string | null
-          email_administrator: number
-          email_contact: number
-          email_default_sender: string
-          email_logging: number
-          email_user_creator: number
-          id: number
-          modified_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          email_administrator: number
-          email_contact: number
-          email_default_sender: string
-          email_logging: number
-          email_user_creator: number
-          id?: number
-          modified_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          email_administrator?: number
-          email_contact?: number
-          email_default_sender?: string
-          email_logging?: number
-          email_user_creator?: number
-          id?: number
-          modified_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "website_settings_email_administrator_fkey"
-            columns: ["email_administrator"]
-            isOneToOne: false
-            referencedRelation: "Mail_Pairing"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "website_settings_email_contact_fkey"
-            columns: ["email_contact"]
-            isOneToOne: false
-            referencedRelation: "Mail_Pairing"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "website_settings_email_logging_fkey"
-            columns: ["email_logging"]
-            isOneToOne: false
-            referencedRelation: "Mail_Pairing"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "website_settings_email_user_creator_fkey"
-            columns: ["email_user_creator"]
-            isOneToOne: false
-            referencedRelation: "Mail_Pairing"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Website_Settings_Main_Misc: {
-        Row: {
-          created_at: string | null
-          id: number
-          modified_at: string | null
-          website_icon: number | null
-          website_keywords: string | null
-          website_language: number
-          website_title: string | null
-          website_url: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: number
-          modified_at?: string | null
-          website_icon?: number | null
-          website_keywords?: string | null
-          website_language?: number
-          website_title?: string | null
-          website_url: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: number
-          modified_at?: string | null
-          website_icon?: number | null
-          website_keywords?: string | null
-          website_language?: number
-          website_title?: string | null
-          website_url?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Website_Settings_Main_Misc_website_language_fkey"
-            columns: ["website_language"]
-            isOneToOne: false
-            referencedRelation: "Available_Languages"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      Website_Settings_Medias: {
-        Row: {
-          created_at: string | null
-          id: number
-          media_auto_optimize: boolean | null
-          media_lazyload: boolean | null
-          media_max_size_height: number | null
-          media_max_size_mb: number | null
-          modified_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: number
-          media_auto_optimize?: boolean | null
-          media_lazyload?: boolean | null
-          media_max_size_height?: number | null
-          media_max_size_mb?: number | null
-          modified_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: number
-          media_auto_optimize?: boolean | null
-          media_lazyload?: boolean | null
-          media_max_size_height?: number | null
-          media_max_size_mb?: number | null
-          modified_at?: string | null
-        }
-        Relationships: []
-      }
-      Website_Settings_Misc: {
-        Row: {
-          created_at: string | null
-          id: number
-          misc_confidentiality: string | null
-          modified_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: number
-          misc_confidentiality?: string | null
-          modified_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: number
-          misc_confidentiality?: string | null
-          modified_at?: string | null
-        }
-        Relationships: []
-      }
-      Website_Settings_Styles: {
-        Row: {
-          created_at: string | null
-          id: number
-          modified_at: string | null
-          style_color_auto: boolean | null
-          style_color_main: string | null
-          style_color_secondary: string | null
-          style_font_main: string | null
-          style_font_secondary: string | null
-          style_theme_toggle: boolean | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: number
-          modified_at?: string | null
-          style_color_auto?: boolean | null
-          style_color_main?: string | null
-          style_color_secondary?: string | null
-          style_font_main?: string | null
-          style_font_secondary?: string | null
-          style_theme_toggle?: boolean | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: number
-          modified_at?: string | null
-          style_color_auto?: boolean | null
-          style_color_main?: string | null
-          style_color_secondary?: string | null
-          style_font_main?: string | null
-          style_font_secondary?: string | null
-          style_theme_toggle?: boolean | null
-        }
-        Relationships: []
-      }
     }
     Views: {
       [_ in never]: never
@@ -1158,6 +831,7 @@ export type Database = {
     }
     Enums: {
       brick_type: "HeroSection" | "Single" | "Album" | "Text" | "Platform_Link"
+      herosection_style: "scrolling-hero"
       media_type: "Audios" | "Videos" | "Images" | "Misc"
     }
     CompositeTypes: {

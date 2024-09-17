@@ -65,6 +65,9 @@ Tasks :
 - [ ] Stats
 - [ ] Settings
   - [ ] Refacto settings following the same pattern as collections
+  - [ ] Support api keys (support, hash, etc...)
+  - [ ] Regroup some code that are very similar between pages (and also all the StylesSettingsDBObject). Ex on pages the logic is *almost* the same, only the UI is different
+  - [ ] Check formfields objects, for better placeholder, validation, etc...
 - [ ] UI
   - [ ] Info icon with tooltip on hover
     - [ ] tell that bricks names are unique
@@ -76,6 +79,12 @@ Tasks :
   - [ ] Global form
     - [ ] Client-side validation
     - [ ] Error handling
+    - [ ] Fields
+      - [ ] File input
+      - [ ] Date input
+      - [ ] Color input
+      - [ ] Checkboxes
+      - [ ] Select and multi select
   - [ ] Global components
     - [ ] Button (primary, secondary, danger, success, etc...)
       - [ ] Trashcan
@@ -103,6 +112,9 @@ Tasks :
   - [ ] Manage saved bricks
   - [ ] Error management
       - [ ] Brick with this name already exists
+  - [ ] After-canva feature fixes
+      - [ ] Add toasts
+      - [ ] Add supa error management
 - [ ] Misc
   - [ ] Learn & refacto whole effects states management with preact
   - [ ] Add localstorage saving

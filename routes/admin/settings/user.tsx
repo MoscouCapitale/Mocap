@@ -28,6 +28,7 @@ export const handler: Handlers<UserType | null> = {
 
 export default function User({ data }: PageProps<any>) {
   const { user } = data;
+  if (!user) return <div className={"text-text"} >Not logged in</div>;
   return (
     <div className={"flex-col justify-center items-start inline-flex gap-[50px]"}>
       <div className="justify-center items-center gap-10 inline-flex">

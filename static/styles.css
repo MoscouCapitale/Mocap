@@ -161,3 +161,11 @@
       background: linear-gradient(45deg, #0000ff, #ff0000, #00ff00); /* Blue to red to green */
   }
 }
+
+/** Custom styles for the settings pages */
+.settings-table th, .settings-table td {
+  padding: 0.5rem;
+}
+.settings-table th:first-child, .settings-table td:first-child {
+  padding-right: 3rem;
+}

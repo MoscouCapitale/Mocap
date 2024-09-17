@@ -30,11 +30,12 @@ export default function Layout({ Component, state, route }: PageProps) {
             label: "Styles",
             path: "/admin/settings/styles"
         },
-        {
-            name: "misc",
-            label: "Autres",
-            path: "/admin/settings/misc"
-        },
+        // Temporarily disabled
+        // {
+        //     name: "misc",
+        //     label: "Divers",
+        //     path: "/admin/settings/misc"
+        // }
     ];
 
     navItems.map((item) => route == item.path && (item.active = true));
@@ -43,7 +44,9 @@ export default function Layout({ Component, state, route }: PageProps) {
   return (
     <>
         <InpageNavbar items={navItems} />
-        <Component />
+        <main className={"flex-col justify-center items-start gap-14 inline-flex"}>
+            <Component />
+        </main>
     </>
   );
 }

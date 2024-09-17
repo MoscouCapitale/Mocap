@@ -1,4 +1,4 @@
-import { Database } from "@models/database.ts";
+import { Database } from "@models/supabase.ts";
 
 interface Media {
   id: string;
