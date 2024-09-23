@@ -97,9 +97,9 @@ Tasks :
   - [ ] Animations...
   - [ ] Misc
 - [ ] Bricks/Nodes
-  - [ ] on preview click it disable the sidebar
-  - [ ] Research on how to implement
-  - [ ] UI
+  - [x] on preview click it disable the sidebar
+  - [x] Research on how to implement
+  - [x] UI
   - [ ] Implement tiles bricks
   - [ ] Manage saved bricks
   - [ ] Error management

@@ -9,7 +9,15 @@ import {
 import { computed, effect, signal } from "@preact/signals-core";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
-import { Ref, useEffect, useMemo, useRef, useState } from "preact/hooks";
+import {
+  Ref,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "preact/hooks";
 
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
@@ -25,109 +33,119 @@ type MNodeGenProps = {
 
 export default function MNodeGen({ nodeProp }: MNodeGenProps) {
   const renderCount = useRenderCount();
-  const MC = useMNodeContext();
+  const {
+    MCNodes,
+    trashPos,
+    deleteNode,
+    getFreeSpace,
+    saveNode,
+    MCFrame,
+    isPreview,
+  } = useMNodeContext();
 
   useEffect(() => setNode(node), [nodeProp]);
 
   const [node, setNode] = useState<MNode>(nodeProp);
-
-  const isOverTrash = signal<boolean>(false);
 
   gsap.registerPlugin(useGSAP, Draggable);
 
   const MNodeRef = signal<Ref<SVGForeignObjectElement>>(createRef());
   const GrabberRef = signal<Ref<HTMLDivElement>>(createRef());
 
-  useEffect(() => {
-    if (
-      node &&
-      MNodeRef.value.current && MC.MCFrame.current &&
-      GrabberRef.value.current && MC.trashPos.isReady
-    ) {
-      Draggable.create(MNodeRef.value.current, {
-        type: "x,y",
-        edgeResistance: 0.65,
-        // bounds: MC.MCFrame.current,
-        trigger: GrabberRef.value.current,
-        onDrag: function () {
-          isOverTrash.value = (this.x + node.width >= MC.trashPos.x) &&
-            (this.y + node.height >= MC.trashPos.y);
-          console.log(`over x: ${this.x} y: ${this.y}`);
-        },
-        onDragEnd: function () {
-          // console.log(`end x: ${this.x} y: ${this.y}`);
-          // const nodePos = {
-          //   id: node.id,
-          //   x1: this.x,
-          //   y1: this.y,
-          //   x2: this.x + node.width,
-          //   y2: this.y + node.height,
-          // };
-          // const newPos = MC.getFreeSpace(nodePos);
-          // if (newPos.x1 !== this.x || newPos.y1 !== this.y) {
-          //   this.x = newPos.x1;
-          //   this.y = newPos.y1;
-          //   console.log(`calculate new after overlap x: ${this.x}, y: ${this.y}`);
-          //   gsap.set(MNodeRef.value.current, {
-          //     css: {
-          //       x: this.x,
-          //       y: this.y,
-          //     },
-          //   });
-          // }
-          console.log(`calculate new x: ${this.x}, y: ${this.y}`);
-          updateNode({ ...node, x: this.x, y: this.y }, true);
-          if (
-            isOverTrash.value &&
-            globalThis.confirm("Are you sure you want to delete this node?")
-          ) {
-            MC.deleteNode(node.id);
-          }
-        },
-        liveSnap: {
-          x: (x: number) => Math.round(x / CANVA_GUTTER) * CANVA_GUTTER,
-          y: (y: number) => Math.round(y / CANVA_GUTTER) * CANVA_GUTTER,
-        },
-      });
-      gsap.set(MNodeRef.value.current, {
-        css: {
-          x: node.x,
-          y: node.y,
-        },
-      });
-    }
-  }, []);
+  // FIXME: this is triggered when you change the viewbox (should be triggered only when you change the node position)
+  /** Here we manage if you set the node on top of the trashcan */
+  // effect(() => {
+  //   if (
+  //     !isPreview &&
+  //     (node.x + node.width >= trashPos.x &&
+  //       node.y + node.height >= trashPos.y) &&
+  //     globalThis.confirm("Are you sure you want to delete this node?")
+  //   ) {
+  //     deleteNode(node.id);
+  //   }
+  // });
 
-  useEffect(() => {
-    const ref = MNodeRef.value.current
-    if (!ref) return
-    const drag = Draggable.get(ref)
-    drag.update()
-    console.log("Node draggable: ", drag)
+  const onDragEnd = useCallback(function (this: Draggable) {
+    const nodePos = {
+      id: node.id,
+      x1: this.x,
+      y1: this.y,
+      x2: this.x + node.width,
+      y2: this.y + node.height,
+    };
+    const newPos = getFreeSpace(nodePos);
+    if (newPos.x1 !== this.x || newPos.y1 !== this.y) {
+      this.x = newPos.x1;
+      this.y = newPos.y1;
+    }
+    updateNode({ x: this.x, y: this.y }, true, true);
+    if (
+      !isPreview &&
+      (this.x + node.width >= trashPos.x &&
+        this.y + node.height >= trashPos.y) &&
+      globalThis.confirm("Are you sure you want to delete this node?")
+    ) {
+      deleteNode(node.id);
+    }
+  }, [MCNodes]);
+
+  /** FIXME: This is a workaround to make the getFreeSpace work, but for now it the pos with one "frame" of
+   * delay, so it checks the previopus pos of each node, instead of the current one */
+  const useIsomorphicLayoutEffect = (typeof window !== "undefined")
+    ? useLayoutEffect
+    : useEffect;
+  useIsomorphicLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      if (
+        node &&
+        MNodeRef.value.current && MCFrame.current &&
+        GrabberRef.value.current && trashPos.isReady
+      ) {
+        Draggable.create(MNodeRef.value.current, {
+          type: "x,y",
+          edgeResistance: 0.65,
+          trigger: GrabberRef.value.current,
+          onDragEnd,
+          liveSnap: {
+            x: (x: number) => Math.round(x / CANVA_GUTTER) * CANVA_GUTTER,
+            y: (y: number) => Math.round(y / CANVA_GUTTER) * CANVA_GUTTER,
+          },
+        });
+      }
+    }, MNodeRef.value);
+    return () => ctx.revert();
   }, [node]);
 
-  /* TODO: il faut laisser gsap gérer le drag, et update la node sans re-render, mais en updatant le contexte 
-  (je sais pas si possible  'est possible)
-  */
+  /** This is here we set the gsap value, from the node value */
+  useEffect(() => {
+    gsap.set(MNodeRef.value.current, {
+      css: {
+        x: node.x,
+        y: node.y,
+      },
+    });
+  }, [node]);
+
   const updateNode = (
-    newNode: MNode,
+    newNodeDatas: Partial<MNode> = node,
     saveToContext = false,
     rerender = false,
   ) => {
-    setNode(newNode);
-    if (saveToContext) MC.saveNode(newNode, rerender);
+    setNode((prev) => {
+      const newNode = { ...prev, ...newNodeDatas };
+      if (saveToContext) saveNode(newNode, rerender);
+      return newNode;
+    });
   };
 
   return (
     <foreignObject
-      className={"group"}
+      className={"group overflow-visible"}
       ref={MNodeRef.value}
-      x={node.x}
-      y={node.y}
       width={node.width}
       height={node.height}
     >
-      <div className={cn("", MC.isPreview ? "hidden" : "block")}>
+      <div className={cn("", isPreview ? "hidden" : "block")}>
         <div
           className={"w-full inline-flex justify-end bg-black z-10 nodeToolbar absolute top-0 left-0 transition-all duration-300 transform translate-y-0 opacity-0 group-hover:-translate-y-full group-hover:opacity-100"}
         >
@@ -171,9 +189,9 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
           <IconHandGrab />
         </div>
       </div>
-      {getBrickFromBrickType(node, { isMovable: !MC.isPreview })}
+      {getBrickFromBrickType(node, { isMovable: !isPreview })}
       {/* debug */}
-      {!MC.isPreview && (
+      {!isPreview && (
         <div className={"absolute bottom-0 right-0 bg-black text-white"}>
           <p>{renderCount}</p>
           <p>id: {node.id.slice(0, 5)}</p>

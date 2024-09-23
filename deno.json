@@ -41,6 +41,7 @@
     "tailwind-merge": "https://esm.sh/tailwind-merge@1.14.0",
     "@tabler-icons-url/": "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/",
     "@babel/runtime/helpers/esm/extends": "https://esm.sh/@babel/runtime@7.23.1/helpers/esm/extends",
+    "lodash": "https://esm.sh/lodash@4.17.21",
 
     "@radix-ui/react-toast": "https://esm.sh/*@radix-ui/react-toast@1.1.5?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
     "@radix-ui/primitive": "https://esm.sh/*@radix-ui/primitive@1.0.1",
@@ -74,7 +75,7 @@
     "@radix-ui/react-visually-hidden": "https://esm.sh/v132/*@radix-ui/react-visually-hidden@1.0.3?alias=react:preact/compat,@types/react:preact/compat",
     "gsap": "https://esm.sh/gsap@3.12.5/",
     "gsap/": "https://esm.sh/gsap@3.12.5/",
-    "@gsap/react": "npm:@gsap/react@2.1.1",
+    "@gsap/react": "https://esm.sh/@gsap/react?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
     "hotkeys-js": "https://esm.sh/hotkeys-js@3.13.7",
     "@radix-ui/react-popover": "https://esm.sh/*@radix-ui/react-popover@1.0.7?alias=react:preact/compat,@types/react:preact/compat",
     "aria-hidden": "https://esm.sh/aria-hidden@1.2.3",

@@ -5,10 +5,11 @@ import { effect, signal } from "@preact/signals-core";
 import { cn } from "@utils/cn.ts";
 import { IconTrash } from "@utils/icons.ts";
 import { createRef } from "preact";
-import { Ref, useEffect, useRef } from "preact/hooks";
+import { Ref, useEffect, useRef, useCallback } from "preact/hooks";
 import Button from "@islands/Button.tsx";
+import _ from "lodash";
 
-function MCFrameEvents(frame: SVGElement, initialViewBox: MCViewBox) {
+function MCFrameEvents(frame: SVGElement, initialViewBox: MCViewBox, setViewBox: (viewBox: MCViewBox) => void) {
   if (!frame) return
 
   let viewBox = initialViewBox
@@ -32,18 +33,19 @@ function MCFrameEvents(frame: SVGElement, initialViewBox: MCViewBox) {
       y: viewBox.y - e.movementY,
     }
     frame.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`)
+    setViewBox(viewBox)
   }
 
   function onMouseWheel(e: WheelEvent) {
     if (e.ctrlKey) {
       e.preventDefault()
-      const oldvb = viewBox
       viewBox = {
         ...viewBox,
         width: e.deltaY >= 0 ? viewBox.width * zoomFactor : viewBox.width / zoomFactor,
         height: e.deltaY >= 0 ? viewBox.height * zoomFactor : viewBox.height / zoomFactor,
       }
       frame.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`)
+      setViewBox(viewBox)
     }
   }
 
@@ -63,26 +65,21 @@ function MCFrameEvents(frame: SVGElement, initialViewBox: MCViewBox) {
 export default function MCanva() {
   const { toast } = useToast();
   const MC = useMNodeContext();
-  const isDragging = signal<boolean>(false);
+  
+  const throttledSetViewBox = useCallback(
+    // @ts-expect-error - lodash types are not correct
+    _.throttle((viewBox: MCViewBox) => {
+      MC.setViewBox(viewBox);
+    }, 500),
+    []
+  );
 
   /* All hotkeys and mouse logic are in native event listener to avoid useless re-renders of states */
   useEffect(() => {
     if (MC.MCFrame.current && MC.viewBox) {
-      console.log("running svg frame events fun")
-      MCFrameEvents(MC.MCFrame.current, MC.viewBox)
+      MCFrameEvents(MC.MCFrame.current, MC.viewBox, throttledSetViewBox)
     }
-  }, [MC.MCFrame.current, MC.viewBox])
-
-  // const zoom = (direction: "in" | "out") => {
-  //   const zoomFactor = 0.1;
-  //   const zoomValue = direction === "out" ? zoomFactor : -zoomFactor;
-  //   console.log(`Zooming ${direction} by ${zoomValue} on ${MC.viewBox.width}`);
-  //   MC.setViewBox({
-  //     ...MC.viewBox,
-  //     width: MC.viewBox.width * (1 + zoomValue),
-  //     height: MC.viewBox.height * (1 + zoomValue),
-  //   });
-  // };
+  }, [MC.MCFrame.current])
 
   effect(() => {
     if (MC.autoSaveMessage?.value) {
@@ -138,19 +135,13 @@ export default function MCanva() {
         </div>
         <svg
           ref={MC.MCFrame}
-          className={"relative w-full h-full grow rounded-3xl border border-text_grey overflow-hidden"}
+          className={"relative w-full h-full grow rounded-3xl border border-text_grey"}
         >
           {MC.MCNodes.length &&
             MC.MCNodes.map((node) => <MNodeGen nodeProp={node} />)}
         </svg>
         {!MC.isPreview && (
           <>
-            {/* <div
-              className={"absolute top-2 left-2 bg-text_grey flex flex-row p-2"}
-            >
-              <div className={"text-xl"} onClick={() => zoom("in")}>+</div>
-              <div className={"text-xl"} onClick={() => zoom("out")}>-</div>
-            </div> */}
             <div
               className={"absolute bottom-0 right-0 p-[2%] w-[8vw] h-[8vw] max-h-[80px] max-w-[80px] cursor-pointer"}
             >

@@ -16,7 +16,6 @@ import {
   TRASH_DEADZONE_MULTIPLIER,
 } from "@models/Canva.ts";
 import { getBaseUrl } from "@utils/pathHandler.ts";
-import { canParse } from "https://deno.land/std@0.216.0/semver/can_parse.ts";
 import { BricksType } from "@models/Bricks.ts";
 
 export type MCViewBox = {
@@ -79,7 +78,6 @@ type MNodeContextType = {
   writeNodes: () => void;
   nodesChanged: boolean;
   hasPendingChanges: boolean;
-  getHeroSectionXPos: () => { x1: number; x2: number };
 };
 
 // const asyncGnal = function<T>(defaultValue: T, callback: () => Promise<T>): ReadonlySignal<T> {
@@ -128,17 +126,32 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   const [nodesChanged, setNodesChanged] = useState(false);
   effect(() => setTimeout(() => nodesChanged && setNodesChanged(false), 100));
 
-  const applyAdditionalMNodeLogic = (data: MNode[]): MNode[] => {
-    return data.map((node) => {
-      if (node.type === BricksType.HeroSection) {
-        const size = getHeroSectionXPos(data);
-        node.x = size.x1;
-        node.width = size.x2 - size.x1;
-        node.height = 400; // TODO: better way to handle this, instead of hardcoded height
-      }
-      return node;
-    });
-  };
+  useEffect(() => {
+    if (
+      MCNodes.length > 0 &&
+      MCNodes.find((n) => n.type === BricksType.HeroSection)
+    ) {
+      setMCNodes((prev) => {
+        let isModified = false;
+        const calc = prev.map((node) => {
+          if (node.type === BricksType.HeroSection) {
+            const size = prev.reduce((acc, n) => {
+              if (n.id === node.id) return acc;
+              if (n.x < acc.x1) acc.x1 = n.x;
+              if ((n.x + n.width) > acc.x2) acc.x2 = (n.x + n.width);
+              return acc;
+            }, { x1: 999999, x2: -999999 });
+            if (node.x !== size.x1 || node.width !== size.x2 - size.x1) isModified = true;
+            node.x = size.x1;
+            node.width = size.x2 - size.x1;
+            node.height = 400; // TODO: better way to handle this, instead of hardcoded height
+          }
+          return node;
+        });
+        return isModified ? calc : prev;
+      });
+    }
+  }, [MCNodes]);
 
   const autoSave = signal<autoSaveType>({
     timeout: 30 * 1000, // 30 seconds
@@ -146,26 +159,17 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   });
   const autoSaveMessage = signal<string | undefined>(undefined);
 
-  const getHeroSectionXPos = useCallback((nodes?: MNode[]) => {
-    const dimensions = { x1: Infinity, x2: -Infinity };
-    (nodes ?? MCNodes).forEach((n) => {
-      if (n.x > 0 && n.x < dimensions.x1) dimensions.x1 = n.x;
-      if (n.x + n.width > dimensions.x2) dimensions.x2 = n.x + n.width;
-    });
-    return dimensions;
-  }, [MCNodes]);
-
   useEffect(() => {
     if (MCFrame.current) {
       const width = MCFrame.current?.clientWidth || 0;
       const height = MCFrame.current?.clientHeight || 0;
-      setViewBox({ 
+      setViewBox({
         x: 0,
         y: 0,
         width,
         height,
-        frameWidth: width, 
-        frameHeight: height 
+        frameWidth: width,
+        frameHeight: height,
       });
     }
   }, [MCFrame]);
@@ -182,7 +186,8 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
         return [];
       }).then((data: MNode[]) => {
         if (isMounted && MCNodes.length === 0) {
-          setMCNodes(applyAdditionalMNodeLogic(data));
+          // setMCNodes(applyAdditionalMNodeLogic(data));
+          setMCNodes(data);
         }
       }).catch(
         (e) => {
@@ -205,7 +210,8 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
         console.error("No response from server: ", res);
         return [];
       }).then((data: MNode[]) => {
-        setMCNodes(applyAdditionalMNodeLogic(data));
+        // setMCNodes(applyAdditionalMNodeLogic(data));
+        setMCNodes(data);
       }).catch(
         (e) => {
           console.error(e);
@@ -215,19 +221,15 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   };
 
   useEffect(() => {
-    if (
-      MCFrame.current?.clientWidth && MCFrame.current?.clientHeight &&
-      !trashPos.isReady
-    ) {
-      const trash = {
-        x: MCFrame.current.clientWidth -
-          (MCFrame.current.clientWidth * TRASH_DEADZONE_MULTIPLIER),
-        y: MCFrame.current.clientHeight -
-          (MCFrame.current.clientHeight * TRASH_DEADZONE_MULTIPLIER),
-      };
-      setTrashPos({ x: trash.x, y: trash.y, isReady: true });
-    }
-  }, [MCFrame.current]);
+    if (!viewBox) return;
+    const trash = {
+      x: (viewBox.width - (viewBox.width * TRASH_DEADZONE_MULTIPLIER)) +
+        viewBox.x,
+      y: (viewBox.height - (viewBox.height * TRASH_DEADZONE_MULTIPLIER)) +
+        viewBox.y,
+    };
+    setTrashPos({ x: trash.x, y: trash.y, isReady: true });
+  }, [viewBox]);
 
   const setNodeOverTrash = (nodeId: string) => {
     setTrashPos((prev) => {
@@ -349,19 +351,22 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     } else return a;
   };
 
-  const isOverlapping = (a: rectCollideProps): isOverlappingType => {
-    const nodes = MCNodes.filter((n) => {
-      if (n.id === a.id) return false;
-      const b = {
-        x1: n.x > n.x + CANVA_GUTTER ? n.x - CANVA_GUTTER : n.x,
-        y1: n.y > n.y + CANVA_GUTTER ? n.y - CANVA_GUTTER : n.y,
-        x2: n.x + n.width + CANVA_GUTTER,
-        y2: n.y + n.height + CANVA_GUTTER,
-      };
-      return a.x1 < b.x2 && a.x2 > b.x1 && a.y1 < b.y2 && a.y2 > b.y1;
-    });
-    return { isOverlapping: nodes.length > 0, overlappingNode: nodes };
-  };
+  const isOverlapping = useCallback(
+    (a: rectCollideProps): isOverlappingType => {
+      const nodes = MCNodes.filter((n) => {
+        if (n.id === a.id) return false;
+        const b = {
+          x1: n.x > n.x + CANVA_GUTTER ? n.x - CANVA_GUTTER : n.x,
+          y1: n.y > n.y + CANVA_GUTTER ? n.y - CANVA_GUTTER : n.y,
+          x2: n.x + n.width + CANVA_GUTTER,
+          y2: n.y + n.height + CANVA_GUTTER,
+        };
+        return a.x1 < b.x2 && a.x2 > b.x1 && a.y1 < b.y2 && a.y2 > b.y1;
+      });
+      return { isOverlapping: nodes.length > 0, overlappingNode: nodes };
+    },
+    [MCNodes],
+  );
 
   const getClosestFreePosition: getClosestFreePositionReturnType = (
     a,
@@ -482,7 +487,6 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     writeNodes,
     nodesChanged,
     hasPendingChanges,
-    getHeroSectionXPos,
   }), [
     MCFrame,
     viewBox,
