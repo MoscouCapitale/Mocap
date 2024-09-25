@@ -64,41 +64,50 @@ function MCFrameEvents(frame: SVGElement, initialViewBox: MCViewBox, setViewBox:
 
 export default function MCanva() {
   const { toast } = useToast();
-  const MC = useMNodeContext();
+  const {
+    MCFrame,
+    MCNodes,
+    viewBox,
+    setViewBox,
+    isPreview,
+    hasPendingChanges,
+    writeNodes,
+    autoSaved,
+    setPreview
+  } = useMNodeContext();
   
   const throttledSetViewBox = useCallback(
     // @ts-expect-error - lodash types are not correct
     _.throttle((viewBox: MCViewBox) => {
-      MC.setViewBox(viewBox);
+      setViewBox(viewBox);
     }, 500),
     []
   );
 
   /* All hotkeys and mouse logic are in native event listener to avoid useless re-renders of states */
   useEffect(() => {
-    if (MC.MCFrame.current && MC.viewBox) {
-      MCFrameEvents(MC.MCFrame.current, MC.viewBox, throttledSetViewBox)
+    if (MCFrame.current && viewBox) {
+      MCFrameEvents(MCFrame.current, viewBox, throttledSetViewBox)
     }
-  }, [MC.MCFrame.current])
+  }, [MCFrame.current])
 
-  effect(() => {
-    if (MC.autoSaveMessage?.value) {
+  useEffect(() => {
+    if (autoSaved) {
       toast({
         title: "Bricks have been successfully saved",
-        description: MC.autoSaveMessage.value,
+        description: `${MCNodes.length} bricks have been saved`,
       });
-      MC.autoSaveMessage.value = undefined;
     }
-  });
+  }, [autoSaved]);
 
   // On page quit, if hasPendingChanges, ask user if they want to save
   useEffect(() => {
-    MC.hasPendingChanges &&
+    hasPendingChanges &&
       globalThis.addEventListener(
         "beforeunload",
         (e) => confirm("You have unsaved changes. Do you want to save them?"),
       );
-  }, [MC.hasPendingChanges]);
+  }, [hasPendingChanges]);
 
   return (
     <>
@@ -108,9 +117,9 @@ export default function MCanva() {
             "absolute top-[-4%] right-0 flex justify-end items-center gap-3",
           )}
         >
-          {!MC.isPreview && MC.hasPendingChanges && (
+          {!isPreview && hasPendingChanges && (
             <Button
-              onClick={() => MC.writeNodes()}
+              onClick={() => writeNodes()}
               text={"Save bricks"}
               variant={"secondary"}
             />
@@ -118,37 +127,28 @@ export default function MCanva() {
           <button
             className={cn(
               "flex p-[2px] align-middle h-[30px] w-[60px] cursor-pointer rounded-full border-[1px] border-solid transition",
-              MC.isPreview
+              isPreview
                 ? "justify-end bg-text border-transparent"
                 : "justify-start bg-black border-text",
             )}
-            onClick={() => MC.setPreview(!MC.isPreview)}
+            onClick={() => setPreview(!isPreview)}
           >
             <span
               className={cn(
                 "h-[24px] w-[24px] rounded-full transition-all",
-                MC.isPreview ? "bg-black" : "bg-text",
+                isPreview ? "bg-black" : "bg-text",
               )}
             >
             </span>
           </button>
         </div>
         <svg
-          ref={MC.MCFrame}
+          ref={MCFrame}
           className={"relative w-full h-full grow rounded-3xl border border-text_grey"}
         >
-          {MC.MCNodes.length &&
-            MC.MCNodes.map((node) => <MNodeGen nodeProp={node} />)}
+          {MCNodes.length &&
+            MCNodes.map((node) => <MNodeGen nodeProp={node} />)}
         </svg>
-        {!MC.isPreview && (
-          <>
-            <div
-              className={"absolute bottom-0 right-0 p-[2%] w-[8vw] h-[8vw] max-h-[80px] max-w-[80px] cursor-pointer"}
-            >
-              <IconTrash className={"w-full h-full"} color={"#FFF"} />
-            </div>
-          </>
-        )}
       </div>
     </>
   );

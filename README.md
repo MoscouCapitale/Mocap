@@ -106,7 +106,7 @@ Tasks :
       - [ ] Brick with this name already exists
   - [ ] Texte
     - [ ] Markdown support
-  - [ ] Save canva/nodes state to localstorage
+  - [ ] Better way to show the sizes list (using navigation menu viewport)
 - [ ] Misc
   - [ ] Learn & refacto whole effects states management with preact
   - [ ] Add localstorage saving

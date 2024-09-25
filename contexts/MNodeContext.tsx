@@ -17,6 +17,7 @@ import {
 } from "@models/Canva.ts";
 import { getBaseUrl } from "@utils/pathHandler.ts";
 import { BricksType } from "@models/Bricks.ts";
+import _ from "lodash";
 
 export type MCViewBox = {
   x: number;
@@ -72,9 +73,7 @@ type MNodeContextType = {
   isPreview: boolean;
   setPreview: (preview: boolean) => void;
   refetchNodes: () => void;
-  trashPos: trashPosType;
-  setNodeOverTrash: (nodeId: string) => void; // TODO: use it for animation ?
-  autoSaveMessage?: Signal<string | undefined>;
+  autoSaved: boolean;
   writeNodes: () => void;
   nodesChanged: boolean;
   hasPendingChanges: boolean;
@@ -116,11 +115,6 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const [hasPendingChanges, setHasPendingChanges] = useState(false);
   const setPreview = (preview: boolean) => setIsPreview(preview);
-  const [trashPos, setTrashPos] = useState<trashPosType>({
-    x: 0,
-    y: 0,
-    isReady: false,
-  });
 
   // Trigger a nodesChanged when a node is added/removed
   const [nodesChanged, setNodesChanged] = useState(false);
@@ -138,10 +132,12 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
             const size = prev.reduce((acc, n) => {
               if (n.id === node.id) return acc;
               if (n.x < acc.x1) acc.x1 = n.x;
-              if ((n.x + n.width) > acc.x2) acc.x2 = (n.x + n.width);
+              if ((n.x + n.width) > acc.x2) acc.x2 = n.x + n.width;
               return acc;
             }, { x1: 999999, x2: -999999 });
-            if (node.x !== size.x1 || node.width !== size.x2 - size.x1) isModified = true;
+            if (node.x !== size.x1 || node.width !== size.x2 - size.x1) {
+              isModified = true;
+            }
             node.x = size.x1;
             node.width = size.x2 - size.x1;
             node.height = 400; // TODO: better way to handle this, instead of hardcoded height
@@ -153,11 +149,34 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     }
   }, [MCNodes]);
 
+  // #region AutoSave management
   const autoSave = signal<autoSaveType>({
-    timeout: 30 * 1000, // 30 seconds
+    timeout: 2 * 1000, // 30 seconds
     triggerTimeout: false,
   });
-  const autoSaveMessage = signal<string | undefined>(undefined);
+  const [autoSaved, setAutoSaved] = useState(false);
+
+  effect(() => {
+    if (hasPendingChanges && !autoSave.value.triggerTimeout && !autoSaved) {
+      autoSave.value.triggerTimeout = true;
+    }
+  });
+
+  effect(() => {
+    if (autoSaved) {
+      setTimeout(() => setAutoSaved(false), 5000);
+    }
+  });
+
+  useEffect(() => {
+    if (autoSave.value.triggerTimeout) {
+      autoSave.value.triggerTimeout = false;
+      const to = setTimeout(() => writeNodes(), autoSave.value.timeout);
+      return () => {
+        clearTimeout(to);
+      };
+    }
+  }, [autoSave, MCNodes]);
 
   useEffect(() => {
     if (MCFrame.current) {
@@ -210,7 +229,6 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
         console.error("No response from server: ", res);
         return [];
       }).then((data: MNode[]) => {
-        // setMCNodes(applyAdditionalMNodeLogic(data));
         setMCNodes(data);
       }).catch(
         (e) => {
@@ -218,23 +236,6 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
           return [];
         },
       );
-  };
-
-  useEffect(() => {
-    if (!viewBox) return;
-    const trash = {
-      x: (viewBox.width - (viewBox.width * TRASH_DEADZONE_MULTIPLIER)) +
-        viewBox.x,
-      y: (viewBox.height - (viewBox.height * TRASH_DEADZONE_MULTIPLIER)) +
-        viewBox.y,
-    };
-    setTrashPos({ x: trash.x, y: trash.y, isReady: true });
-  }, [viewBox]);
-
-  const setNodeOverTrash = (nodeId: string) => {
-    setTrashPos((prev) => {
-      return { ...prev, nodeOverTrash: nodeId };
-    });
   };
 
   /**
@@ -272,11 +273,6 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     autoSave.value = { ...autoSave.value, triggerTimeout: true };
   };
 
-  const getNode = useCallback(
-    (nodeId: string) => MCNodes.find((n) => n.id === nodeId),
-    [MCNodes],
-  );
-
   const deleteNode = (nodeId: string) => {
     const nodeIndex = MCNodes.findIndex((n) => n.id === nodeId);
     if (hasPendingChanges) setHasPendingChanges(false);
@@ -293,7 +289,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     }
   };
 
-  const writeNodes = (nodes?: MNode[]) => {
+  const writeNodes = useCallback((nodes?: MNode[]) => {
     const nodesToSave = nodes || MCNodes;
     if (hasPendingChanges) setHasPendingChanges(false);
     fetch(getBaseUrl() + "/api/node", {
@@ -301,40 +297,13 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
       body: JSON.stringify({ nodes: nodesToSave }),
     }).then((res) => {
       if (res.status) {
-        autoSave.value = {
-          ...autoSave.value,
-          triggerTimeout: false,
-        };
-        autoSaveMessage.value =
-          `${MCNodes.length} bricks have been saved to the database`;
+        setHasPendingChanges(false);
+        setAutoSaved(true);
       }
     });
-  };
+  }, [MCNodes]);
 
-  // Save nodes on autoSave trigger
-  // effect(() => {
-  //   if (autoSave.value.triggerTimeout) createSavingDelay();
-  // });
-
-  const timeoutSaveNodes = () => {
-    autoSave.value = {
-      ...autoSave.value,
-      currentTimer: setTimeout(() => {
-        writeNodes();
-      }, autoSave.value.timeout),
-    };
-  };
-
-  const createSavingDelay = () => {
-    autoSave.value = { ...autoSave.value, triggerTimeout: false };
-    if (autoSave.value.currentTimer) {
-      clearTimeout(autoSave.value.currentTimer);
-      timeoutSaveNodes();
-    } else {
-      timeoutSaveNodes();
-    }
-  };
-
+  // #region Nodes overlap management
   const MAX_RECURSION_DEPTH = 10;
   const getFreeSpace = (
     a: rectCollideProps,
@@ -481,9 +450,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     isPreview,
     setPreview,
     refetchNodes,
-    trashPos,
-    setNodeOverTrash,
-    autoSaveMessage,
+    autoSaved,
     writeNodes,
     nodesChanged,
     hasPendingChanges,
@@ -492,9 +459,9 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     viewBox,
     MCNodes,
     isPreview,
-    trashPos,
     nodesChanged,
     hasPendingChanges,
+    autoSaved,
   ]);
 
   return (
