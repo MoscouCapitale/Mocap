@@ -69,7 +69,7 @@ type MNodeContextType = {
   getClosestFreePosition: getClosestFreePositionReturnType;
   getFreeSpace: (a: rectCollideProps) => rectCollideProps;
   saveNode: (node: MNode, rerender?: boolean) => void;
-  deleteNode: (nodeId: string) => void;
+  deleteNode: (nodeId: string) => Promise<void>;
   isPreview: boolean;
   setPreview: (preview: boolean) => void;
   refetchNodes: () => void;
@@ -151,7 +151,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
 
   // #region AutoSave management
   const autoSave = signal<autoSaveType>({
-    timeout: 2 * 1000, // 30 seconds
+    timeout: 30 * 1000, // 30 seconds
     triggerTimeout: false,
   });
   const [autoSaved, setAutoSaved] = useState(false);
@@ -273,11 +273,12 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     autoSave.value = { ...autoSave.value, triggerTimeout: true };
   };
 
-  const deleteNode = (nodeId: string) => {
+  const deleteNode = async (nodeId: string) => {
     const nodeIndex = MCNodes.findIndex((n) => n.id === nodeId);
     if (hasPendingChanges) setHasPendingChanges(false);
     if (nodeIndex !== -1) {
-      fetch(`/api/node/${nodeId}`, { method: "DELETE" }).then((res) => {
+      try {
+        const res = await fetch(`/api/node/${nodeId}`, { method: "DELETE" });
         if (res.status === 204) {
           setMCNodes([
             ...MCNodes.slice(0, nodeIndex),
@@ -285,7 +286,9 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
           ]);
           setNodesChanged(true);
         } else throw new Error(`Generic error while deleting node ${nodeId}`);
-      }).catch((e) => console.error(e));
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 

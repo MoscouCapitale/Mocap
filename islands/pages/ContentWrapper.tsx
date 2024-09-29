@@ -111,10 +111,10 @@ export default function MCanva() {
 
   return (
     <>
-      <div className={"relative w-full grow"}>
+      <div className={"relative w-full grow flex flex-col gap-4"}>
         <div
           className={cn(
-            "absolute top-[-4%] right-0 flex justify-end items-center gap-3",
+            "self-end flex justify-end items-center gap-3",
           )}
         >
           {!isPreview && hasPendingChanges && (

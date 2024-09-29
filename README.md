@@ -101,12 +101,16 @@ Tasks :
   - [x] Research on how to implement
   - [x] UI
   - [ ] Implement tiles bricks
-  - [ ] Manage saved bricks
+  - [x] Manage saved bricks (in canva page)
   - [ ] Error management
       - [ ] Brick with this name already exists
   - [ ] Texte
     - [ ] Markdown support
   - [ ] Better way to show the sizes list (using navigation menu viewport)
+  - [ ] When deleting a brick, maybe add an "intelligent" way of deleting related unused content ?
+  - [ ] Content
+    - [ ] Do all animations
+    - [ ] BUG - no content on click
 - [ ] Misc
   - [ ] Learn & refacto whole effects states management with preact
   - [ ] Add localstorage saving
@@ -114,7 +118,8 @@ Tasks :
     - [ ] Make an optionnal parameter to show (or not) the result of the fetch
   - [ ] Add a global error handler
     - [x] Error handler on side (what response on supa {data, error}) -- started in `utils/api.ts`
-  - [ ] Set partial content displayed on page load, instead of click (because for now it is only on subnav items, and specifically on the content page. It should be global, for each "page")
+  - [ ] Make partials WORK
+    - [ ] Set partial content displayed on page load, instead of click (because for now it is only on subnav items, and specifically on the content page. It should be global, for each "page")
   - [ ] Set every database id as uuid
   - [ ] Why is database fetching empty when first connexion ?
   - [ ] Fix email notifications

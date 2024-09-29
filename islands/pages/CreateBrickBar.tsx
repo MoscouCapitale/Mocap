@@ -13,6 +13,8 @@ import {
 import { Media, MediaType } from "@models/Medias.ts";
 import { renderMediaInputs } from "@utils/inputs.tsx";
 import { useEffect, useState } from "preact/hooks";
+import { toast } from "@hooks/toast.tsx";
+import { IconTrash } from "@utils/icons.ts";
 
 type CreateBrickBarProps = {
   brickType: BricksType; // The general type of the brick to create
@@ -24,7 +26,7 @@ type brickState = "creating" | "modifying" | "alreadyInCanvas";
 export default function CreateBrickBar(
   { brickType, brickData }: CreateBrickBarProps,
 ) {
-  const MCctx = useMNodeContext();
+  const { MCNodes, saveNode, deleteNode } = useMNodeContext();
 
   const [displayMedias, setDisplayMedias] = useState<boolean>(false);
   const [brickState, setBrickState] = useState<brickState>("creating");
@@ -45,7 +47,7 @@ export default function CreateBrickBar(
 
   useEffect(() => {
     if (brickData) {
-      if (MCctx.MCNodes.find((n) => n.id === brickData.nodeId)) {
+      if (MCNodes.find((n) => n.id === brickData.nodeId)) {
         setBrickState("alreadyInCanvas");
       } else {
         setBrickState("modifying");
@@ -53,7 +55,7 @@ export default function CreateBrickBar(
     } else {
       setBrickState("creating");
     }
-  }, [MCctx.MCNodes, brickData]);
+  }, [MCNodes, brickData]);
 
   const mediaClickHandler = (media: Media) => {
     if (!brick) return;
@@ -87,8 +89,48 @@ export default function CreateBrickBar(
         withCanvaInsert: Boolean(withCanvaInsert),
       }),
     }).then((res) => res && res.json()).then((res) => {
-      if (withCanvaInsert && res?.newNode) MCctx.saveNode(res.newNode, true);
+      toast({
+        title: "Brick saved",
+        description: `The brick ${brick.name} has been saved.`,
+      });
+      if (withCanvaInsert && res?.newNode) saveNode(res.newNode, true);
     });
+  };
+
+  const deleteBrick = async () => {
+    if (
+      brickData && brick &&
+      globalThis.confirm(
+        `Are you sure ? The will NOT be recoverable.${
+          brickData.nodeId
+            ? " The brick will also be removed from the canvas."
+            : ""
+        }`,
+      )
+    ) {
+      try {
+        await fetch(`/api/brick`, {
+          method: "DELETE",
+          body: JSON.stringify({
+            data: brick,
+            type: brickType,
+          }),
+        });
+        if (brickData?.nodeId) await deleteNode(brickData.nodeId);
+        toast({
+          title: "Brick deleted",
+          description: `The brick has been deleted.`,
+        });
+        setBrick(createDefaultBrick(brickType));
+      } catch (e) {
+        console.error(e);
+        toast({
+          title: "Error",
+          description:
+            `An error occured while deleting the brick. Please try again later.`,
+        });
+      }
+    }
   };
 
   const mainButtonText = () => {
@@ -126,9 +168,18 @@ export default function CreateBrickBar(
             text={`${
               brickState === "modifying" ? "Modifier" : "Enregistrer"
             } la brique`}
-            onClick={() => saveBrick()}
+            onClick={saveBrick}
             className={{ wrapper: "grow justify-center" }}
           />
+          {brickData && (
+            <Button
+              variant="danger"
+              text={`Supprimer la brique`}
+              onClick={deleteBrick}
+              className={{ wrapper: "grow justify-center" }}
+              icon={<IconTrash size={20} color="#EA5959" />}
+            />
+          )}
         </div>
         <InpagePopup
           isOpen={displayMedias}

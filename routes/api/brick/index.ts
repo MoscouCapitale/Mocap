@@ -2,8 +2,13 @@ import { FreshContext, Handlers } from "$fresh/server.ts";
 import { supabase as supa } from "@services/supabase.ts";
 import { DatabaseAttributes } from "@models/App.ts";
 import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
-import { BricksType, PlateformLink, Track, availBricks } from "@models/Bricks.ts";
-import { createNodeFromBrick } from "@services/bricks.ts";
+import {
+  availBricks,
+  BricksType,
+  getBrickTypeTableName,
+  PlateformLink,
+  Track,
+} from "@models/Bricks.ts";
 import { TableNames } from "@models/database.ts";
 import { createOrUpdateNodeFromBrick } from "@services/nodes.ts";
 
@@ -20,7 +25,7 @@ export const handler: Handlers<any | null> = {
 
     const brick = body.data;
     // console.log("raw brick is ", brick);
-    const tableName = `Bricks_${BricksType[type as keyof typeof BricksType]}` as TableNames;
+    const tableName = getBrickTypeTableName(type);
 
     // Remove some attributes that are not in the database
     const attr_isActive = brick.isActive;
@@ -57,7 +62,9 @@ export const handler: Handlers<any | null> = {
       updated_at: new Date(),
     }).select();
 
-    if (evaluateSupabaseResponse(data, error)) return returnErrorReponse(data, error);
+    if (evaluateSupabaseResponse(data, error)) {
+      return returnErrorReponse(data, error);
+    }
 
     const brickId = data[0].id;
     // Save linked tables
@@ -99,8 +106,14 @@ export const handler: Handlers<any | null> = {
     let newNode = null;
     // TODO: I think it would be better to either create a dedicated endpoint for canva insert
     if (withCanvaInsert) {
-      newNode = await createOrUpdateNodeFromBrick(savedBrick as availBricks, attr_nodeId, type);
-      if (!newNode) console.error("Error while creating node for brick ", savedBrick);
+      newNode = await createOrUpdateNodeFromBrick(
+        savedBrick as availBricks,
+        attr_nodeId,
+        type,
+      );
+      if (!newNode) {
+        console.error("Error while creating node for brick ", savedBrick);
+      }
     }
 
     console.log("Returning response");
@@ -109,7 +122,7 @@ export const handler: Handlers<any | null> = {
         ...savedBrick,
         isActive: attr_isActive,
         nodeId: attr_nodeId,
-        newNode
+        newNode,
       }),
       {
         status: 200,
@@ -131,25 +144,16 @@ export const handler: Handlers<any | null> = {
 
     const brick = body.data;
 
-    const tableName = `Bricks_${BricksType[type as keyof typeof BricksType]}` as TableNames;
+    const tableName = getBrickTypeTableName(type);
 
     const { data, error } = await supa.from(tableName).delete().eq(
       "id",
       brick.id,
     );
 
-    // TODO: delete all the linked tables
-    // delete all the linked tables
-    // const linkedTables = Object.entries(DatabaseAttributes).filter(
-    //   ([key, value]) =>
-    //     value.parentTables?.includes(`Bricks_${type}`),
-    // );
-    // for (const [key, value] of linkedTables) {
-    //   const linkedTableName = `${tableName}_${value.table}`;
-    //   await supa.from(linkedTableName).delete().eq(type, brick.id);
-    // }
-
-    if (evaluateSupabaseResponse(data, error)) return returnErrorReponse(data, error);
+    if (evaluateSupabaseResponse(data, error)) {
+      return returnErrorReponse(data, error);
+    }
 
     return new Response(JSON.stringify(data), {
       status: 200,

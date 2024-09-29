@@ -41,6 +41,13 @@ export const getBrickFromType = async (
   if (evaluateSupabaseResponse(rawData, error)) return { data: null, error: "Error while fetching bricks" };
 
   const data = rawData as unknown as [availBricks];
+  
+  // Assign some additional properties to the bricks
+  data.forEach((d: availBricks) => {
+    // Set the type of the brick to ease the management in the front
+    d.type = type as BricksType;
+  });
+
   if (getNodeId && data && data.length > 0) {
     for (const d of data) {
       if (d.id) {

@@ -1,4 +1,5 @@
 import { Image, MediaCTA, Video } from "@models/Medias.ts";
+import { TableNames } from "@models/database.ts";
 
 interface Brick {
   id: number;
@@ -124,6 +125,23 @@ const getBrickTypeLabel = (type: BricksType): string => {
   }
 }
 
+const getBrickTypeTableName = (type: BricksType): TableNames => {
+  switch (type) {
+    case BricksType.HeroSection:
+      return "Bricks_HeroSection";
+    case BricksType.Single:
+      return "Bricks_Single";
+    case BricksType.Album:
+      return "Bricks_Album";
+    case BricksType.Text:
+      return "Bricks_Text";
+    case BricksType.Platform_Link:
+      return "Platform_Link";
+    default:
+      throw new Error(`Unsupported brick type: ${type}`);
+  }
+}
+
 type availBricks = HeroSection | Single | Album | Text | Social | PlateformLink;
 
 export type { Album, HeroSection, PlateformLink, Single, Social, Text, Track, availBricks };
@@ -132,7 +150,7 @@ export {
   BrickModifiableAttributes, 
   BricksType, 
   getBrickTypeLabel,
-  // BricksEnum
+   getBrickTypeTableName,  
 };
 
 export function createDefaultBrick(

@@ -89,6 +89,7 @@ export default function BrickSidebar({}: BrickSidebarProps) {
     );
   };
 
+  /** Highlight the node in the canvas when hovering over the brick in the sidebar */
   const onItemHover = (action: "enter" | "leave", id: string | number) => {
     const el = document.querySelector("#mcanva-article-placeholder[data-node-id='" + id + "']")
     if (el) {

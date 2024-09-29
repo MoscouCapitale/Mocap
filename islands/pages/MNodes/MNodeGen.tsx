@@ -22,7 +22,7 @@ import {
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 
-import { getBrickFromBrickType } from "@utils/bricks.tsx";
+import { getBrickFromCanvaNode } from "@utils/bricks.tsx";
 import { IconHandGrab, IconResize, IconTrash } from "@utils/icons.ts";
 import { createRef } from "https://esm.sh/v128/preact@10.19.6/src/index.js";
 import { cn } from "@utils/cn.ts";
@@ -201,7 +201,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
       </div>
 
       {/* Actual node content */}
-      {getBrickFromBrickType(node, { isMovable: !isPreview })}
+      {getBrickFromCanvaNode(node, { isMovable: !isPreview })}
 
       {/* debug */}
       {!isPreview && (

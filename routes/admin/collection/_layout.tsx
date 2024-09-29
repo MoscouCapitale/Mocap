@@ -17,12 +17,6 @@ export default function Layout({ Component, state, route }: PageProps) {
             label: "Médias",
             path: "/admin/collection",
             fpath: "/partials/admin/collection"
-        },
-        {
-            name: "bricks",
-            label: "Briques",
-            path: "/admin/collection/bricks",
-            fpath: "/partials/admin/collection/bricks"
         }
     ];
 

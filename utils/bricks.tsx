@@ -5,7 +5,8 @@ import {
   HeroSection as HeroSectionType,
   PlateformLink as PlateformLinkType,
   Single as SingleType,
-  Text as TextType
+  Text as TextType,
+  availBricks
 } from "@models/Bricks.ts";
 
 import Single from "@islands/Bricks/Single.tsx";
@@ -20,7 +21,7 @@ interface AdditionalProps {
   isMovable?: boolean;
 }
 
-export const getBrickFromBrickType = (
+export const getBrickFromCanvaNode = (
     node: MNode,
     { ...args }: AdditionalProps
 ): VNode | null => {
@@ -40,3 +41,18 @@ const getBrickSizeIndex = (node: MNode): number => {
   if (node.sizes.length < 2) return -1;
   return node.sizes.findIndex(s => s.height === node.height && s.width === node.width)
 }
+
+export const getBrickFromBrickData= (
+  brick: availBricks,
+  { ...args }: AdditionalProps
+): VNode | null => {
+  const type = brick.type;
+  const content = brick;
+
+  if (type === "HeroSection") return <HeroSection content={content as HeroSectionType} {...args} />
+  if (type === "Single") return <Single content={content as SingleType}  {...args} />
+  if (type === "Album") return <Album content={content as AlbumType}  {...args} />
+  if (type === "Text") return <Text content={content as TextType} {...args} />
+  if (type === "Platform_Link") return <PlateformLink content={content as PlateformLinkType} sizeIndex={1} {...args} />
+  return null;
+};
