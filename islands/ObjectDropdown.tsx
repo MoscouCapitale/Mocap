@@ -8,6 +8,7 @@ import InpagePopup from "@islands/Layout/InpagePopup.tsx";
 import { renderMediaInputs } from "@utils/inputs.tsx";
 import Button from "@islands/Button.tsx";
 import ConfirmationModal from "@islands/ConfirmationModal.tsx";
+import ContextualDots from "@islands/UI/ContextualDots.tsx";
 
 type ObjectDropdownProps = {
   table: string;
@@ -85,13 +86,7 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem, 
         <div className="w-full inline-flex items-center justify-between gap-3 ">
           {itemLabel}
           {DatabaseAttributes[table]?.modifiable && (
-            <button className="group gap-[3px] inline-flex top-0 right-0 p-2 rounded-bl" onClick={(e) => {
-              e.stopPropagation()
-              setItemDetail(item)}}>
-              {Array.from({ length: 3 }).map(() => (
-                <span className={`block w-2 h-2 rounded-full border-2 border-text group-hover:border-main`} />
-              ))}
-            </button>
+            <ContextualDots onClick={() => setItemDetail(item)} />
           )}
         </div>
       ),

@@ -2,6 +2,7 @@ import { type Config } from "tailwindcss";
 // tailwindcss-animate
 import * as twAnimate from "tailwindcss-animate";
 import * as twScrollbar from "tailwind-scrollbar";
+import plugin from "tailwindcss/plugin";
 
 export default {
   content: [
@@ -90,29 +91,50 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "contextualdots-bounce": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-30%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "contextualdots-bounce":
+          "contextualdots-bounce 0.5s ease-in-out infinite alternate",
+        "contextualdots-bounce-delayed":
+          "contextualdots-bounce 0.5s ease-in-out infinite alternate 0.2s",
       },
       outline: {
         inputerror: ["2px solid #EA5959", "2px"],
       },
     },
   },
-  plugins: [twAnimate, function ({ addUtilities }) {
-    const newUtilities = {
-      ".pos-center": {
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-      },
-      ".node-highlight": {
-        // TODO: better highlight, and using theme colors
-        boxShadow: "0px 0px 30px 10px #FFFFFF33",
-      },
-    };
+  plugins: [
+    twAnimate,
+    function ({ addUtilities }) {
+      const newUtilities = {
+        ".pos-center": {
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+        },
+        ".node-highlight": {
+          // TODO: better highlight, and using theme colors
+          boxShadow: "0px 0px 30px 10px #FFFFFF33",
+        },
+      };
 
-    addUtilities(newUtilities, ["responsive", "hover"]);
-  }, twScrollbar],
+      addUtilities(newUtilities, ["responsive", "hover"]);
+    },
+    plugin(function ({ matchUtilities, theme }) {
+      matchUtilities(
+        {
+          "animate-delay": (value) => ({
+            animationDelay: value,
+          }),
+        },
+        { values: theme("transitionDelay") },
+      );
+    }),
+  ],
 } satisfies Config;

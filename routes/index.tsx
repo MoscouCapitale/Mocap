@@ -1,16 +1,18 @@
-import { FreshContext, Handlers } from "$fresh/server.ts";
+import Footer from "@components/Layout/Footer.tsx";
+import { getFooterLinks } from "@utils/app.ts";
+import Cursor from "@islands/UI/Cursor.tsx";
 
-export const handler: Handlers = {
-  GET(_req: Request, _ctx: FreshContext) {
-    return new Response("", {
-      status: 303,
-      headers: {
-        Location: "/auth",
-      },
-    });
-  },
-};
+export default async function Home() {
+  const platforms = await getFooterLinks();
 
-export default function Home() {
-  return;
+  return (
+    <div>
+      <link rel="stylesheet" href="/main.css" />
+      <Cursor />
+      <main className={"min-h-screen"}>
+        <textarea height={1000}></textarea>
+      </main>
+      <Footer platforms={platforms} />
+    </div>
+  );
 }

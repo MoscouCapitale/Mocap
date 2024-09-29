@@ -3,9 +3,11 @@ import Navbar from "@islands/Layout/Navbar.tsx";
 
 export default function Layout({ Component, state, route }: PageProps) {
   return (
-    <div class="w-full justify-start items-start inline-flex">
-        <Navbar path={route} />
+    <div class="flex h-screen">
+      <Navbar path={route} />
+      <div class="w-full min-h-full p-10 flex-col justify-start items-start gap-5 inline-flex overflow-auto">
         <Component />
+      </div>
     </div>
   );
 }

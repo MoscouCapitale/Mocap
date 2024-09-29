@@ -2,6 +2,7 @@ import { Role, UserAdminActions } from "@models/User.ts";
 import { useEffect, useState } from "preact/hooks";
 import { IconInfoSquareRounded } from "@utils/icons.ts";
 import UserActions from "@islands/Settings/Users/UsersList/UserActions.tsx";
+import ContextualDots from "@islands/UI/ContextualDots.tsx";
 
 export default function UsersList() {
   const roles: Role[] = ["anon", "authenticated", "mocap_admin", "supabase_admin"];
@@ -78,23 +79,16 @@ export default function UsersList() {
               <div className={"grow max-w-[200px]"}>{user.created_at.split("T")[0]}</div>
               <div className={"grow h-full justify-end inline-flex relative"}>
                 {currentUser.id !== user.id && (
-                  <>
-                    <button
-                      className={"h-full justify-end items-start gap-[3px] inline-flex"}
-                      onClick={() => setShowContextualMenu(showContextualMenu === user.id ? "" : user.id)}
-                    >
-                      {Array.from({ length: 3 }).map((_, i) => (
-                        <span className={`block w-2 h-2 bg-background rounded-full border-2 border-text`}></span>
-                      ))}
-                    </button>
-                    {showContextualMenu === user.id && (
+                  <ContextualDots
+                    popoverChildren={
                       <UserActions
                         user={user}
-                        onBlockUnblock={(action: UserAdminActions) => updateUserAccess(user, action)}
+                        onBlockUnblock={(action: UserAdminActions) =>
+                          updateUserAccess(user, action)}
                         onRevoke={() => updateUserAccess(user, "revoke")}
                       />
-                    )}
-                  </>
+                    }
+                  />
                 )}
               </div>
             </div>

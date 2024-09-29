@@ -43,7 +43,7 @@ export default function Requests({ data }: PageProps<Record<string, RequestedUse
   const { userRequests } = data;
 
   return (
-    <main className={"w-full min-h-screen justify-center items-center gap-[150px] inline-flex"}>
+    <main className={"w-full min-h-full justify-center items-center gap-[150px] inline-flex"}>
       {userRequests.length === 0 && <div class="text-text text-base font-bold">Aucune demande d'inscription</div>}
       {userRequests.length > 0 &&
         userRequests.map((user: RequestedUser) => {

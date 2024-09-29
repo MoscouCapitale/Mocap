@@ -7,6 +7,6 @@ export default function Layout({ Component }: PageProps) {
         <Partial name="pages-content">
             <Component />
         </Partial>
-    </div>
+    </>
   );
 }

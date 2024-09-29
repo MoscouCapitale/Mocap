@@ -30,20 +30,23 @@ export default function Layout({ Component, state, route }: PageProps) {
             label: "Styles",
             path: "/admin/settings/styles"
         },
-        {
-            name: "misc",
-            label: "Autres",
-            path: "/admin/settings/misc"
-        },
+        // Temporarily disabled
+        // {
+        //     name: "misc",
+        //     label: "Divers",
+        //     path: "/admin/settings/misc"
+        // }
     ];
 
     navItems.map((item) => route == item.path && (item.active = true));
 
 
   return (
-    <div class="w-full min-h-screen p-10 flex-col justify-start items-start gap-[30px] inline-flex">
+    <>
         <InpageNavbar items={navItems} />
-        <Component />
-    </div>
+        <main className={"flex-col justify-center items-start gap-14 inline-flex"}>
+            <Component />
+        </main>
+    </>
   );
 }

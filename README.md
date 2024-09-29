@@ -32,6 +32,7 @@ Tasks :
     - [x] 429 too many request
     - [ ] 403 token expired after too much time on app, and it does not renew itself (it should tho)
     - [ ] ? AuthRetryableFetchError if no internet connection, it returns to the login page
+    - [ ] 422 (Signups not allowed for otp) AuthApiError otp_disabled
   - [ ] Middleware on api ??? 
 - [ ] Collection
   - [x] Supabase init
@@ -64,16 +65,26 @@ Tasks :
 - [ ] Stats
 - [ ] Settings
   - [ ] Refacto settings following the same pattern as collections
+  - [ ] Support api keys (support, hash, etc...)
+  - [ ] Regroup some code that are very similar between pages (and also all the StylesSettingsDBObject). Ex on pages the logic is *almost* the same, only the UI is different
+  - [ ] Check formfields objects, for better placeholder, validation, etc...
 - [ ] UI
   - [ ] Info icon with tooltip on hover
     - [ ] tell that bricks names are unique
   - [ ] Cursor
+    - [ ] Hover card state
   - [ ] Navbar
     - [ ] Smooth animation on expand
-    - [ ] Set the position as fixed, to have the navbar always displayed same on page scroll
+    - [x] Set the position as fixed, to have the navbar always displayed same on page scroll
   - [ ] Global form
     - [ ] Client-side validation
     - [ ] Error handling
+    - [ ] Fields
+      - [ ] File input
+      - [ ] Date input
+      - [ ] Color input
+      - [ ] Checkboxes
+      - [ ] Select and multi select
   - [ ] Global components
     - [ ] Button (primary, secondary, danger, success, etc...)
       - [ ] Trashcan
@@ -90,10 +101,10 @@ Tasks :
       - [ ] Toasts (https://www.npmjs.com/package/react-toastify)
         - [ ] Themes (error, success, info, warning)
     - [ ] Misc
-      - [ ] Loader
+      - [x] Loader
       - [ ] InpagePopup
         - [ ] If you quit one popup showed on top of another, only the last one should be closed
-      - [ ] The 3 little dots as reusable component
+      - [x] The 3 little dots as reusable component
   - [ ] Animations...
   - [ ] Misc
 - [ ] Bricks/Nodes
@@ -111,6 +122,9 @@ Tasks :
   - [ ] Content
     - [ ] Do all animations
     - [ ] BUG - no content on click
+  - [ ] After-canva feature fixes
+      - [ ] Add toasts
+      - [ ] Add supa error management
 - [ ] Misc
   - [ ] Learn & refacto whole effects states management with preact
   - [ ] Add localstorage saving
