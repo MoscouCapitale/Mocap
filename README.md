@@ -67,6 +67,7 @@ Tasks :
   - [ ] Refacto settings following the same pattern as collections
   - [ ] Support api keys (support, hash, etc...)
   - [ ] Regroup some code that are very similar between pages (and also all the StylesSettingsDBObject). Ex on pages the logic is *almost* the same, only the UI is different
+  - [x] Maybe store some settings in context, or in server launch (https://fresh.deno.dev/docs/examples/init-the-server), to avoid fetching them every time, for each client, on each page (very heavy)
   - [ ] Check formfields objects, for better placeholder, validation, etc...
 - [ ] UI
   - [ ] Info icon with tooltip on hover
@@ -92,9 +93,14 @@ Tasks :
         - [ ] Confirm popup
     - [ ] inputs (text, email, password, etc...)
       - [ ] Read only input
-      - [ ] Better multi option dropdown UI
-        - [ ] Make dropdown zone better
-        - [ ] In bricks, make the dropdown display the items choosen (ex in tracklist, show the label "tracklist", at the right a dropdown to select the tracklist, and below the selected tracklist)
+      - [ ] Support custom types:
+        - [ ] File input
+        - [ ] Color input 
+        - [ ] Select/Multi select
+          - [ ] Make dropdown zone better
+          - [ ] In bricks, make the dropdown display the items choosen (ex in tracklist, show the label "tracklist", at the right a dropdown to select the tracklist, and below the selected tracklist)
+          - [ ] FInish all todos of Select component
+    - [ ] Hint popover (as an '?' icon)
     - [ ] Alerts
       - [ ] Modals
         - [ ] Globale confirmation modal

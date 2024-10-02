@@ -16,7 +16,7 @@ export const handler: Handlers<stylesSettings | []> = {
 
     const { data, error } = await supa.from("Settings").select(
       `id, user, ${type}`,
-    )
+    );
 
     // FIXME: add correct supabase error manager (after canva update)
 
@@ -37,8 +37,6 @@ export const handler: Handlers<stylesSettings | []> = {
     let body = await req.json();
     // FIXME: hadrcode id to 0. For now we'll only support "general" settings, but it will change with settings by-users
     body = { id: 0, updated_at: new Date().toISOString(), [type]: body };
-
-    console.log("Body is now: ", body);
 
     try {
       const { error } = await supa

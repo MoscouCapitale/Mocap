@@ -1,8 +1,9 @@
-import { FormField, FormFieldValue } from "@models/Form.ts";
+import { baseInputStyle, FormField, FormFieldValue } from "@models/Form.ts";
 import { cn } from "@utils/cn.ts";
 import { IconInfoSquareRounded } from "@utils/icons.ts";
 import { VNode } from "preact";
 import { useState } from "preact/hooks";
+import Select from "@islands/UI/Forms/Select.tsx";
 
 type InputFromTypeProps = {
   field: FormField;
@@ -13,6 +14,14 @@ type InputFromTypeProps = {
 const InputFromType = (
   { field, onChange, error }: InputFromTypeProps,
 ): VNode => {
+  const defaultField = (
+    <input
+      className={cn(baseInputStyle, "border-text_grey")}
+      placeholder={"Not implemented yet"}
+      disabled
+    />
+  );
+
   switch (field.type) {
     case "string":
     case "number":
@@ -24,7 +33,7 @@ const InputFromType = (
       return (
         <input
           className={cn(
-            "min-w-[200px] bg-background text-[15px] rounded px-[5px] py-[3px] border-2 border-text text-text focus:border-main focus:outline-none focus:ring-0 mx-0",
+            baseInputStyle,
             error && "border-error",
             field.label && "mt-2",
             error && !field.tooltipError && "mb-1",
@@ -53,11 +62,21 @@ const InputFromType = (
           title={error && field.tooltipError ? error : undefined}
         />
       );
-    case "file":
     case "select":
     case "multiselect":
+      return (
+        <Select
+          field={field}
+          error={error}
+          onChange={onChange}
+          multiSelect={field.type === "multiselect"}
+          sx={"max-w-[200px]"}
+        />
+      );
+    case "file":
+    case "NI":
     default:
-      return <p>Not supported</p>;
+      return defaultField;
   }
 };
 

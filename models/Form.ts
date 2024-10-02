@@ -1,3 +1,5 @@
+import { cn } from "@utils/cn.ts";
+
 export type InputError = {
   error: boolean;
   field: string;
@@ -17,14 +19,19 @@ export interface FormField {
   disabled?: boolean;
   readOnly?: boolean;
   /** Options of the select */
-  options?: { value: string; label: string }[];
+  options?: FormFieldOptions[];
   validation?: (value: any) => string | null;
   /** Some base style variant. Default is inline */
   variant?: "inline" | "compact";
   /** If the field error is displayed as tooltip. Default is below the input */
   tooltipError?: boolean;
   /** If realtime, the validation will be done on input change, instead of on blur */
-  realtime?: boolean
+  realtime?: boolean;
+}
+
+export interface FormFieldOptions {
+  value: string;
+  label: string;
 }
 
 export type FormFieldType =
@@ -37,7 +44,9 @@ export type FormFieldType =
   | "color"
   | "file"
   | "email"
-  | "password";
+  | "password"
+  /** The NI type is for Not Implemented */
+  | "NI";
 
 export type FormFieldValue =
   | string
@@ -47,3 +56,8 @@ export type FormFieldValue =
   | File
   | string[]
   | null;
+
+export const baseInputStyle = cn(
+  "min-w-[200px] bg-background text-[15px] rounded px-[5px] py-[3px] border-2 border-text text-text mx-0",
+  "focus:border-main focus:outline-none focus:ring-0",
+);

@@ -13,8 +13,10 @@ export const FetchableSettingsKeysArray: FetchableSettingsKeys[] = [
   "misc",
 ];
 
+// FIXME: implement all types `NI${type}`
+
 const defaultEmailFieldProps: Omit<FormField, "name"> = {
-  type: "email",
+  type: "NI",
   placeholder: "empty if same as admin",
   validation: (v) => {
     if (
@@ -70,32 +72,32 @@ export const MainSettingsFormFields: FormField[] = [
   },
   {
     name: "api_spotify",
-    type: "string",
+    type: "NI",
     placeholder: "Spotify API Key",
   },
   {
     name: "api_soundcloud",
-    type: "string",
+    type: "NI",
     placeholder: "Soundcloud API Key",
   },
   {
     name: "api_deezer",
-    type: "string",
+    type: "NI",
     placeholder: "Deezer API Key",
   },
   {
     name: "api_youtube_music",
-    type: "string",
+    type: "NI",
     placeholder: "YouTube Music API Key",
   },
   {
     name: "api_amazon_music",
-    type: "string",
+    type: "NI",
     placeholder: "Amazon Music API Key",
   },
   {
     name: "api_tidal",
-    type: "string",
+    type: "NI",
     placeholder: "Tidal API Key",
   },
   {
@@ -120,40 +122,43 @@ export const MainSettingsFormFields: FormField[] = [
   },
 ];
 
-export const MainSettingsDBObject: { [key: FormField["name"]]: FormFieldValue } = Object
+export const MainSettingsDBObject: {
+  [key: FormField["name"]]: FormFieldValue;
+} = Object
   .fromEntries(MainSettingsFormFields.map((field) => [field.name, ""]));
 
 export const MediasSettingsFormFields: FormField[] = [
   {
     name: "media_max_size_mb",
-    type: "number",
+    type: "NI",
     placeholder: "Media max size (mb)",
   },
   {
     name: "media_max_size_height",
-    type: "number",
+    type: "NI",
     placeholder: "Media max size (height)",
   },
   {
     name: "media_auto_optimize",
-    type: "checkbox",
+    type: "NI",
     placeholder: "Media auto optimize",
   },
   {
     name: "media_lazyload",
-    type: "checkbox",
+    type: "NI",
     placeholder: "Media lazyload",
   },
 ];
 
-export const MediasSettingsDBObject: { [key: FormField["name"]]: FormFieldValue } =
-  Object
-    .fromEntries(MediasSettingsFormFields.map((field) => [field.name, ""]));
+export const MediasSettingsDBObject: {
+  [key: FormField["name"]]: FormFieldValue;
+} = Object
+  .fromEntries(MediasSettingsFormFields.map((field) => [field.name, ""]));
 
 export const StylesSettingsFormFields: FormField[] = [
   {
     name: "style_color_auto",
-    type: "checkbox",
+    type: "NI",
     placeholder: "Gestion auto des couleurs",
   },
   {
@@ -173,16 +178,27 @@ export const StylesSettingsFormFields: FormField[] = [
   },
   {
     name: "style_font_main",
-    type: "string",
+    type: "select",
     placeholder: "Police principale",
+    options: [
+      { label: "Messina", value: "Messina Sans" },
+      { label: "Arial", value: "Arial" },
+      { label: "Helvetica", value: "Helvetica" },
+    ],
   },
   {
     name: "style_font_secondary",
-    type: "string",
+    type: "select",
     placeholder: "Police secondaire",
+    options: [
+      { label: "Messina", value: "Messina Sans" },
+      { label: "Arial", value: "Arial" },
+      { label: "Helvetica", value: "Helvetica" },
+    ],
   },
 ];
 
-export const StylesSettingsDBObject: { [key: FormField["name"]]: FormFieldValue } =
-  Object
-    .fromEntries(StylesSettingsFormFields.map((field) => [field.name, ""]));
+export const StylesSettingsDBObject: {
+  [key: FormField["name"]]: FormFieldValue;
+} = Object
+  .fromEntries(StylesSettingsFormFields.map((field) => [field.name, ""]));

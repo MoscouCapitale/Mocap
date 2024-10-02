@@ -2,6 +2,16 @@ import { DropdownItem } from "@models/App.ts";
 import { useState } from "preact/hooks";
 import { IconChevronDown } from "@utils/icons.ts";
 
+// type DropdownItem = {
+//   id: number | string;
+//   label: string | JSX.Element;
+//   value: string;
+//   isActive?: boolean;
+//   onClick: () => void;
+//   onMouseEnter?: (e: MouseEvent, id: number | string) => void;
+//   onMouseLeave?: (e: MouseEvent, id: number | string) => void;
+// };
+
 type DropdownProps = {
   items: DropdownItem[];
   customLabel?: string;

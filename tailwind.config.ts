@@ -32,8 +32,8 @@ export default {
         dark: "#A3A3A3",
       },
       text_special: "#EA5959",
-      main: "#007BFF",
-      second: "#4476AB",
+      main: 'var(--color-accent-main)',
+      secondary: 'var(--color-accent-secondary)',
       success: "#40C057",
       warning: "#F19B4B",
       error: "#EA5959",
@@ -108,6 +108,10 @@ export default {
         inputerror: ["2px solid #EA5959", "2px"],
       },
     },
+    fontFamily: {
+      'sans': ['var(--font-main)', "Segoe UI", "sans-serif"],
+      'secondary': ['var(--font-secondary)', 'var(--font-main)', "Segoe UI", "sans-serif"],
+    }
   },
   plugins: [
     twAnimate,
