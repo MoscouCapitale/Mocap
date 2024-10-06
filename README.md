@@ -114,6 +114,8 @@ Tasks :
   - [ ] Animations...
   - [ ] Misc
 - [ ] Bricks/Nodes
+  - [ ] Canva
+    - [ ] Add dotted background
   - [x] on preview click it disable the sidebar
   - [x] Research on how to implement
   - [x] UI
@@ -132,6 +134,7 @@ Tasks :
       - [ ] Add toasts
       - [ ] Add supa error management
 - [ ] Misc
+  - [ ] Fix lodash bad types
   - [ ] Learn & refacto whole effects states management with preact
   - [ ] Add localstorage saving
   - [ ] Request service object instead of js native `fetch()` (reast query with preact compat ?)

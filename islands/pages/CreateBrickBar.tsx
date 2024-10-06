@@ -88,7 +88,9 @@ export default function CreateBrickBar(
         data: brick,
         withCanvaInsert: Boolean(withCanvaInsert),
       }),
-    }).then((res) => res && res.json()).then((res) => {
+    }).then((res) => {
+      if (res.ok && res.status !== 204) res.json();
+    }).then((res) => {
       toast({
         title: "Brick saved",
         description: `The brick ${brick.name} has been saved.`,

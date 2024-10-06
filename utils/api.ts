@@ -14,7 +14,7 @@ export const evaluateSupabaseResponse = (
   data: any,
   error: Error | PostgrestError | null,
 ): boolean => {
-  if (error || (!data || data.length === 0)) return true
+  if (error || (!data || data.length === 0)) return true;
   return false;
 };
 
@@ -23,10 +23,6 @@ export const returnErrorReponse = (
   data: any,
   error: Error | PostgrestError | null,
 ): Response => {
-  if (!data || data.length === 0) {
-    return new Response(null, { status: 204 });
-  }
-
   console.error(
     "=========Error while fetching data=========\n",
     "error: ",
@@ -34,6 +30,9 @@ export const returnErrorReponse = (
     "\ndata: ",
     data,
   );
+  if (Array.isArray(data) && data.length === 0) {
+    return new Response(null, { status: 204 });
+  }
 
   return new Response("Server error", { status: 500 });
 };

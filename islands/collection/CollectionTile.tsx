@@ -1,10 +1,11 @@
-import { Image, Video, Audio, Misc } from "@models/Medias.ts";
+import { Audio, Image, Misc, Video } from "@models/Medias.ts";
 import { useState } from "preact/hooks";
 import InpagePopup from "@islands/Layout/InpagePopup.tsx";
 import MediaDetail from "@islands/collection/MediaDetail.tsx";
 import { MediaType } from "@models/Medias.ts";
 import MediaPreview from "@islands/collection/MediaPreview.tsx";
 import ContextualDots from "@islands/UI/ContextualDots.tsx";
+import Button from "@islands/Button.tsx";
 
 export default function CollectionTile({
   media,
@@ -15,7 +16,8 @@ export default function CollectionTile({
 }) {
   const [active, setActive] = useState(false);
 
-  const specialType = media.type === MediaType.Misc || media.type === MediaType.Audios;
+  const specialType = media.type === MediaType.Misc ||
+    media.type === MediaType.Audios;
   const activeBtnStyle = specialType
     ? "flex-col absolute justify-center items-start gap-[3px] inline-flex bg-background h-full top-0 left-full px-2 rounded-bl"
     : "absolute items-start gap-[3px] inline-flex bg-background top-0 right-0 p-2 rounded-bl";
@@ -27,6 +29,10 @@ export default function CollectionTile({
           <MediaPreview media={media} from={"collection"} />
         </div>
         <ContextualDots onClick={() => setActive(true)} />
+        <Button
+          text={"useit"}
+          onClick={() => mediaClick && mediaClick(media)}
+        />
       </div>
       <InpagePopup isOpen={active} closePopup={() => setActive(false)}>
         <MediaDetail media={media} />

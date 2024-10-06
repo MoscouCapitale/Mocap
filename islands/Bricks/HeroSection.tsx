@@ -3,17 +3,30 @@ import { cn } from "@utils/cn.ts";
 
 type HeroSectionProps = {
   content: HeroSectionType;
+  asMainHeroSection?: boolean;
 };
 
-export default function HeroSection({ content }: HeroSectionProps) {
+export default function HeroSection(
+  { content, asMainHeroSection }: HeroSectionProps,
+) {
+  console.log(
+    "HeroSection",
+    content,
+    " asMainHeroSection: ",
+    asMainHeroSection,
+  );
   return (
     <div
-      className={"group/main w-full h-full rounded-[20px] overflow-y-auto"}
+      className={cn(
+        "group/main w-full h-full overflow-y-auto",
+        asMainHeroSection ? "rounded-none" : "rounded-[20px]",
+      )}
     >
       {/* TODO: media rendered */}
       <img
         className={cn(
-          "absolute rounded-[20px] group-hover/main:brightness-75 object-cover w-[calc(100%-2px)] h-[calc(100%-2px)]",
+          "absolute group-hover/main:brightness-75 object-cover w-[calc(100%-2px)] h-[calc(100%-2px)]",
+          asMainHeroSection ? "rounded-none" : "rounded-[20px]",
         )}
         src={content.media?.public_src}
         alt={content.media?.alt}

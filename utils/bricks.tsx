@@ -19,6 +19,7 @@ import Placeholder from "@islands/Bricks/Placeholder.tsx";
 
 interface AdditionalProps {
   isMovable?: boolean;
+  asMainHeroSection?: boolean;
 }
 
 export const getBrickFromCanvaNode = (
