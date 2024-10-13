@@ -35,6 +35,9 @@ Tasks :
     - [ ] 422 (Signups not allowed for otp) AuthApiError otp_disabled
   - [ ] Middleware on api ??? 
 - [ ] Collection
+  - [ ] Bugs
+    - [ ] You cannot upload any file
+    - [ ] When creating a new media, the form re-renders on each interaction
   - [x] Supabase init
   - [x] List collection
     - [ ] Pagination
@@ -106,6 +109,11 @@ Tasks :
         - [ ] Globale confirmation modal
       - [ ] Toasts (https://www.npmjs.com/package/react-toastify)
         - [ ] Themes (error, success, info, warning)
+    - [ ] Video player
+      - [ ] Fix slider thumb
+      - [ ] Set the clickable icons in a wrapper, to make the area of click larger than the icon, which will improve the ux
+      - [x] Add a "loading" state
+      - [x] Add a "no video" state
     - [ ] Misc
       - [x] Loader
       - [ ] InpagePopup
@@ -130,9 +138,12 @@ Tasks :
   - [ ] Content
     - [ ] Do all animations
     - [ ] BUG - no content on click
+  - [ ] Mettre les tailles de certaines briques (link, texte) en "libre" (snap à 100px)
   - [ ] After-canva feature fixes
       - [ ] Add toasts
       - [ ] Add supa error management
+  - [ ] Bugs
+    - [ ] Herosection - when you hover the title with disablePauseOnHover, it stops the video (maybe we can tie the mouseEnter on a specific element)
 - [ ] Misc
   - [ ] Fix lodash bad types
   - [ ] Learn & refacto whole effects states management with preact
@@ -147,3 +158,4 @@ Tasks :
   - [ ] Why is database fetching empty when first connexion ?
   - [ ] Fix email notifications
   - [ ] Make a bootstrap function to init the database and all misc settings of the supabase instance, to make it possible to run it from an empty project
+  - [ ] Fix media-chrome ts errors on web components

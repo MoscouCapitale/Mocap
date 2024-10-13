@@ -27,6 +27,11 @@ import IconHandStop from "@tabler-icons-url/hand-stop.tsx"
 import IconResize from "@tabler-icons-url/resize.tsx"
 import IconArrowDownRight from "@tabler-icons-url/arrow-down-right.tsx"
 import IconArrowUpRight from "@tabler-icons-url/arrow-up-right.tsx"
+import IconPlayerPlayFilled from "@tabler-icons-url/player-play-filled.tsx"
+import IconPlayerPauseFilled from "@tabler-icons-url/player-pause-filled.tsx"
+import IconVolume from "@tabler-icons-url/volume.tsx"
+import IconVolume2 from "@tabler-icons-url/volume-2.tsx"
+import IconVolume3 from "@tabler-icons-url/volume-3.tsx"
 
 export {
     IconSend,
@@ -51,4 +56,9 @@ export {
     IconResize,
     IconArrowDownRight,
     IconArrowUpRight,
+    IconPlayerPlayFilled,
+    IconPlayerPauseFilled,
+    IconVolume,
+    IconVolume2,
+    IconVolume3
 }

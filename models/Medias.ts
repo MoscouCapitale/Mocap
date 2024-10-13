@@ -106,7 +106,7 @@ const MediaModifiableAttributes = {
   object_fit: "Positionnement",
   autoplay: "Lecture auto.",
   controls: "Controles",
-  cta: "Lien",
+  // cta: "Lien", // TODO: is it really necessary ? CTA is already there on the bricks...
   autodetect_source: "Source auto.",
 };
 

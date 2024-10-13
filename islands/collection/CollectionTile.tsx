@@ -29,10 +29,10 @@ export default function CollectionTile({
           <MediaPreview media={media} from={"collection"} />
         </div>
         <ContextualDots onClick={() => setActive(true)} />
-        <Button
+        {/* {mediaClick && <Button
           text={"useit"}
-          onClick={() => mediaClick && mediaClick(media)}
-        />
+          onClick={() => mediaClick(media)}
+        />} */}
       </div>
       <InpagePopup isOpen={active} closePopup={() => setActive(false)}>
         <MediaDetail media={media} />

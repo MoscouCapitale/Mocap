@@ -1,13 +1,12 @@
 import { availBricks, BricksType } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
+import Video from "@islands/Video.tsx";
 
 type PlaceholderProps = {
   type: BricksType;
   content: availBricks;
   nodeId: string;
 };
-
-// TODO: do same placeholder style as bricks
 
 export default function Placeholder(
   { type, content, nodeId }: PlaceholderProps,
@@ -37,13 +36,29 @@ export default function Placeholder(
           </div>
         );
       default:
-        return (
-          <img
-            className={"w-full h-full object-cover rounded-[20px]"}
-            // @ts-ignore - this is a default brick
-            src={content.platform?.icon ?? content.media?.public_src}
-          />
-        );
+        // @ts-ignore - content is not a PlatformLink nor Text
+        if (content.media) {
+          // @ts-ignore - content is not a PlatformLink nor Text
+          if (content.media.extension?.includes("video")) {
+            return (
+              <Video
+                // @ts-ignore - content is not a PlatformLink nor Text
+                src={content.media.public_src ?? ""}
+                disabled
+                sx={"rounded-[20px]"}
+              />
+            );
+            // @ts-ignore - content is not a PlatformLink nor Text
+          } else if (content.media.extension?.includes("image")) {
+            return (
+              <img
+                className={"w-full h-full object-cover rounded-[20px]"}
+                // @ts-ignore - this is a default brick
+                src={content.platform?.icon ?? content.media?.public_src}
+              />
+            );
+          } else return null;
+        } else return null;
     }
   };
 
@@ -52,7 +67,8 @@ export default function Placeholder(
       id={"mcanva-article-placeholder"}
       data-node-id={nodeId}
       className={cn(
-        "group/main w-full h-full p-[1px] bg-gradient-to-b from-[#7da7d9] to-[#313131] rounded-[20px] [&_*]:pointer-events-none [&_*]:grayscale [&_*]:brightness-50")}
+        "group/main w-full h-full p-[1px] bg-gradient-to-b from-[#7da7d9] to-[#313131] rounded-[20px] [&_*]:pointer-events-none [&_*]:grayscale [&_*]:brightness-50",
+      )}
     >
       {renderedContent()}
     </div>

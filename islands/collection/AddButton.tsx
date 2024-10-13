@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
 import Button from "@islands/Button.tsx";
 import InpagePopup from "@islands/Layout/InpagePopup.tsx";
-import AddPopup from "@islands/collection/AddPopup.tsx";
+import UploadMediaPopup from "./UploadMediaPopup.tsx";
 
 type AddButtonProps = {
   position?: string;
@@ -20,7 +20,7 @@ export default function AddButton({position}: AddButtonProps) {
         className={{ wrapper: position || "absolute top-[calc(2.5rem+0.625rem)] right-10" }}
       />
       <InpagePopup isOpen={openAddMediaInterface} closePopup={() => setOpenAddMediaInterface(false)}>
-        <AddPopup />
+        <UploadMediaPopup />
       </InpagePopup>      
     </>
   );

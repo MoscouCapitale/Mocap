@@ -20,6 +20,15 @@ import Placeholder from "@islands/Bricks/Placeholder.tsx";
 interface AdditionalProps {
   isMovable?: boolean;
   asMainHeroSection?: boolean;
+  animateConfig?: AnimationConfig;
+  disableAnimations?: boolean
+}
+
+export type AnimationConfig = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 export const getBrickFromCanvaNode = (

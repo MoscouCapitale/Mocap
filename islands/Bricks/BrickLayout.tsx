@@ -24,12 +24,15 @@ type LayoutCanvaSize = {
   y2: number;
 };
 
-const MAX_CONTENT_WIDTH = 1000;
+const CONTENT_MARGIN = 80;
 
 export default function BrickLayout({ nodes }: BrickLayoutProps) {
   useEffect(() => console.log(nodes), [nodes]);
 
   const [renderedNodes, setRenderedNodes] = useState<MNode[] | null>(null);
+  const [heroSectionPos, setHeroSectionPos] = useState<
+    { x: number; y: number } | null
+  >();
 
   const canvaSize: LayoutCanvaSize = useMemo(() => {
     const nodesCanvaSize = {
@@ -53,19 +56,20 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
 
   useEffect(() => console.log(canvaSize), [canvaSize]);
 
-  const HeroSection: VNode | null = useMemo(() => {
+  const HeroSection = useMemo(() => {
     const heroNode = nodes.find((n) => n.type === BricksType.HeroSection);
     if (!heroNode) return null;
 
-    return (
-      <article
-        // className={"w-full h-full"}
-        style={{}}
-      >
-        {getBrickFromCanvaNode(heroNode, { asMainHeroSection: true })}
-      </article>
-    );
-  }, [nodes]);
+    return getBrickFromCanvaNode(heroNode, {
+      asMainHeroSection: true,
+      animateConfig: {
+        x: heroNode.x + (heroSectionPos?.x ?? 0),
+        y: heroNode.y + (heroSectionPos?.y ?? 0),
+        width: heroNode.width,
+        height: heroNode.height,
+      },
+    });
+  }, [heroSectionPos]);
 
   const calculateRenderedNodes = useCallback(() => {
     if (!globalThis?.innerHeight || !globalThis?.innerWidth) return;
@@ -80,18 +84,21 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
     );
 
     const leftOffset = (vw - (canvaSize.x1 + canvaSize.x2)) / 2;
-    const topOffset = -canvaSize.y1; // TODO: herosection
+    const topOffset = -canvaSize.y1;
+
+    setHeroSectionPos({ x: leftOffset, y: vh + CONTENT_MARGIN + topOffset });
 
     if (!vw || !vh || !canvaSize) return;
 
     setRenderedNodes(() =>
       nodes.map((node) => {
+        if (node.type === BricksType.HeroSection) return null;
         return {
           ...node,
           x: node.x + leftOffset,
           y: node.y + topOffset,
         };
-      })
+      }).filter(Boolean) as MNode[]
     );
   }, [globalThis?.innerHeight, globalThis?.innerWidth]);
 
@@ -125,8 +132,12 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
 
         {/** Actual bricks layout */}
         <div
-          className={`w-full my-20`}
-          style={{ height: `${Math.abs(canvaSize.y1) + canvaSize.y2}px` }}
+          className={`w-full`}
+          style={{
+            height: `${Math.abs(canvaSize.y1) + canvaSize.y2}px`,
+            marginTop: `${CONTENT_MARGIN}px`,
+            marginBottom: `${CONTENT_MARGIN}px`,
+          }}
         >
           {renderedNodes.map((node) => {
             return (

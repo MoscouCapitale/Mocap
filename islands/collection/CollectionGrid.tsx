@@ -1,6 +1,6 @@
 import CollectionTile from "@islands/collection/CollectionTile.tsx";
 import { DatabaseMedia, MediaByType } from "@models/Medias.ts";
-import { Media, MediaType, Image, Video, Audio, Misc } from "@models/Medias.ts";
+import { Audio, Image, Media, MediaType, Misc, Video } from "@models/Medias.ts";
 import { useEffect, useState } from "preact/hooks";
 import { filterOutNonValideAttributes } from "@utils/database.ts";
 
@@ -19,8 +19,12 @@ type FetchingRouteMap = {
 
 type CollectionType<T extends MediaType> = FetchingRouteMap[T];
 
-export default function CollectionGrid({ fetchingRoute, mediaSize, onMediaClick }: GridProps) {
-  const [collection, setCollection] = useState<CollectionType<typeof fetchingRoute>>();
+export default function CollectionGrid(
+  { fetchingRoute, mediaSize, onMediaClick }: GridProps,
+) {
+  const [collection, setCollection] = useState<
+    CollectionType<typeof fetchingRoute>
+  >();
 
   useEffect(() => {
     fetch(`/api/medias/all/${fetchingRoute}`)
@@ -28,7 +32,12 @@ export default function CollectionGrid({ fetchingRoute, mediaSize, onMediaClick 
         return res.status === 200 ? res.json() : setCollection([]);
       })
       .then((data: DatabaseMedia[]) => {
-        data && setCollection(data.map((media: DatabaseMedia) => filterOutNonValideAttributes(media)) as CollectionType<MediaType>);
+        data &&
+          setCollection(
+            data.map((media: DatabaseMedia) =>
+              filterOutNonValideAttributes(media)
+            ) as CollectionType<MediaType>,
+          );
       });
   }, [fetchingRoute]);
 
@@ -44,12 +53,17 @@ export default function CollectionGrid({ fetchingRoute, mediaSize, onMediaClick 
           style={{
             width: "100%",
             display: "grid",
-            gridTemplateColumns: `repeat(auto-fill, minmax(${mediaSize || '200'}px, 1fr))`,
+            gridTemplateColumns: `repeat(auto-fill, minmax(${
+              mediaSize || "200"
+            }px, 1fr))`,
             gap: "1rem",
           }}
         >
           {collection.map((media) => (
-            <CollectionTile media={media} mediaClick={() => onMediaClick && onMediaClick(media)} />
+            <CollectionTile
+              media={media}
+              mediaClick={() => onMediaClick && onMediaClick(media)}
+            />
           ))}
         </div>
       )}

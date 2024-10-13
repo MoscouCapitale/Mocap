@@ -1,7 +1,7 @@
+import Video from "@islands/Video.tsx";
 import { Single as SingleType } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
-import { IconArrowDownRight } from "@utils/icons.ts";
-import { useCallback, useState } from "preact/hooks";
+import { useCallback, useMemo, useState } from "preact/hooks";
 
 type SingleProps = {
   content: SingleType;
@@ -9,77 +9,101 @@ type SingleProps = {
 
 export default function Single({ content }: SingleProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isCreditsOpen, setIsCreditsOpen] = useState(false);
-
-  // FIXME: gradient tests:
-  // bg-gradient-to-b from-[#007BFF] to-[#114752]
-  // bg-gradient-to-b from-[#7da7d9] to-[#313131]
 
   const toggleOpenState = useCallback(() => {
     if (content.platforms) setIsOpen((p) => !p);
   }, []);
 
+  const transitionsStyles = "transition-all ease-in-out duration-500";
+
+  const renderMedia = useMemo(() => {
+    if (content.media) {
+      if (content.media.extension?.includes("video")) {
+        return (
+          <Video
+            src={content.media.public_src ?? ""}
+            autoplay
+            additionnalConfig={{
+              delay: 2000,
+              controlsTrigger: "bottom",
+              disableSomeControls: ["volumeIcon", "duration"],
+            }}
+            loopVideo
+            muted
+            sx={cn(
+              "absolute group-hover/main:brightness-50 rounded-[20px] [&_#volbar]:w-[50px]",
+              isOpen ? "brightness-50" : "",
+              transitionsStyles,
+            )}
+          />
+        );
+      } else if (content.media.extension?.includes("image")) {
+        return (
+          <img
+            className={cn(
+              "absolute rounded-[20px] group-hover/main:brightness-50 object-cover w-[calc(100%-2px)] h-[calc(100%-2px)]",
+              isOpen ? "brightness-50" : "",
+              transitionsStyles,
+            )}
+            src={content.media?.public_src}
+            alt={content.media?.alt}
+          />
+        );
+      } else return null;
+    } else return null;
+  }, [content, isOpen]);
+
   return (
     <div
       data-open={isOpen}
-      className={"group/main w-full h-full p-[1px] bg-gradient-to-b from-[#7da7d9] to-[#313131] rounded-[20px] overflow-y-auto"}
+      className={"group/main w-full h-full p-[1px] bg-gradient-to-b from-[#7da7d9] to-[#313131] rounded-[20px]"}
       onMouseLeave={() => {
         if (isOpen) setIsOpen(false);
-        if (isCreditsOpen) setIsCreditsOpen(false);
       }}
     >
-      <img
-        className={cn(
-          "absolute rounded-[20px] group-hover/main:brightness-50 object-cover w-[calc(100%-2px)] h-[calc(100%-2px)]",
-          isOpen ? "brightness-50" : "",
-        )}
-        src={content.media?.public_src}
-        alt={content.media?.alt}
-      />
-      {(!isOpen && !isCreditsOpen) &&
+      {renderMedia}
+      {(!isOpen) &&
         (
           <>
             <h2
-              // TODO: font
-              className={"hidden group-hover/main:block text-[20px] font-bold text-white text-center absolute pos-center cursor-pointer hover:underline"}
+              className={cn(
+                "invisible group-hover/main:visible opacity-0 group-hover/main:opacity-100",
+                "absolute pos-center cursor-pointer inline-block",
+                "text-[20px] font-bold text-center text-text", // Font styles
+                transitionsStyles,
+              )}
               onClick={toggleOpenState}
             >
               {content.title}
             </h2>
-            <IconArrowDownRight
-              className={"hidden group-hover/main:block absolute m-2 right-0 bottom-0 w-5 h-5 cursor-pointer"}
-              color={"#202020"}
-              onClick={() => setIsCreditsOpen((p) => !p)}
-            />
           </>
         )}
       {isOpen && (
         <div
-          className={"absolute inset-0 p-14 flex justify-around items-start"}
+          className={"absolute inset-0 p-14 grid justify-items-center content-between"}
+          style={{
+            gridTemplateColumns: "repeat(2, 1fr)",
+          }}
         >
           {content.track.platforms?.map((pfl) => {
             console.log(`platform ${pfl.name}: `, pfl);
             if (pfl.platform.icon) {
               return (
-                <a href={pfl.url} target="_blank" className={"w-fit h-fit"}>
+                <a
+                  href={pfl.url}
+                  target="_blank"
+                  className={cn(
+                    "w-12 h-12 flex justify-center items-center",
+                  )}
+                >
                   <img
-                    className={"max-w-12 max-h-12	w-auto h-auto hover:drop-shadow-platformIcon"}
+                    className={"max-w-full max-h-full w-auto h-auto hover:drop-shadow-platformIcon transition-all ease-in-out duration-500"}
                     src={pfl.platform.icon}
                   />
                 </a>
               );
             }
           })}
-        </div>
-      )}
-      {isCreditsOpen && (
-        <div
-          className={"absolute inset-0 p-14 flex justify-around items-start"}
-        >
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-            quod, quae quia cumque, quos, quas quidem sit voluptates quibusdam
-          </p>
         </div>
       )}
     </div>

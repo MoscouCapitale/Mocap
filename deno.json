@@ -42,6 +42,7 @@
     "@tabler-icons-url/": "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/",
     "@babel/runtime/helpers/esm/extends": "https://esm.sh/@babel/runtime@7.23.1/helpers/esm/extends",
     "lodash": "https://esm.sh/lodash@4.17.21",
+    "react-player": "https://esm.sh/react-player@2.16.0?alias=react:preact/compat,@types/react:preact/compat",
 
     "@radix-ui/react-toast": "https://esm.sh/*@radix-ui/react-toast@1.1.5?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
     "@radix-ui/primitive": "https://esm.sh/*@radix-ui/primitive@1.0.1",
@@ -65,6 +66,7 @@
     "@radix-ui/react-portal": "https://esm.sh/v132/*@radix-ui/react-portal@1.0.4?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
     "@radix-ui/react-presence": "https://esm.sh/v132/*@radix-ui/react-presence@1.0.1?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
     "@radix-ui/react-primitive": "https://esm.sh/v132/*@radix-ui/react-primitive@1.0.3?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
+    "@radix-ui/react-slider": "https://esm.sh/v132/*@radix-ui/react-slider@1.2.1?alias=react:preact/compat,@types/react:preact/compat",
     "@radix-ui/react-slot": "https://esm.sh/v132/*@radix-ui/react-slot@1.0.2?alias=react:preact/compat,@types/react:preact/compat",
     "@radix-ui/react-use-controllable-state": "https://esm.sh/v132/*@radix-ui/react-use-controllable-state@1.0.1?alias=react:preact/compat,@types/react:preact/compat",
     "@radix-ui/react-use-callback-ref": "https://esm.sh/v132/*@radix-ui/react-use-callback-ref@1.0.1?alias=react:preact/compat,@types/react:preact/compat",

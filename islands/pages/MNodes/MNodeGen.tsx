@@ -201,7 +201,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
       </div>
 
       {/* Actual node content */}
-      {getBrickFromCanvaNode(node, { isMovable: !isPreview })}
+      {getBrickFromCanvaNode(node, { isMovable: !isPreview, disableAnimations: true })}
 
       {/* debug */}
       {!isPreview && (

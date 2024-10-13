@@ -37,8 +37,14 @@ export default function PlateformLink(
         )}
         {sizeIndex === 1 && (
           <>
-            <p className={"text-white text-[24px] font-bold"}>{content.platform.name}</p>
-            <IconArrowUpRight className={"group-hover/main:-mr-2 group-hover/main:-mt-2"} color="white" size={40}/>
+            <p className={"text-white text-[24px] font-bold"}>
+              {content.platform.name}
+            </p>
+            <IconArrowUpRight
+              className={"translate-x-0 translate-y-0 group-hover/main:translate-x-[10%] group-hover/main:-translate-y-[10%] transition-transform ease-in-out duration-500"}
+              color="white"
+              size={40}
+            />
           </>
         )}
       </a>

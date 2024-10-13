@@ -80,7 +80,7 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       dropShadow: {
-        "platformIcon": "0px 0px 30px #FFFFFFFF",
+        "platformIcon": "0px 0px 20px #FFFFFF50",
       },
       keyframes: {
         "accordion-down": {
@@ -107,6 +107,16 @@ export default {
       outline: {
         inputerror: ["2px solid #EA5959", "2px"],
       },
+      fontSize: {
+        clamp: "clamp(18px, 5vw, 3rem)",
+        "clamp-sm": "clamp(14px, 70%, 1.5rem)"
+      },
+      transitionDuration: {
+        2000: "2000ms",
+        3000: "3000ms",
+        4000: "4000ms",
+        5000: "5000ms",
+      }
     },
     fontFamily: {
       'sans': ['var(--font-main)', "Segoe UI", "sans-serif"],
