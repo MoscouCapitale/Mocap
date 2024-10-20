@@ -44,6 +44,8 @@ export const handler: Handlers<any | null> = {
     const cleanedBody = JSON.parse(JSON.stringify(body));
     const jointAttributes: string[] = [];
 
+    console.log(`Inserting ${type} with body:`, body);
+
     const tableName = DatabaseAttributes[type].table;
 
     Object.entries(body).forEach(([key, value]) => Array.isArray(body[key]) && delete cleanedBody[key] && jointAttributes.push(key));

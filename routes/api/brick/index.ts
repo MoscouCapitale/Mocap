@@ -6,7 +6,7 @@ import {
   availBricks,
   BricksType,
   getBrickTypeTableName,
-  PlateformLink,
+  PlatformLink,
   Track,
 } from "@models/Bricks.ts";
 import { TableNames } from "@models/database.ts";
@@ -43,7 +43,7 @@ export const handler: Handlers<any | null> = {
           DatabaseAttributes[key]?.parentTables?.includes(`Bricks_${type}`)
         ) {
           const res = {
-            [key]: brick[key].map((item: PlateformLink | Track) => item.id),
+            [key]: brick[key].map((item: PlatformLink | Track) => item.id),
           };
           delete brick[key];
           return res;

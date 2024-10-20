@@ -1,9 +1,10 @@
 import { JSX } from "preact/jsx-runtime";
 import ObjectDropdown from "@islands/ObjectDropdown.tsx";
 import { defaultPrivateFields } from "@models/Medias.ts";
-import AddMediaZone from "@islands/Misc/AddMediaZone.tsx";
 import { DatabaseAttributes, DatabaseAttributesKeys, DropdownItem } from "@models/App.ts";
 import { cn } from "@utils/cn.ts";
+import FileInput from "@islands/UI/Forms/FileInput/index.tsx";
+import PreviewImage from "@islands/UI/Forms/FileInput/PreviewImage.tsx";
 
 /**
  * Take as input an object, and return all fields as inputs.
@@ -34,7 +35,18 @@ export const renderMediaInputs = (
             {modifiableAttributes && Object.keys(modifiableAttributes).includes(key) && (
               <>
               {key === "media" ? (
-                <AddMediaZone handleFileUpload={() => onAddMediaClick && onAddMediaClick()} bgImage={value?.public_src || undefined} />
+                <FileInput
+                  overwriteOnFileZoneClick={() => onAddMediaClick && onAddMediaClick()}
+                  bgElement={value?.public_src
+                    ? (
+                      <PreviewImage
+                        src={value.public_src}
+                        filetype={value.type}
+                        filename={value.name}
+                      />
+                    )
+                    : undefined}
+                />
               ) : (
                 <>
                 <label>{modifiableAttributes[key as keyof typeof modifiableAttributes]}</label>

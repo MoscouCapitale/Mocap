@@ -56,7 +56,7 @@ type MediaCTA = {
   url: string;
 };
 
-type MediaControls = {
+export type MediaControls = {
   id: number;
   name: string;
   play: boolean;
@@ -72,10 +72,7 @@ enum MediaType {
   Misc = "Misc",
 }
 
-type MediaObjectFit = {
-  id: number;
-  value: "best" | "cover" | "contain";
-};
+export type MediaObjectFit = "best" | "cover" | "contain";
 
 type MediaSettingsAttributes = MediaCTA | MediaControls | MediaObjectFit;
 

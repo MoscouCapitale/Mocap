@@ -1,16 +1,10 @@
 import { VNode } from "preact";
 import { useState } from "preact/hooks";
 import { cn } from "@utils/cn.ts";
-import {
-  Popover,
-  PopoverClose,
-  PopoverContent,
-  PopoverPortal,
-  PopoverTrigger,
-} from "@radix-ui/react-popover";
+import { Popover, PopoverClose, PopoverContent, PopoverPortal, PopoverTrigger } from "@radix-ui/react-popover";
 
 type ContextualDotsProps =
-  | { onClick: () => void; popoverChildren?: never }
+  | { onClick: (e: Event) => void; popoverChildren?: never }
   | { onClick?: never; popoverChildren: VNode };
 
 export default function ContextualDots(
@@ -22,8 +16,8 @@ export default function ContextualDots(
     ? (
       <button
         className="group gap-[3px] inline-flex top-0 right-0 p-2 rounded-bl"
-        onClick={() => {
-          if (onClick) onClick();
+        onClick={(e) => {
+          if (onClick) onClick(e);
           setIsActive((p) => !p);
         }}
       >
@@ -58,11 +52,7 @@ function ThreeDots({ isActive }: { isActive: boolean }) {
           key={i}
           className={cn(
             "block w-2 h-2 rounded-full border-2 border-text transition-transform duration-300 ease-in-out",
-            i === 1
-              ? isActive
-                ? "transform translate-y-1"
-                : "group-hover:-translate-y-1"
-              : "",
+            i === 1 ? isActive ? "transform translate-y-1" : "group-hover:-translate-y-1" : "",
           )}
         />
       ))}

@@ -32,8 +32,8 @@ export default {
         dark: "#A3A3A3",
       },
       text_special: "#EA5959",
-      main: 'var(--color-accent-main)',
-      secondary: 'var(--color-accent-secondary)',
+      main: "var(--color-accent-main)",
+      secondary: "var(--color-accent-secondary)",
       success: "#40C057",
       warning: "#F19B4B",
       error: "#EA5959",
@@ -95,6 +95,10 @@ export default {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-30%)" },
         },
+        "tootltip-slideAndFade": {
+          from: { opacity: "0", transform: "translateY(10px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -103,25 +107,32 @@ export default {
           "contextualdots-bounce 0.5s ease-in-out infinite alternate",
         "contextualdots-bounce-delayed":
           "contextualdots-bounce 0.5s ease-in-out infinite alternate 0.2s",
+        "tooltip-slideAndFade":
+          "tooltip-slideAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
       },
       outline: {
         inputerror: ["2px solid #EA5959", "2px"],
       },
       fontSize: {
         clamp: "clamp(18px, 5vw, 3rem)",
-        "clamp-sm": "clamp(14px, 70%, 1.5rem)"
+        "clamp-sm": "clamp(14px, 70%, 1.5rem)",
       },
       transitionDuration: {
         2000: "2000ms",
         3000: "3000ms",
         4000: "4000ms",
         5000: "5000ms",
-      }
+      },
     },
     fontFamily: {
-      'sans': ['var(--font-main)', "Segoe UI", "sans-serif"],
-      'secondary': ['var(--font-secondary)', 'var(--font-main)', "Segoe UI", "sans-serif"],
-    }
+      "sans": ["var(--font-main)", "Segoe UI", "sans-serif"],
+      "secondary": [
+        "var(--font-secondary)",
+        "var(--font-main)",
+        "Segoe UI",
+        "sans-serif",
+      ],
+    },
   },
   plugins: [
     twAnimate,

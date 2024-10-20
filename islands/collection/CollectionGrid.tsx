@@ -34,9 +34,7 @@ export default function CollectionGrid(
       .then((data: DatabaseMedia[]) => {
         data &&
           setCollection(
-            data.map((media: DatabaseMedia) =>
-              filterOutNonValideAttributes(media)
-            ) as CollectionType<MediaType>,
+            data.map((media: DatabaseMedia) => filterOutNonValideAttributes(media)) as CollectionType<MediaType>,
           );
       });
   }, [fetchingRoute]);
@@ -53,16 +51,14 @@ export default function CollectionGrid(
           style={{
             width: "100%",
             display: "grid",
-            gridTemplateColumns: `repeat(auto-fill, minmax(${
-              mediaSize || "200"
-            }px, 1fr))`,
+            gridTemplateColumns: `repeat(auto-fill, minmax(${mediaSize || "200"}px, 1fr))`,
             gap: "1rem",
           }}
         >
           {collection.map((media) => (
             <CollectionTile
               media={media}
-              mediaClick={() => onMediaClick && onMediaClick(media)}
+              mediaClick={onMediaClick ? () => onMediaClick(media) : undefined}
             />
           ))}
         </div>

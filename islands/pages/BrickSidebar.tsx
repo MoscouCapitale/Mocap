@@ -98,6 +98,11 @@ export default function BrickSidebar({}: BrickSidebarProps) {
     }
   }
 
+  // When CreateBrickBar calls this function, it will pass an empty brick (on delete, or on create)
+  const handleSetBrick = (brick: availBricks | undefined) => {
+    onBrickClick(brick as activeAvailType);
+  };
+
   return (
     <div class={cn("w-[200px] h-full flex-col justify-start items-start gap-6 inline-flex relative")}>
       {isPreview && 
@@ -137,6 +142,7 @@ export default function BrickSidebar({}: BrickSidebarProps) {
       <CreateBrickBar
         brickType={createBrickType}
         brickData={userBricks.find((b) => b.isActive)}
+        setBrick={handleSetBrick} // Pass the callback function as a prop
       />
     </div>
   );

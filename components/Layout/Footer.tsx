@@ -1,8 +1,8 @@
-import { PlateformLink } from "@models/Bricks.ts";
+import { PlatformLink } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
 
 interface FooterProps {
-  platforms: PlateformLink[] | null;
+  platforms: PlatformLink[] | null;
 }
 
 export default function Footer({ platforms }: FooterProps) {

@@ -71,7 +71,7 @@ export const handler: Handlers<Media | null> = {
  * @returns A promise that resolves to an array of media information if successful, otherwise an empty array.
  */
 const getMediaInfosFromId = async (id: string) => {
-  const { data, error } = await supa.from("Medias").select(`*, cover (*), controls (*), cta (*), object_fit (*)`).eq("id", id);
+  const { data, error } = await supa.from("Medias").select(`*, cover (*), controls (*), cta (*)`).eq("id", id);
   if (error) return [];
   return data;
 };

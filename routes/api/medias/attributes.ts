@@ -10,7 +10,7 @@ export const handler: Handlers<any> = {
       object_fit: [] as any,
     };
     let res = await supa.from("Media_Adjustement").select();
-    additionalAttributes.object_fit = res.data || [];
+    additionalAttributes.object_fit = res.data || "best";
     res = await supa.from("Audio_Controls").select();
     additionalAttributes.controls = res.data || [];
     res = await supa.from("Audio_Link").select();

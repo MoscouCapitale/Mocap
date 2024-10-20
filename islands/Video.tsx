@@ -16,6 +16,7 @@ import {
 import { cn } from "@utils/cn.ts";
 import * as Slider from "@radix-ui/react-slider";
 import Loader from "@components/UI/Loader.tsx";
+import { MediaObjectFit } from "@models/Medias.ts";
 
 type VideoProps = {
   src: string;
@@ -26,7 +27,7 @@ type VideoProps = {
   disableControls?: boolean;
   loopVideo?: boolean;
   muted?: boolean;
-  fit?: "cover" | "contain";
+  fit?: MediaObjectFit;
   sx?: string;
 };
 
@@ -55,6 +56,7 @@ type AdditionnalConfig = {
    */
   controlsTrigger?: "full" | "bottom";
   disableSomeControls?: AvailableControls[];
+  loader?: boolean;
 };
 
 type AvailableControls =
@@ -197,7 +199,7 @@ export default function Video(
         </div>
       )}
 
-      {videoState.isInit && !videoState.error && !videoState.isReady && (
+      {additionnalConfig?.loader !== false && videoState.isInit && !videoState.error && !videoState.isReady && (
         <div className={"w-full h-full flex justify-center items-center"}>
           <Loader />
         </div>

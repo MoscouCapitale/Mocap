@@ -10,7 +10,7 @@ interface Brick {
   nodeId?: string;
 }
 
-interface HeroSection extends Brick {
+export interface HeroSection extends Brick {
   title?: string;
   subtitle?: string;
   media: Image | Video | null;
@@ -18,46 +18,39 @@ interface HeroSection extends Brick {
   style?: HeroSectionStyle;
 }
 
-interface Single extends Brick {
+export interface Single extends Brick {
   title: string;
   media: Image | Video | null;
   track: Track;
   hoverable: boolean;
-  platforms?: PlateformLink[];
+  platforms?: PlatformLink[];
   cta?: MediaCTA;
 }
 
-interface Album extends Brick {
+export interface Album extends Brick {
   title: string;
   media: Image | Video | null;
   hoverable: boolean;
-  platforms?: PlateformLink[];
+  platforms?: PlatformLink[];
   tracklist?: Track[];
   cta?: MediaCTA;
 }
 
-interface Text extends Brick {
+export interface Text extends Brick {
   text: string;
   special: string;
 }
 
-// Type social is a brick type for social networks, but has the same attributes as PlateformLink
-type Social = PlateformLink;
-
-// interface Tiles extends Brick {
-//   content: (Single | Album | Text | Social)[];
-// }
-
-type Track = {
+export type Track = {
   id: number;
   name: string;
   artist: Artist[];
-  platforms?: PlateformLink[];
+  platforms?: PlatformLink[];
   created_at: string;
   updated_at: string;
 };
 
-type Artist = {
+export type Artist = {
   id: number;
   name: string;
   url: string;
@@ -65,12 +58,12 @@ type Artist = {
   updated_at: string;
 };
 
-interface PlateformLink extends Brick {
+export interface PlatformLink extends Brick {
   platform: Platform;
   url: string;
 };
 
-type Platform = {
+export type Platform = {
   id: number;
   name: string;
   icon: string;
@@ -142,9 +135,7 @@ const getBrickTypeTableName = (type: BricksType): TableNames => {
   }
 }
 
-type availBricks = HeroSection | Single | Album | Text | Social | PlateformLink;
-
-export type { Album, HeroSection, PlateformLink, Single, Social, Text, Track, availBricks };
+export type availBricks = HeroSection | Single | Album | Text | PlatformLink;
 
 export { 
   BrickModifiableAttributes, 
@@ -197,7 +188,7 @@ export function createDefaultBrick(
         name: "",        
         url: "",
         platform: {},
-      } as Social;
+      } as PlatformLink;
     default:
       throw new Error(`Unsupported brick type: ${brickType}`);
   }

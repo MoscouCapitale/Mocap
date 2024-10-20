@@ -17,18 +17,18 @@ This will watch the project directory and restart as necessary.
 
 Tasks :
 - [ ] Authentication & User Management (OMG see https://github.com/denoland/fresh/blob/main/docs/latest/examples/authentication-with-supabase.md)
-  - [ ] Password Login
+  - [ ] ==Password Login
   - [ ] One-page Magic Link Login
   - [ ] Magic Link email
   - [ ] Notifications on new user
     - [x] Find a notification service
-    - [ ] Notify admin on new request
+    - [ ] ==Notify admin on new request
     - [x] Add notification badge on admin UI
   - [ ] Roles
     - [ ] Role based access control
     - [ ] RLS
     - [ ] Role management
-  - [ ] Error management
+  - [ ] ==Error management
     - [x] 429 too many request
     - [ ] 403 token expired after too much time on app, and it does not renew itself (it should tho)
     - [ ] ? AuthRetryableFetchError if no internet connection, it returns to the login page
@@ -36,8 +36,6 @@ Tasks :
   - [ ] Middleware on api ??? 
 - [ ] Collection
   - [ ] Bugs
-    - [ ] You cannot upload any file
-    - [ ] When creating a new media, the form re-renders on each interaction
   - [x] Supabase init
   - [x] List collection
     - [ ] Pagination
@@ -52,7 +50,6 @@ Tasks :
     - [x] UI
     - [x] API
     - [x] Specify all media attributes based off type (cta, etc)
-    - [ ] Fix bug on media upload delete button -- what ?
   - [x] Edit media
     - [x] UI
     - [x] API
@@ -65,45 +62,35 @@ Tasks :
     - [x] API
   - [x] Media
     - [x] Extend the base Media interface to specify more clearly the attribute of each medias
+    - [ ] Better file handling
+    - [ ] Better audio support
 - [ ] Stats
 - [ ] Settings
   - [ ] Refacto settings following the same pattern as collections
   - [ ] Support api keys (support, hash, etc...)
   - [ ] Regroup some code that are very similar between pages (and also all the StylesSettingsDBObject). Ex on pages the logic is *almost* the same, only the UI is different
   - [x] Maybe store some settings in context, or in server launch (https://fresh.deno.dev/docs/examples/init-the-server), to avoid fetching them every time, for each client, on each page (very heavy)
-  - [ ] Check formfields objects, for better placeholder, validation, etc...
+  - [x] Check formfields objects, for better placeholder, validation, etc...
 - [ ] UI
-  - [ ] Info icon with tooltip on hover
-    - [ ] tell that bricks names are unique
+  - [x] Info icon with tooltip on hover
+    - [x] tell that bricks names are unique
   - [ ] Cursor
     - [ ] Hover card state
   - [ ] Navbar
     - [ ] Smooth animation on expand
     - [x] Set the position as fixed, to have the navbar always displayed same on page scroll
   - [ ] Global form
-    - [ ] Client-side validation
+    - [x] Client-side validation
     - [ ] Error handling
-    - [ ] Fields
-      - [ ] File input
-      - [ ] Date input
-      - [ ] Color input
-      - [ ] Checkboxes
-      - [ ] Select and multi select
+    - [x] Fields
+      - [x] File input
+      - [x] Checkboxes
+      - [x] Select and multi select
   - [ ] Global components
     - [ ] Button (primary, secondary, danger, success, etc...)
       - [ ] Trashcan
         - [ ] Animation
         - [ ] Confirm popup
-    - [ ] inputs (text, email, password, etc...)
-      - [ ] Read only input
-      - [ ] Support custom types:
-        - [ ] File input
-        - [ ] Color input 
-        - [ ] Select/Multi select
-          - [ ] Make dropdown zone better
-          - [ ] In bricks, make the dropdown display the items choosen (ex in tracklist, show the label "tracklist", at the right a dropdown to select the tracklist, and below the selected tracklist)
-          - [ ] FInish all todos of Select component
-    - [ ] Hint popover (as an '?' icon)
     - [ ] Alerts
       - [ ] Modals
         - [ ] Globale confirmation modal
@@ -138,6 +125,7 @@ Tasks :
   - [ ] Content
     - [ ] Do all animations
     - [ ] BUG - no content on click
+    - [ ] If you delete a brick, it is still present in the bricks list
   - [ ] Mettre les tailles de certaines briques (link, texte) en "libre" (snap à 100px)
   - [ ] After-canva feature fixes
       - [ ] Add toasts
@@ -147,7 +135,7 @@ Tasks :
 - [ ] Misc
   - [ ] Fix lodash bad types
   - [ ] Learn & refacto whole effects states management with preact
-  - [ ] Add localstorage saving
+  - [x] Add localstorage saving
   - [ ] Request service object instead of js native `fetch()` (reast query with preact compat ?)
     - [ ] Make an optionnal parameter to show (or not) the result of the fetch
   - [ ] Add a global error handler
@@ -156,6 +144,5 @@ Tasks :
     - [ ] Set partial content displayed on page load, instead of click (because for now it is only on subnav items, and specifically on the content page. It should be global, for each "page")
   - [ ] Set every database id as uuid
   - [ ] Why is database fetching empty when first connexion ?
-  - [ ] Fix email notifications
+  - [ ] ==Fix email notifications
   - [ ] Make a bootstrap function to init the database and all misc settings of the supabase instance, to make it possible to run it from an empty project
-  - [ ] Fix media-chrome ts errors on web components

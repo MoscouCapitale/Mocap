@@ -14,6 +14,7 @@ export const evaluateSupabaseResponse = (
   data: any,
   error: Error | PostgrestError | null,
 ): boolean => {
+  if (error === null && data === null) return false;
   if (error || (!data || data.length === 0)) return true;
   return false;
 };

@@ -1,9 +1,9 @@
-import { PlateformLink as PlateformLinkType } from "@models/Bricks.ts";
+import { PlatformLink as PlatformLinkType } from "@models/Bricks.ts";
 import { IconArrowUpRight } from "@utils/icons.ts";
 import { cn } from "@utils/cn.ts";
 
-type PlateformLinkProps = {
-  content: PlateformLinkType;
+type PlatformLinkProps = {
+  content: PlatformLinkType;
   /**
    * The size index determines the size of the brick.
    * - 0: small
@@ -14,8 +14,8 @@ type PlateformLinkProps = {
   sizeIndex: number;
 };
 
-export default function PlateformLink(
-  { content, sizeIndex }: PlateformLinkProps,
+export default function PlatformLink(
+  { content, sizeIndex }: PlatformLinkProps,
 ) {
   return (
     <div

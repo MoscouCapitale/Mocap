@@ -1,17 +1,60 @@
-export default function ConfirmationModal(props: { message: string; onConfirm: () => void; onCancel: () => void }) {
-  return (
-    <div className={"fixed z-50 top-0 left-0 w-screen h-screen bg-background bg-opacity-80 flex justify-center items-center"}>
-      <div className={"bg-background rounded-[10px] p-10 flex-col justify-center items-center gap-5 inline-flex"}>
-        <div className={"text-text text-base"}>{props.message}</div>
-        <div className={"w-full flex-row justify-center items-center gap-5 inline-flex"}>
-          <button className={"bg-primary rounded-[5px] text-text text-base font-semibold px-5 py-2"} onClick={props.onConfirm}>
-            Confirmer
-          </button>
-          <button className={"bg-background rounded-[5px] text-text text-base font-semibold px-5 py-2"} onClick={props.onCancel}>
-            Annuler
-          </button>
+import Button from "@islands/Button.tsx";
+import { effect } from "@preact/signals-core";
+import { VNode } from "preact";
+import { useState } from "preact/hooks";
+
+type ConfirmationModalProps = {
+  isOpen: boolean;
+  message: string | VNode;
+  onConfirm: () => void;
+  onCancel: () => void;
+};
+
+// TODO: instead of this element, we should make a Element wrapper, that, on click, add a confirm modal/popover/whatever to confirm the action
+
+export default function ConfirmationModal(
+  {
+    isOpen: isOpenInitial,
+    message,
+    onConfirm,
+    onCancel,
+  }: ConfirmationModalProps,
+) {
+  const [isOpen, setIsOpen] = useState<boolean>(isOpenInitial);
+
+  effect(() => setIsOpen(isOpenInitial));
+
+  const handleConfirm = () => {
+    onConfirm();
+    setIsOpen(false);
+  };
+
+  const handleCancel = () => {
+    onCancel();
+    setIsOpen(false);
+  };
+
+  return isOpen
+    ? (
+      <div
+        className={"fixed top-0 left-0 w-screen h-screen bg-background bg-opacity-80 flex flex-col justify-center items-center p-10"}
+        style={{ zIndex: "99999" }}
+      >
+        <div className={"text-text text-base"}>{message}</div>
+        <div
+          className={"w-full flex-row justify-center items-center gap-5 inline-flex"}
+        >
+          <Button
+            text={"Annuler"}
+            onClick={handleCancel}
+            variant="secondary"
+          />
+          <Button
+            text={"Confirmer"}
+            onClick={handleConfirm}
+          />
         </div>
       </div>
-    </div>
-  );
+    )
+    : null;
 }

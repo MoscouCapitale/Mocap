@@ -101,10 +101,6 @@ const DatabaseAttributes: DatabaseAttributesType = {
     modifiable: true,
     parentTables: ["Bricks_Single", "Bricks_Album", "Bricks_HeroSection"]
   },
-  object_fit: {
-    name: "Ajustement",
-    table: "Media_Adjustement",
-  },
   platforms: {
     name: "Liens vers plateformes",
     table: "Platform_Link",

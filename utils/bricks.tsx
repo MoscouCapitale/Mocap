@@ -3,7 +3,7 @@ import {
   Album as AlbumType,
   BricksType,
   HeroSection as HeroSectionType,
-  PlateformLink as PlateformLinkType,
+  PlatformLink as PlatformLinkType,
   Single as SingleType,
   Text as TextType,
   availBricks
@@ -13,7 +13,7 @@ import Single from "@islands/Bricks/Single.tsx";
 import Album from "@islands/Bricks/Album.tsx";
 import HeroSection from "@islands/Bricks/HeroSection.tsx";
 import Text from "@islands/Bricks/Text.tsx";
-import PlateformLink from "@islands/Bricks/PlatformLink.tsx";
+import PlatformLink from "@islands/Bricks/PlatformLink.tsx";
 import { MNode } from "@models/Canva.ts";
 import Placeholder from "@islands/Bricks/Placeholder.tsx";
 
@@ -43,7 +43,7 @@ export const getBrickFromCanvaNode = (
     if (type === "Single") return <Single content={content as SingleType}  {...args} />
     if (type === "Album") return <Album content={content as AlbumType}  {...args} />
     if (type === "Text") return <Text content={content as TextType} {...args} />
-    if (type === "Platform_Link") return <PlateformLink content={content as PlateformLinkType} sizeIndex={getBrickSizeIndex(node)} {...args} />
+    if (type === "Platform_Link") return <PlatformLink content={content as PlatformLinkType} sizeIndex={getBrickSizeIndex(node)} {...args} />
     return null;
 };
 
@@ -63,6 +63,6 @@ export const getBrickFromBrickData= (
   if (type === "Single") return <Single content={content as SingleType}  {...args} />
   if (type === "Album") return <Album content={content as AlbumType}  {...args} />
   if (type === "Text") return <Text content={content as TextType} {...args} />
-  if (type === "Platform_Link") return <PlateformLink content={content as PlateformLinkType} sizeIndex={1} {...args} />
+  if (type === "Platform_Link") return <PlatformLink content={content as PlatformLinkType} sizeIndex={1} {...args} />
   return null;
 };

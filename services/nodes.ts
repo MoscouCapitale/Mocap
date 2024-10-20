@@ -162,7 +162,7 @@ const createNodeFromBrick = async (
       savedNode.Text = brick.id;
       break;
     case "Platform_Link":
-      savedNode.PlateformLink = brick.id;
+      savedNode.PlatformLink = brick.id;
       break;
     default:
       console.error(

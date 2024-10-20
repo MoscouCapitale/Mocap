@@ -24,15 +24,21 @@ export default function CollectionTile({
 
   return (
     <>
-      <div className={`relative ${specialType && "w-fit"}`}>
-        <div onClick={() => mediaClick && mediaClick(media)}>
-          <MediaPreview media={media} from={"collection"} />
-        </div>
-        <ContextualDots onClick={() => setActive(true)} />
-        {/* {mediaClick && <Button
-          text={"useit"}
-          onClick={() => mediaClick(media)}
-        />} */}
+      <div
+        className={`relative ${
+          specialType && "w-fit"
+        } flex flex-col items-start gap-1`}
+      >
+        <MediaPreview media={media} from={"collection"} />
+        {mediaClick
+          ? (
+            <Button
+              variant="secondary"
+              text={"Select"}
+              onClick={() => mediaClick(media)}
+            />
+          )
+          : <ContextualDots onClick={() => setActive(true)} />}
       </div>
       <InpagePopup isOpen={active} closePopup={() => setActive(false)}>
         <MediaDetail media={media} />

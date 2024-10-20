@@ -4,6 +4,9 @@ import { IconInfoSquareRounded } from "@utils/icons.ts";
 import { VNode } from "preact";
 import { useState } from "preact/hooks";
 import Select from "@islands/UI/Forms/Select.tsx";
+import FileInput from "@islands/UI/Forms/FileInput/index.tsx";
+import PreviewImage from "@islands/UI/Forms/FileInput/PreviewImage.tsx";
+import RelationInput from "@islands/UI/Forms/RelationInput/index.tsx";
 
 type InputFromTypeProps = {
   field: FormField;
@@ -35,15 +38,13 @@ const InputFromType = (
           className={cn(
             baseInputStyle,
             error && "border-error",
-            field.label && "mt-2",
+            field.label && (field.type !== "checkbox") && "mt-2",
             error && !field.tooltipError && "mb-1",
           )}
           defaultValue={String(field.defaultValue ?? "")}
           type={field.type}
           placeholder={field.placeholder ?? ""}
-          defaultChecked={field.type === "checkbox"
-            ? Boolean(field.defaultValue)
-            : undefined}
+          defaultChecked={field.type === "checkbox" ? Boolean(field.defaultValue) : undefined}
           onChange={(e) => {
             switch (field.type) {
               case "number":
@@ -70,10 +71,34 @@ const InputFromType = (
           error={error}
           onChange={onChange}
           multiSelect={field.type === "multiselect"}
+          min={field.required ? 1 : 0}
           sx={"max-w-[200px]"}
         />
       );
     case "file":
+      return (
+        <FileInput
+          // TODO: This way of bubbling up the click event is not ideal, I should find a better more elegant way
+          overwriteOnFileZoneClick={() => {
+            if (field.inputConfig?.onClickInput) {
+              field.inputConfig?.onClickInput();
+            }
+          }}
+          bgElement={field.defaultValue?.public_src
+            ? (
+              <PreviewImage
+                src={field.defaultValue.public_src}
+                filetype={field.defaultValue.type}
+                filename={field.defaultValue.name}
+              />
+            )
+            : undefined}
+          label={field.inputConfig?.customLabel}
+        />
+      );
+    case "relation":
+      // Because the Select component always returns an array, we need to 'parse' the value to match the relation type (single or multiple)
+      return <RelationInput field={field} onChange={(e) => onChange(field.relation?.multiple ? e : (e[0] ?? null))} />;
     case "NI":
     default:
       return defaultField;
@@ -90,8 +115,9 @@ export default function Input({ field: initialField, onChange }: InputProps) {
   const [fieldError, setFieldError] = useState<string | null>(null);
 
   const onValueChange = (value: FormFieldValue) => {
-    if (field.validation) {
-      const error = field.validation(value);
+    if (field.validation || field.required) {
+      let error = field.validation ? field.validation(value) : null;
+      if (field.required && !value) error = "Ce champ est requis";
       if (!error) {
         setFieldError(null);
         return onChange(value);
@@ -102,13 +128,29 @@ export default function Input({ field: initialField, onChange }: InputProps) {
 
   return (
     <div>
-      <label className={"flex flex-col"}>
-        {field.label}
-        <InputFromType
-          field={field}
-          onChange={onValueChange}
-          error={fieldError}
-        />
+      <label className={"flex flex-col w-full"}>
+        {/* Set the style as inline for checkboxes */}
+        {field.type === "checkbox"
+          ? (
+            <div className={"w-full flex items-center gap-2 justify-between"}>
+              {field.label}
+              <InputFromType
+                field={field}
+                onChange={onValueChange}
+                error={fieldError}
+              />
+            </div>
+          )
+          : (
+            <>
+              {field.label}
+              <InputFromType
+                field={field}
+                onChange={onValueChange}
+                error={fieldError}
+              />
+            </>
+          )}
         {fieldError && !field.tooltipError &&
           (
             <div

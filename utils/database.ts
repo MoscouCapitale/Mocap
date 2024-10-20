@@ -121,14 +121,13 @@ export const createDefaultMediaFromRawFile = (
     case MediaType.Images:
       return {
         ...baseMedia,
-        object_fit: { id: 0, value: "best" }, // default value
-        cta: { id: 0, label: "", url: "" }, // default value
+        object_fit: "best", // default value        cta: { id: 0, label: "", url: "" }, // default value
         type: MediaType.Images,
       };
     case MediaType.Videos:
       return {
         ...baseMedia,
-        object_fit: { id: 0, value: "best" }, // default value
+        object_fit: "best", // default value
         autoplay: false, // default value
         controls: {
           id: 0,

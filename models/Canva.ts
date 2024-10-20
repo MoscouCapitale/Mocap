@@ -1,4 +1,4 @@
-import { HeroSection, Single, Album, Text, PlateformLink, BricksType } from "@models/Bricks.ts";
+import { HeroSection, Single, Album, Text, PlatformLink, BricksType } from "@models/Bricks.ts";
 
 // Canva constants
 export const CANVA_GUTTER = 20;
@@ -21,8 +21,8 @@ interface MNode {
     Single?: Single;
     Album?: Album;
     Text?: Text;
-    PlateformLink?: PlateformLink;
-    content: HeroSection | Single | Album | Text | PlateformLink;
+    PlatformLink?: PlatformLink;
+    content: HeroSection | Single | Album | Text | PlatformLink;
     sizes: MNodeSize[];
     isHighlighted?: boolean;
 }
@@ -42,7 +42,7 @@ interface DBMNode {
     Single?: number;
     Album?: number;
     Text?: number;
-    PlateformLink?: number;
+    PlatformLink?: number;
 }
 
 export type { MNode, DBMNode };
