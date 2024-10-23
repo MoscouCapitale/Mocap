@@ -3,17 +3,27 @@ import { cn } from "@utils/cn.ts";
 import { VNode } from "preact";
 
 type ButtonProps = {
-  onClick: () => void;
-  text: string;
+  children?: VNode | string | string[];
+  onClick?: () => void;
   variant?: "primary" | "secondary" | "danger";
   className?: {
     wrapper?: string;
     button?: string;
   };
   icon?: VNode;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
 };
 
-export default function Button(props: ButtonProps) {
+export default function Button({
+  onClick,
+  children,
+  variant = "primary",
+  className,
+  icon,
+  disabled = false,
+  type = "button",
+}: ButtonProps) {
   const ButtonVariants = cva("rounded-[3px] justify-start items-center gap-2.5 inline-flex cursor-pointer", {
     variants: {
       variant: {
@@ -28,9 +38,15 @@ export default function Button(props: ButtonProps) {
   });
 
   return (
-    <div className={cn(ButtonVariants({ variant: props.variant }), props.className?.wrapper)} onClick={props.onClick}>
-      {props.icon && props.icon}
-      <button className={cn("text-text font-normal", props.className?.button)}>{props.text}</button>
+    <div className={cn(ButtonVariants({ variant }), className?.wrapper)} onClick={onClick}>
+      {icon}
+      <button
+        className={cn("text-text font-normal", className?.button)}
+        disabled={disabled}
+        type={type}
+      >
+        {children}
+      </button>
     </div>
   );
 }

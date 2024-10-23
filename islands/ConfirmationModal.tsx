@@ -45,14 +45,12 @@ export default function ConfirmationModal(
           className={"w-full flex-row justify-center items-center gap-5 inline-flex"}
         >
           <Button
-            text={"Annuler"}
             onClick={handleCancel}
             variant="secondary"
-          />
+          >Annuler</Button>
           <Button
-            text={"Confirmer"}
             onClick={handleConfirm}
-          />
+          >Confirmer</Button>
         </div>
       </div>
     )

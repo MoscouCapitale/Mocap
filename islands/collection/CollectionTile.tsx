@@ -34,9 +34,8 @@ export default function CollectionTile({
           ? (
             <Button
               variant="secondary"
-              text={"Select"}
               onClick={() => mediaClick(media)}
-            />
+            >Select</Button>
           )
           : <ContextualDots onClick={() => setActive(true)} />}
       </div>

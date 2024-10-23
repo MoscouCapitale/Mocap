@@ -86,10 +86,9 @@ export default function MediaDetail({ media }: MediaDetailProps) {
 
           <div class="text-text flex align-center gap-4">
             <Button
-              text={buttonLabel}
               onClick={updateMedia}
               className={{ wrapper: "grow justify-center" }}
-            />{" "}
+            >{buttonLabel}</Button>
             <IconTrash
               className={"text-error cursor-pointer"}
               onClick={onDeleteMediaClick}

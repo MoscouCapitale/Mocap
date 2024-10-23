@@ -171,10 +171,9 @@ export default function RelationInput(
             </div>
             <div class="text-text flex align-center gap-4">
               <Button
-                text={`${updating ? "Enregistrement..." : `${isUpsertedItemNew ? "Créer" : "Modifier"}`}`}
                 onClick={upsertAttribute}
                 className={{ wrapper: "grow justify-center" }}
-              />{" "}
+              >{updating ? "Enregistrement..." : `${isUpsertedItemNew ? "Créer" : "Modifier"}`}</Button>
               {!isUpsertedItemNew &&
                 <IconTrash className={"text-error cursor-pointer"} onClick={deleteAttribute} />}
             </div>

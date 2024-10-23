@@ -110,11 +110,10 @@ export default function MediaPreview(
               <div className={"w-fit p-2 rounded bg-black text-text"}>
                 {media.name}
                 <Button
-                  text={"dl"}
                   onClick={() => {
                     globalThis.open(media.public_src);
                   }}
-                />
+                >dl</Button>
               </div>
             );
           } else {
@@ -122,11 +121,10 @@ export default function MediaPreview(
               <div className={"w-fit p-2 rounded bg-black text-text"}>
                 {media.name}
                 <Button
-                  text={"dl"}
                   onClick={() => {
                     globalThis.open(media.public_src);
                   }}
-                />
+                >dl</Button>
               </div>
             );
           }

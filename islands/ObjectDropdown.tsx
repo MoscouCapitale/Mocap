@@ -193,10 +193,9 @@ export default function ObjectDropdown({ table, currentItem, changeCurrentItem, 
             {renderMediaInputs(itemDetail, updateItemDetail)}
             <div class="text-text flex align-center gap-4">
               <Button
-                text={`${updating ? "Enregistrement..." : `${itemDetail.id ? "Modifier" : "Créer"}`}`}
                 onClick={upsertAttribute}
                 className={{ wrapper: "grow justify-center" }}
-              />{" "}
+              >{updating ? "Enregistrement..." : `${itemDetail.id ? "Modifier" : "Créer"}`}</Button>
               <IconTrash className={"text-error cursor-pointer"} onClick={deleteAttribute} />
             </div>
           </div>

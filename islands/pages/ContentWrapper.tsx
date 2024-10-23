@@ -120,9 +120,8 @@ export default function MCanva() {
           {!isPreview && hasPendingChanges && (
             <Button
               onClick={() => writeNodes()}
-              text={"Save bricks"}
               variant={"secondary"}
-            />
+            >Save bricks</Button>
           )}
           <button
             className={cn(

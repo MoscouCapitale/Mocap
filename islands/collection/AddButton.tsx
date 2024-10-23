@@ -13,12 +13,11 @@ export default function AddButton({position}: AddButtonProps) {
   return (
     <>
       <Button
-        text={`Ajouter un média`}
         onClick={() => {
           setOpenAddMediaInterface(true);
         }}
         className={{ wrapper: position || "absolute top-[calc(2.5rem+0.625rem)] right-10" }}
-      />
+      >Ajouter un média</Button>
       <InpagePopup isOpen={openAddMediaInterface} closePopup={() => setOpenAddMediaInterface(false)}>
         <UploadMediaPopup />
       </InpagePopup>      

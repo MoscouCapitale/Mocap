@@ -74,12 +74,11 @@ export default function Main() {
       <>
         {showSaveButton && (
           <Button
-            text={"Sauvegarder"}
             onClick={updateSettings}
             className={{
               wrapper: "absolute top-[calc(2.5rem+0.625rem)] right-[2.5rem]",
             }}
-          />
+          >Sauvegarder</Button>
         )}
         <form className="flex flex-col gap-14 justify-start">
           {/* Emails */}

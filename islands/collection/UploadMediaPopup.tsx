@@ -30,10 +30,9 @@ export default function UploadMediaPopup() {
       {mediaToUpload && (
         <div class="text-text flex justify-center align-center gap-4 w-full">
           <Button
-            text={`${updating ? "..." : "Téléverser"}`}
             onClick={uploadFileToCollection}
             className={{ wrapper: "min-w-[150px] justify-center" }}
-          />
+          >{updating ? "Téléversement..." : "Téléverser"}</Button>
           <IconTrash
             className={"text-error cursor-pointers"}
             onClick={() => setMediaToUpload(null)}

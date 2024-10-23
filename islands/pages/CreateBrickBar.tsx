@@ -136,24 +136,21 @@ export default function CreateBrickBar(
       </div>
       <div class="w-full gap-4 flex flex-col justify-center align-middle">
         <Button
-          text={mainButtonText()}
           onClick={() => saveBrick(true)}
           className={{ wrapper: "grow justify-center text-2xl" }}
-        />
+        >{mainButtonText()}</Button>
         <Button
           variant="secondary"
-          text={`${brickState === "modifying" ? "Modifier" : "Enregistrer"} la brique`}
           onClick={() => saveBrick()}
           className={{ wrapper: "grow justify-center" }}
-        />
+        >{brickState === "modifying" ? "Modifier" : "Enregistrer"} la brique</Button>
         {brickData && (
           <Button
             variant="danger"
-            text={`Supprimer la brique`}
             onClick={deleteBrick}
             className={{ wrapper: "grow justify-center" }}
             icon={<IconTrash size={20} color="#EA5959" />}
-          />
+          >Supprimer la brique</Button>
         )}
       </div>
       <InpagePopup
