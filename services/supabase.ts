@@ -1,10 +1,8 @@
-import { createClient } from "supabase";
+import { AuthError, createClient } from "supabase";
 import { getCookies, setCookie } from "$std/http/cookie.ts";
-import {
-  decodeBase64 as decode,
-  encodeBase64 as encode,
-} from "$std/encoding/base64.ts";
+import { decodeBase64 as decode, encodeBase64 as encode } from "$std/encoding/base64.ts";
 import { Database } from "@models/database.ts";
+import { User, UserMetadatas } from "@models/Authentication.ts";
 
 // TODO: find a way to avoid using the service key
 export const supabase = createClient<Database>(
@@ -56,8 +54,8 @@ export const supabaseSSR = (req: Request, res: Response) =>
   );
 
 export const getUserFromSession = async (request: Request): Promise<{
-  user: any;
-  error: any;
+  user: User | null;
+  error: AuthError | null;
 }> => {
   const cookies = getCookies(request.headers);
 
@@ -67,19 +65,13 @@ export const getUserFromSession = async (request: Request): Promise<{
     const { error, data } = await supabase.auth.getUser(access);
     if (error) {
       console.log("Error with getUserFromSession", error);
-      return { user: null, error: error.status };
+      return { user: null, error: error };
     }
-    if (data?.user?.id) {
-      const additionnal_infos = await supabase.from("Users").select().eq(
-        "id",
-        data.user.id,
-      );
-      return { user: additionnal_infos.data && { ...data.user, ...additionnal_infos.data[0] }, error: null };
-    }
-    return { user: data.user, error: null };
+    return { user: data.user as User, error: null };
   }
 
-  return { user: null, error: 500 };
+  // If no access, it means first connexion. Return nothing
+  return { user: null, error: null };
 };
 
 export const accessTokenExpired = (request: Request) => {
@@ -130,25 +122,19 @@ export const setAuthCookie = (
   });
 };
 
-export const updateAuthorizations = async (user: any) => {
-  const user_additional_infos = await supabase.from("Users").select().eq(
-    "id",
-    user.id,
-  );
-  if (!user_additional_infos.data || user_additional_infos.data.length === 0) return;
-  const user_infos = user_additional_infos.data[0];
-  const res = await updateUserMetadata(user.id, {
-    is_authorised: !user_infos.requested && user_infos.accepted,
-  });
-  return res;
-};
+export const updateUserMetadata = async (user_id: User["id"], metadata: UserMetadatas): Promise<boolean> => {
+  try {
+    const { data, error } = await supabase.auth.admin.getUserById(user_id);
 
-export const updateUserMetadata = async (user_id: string, metadata: any) => {
-  //TODO: replace any with custom type
-  const current_user: any = await supabase.auth.admin.getUserById(user_id);
-
-  const res = await supabase.auth.admin.updateUserById(user_id, {
-    user_metadata: { ...current_user.user_metadata, ...metadata },
-  });
-  return res;
+    if (!error) {
+      await supabase.auth.admin.updateUserById(user_id, {
+        user_metadata: { ...data.user.user_metadata, ...metadata },
+      });
+      return true;
+    }
+    throw new Error(error.message);
+  } catch (e) {
+    console.error("Error updating user metadata", e);
+    return false;
+  }
 };

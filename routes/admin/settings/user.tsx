@@ -4,10 +4,9 @@ import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
 import UserChangePassword from "@components/settings/UserChangePassword.tsx";
 import UserRevokeAccount from "@components/settings/UserRevokeAccount.tsx";
 
-// TODO: replace all of these user types with the correct one
-import { User as UserType } from "https://esm.sh/v116/@supabase/gotrue-js@2.23.0/dist/module/index.js";
+import { User } from "@models/Authentication.ts";
 
-export const handler: Handlers<UserType | null> = {
+export const handler: Handlers<User | null> = {
   async GET(req: Request, ctx: FreshContext) {
     let user = ctx.state.user;
     if (!user) {
@@ -26,7 +25,7 @@ export const handler: Handlers<UserType | null> = {
   },
 };
 
-export default function User({ data }: PageProps<any>) {
+export default function UserSettings({ data }: PageProps<any>) {
   const { user } = data;
   if (!user) return <div className={"text-text"} >Not logged in</div>;
   return (

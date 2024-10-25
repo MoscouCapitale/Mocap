@@ -1,9 +1,9 @@
-import { supabase as sup, updateAuthorizations } from "@services/supabase.ts";
+import { supabase as sup } from "@services/supabase.ts";
 import { FreshContext, Handlers, PageProps, RouteConfig } from "$fresh/server.ts";
 import RequestSingle from "@islands/Users/RequestSingle.tsx";
 
-import { User } from "https://esm.sh/v116/@supabase/gotrue-js@2.23.0/dist/module/index.js";
 import { RequestedUser, Role } from "@models/User.ts";
+import { User } from "@models/Authentication.ts";
 
 // export const config: RouteConfig = {
 //   skipInheritedLayouts: true,
@@ -28,7 +28,7 @@ export const handler: Handlers<User | null> = {
     const user: RequestedUser = await req.json();
     const res = await sup.from("Users").update({ requested: false, accepted: true }).eq("id", user.id);
     const res_role = await sup.auth.admin.updateUserById(user.id, { role: user.role });
-    updateAuthorizations(user);
+    // updateAuthorizations(user); // TODO: update authorizations 
     return new Response(res.error || res_role.error ? JSON.stringify({ request_update: res.error, role_update: res.error }) : "true");
   },
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
-import { User } from "https://esm.sh/v116/@supabase/gotrue-js@2.23.0/dist/module/index.js";
+import { User } from "@models/Authentication.ts";
 
-export default function RequestButton(props: { user: any; text: string; accept: boolean }) {
+export default function RequestButton(props: { user: User; text: string; accept: boolean }) {
   const { user, text, accept } = props;
 
   const [loading, setLoading] = useState(false);

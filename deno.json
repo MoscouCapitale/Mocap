@@ -48,6 +48,7 @@
     "@radix-ui/primitive": "https://esm.sh/*@radix-ui/primitive@1.0.1",
     "@radix-ui/number": "https://esm.sh/@radix-ui/number@1.0.1",
     "@radix-ui/react-arrow": "https://esm.sh/v132/*@radix-ui/react-arrow@1.0.3?alias=react:preact/compat,@types/react:preact/compat",
+    "@radix-ui/react-accordion": "https://esm.sh/v132/*@radix-ui/react-accordion@1.2.1?alias=react:preact/compat,@types/react:preact/compat",
     "@radix-ui/react-collapsible": "https://esm.sh/v132/*@radix-ui/react-collapsible@1.0.3?alias=react:preact/compat,@types/react:preact/compat",
     "@radix-ui/react-collection": "https://esm.sh/v132/*@radix-ui/react-collection@1.0.3?alias=react:preact/compat,@types/react:preact/compat",
     "@radix-ui/react-compose-refs": "https://esm.sh/v132/*@radix-ui/react-compose-refs@1.0.1?alias=react:preact/compat,@types/react:preact/compat",

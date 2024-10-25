@@ -4,6 +4,7 @@ import { VNode } from "preact";
 
 type ButtonProps = {
   children?: VNode | string | string[];
+  href?: string;
   onClick?: () => void;
   variant?: "primary" | "secondary" | "danger";
   className?: {
@@ -16,6 +17,7 @@ type ButtonProps = {
 };
 
 export default function Button({
+  href,
   onClick,
   children,
   variant = "primary",
@@ -38,7 +40,13 @@ export default function Button({
   });
 
   return (
-    <div className={cn(ButtonVariants({ variant }), className?.wrapper)} onClick={onClick}>
+    <div
+      className={cn(ButtonVariants({ variant }), className?.wrapper, disabled && "filter grayscale opacity-50")}
+      onClick={(e) => {
+        if (onClick) onClick();
+        if (href) window.location.href = href;
+      }}
+    >
       {icon}
       <button
         className={cn("text-text font-normal", className?.button)}

@@ -1,4 +1,4 @@
-import { User } from "https://esm.sh/v116/@supabase/gotrue-js@2.23.0/dist/module/index.js";
+import { User } from "@models/Authentication.ts";
 
 export default function UserChangePassword(user: User) {
   return (

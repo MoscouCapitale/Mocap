@@ -35,6 +35,8 @@ export interface FormField {
     onClickInput?: (el?: FormField["name"]) => void;
     customLabel?: string | JSX.Element;
   };
+  /** Additionnal style for the input. Only works with default input fields (exclude relation, file, select) */
+  sx?: string;
 }
 
 export interface FormFieldOptions {

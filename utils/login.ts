@@ -1,25 +1,26 @@
-function verifyEmailIntegrity(email: string): boolean {
+function verifyEmailIntegrity(email: string): string {
   const emailFormat = {
     minLength: 5,
     maxLength: 254,
     authorizedCharacters: /^[a-zA-Z0-9!#$%&'*+\-/=?^_`{|}~@.]*$/,
   };
+  const defaultReturnError = "Invalid email address";
 
-  if ((email.length < emailFormat.minLength) || email.length > emailFormat.maxLength) return false;
-  if (!emailFormat.authorizedCharacters.test(email)) return false;
+  if ((email.length < emailFormat.minLength) || email.length > emailFormat.maxLength) return defaultReturnError;
+  if (!emailFormat.authorizedCharacters.test(email)) return defaultReturnError;
 
   const emailParts = email.split("@");
-  if (emailParts.length !== 2) return false;
-  if (emailParts[0].length < 1 || emailParts[1].length < 1) return false;
+  if (emailParts.length !== 2) return defaultReturnError;
+  if (emailParts[0].length < 1 || emailParts[1].length < 1) return defaultReturnError;
 
-  return true;
+  return "";
 }
 
-function verifySamePassword(password: string, confirmPassword: string): boolean {
-  return password === confirmPassword;
+function verifySamePassword(password: string, confirmPassword: string): string {
+  return password === confirmPassword ? "" : "Passwords do not match";
 }
 
-function verifyPasswordIntegrity(password: string): boolean {
+function verifyPasswordIntegrity(password: string): string {
   const passwordFormat = {
     minLength: 10,
     hasCase: true,
@@ -28,12 +29,12 @@ function verifyPasswordIntegrity(password: string): boolean {
     authorizedCharacters: /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/,
   };
 
-  if (password.length < passwordFormat.minLength) return false;
-  if (passwordFormat.hasCase && (!/[A-Z]/.test(password) || !/[a-z]/.test(password))) return false;
-  if (passwordFormat.hasNumber && !/[0-9]/.test(password)) return false;
-  if (passwordFormat.hasSpecialCharacter && !passwordFormat.authorizedCharacters.test(password)) return false;
+  if (password.length < passwordFormat.minLength) return "Password must be at least 10 char.";
+  if (passwordFormat.hasCase && (!/[A-Z]/.test(password) || !/[a-z]/.test(password))) return "Password must contain at least one uppercase/lowercase";
+  if (passwordFormat.hasNumber && !/[0-9]/.test(password)) return "Password must contain at least one number";
+  if (passwordFormat.hasSpecialCharacter && !passwordFormat.authorizedCharacters.test(password)) return "Password must contain at least one special character";
 
-  return true;
+  return "";
 }
 
 export { verifyEmailIntegrity, verifySamePassword, verifyPasswordIntegrity };

@@ -23,14 +23,16 @@ export const handleErrorStatus = async (
 
   switch (status) {
     case 400:
-    case 422:
+      renderObj.error.message = "Les identifiants saisis sont incorrects.";
+      break;
+    case 422: // otp_disabled AuthApiError: Signups not allowed for otp : You cannot signin with email not saved
       renderObj.type = "signup";
       renderObj.error.message =
         "Cette adresse email n'est pas enregistrée, veuillez vous inscrire.";
       break;
     case 429:
       renderObj.error.message =
-        "Merci d'attendre 60 secondes avant de réessayer de vous connecter.";
+        "Merci d'attendre quelques secondes avant de réessayer.";
       break;
     case 500:
     default:

@@ -1,8 +1,8 @@
 import { baseInputStyle, FormField, FormFieldValue } from "@models/Form.ts";
 import { cn } from "@utils/cn.ts";
-import { IconInfoSquareRounded } from "@utils/icons.ts";
+import { IconEye, IconEyeClosed, IconInfoSquareRounded } from "@utils/icons.ts";
 import { VNode } from "preact";
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import Select from "@islands/UI/Forms/Select.tsx";
 import FileInput from "@islands/UI/Forms/FileInput/index.tsx";
 import PreviewImage from "@islands/UI/Forms/FileInput/PreviewImage.tsx";
@@ -40,6 +40,7 @@ const InputFromType = (
             error && "border-error",
             field.label && (field.type !== "checkbox") && "mt-2",
             error && !field.tooltipError && "mb-1",
+            field.sx,
           )}
           defaultValue={String(field.defaultValue ?? "")}
           type={field.type}
@@ -57,10 +58,12 @@ const InputFromType = (
                 return onChange(e.currentTarget.value);
             }
           }}
+          name={field.name}
           required={field.required}
           readOnly={field.readOnly}
           disabled={field.disabled}
           title={error && field.tooltipError ? error : undefined}
+          autoComplete={"on"}
         />
       );
     case "select":
@@ -113,6 +116,7 @@ type InputProps = {
 export default function Input({ field: initialField, onChange }: InputProps) {
   const [field, setField] = useState<FormField>(initialField);
   const [fieldError, setFieldError] = useState<string | null>(null);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const onValueChange = (value: FormFieldValue) => {
     if (field.validation || field.required) {
@@ -123,15 +127,16 @@ export default function Input({ field: initialField, onChange }: InputProps) {
         return onChange(value);
       }
       setFieldError(error);
+      onChange(null);
     } else onChange(value);
   };
 
   return (
-    <div>
+    <>
       <label className={"flex flex-col w-full"}>
         {/* Set the style as inline for checkboxes */}
-        {field.type === "checkbox"
-          ? (
+        {field.type === "checkbox" &&
+          (
             <div className={"w-full flex items-center gap-2 justify-between"}>
               {field.label}
               <InputFromType
@@ -140,8 +145,30 @@ export default function Input({ field: initialField, onChange }: InputProps) {
                 error={fieldError}
               />
             </div>
-          )
-          : (
+          )}
+        {field.type === "password" && (
+          <>
+            {field.label}
+            <div className={"w-full relative"}>
+              <InputFromType
+                field={{ ...field, type: isPasswordVisible ? "string" : field.type }}
+                onChange={onValueChange}
+                error={fieldError}
+              />
+              <div
+                className={cn("absolute top-0 bottom-0 right-0 -translate-x-2 flex items-center gap-2 cursor-pointer")}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsPasswordVisible(!isPasswordVisible);
+                }}
+              >
+                {isPasswordVisible ? <IconEye color={"#FFF"} /> : <IconEyeClosed color={"#FFF"} />}
+              </div>
+            </div>
+          </>
+        )}
+        {field.type !== "checkbox" && field.type !== "password" && (
+          (
             <>
               {field.label}
               <InputFromType
@@ -150,7 +177,8 @@ export default function Input({ field: initialField, onChange }: InputProps) {
                 error={fieldError}
               />
             </>
-          )}
+          )
+        )}
         {fieldError && !field.tooltipError &&
           (
             <div
@@ -163,6 +191,6 @@ export default function Input({ field: initialField, onChange }: InputProps) {
             </div>
           )}
       </label>
-    </div>
+    </>
   );
 }

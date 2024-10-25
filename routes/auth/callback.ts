@@ -1,6 +1,12 @@
 import { Handlers } from "$fresh/server.ts";
 import { setAuthCookie, supabase, supabaseSSR } from "@services/supabase.ts";
 
+/**
+ * Handle the callback from the OAuth provider
+ * 
+ * This page is only used on OTP sign in and sign up, to provide a PKCE flow callback.
+ * 
+ */
 export const handler: Handlers = {
   async GET(req, ctx) {
     const res = new Response();
@@ -9,6 +15,7 @@ export const handler: Handlers = {
     const code = url.searchParams.get("code");
     const redirectURL = url.searchParams.get("redirect");
 
+    // The error code is used by supabase to return errors using magic links
     const errorCode = url.searchParams.get("error_code");
 
     if (errorCode) {
@@ -40,8 +47,8 @@ export const handler: Handlers = {
 
       const session = data?.session;
       if (session?.access_token && session.refresh_token) {
-        const user = await sup.auth.getUser(session.access_token);
-        if (!user.error) {
+        const { error } = await sup.auth.getUser(session.access_token);
+        if (!error) {
           const resp = new Response("", {
             status: 303,
             headers: {
@@ -56,6 +63,11 @@ export const handler: Handlers = {
       }
     }
 
-    return ctx.render({});
+    return new Response("", {
+      status: 303,
+      headers: {
+        Location: `/auth`,
+      },
+    });
   },
 };
