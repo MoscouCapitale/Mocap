@@ -1,12 +1,61 @@
-import { RequestedUser, Role } from "@models/User.ts";
-
 import RequestButton from "@islands/Users/RequestButton.tsx";
-import { useState } from "preact/hooks";
+import { useMemo, useState } from "preact/hooks";
+import { User, UserRole, UserStatus } from "@models/Authentication.ts";
+import { FormField } from "@models/Form.ts";
+import Select from "@islands/UI/Forms/Select.tsx";
+import { Toaster } from "@components/UI/Toast/Toaster.tsx";
+import { toast } from "@hooks/toast.tsx";
 
-const ROLES: Role[] = ["anon", "authenticated", "mocap_admin", "supabase_admin"];
+export default function RequestSingle(user: User) {
+  const [currentUser, setCurrentUser] = useState<User | null>(user);
+  const [loading, setLoading] = useState(false);
 
-export default function RequestSingle(user: RequestedUser) {
-  const [currentUser, setCurrentUser] = useState<RequestedUser>(user);
+  const selectField: FormField = useMemo(() => ({
+    name: "role",
+    type: "select",
+    defaultValue: user.user_metadata.role ?? UserRole.USER,
+    options: [{
+      label: "user",
+      value: UserRole.USER,
+    }, {
+      label: "admin",
+      value: UserRole.ADMIN,
+    }, {
+      label: "superadmin",
+      value: UserRole.SADMIN,
+    }],
+  }), [user]);
+
+  const handleRequest = (accept: boolean) => {
+    setLoading(true);
+    fetch(`/api/users/manage/${user.id}/request`, {
+      method: "PUT",
+      body: JSON.stringify({ user: { role: currentUser?.role, status: accept ? UserStatus.ACTV : UserStatus.DECL } }),
+    }).then((res) => {
+      if (res.status === 200) {
+        setCurrentUser(null);
+        toast({
+          description: `L'utilisateur a bien été ${accept ? "accepté" : "refusé"}`,
+        });
+      } else {
+        toast({
+          title: "Erreur lors de la mise à jour de l'utilisateur",
+          description: res.status === 401
+            ? "Vous n'avez pas les droits pour effectuer cette action"
+            : "Erreur serveur, veuillez réessayer plus tard",
+        });
+      }
+    }).catch(
+      (e) => {
+        console.error("Error updating user role", e);
+        toast({
+          title: "Erreur lors de la mise à jour de l'utilisateur",
+          description: "Erreur serveur, veuillez réessayer plus tard",
+        });
+      },
+    );
+    setLoading(false);
+  };
 
   return (
     <>
@@ -19,28 +68,41 @@ export default function RequestSingle(user: RequestedUser) {
               </div>
               <div class="flex-col justify-center items-start gap-2 inline-flex">
                 <div class="justify-start items-center gap-2.5 inline-flex">
-                  <select
-                    class="bg-background rounded-[5px] px-2 py-[5px] text-text_grey text-base font-semibold"
-                    value={currentUser.role}
-                    onChange={(e) =>
-                      setCurrentUser({ ...currentUser, role: (e.target as HTMLSelectElement).value ? ((e.target as HTMLSelectElement).value as Role) : "anon" })
-                    }
-                  >
-                    {ROLES.map((role: Role) => {
-                      return <option value={role}>{role === "anon" ? "anon (default)" : role}</option>;
-                    })}
-                  </select>
+                  <Select
+                    error={null}
+                    field={selectField}
+                    onChange={(v) => setCurrentUser((p) => p ? { ...p, role: v } : null)}
+                    min={1}
+                  />
                 </div>
               </div>
               <div class="self-stretch justify-start items-center gap-[20px] flex">
-                <RequestButton user={currentUser} text={"Accepter"} accept={true} />
-                <RequestButton user={currentUser} text={"Refuser"} accept={false} />
+                <div
+                  class={`px-2.5 py-[5px] bg-success rounded-[5px] flex-col justify-center items-start gap-2 inline-flex`}
+                >
+                  <button onClick={() => handleRequest(true)} class={`text-text text-base font-semibold`}>
+                    {loading
+                      ? <div class="animate-spin rounded-full h-3 w-3 border-b-2 border-text_grey"></div>
+                      : "Accepter"}
+                  </button>
+                </div>
+
+                <div
+                  class={`px-2.5 py-[5px] bg-error rounded-[5px] flex-col justify-center items-start gap-2 inline-flex`}
+                >
+                  <button onClick={() => handleRequest(false)} class={`text-text text-base font-semibold`}>
+                    {loading
+                      ? <div class="animate-spin rounded-full h-3 w-3 border-b-2 border-text_grey"></div>
+                      : "Refuser"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
           {user.created_at && <div class="text-text_grey text-xs font-normal">{user.created_at.split("T")[0]}</div>}
         </div>
       )}
+      <Toaster />
     </>
   );
 }

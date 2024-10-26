@@ -51,7 +51,7 @@ export enum UserStatus {
   /** Blocked. When an admin blocked an active user's account. Can be reverted. */
   BLCK = "BLCK",
 
-  /** Banned. When an admin banned an active user's account. Can't be reverted. */
+  /** Banned. When an admin banned an active user's account. Can't be reverted. This status is not applicable to users. It only used to delete a user. */
   BANN = "BANN",
 }
 

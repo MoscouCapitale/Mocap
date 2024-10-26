@@ -1,54 +1,25 @@
-import { supabase as sup } from "@services/supabase.ts";
-import { FreshContext, Handlers, PageProps, RouteConfig } from "$fresh/server.ts";
+import { RouteContext } from "$fresh/server.ts";
 import RequestSingle from "@islands/Users/RequestSingle.tsx";
+import { supabase as supa } from "@services/supabase.ts";
 
-import { RequestedUser, Role } from "@models/User.ts";
-import { User } from "@models/Authentication.ts";
+import { User, UserStatus } from "@models/Authentication.ts";
 
-// export const config: RouteConfig = {
-//   skipInheritedLayouts: true,
-// };
+export default async function Requests(req: Request, ctx: RouteContext) {
+  const { data } = await supa.auth.admin.listUsers({
+    page: 1,
+    perPage: 100,
+  });
 
-export const handler: Handlers<User | null> = {
-  async GET(req: Request, ctx: FreshContext) {
-    const res = await sup.from("Users").select().eq("requested", true).eq("accepted", false);
-    let userRequests = res.data;
-
-    userRequests = await Promise.all(
-      userRequests.map(async (user: RequestedUser) => {
-        const userInfos = await sup.auth.admin.getUserById(user.id);
-        return { ...user, email: userInfos.data.user.email, created_at: userInfos.data.user.created_at, role: userInfos.data.user.role };
-      })
-    );
-
-    return ctx.render({ userRequests });
-  },
-
-  async POST(req, _ctx) {
-    const user: RequestedUser = await req.json();
-    const res = await sup.from("Users").update({ requested: false, accepted: true }).eq("id", user.id);
-    const res_role = await sup.auth.admin.updateUserById(user.id, { role: user.role });
-    // updateAuthorizations(user); // TODO: update authorizations 
-    return new Response(res.error || res_role.error ? JSON.stringify({ request_update: res.error, role_update: res.error }) : "true");
-  },
-
-  async PUT(req, _ctx) {
-    const user: RequestedUser = await req.json();
-    const res = await sup.from("Users").update({ requested: false, accepted: false }).eq("id", user.id);
-    return new Response(res.error ? JSON.stringify(res.error) : "true");
-  },
-};
-
-export default function Requests({ data }: PageProps<Record<string, RequestedUser[]>>) {
-  const { userRequests } = data;
+  const userRequests = (data.users as User[]).filter((user) =>
+    user.user_metadata.status === UserStatus.RQST &&
+    user.id !== (ctx.state.user as User).id
+  );
 
   return (
     <main className={"w-full min-h-full justify-center items-center gap-[150px] inline-flex"}>
-      {userRequests.length === 0 && <div class="text-text text-base font-bold">Aucune demande d'inscription</div>}
-      {userRequests.length > 0 &&
-        userRequests.map((user: RequestedUser) => {
-          return <RequestSingle {...user} />;
-        })}
+      {userRequests.length === 0
+        ? <div class="text-text text-base font-bold">Aucune demande d'inscription</div>
+        : userRequests.map((user: User) => <RequestSingle {...user} />)}
     </main>
   );
 }

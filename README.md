@@ -17,23 +17,23 @@ This will watch the project directory and restart as necessary.
 
 Tasks :
 - [ ] Authentication & User Management (OMG see https://github.com/denoland/fresh/blob/main/docs/latest/examples/authentication-with-supabase.md)
-  - [ ] ==Password Login
-  - [ ] One-page Magic Link Login
+  - [x] Password Login
+  - [x] One-page Magic Link Login
   - [ ] Magic Link email
   - [ ] Notifications on new user
     - [x] Find a notification service
     - [ ] ==Notify admin on new request
     - [x] Add notification badge on admin UI
   - [ ] Roles
-    - [ ] Role based access control
+    - [x] Role based access control
     - [ ] RLS
-    - [ ] Role management
+    - [x] Role management
   - [ ] ==Error management
     - [x] 429 too many request
-    - [ ] 403 token expired after too much time on app, and it does not renew itself (it should tho)
+    - [x] 403 token expired after too much time on app, and it does not renew itself (it should tho)
     - [ ] ? AuthRetryableFetchError if no internet connection, it returns to the login page
-    - [ ] 422 (Signups not allowed for otp) AuthApiError otp_disabled
-  - [ ] Middleware on api ??? 
+    - [x] 422 (Signups not allowed for otp) AuthApiError otp_disabled
+  - [x] Middleware on api ??? 
 - [ ] Collection
   - [ ] Bugs
   - [x] Supabase init

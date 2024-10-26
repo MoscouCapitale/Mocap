@@ -64,7 +64,7 @@ export const getUserFromSession = async (request: Request): Promise<{
   if (access) {
     const { error, data } = await supabase.auth.getUser(access);
     if (error) {
-      console.log("Error with getUserFromSession", error);
+      // Generaly, the error is because the token is expired
       return { user: null, error: error };
     }
     return { user: data.user as User, error: null };
@@ -122,19 +122,20 @@ export const setAuthCookie = (
   });
 };
 
-export const updateUserMetadata = async (user_id: User["id"], metadata: UserMetadatas): Promise<boolean> => {
+export const updateUserMetadata = async (user_id: User["id"], metadata: Partial<UserMetadatas>): Promise<User | null> => {
   try {
     const { data, error } = await supabase.auth.admin.getUserById(user_id);
 
     if (!error) {
-      await supabase.auth.admin.updateUserById(user_id, {
+      const { data: newUser } = await supabase.auth.admin.updateUserById(user_id, {
         user_metadata: { ...data.user.user_metadata, ...metadata },
       });
-      return true;
+      // @ts-ignore - return a user, or null if not found
+      return newUser.user as User ?? null;
     }
     throw new Error(error.message);
   } catch (e) {
     console.error("Error updating user metadata", e);
-    return false;
+    return null;
   }
 };
