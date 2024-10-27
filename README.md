@@ -28,10 +28,9 @@ Tasks :
     - [x] Role based access control
     - [ ] RLS
     - [x] Role management
-  - [ ] ==Error management
+  - [x] ==Error management
     - [x] 429 too many request
     - [x] 403 token expired after too much time on app, and it does not renew itself (it should tho)
-    - [ ] ? AuthRetryableFetchError if no internet connection, it returns to the login page
     - [x] 422 (Signups not allowed for otp) AuthApiError otp_disabled
   - [x] Middleware on api ??? 
 - [ ] Collection

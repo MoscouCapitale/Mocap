@@ -1,10 +1,9 @@
-import AuthForm from "@islands/AuthForm.tsx";
-import SimpleMessage from "@components/SimpleMessage.tsx";
 import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
+import AuthForm from "@islands/AuthForm.tsx";
 import { FormType } from "@models/Authentication.ts";
-import { verifyEmailIntegrity, verifyPasswordIntegrity, verifySamePassword } from "@utils/login.ts";
-import { getUserFromSession, supabaseSSR } from "@services/supabase.ts";
 import { handleSignInOTP, handleSignInPassword, handleSignUp } from "@services/authentication.ts";
+import { getUserFromSession, supabaseSSR } from "@services/supabase.ts";
+import { verifyEmailIntegrity } from "@utils/login.ts";
 
 export const handler: Handlers<FormType> = {
   // When accessing the /auth route
@@ -141,6 +140,13 @@ export default function AuthPage({ data }: PageProps<FormType>) {
   return (
     <>
       <AuthForm {...data} />
+
+      <a
+        className={"text-text_grey text-sm absolute bottom-2 right-2 transition-all hover:text-text"}
+        href="/auth/resetpassword"
+      >
+        Mot de passe oublié ?
+      </a>
     </>
   );
 }

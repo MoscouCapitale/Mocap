@@ -7,7 +7,7 @@ import { VNode } from "preact";
 const TOAST_LIMIT = 1
 const TOAST_REMOVE_DELAY = 40000
 
-type ToasterToast = ToastProps & {
+export type ToasterToast = ToastProps & {
   id: string
   title?: VNode | string
   description?: VNode | string
