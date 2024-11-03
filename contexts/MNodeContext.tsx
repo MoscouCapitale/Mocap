@@ -196,7 +196,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   useEffect(() => {
     let isMounted = true;
 
-    fetch(getBaseUrl() + "/api/node/getAll?force=true")
+    fetch("/api/node/getAll?force=true")
       .then((res) => {
         if (res) {
           return res.json();
@@ -221,7 +221,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   }, []);
 
   const refetchNodes = () => {
-    fetch(getBaseUrl() + "/api/node/getAll?force=true")
+    fetch("/api/node/getAll?force=true")
       .then((res) => {
         if (res) {
           return res.json();
