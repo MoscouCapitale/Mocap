@@ -1,22 +1,11 @@
 import ReactPlayer from "react-player";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "preact/hooks";
-import {
-  IconPlayerPauseFilled,
-  IconPlayerPlayFilled,
-  IconVolume,
-  IconVolume2,
-  IconVolume3,
-} from "@utils/icons.ts";
+import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
+import { IconPlayerPauseFilled, IconPlayerPlayFilled, IconVolume, IconVolume2, IconVolume3 } from "@utils/icons.ts";
 import { cn } from "@utils/cn.ts";
 import * as Slider from "@radix-ui/react-slider";
 import Loader from "@components/UI/Loader.tsx";
 import { MediaObjectFit } from "@models/Medias.ts";
+import Volume from "@islands/Video/Volume.tsx";
 
 type VideoProps = {
   src: string;
@@ -57,6 +46,8 @@ type AdditionnalConfig = {
   controlsTrigger?: "full" | "bottom";
   disableSomeControls?: AvailableControls[];
   loader?: boolean;
+  /** Adds an additionnal volume control button at the specified location. Only show if `disableControls` is set to true. */
+  volumeControl?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
 };
 
 type AvailableControls =
@@ -88,13 +79,7 @@ export default function Video(
   const [videoState, setVideoState] = useState<VideoControls>({
     isReady: false,
     isInit: false,
-    playing: disabled
-      ? false
-      : additionnalConfig?.delay
-      ? false
-      : additionnalConfig?.controlOnHover
-      ? false
-      : autoplay, // If disabled is true, then the video will not play, it will just be a "thumbnail"
+    playing: disabled ? false : additionnalConfig?.delay ? false : additionnalConfig?.controlOnHover ? false : autoplay, // If disabled is true, then the video will not play, it will just be a "thumbnail"
     muted: autoplay ?? muted, // If autoplay is true, then the video will be muted (Browsers ask for videos to be muted to autoplay)
     volume: 0.4,
     played: 0,
@@ -122,8 +107,7 @@ export default function Video(
     }
   }, [additionnalConfig?.delay]);
 
-  const onDuration = (duration: number) =>
-    setVideoState((p) => ({ ...p, duration }));
+  const onDuration = (duration: number) => setVideoState((p) => ({ ...p, duration }));
 
   const onProgress = ({ playedSeconds }: { playedSeconds: number }) => {
     setVideoState((p) => ({
@@ -144,23 +128,6 @@ export default function Video(
   const setTimeline = useCallback((time: number) => {
     if (playerRef?.current) playerRef.current.seekTo(time, "seconds");
   }, [videoState.duration]);
-
-  const VolumeIcon = useMemo(() => {
-    const props = {
-      className: "text-text cursor-pointer",
-      size: ICONS_SIZE,
-      onClick: () =>
-        setVideoState((p) => ({
-          ...p,
-          muted: !p.muted,
-        })),
-    };
-    if (videoState.muted || videoState.volume == 0) {
-      return <IconVolume3 {...props} />;
-    } else if (!videoState.muted && videoState.volume < 0.5) {
-      return <IconVolume2 {...props} />;
-    } else return <IconVolume {...props} />;
-  }, [videoState.muted, videoState.volume]);
 
   const canDisplayControl = useCallback((el: AvailableControls) => {
     return !(additionnalConfig?.disableSomeControls ?? []).includes(el);
@@ -212,9 +179,7 @@ export default function Video(
             ref={playerRef}
             className={cn(
               "pointer-events-none",
-              fit === "cover"
-                ? "[&>video]:object-cover"
-                : "[&>video]:object-contain", // Set the object-fit property of the video
+              fit === "cover" ? "[&>video]:object-cover" : "[&>video]:object-contain", // Set the object-fit property of the video
             )}
             controls={false}
             playing={videoState.playing}
@@ -235,9 +200,7 @@ export default function Video(
             <div
               className={cn(
                 "absolute w-full bottom-0 group/trgzone",
-                additionnalConfig?.controlsTrigger === "bottom"
-                  ? "h-10"
-                  : "h-full",
+                additionnalConfig?.controlsTrigger === "bottom" ? "h-10" : "h-full",
               )}
               // onMouseEnter={TriggerZoneHandler}
               // onMouseLeave={TriggerZoneHandler}
@@ -306,43 +269,34 @@ export default function Video(
                   )}
                 </div>
                 {/* Volume */}
-                <div className={"flex items-center gap-2 group"}>
-                  {canDisplayControl("volumeIcon") && VolumeIcon}
-                  {canDisplayControl("volumeBar") &&
-                    (
-                      <Slider.Root
-                        id={"volbar"}
-                        className={cn(
-                          "relative flex h-5 w-[100px] touch-none select-none items-center",
-                        )}
-                        defaultValue={[videoState.volume]}
-                        max={1}
-                        step={0.01}
-                        onValueChange={(volume: number) =>
-                          setVideoState((p) => ({
-                            ...p,
-                            volume,
-                            muted: volume === 0,
-                          }))}
-                      >
-                        <Slider.Track className="relative h-[3px] grow rounded-full bg-text_grey cursor-pointer">
-                          <Slider.Range
-                            className={cn(
-                              "absolute h-full rounded-full",
-                              videoState.muted ? "bg-text_grey" : "bg-text",
-                            )}
-                          />
-                        </Slider.Track>
-                        <Slider.Thumb
-                          className="block h-1 w-1 rounded-[10px] bg-text focus:outline-none cursor-pointer"
-                          aria-label="Volume"
-                        />
-                      </Slider.Root>
-                    )}
-                </div>
+                <Volume
+                  volume={videoState.volume}
+                  muted={videoState.muted}
+                  setVolume={(volume: number) => setVideoState((p) => ({ ...p, volume }))}
+                  setMuted={(muted: boolean) => setVideoState((p) => ({ ...p, muted }))}
+                  disabledIcon={!canDisplayControl("volumeIcon")}
+                  disabledSlider={!canDisplayControl("volumeBar")}
+                  position={additionnalConfig?.volumeControl}
+                />
               </div>
             </div>
           )}
+
+          {/* Absoluite independant Volume control  */}
+          {disableControls && additionnalConfig?.volumeControl &&
+            (
+              <Volume
+                volume={videoState.volume}
+                muted={videoState.muted}
+                setVolume={(volume: number) => setVideoState((p) => ({ ...p, volume }))}
+                setMuted={(muted: boolean) => setVideoState((p) => ({ ...p, muted }))}
+                disabledIcon={!canDisplayControl("volumeIcon")}
+                disabledSlider={!canDisplayControl("volumeBar")}
+                position={additionnalConfig.volumeControl}
+                variant="onhover"
+                orientation="vertical"
+              />
+            )}
         </>
       )}
     </div>
