@@ -1,0 +1,33 @@
+:root {
+    /* Color of the border */
+    --backdrop: hsla(0, 0%, 30%, 0.12);
+    /* Width of the border */
+    --border-size: 2px;
+    /* Size of the spotlight element, which is the circle of light in the card */
+    --spotlight-size: 200px;
+
+    --hover-color: hsl(0, 0%, 30%);
+}
+
+/* This is the CSS for the card glow effect. You can change the colors and sizes of the glow effect by modifying the variables in the :root selector. */
+[data-hover-card] {
+    --radial-x: calc(var(--mouse-x, 0) * 1px - var(--offset-x, 0px));
+    --radial-y: calc(var(--mouse-y, 0) * 1px - calc(var(--offset-y, 0px)));
+
+    /* Here is the CSS for the card glow effect
+    Change the colors and percentage to change how much color for each gradient color */
+    background-image: radial-gradient(
+        var(--spotlight-size) var(--spotlight-size) at var(--radial-x, 0) var(--radial-y, 0),
+        white 0%,
+        white 15%,
+        color-mix(in srgb, var(--hover-color), transparent 50%) 50%,
+        transparent
+    );
+    background-color: var(--backdrop, transparent);
+    background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
+    background-position: 50% 50%;
+    background-attachment: fixed;
+    border: var(--border-size) solid var(--backdrop);
+    position: relative;
+    touch-action: none;
+}

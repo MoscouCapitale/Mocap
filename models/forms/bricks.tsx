@@ -1,17 +1,10 @@
+import { LabeledToolTip } from "@islands/UI/Tooltip.tsx";
+import { Album, Artist, HeroSection, Platform, PlatformLink, Single, Text, Track } from "@models/Bricks.ts";
 import { AvailableFormRelation, FormField, ObjFormField } from "@models/Form.ts";
 import {
-  Audio,
-  Image,
-  Media,
   MediaControls,
-  MediaCTA,
-  MediaObjectFit,
-  MediaType,
-  Misc,
-  Video,
+  MediaCTA
 } from "@models/Medias.ts";
-import { Album, Artist, HeroSection, Platform, PlatformLink, Single, Text, Track } from "@models/Bricks.ts";
-import { LabeledToolTip, Tooltip } from "@islands/UI/Tooltip.tsx";
 
 export type AllMocapObjectsTypes =
   | "HeroSection"
@@ -60,7 +53,7 @@ export const getObjectFormFromType = (
 };
 
 const DefaultBricksFormValues: ObjFormField<
-  HeroSection | Single | Album | Track | Artist | Platform
+  HeroSection | Single | Album | Track | Artist | Platform | Text
 >[] = [
   {
     name: "name",
@@ -256,15 +249,30 @@ const AlbumFormFields: ObjFormField<Album>[] = [
 ];
 
 const TextFormFields: ObjFormField<Text>[] = [
+  ...DefaultBricksFormValues,
   {
     name: "text",
-    type: "string",
-    label: "Texte",
+    type: "markdown",
+    label: (
+      <LabeledToolTip
+        label="Texte"
+        text="Texte de la brique. Supporte la mise en forme en markdown."
+      />
+    ),
   },
   {
-    name: "special",
-    type: "string",
-    label: "Spécial",
+    name: "media",
+    type: "file",
+    label: (
+      <LabeledToolTip
+        label="Image de fond"
+        text="Une image qui sera affichée en arrière plan du texte. Elle sera assombrie et floutée pour mettre en avant le texte."
+      />
+    ),
+    inputConfig: {
+      onClickInput: () => {},
+      customLabel: "Parcourir la médiathèque",
+    },
   },
 ];
 

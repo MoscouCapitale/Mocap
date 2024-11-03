@@ -7,7 +7,7 @@ import {
   Video as VideoType,
 } from "@models/Medias.ts";
 import Button from "@islands/Button.tsx";
-import Video from "@islands/Video.tsx";
+import Video from "@islands/Video/index.tsx";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import { cn } from "@utils/cn.ts";
 

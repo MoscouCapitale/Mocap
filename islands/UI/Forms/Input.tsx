@@ -102,6 +102,27 @@ const InputFromType = (
     case "relation":
       // Because the Select component always returns an array, we need to 'parse' the value to match the relation type (single or multiple)
       return <RelationInput field={field} onChange={(e) => onChange(field.relation?.multiple ? e : (e[0] ?? null))} />;
+    case "markdown":
+      // For now, markdown will just be a textarea (I do not think a markdown input is really needed)
+      return <textarea
+        className={cn(
+          baseInputStyle,
+          error && "border-error",
+          field.label && "mt-2",
+          error && !field.tooltipError && "mb-1",
+          field.type === "markdown" && "h-40",
+          field.sx,
+        )}
+        defaultValue={String(field.defaultValue ?? "")}
+        placeholder={field.placeholder ?? ""}
+        onChange={(e) => onChange(e.currentTarget.value)}
+        name={field.name}
+        required={field.required}
+        readOnly={field.readOnly}
+        disabled={field.disabled}
+        title={error && field.tooltipError ? error : undefined}
+        autoComplete={"on"}
+      ></textarea>;
     case "NI":
     default:
       return defaultField;

@@ -5,8 +5,18 @@ import { IconChevronDown } from "@utils/icons.ts";
 import { VNode } from "preact";
 import { useCallback, useState } from "preact/compat";
 
+interface CustomSelectOption extends FormFieldOptions {
+  onMouseEnter?: (e: MouseEvent, id: number | string) => void;
+  onMouseLeave?: (e: MouseEvent, id: number | string) => void;
+}
+[];
+
+export interface SelectField extends FormField {
+  options: CustomSelectOption[];
+}
+
 type SelectProps = {
-  field: FormField;
+  field: FormField | SelectField;
   multiSelect?: boolean;
   // defaultValues?: boolean;
   /** Main on change to bubble up the selected element */
@@ -102,12 +112,20 @@ export default function Select(
           sideOffset={5}
           align={"start"}
         >
-          {field.options?.map(({ value, label }, index) => (
+          {field.options?.map(({ value, label, ...rest }, index) => (
             <DropdownMenu.Item
               key={index}
               onClick={() => selectItem(value)}
               // Keep the menu open when click on item
               onSelect={(e: Event) => multiSelect && e.preventDefault()}
+              onMouseEnter={(e: MouseEvent) => {
+                const onMouseEnter = (rest as CustomSelectOption).onMouseEnter;
+                if (onMouseEnter) onMouseEnter(e, value);
+              }}
+              onMouseLeave={(e: MouseEvent) => {
+                const onMouseLeave = (rest as CustomSelectOption).onMouseLeave;
+                if (onMouseLeave) onMouseLeave(e, value);
+              }}
               className={cn(
                 "inline-flex align-center justify-start px-4 py-2 text-sm text-text bg-black bg-opacity-0 select-none",
                 "hover:outline-none",

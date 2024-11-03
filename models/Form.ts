@@ -56,6 +56,7 @@ export type FormFieldType =
   | "email"
   | "password"
   | "relation"
+  | "markdown"
   /** The NI type is for Not Implemented */
   | "NI";
 

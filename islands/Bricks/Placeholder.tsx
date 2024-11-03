@@ -1,6 +1,6 @@
 import { availBricks, BricksType } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
-import Video from "@islands/Video.tsx";
+import Video from "@islands/Video/index.tsx";
 
 type PlaceholderProps = {
   type: BricksType;
