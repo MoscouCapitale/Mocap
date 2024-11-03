@@ -231,3 +231,8 @@
 .settings-table td:first-child {
   padding-right: 3rem;
 }
+
+/** Disable scrollbars */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

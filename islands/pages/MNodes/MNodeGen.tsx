@@ -1,38 +1,23 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { useGSAP } from "@gsap/react";
-import useRenderCount from "@hooks/useRenderCount.ts";
-import {
-  CANVA_GUTTER,
-  MNode,
-  TRASH_DEADZONE_MULTIPLIER,
-} from "@models/Canva.ts";
-import { computed, effect, signal } from "@preact/signals-core";
+import { CANVA_GUTTER, MNode } from "@models/Canva.ts";
+import { signal } from "@preact/signals-core";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
-import {
-  Ref,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "preact/hooks";
+import { Ref, useCallback, useEffect, useLayoutEffect, useState } from "preact/hooks";
 
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 
 import { getBrickFromCanvaNode } from "@utils/bricks.tsx";
+import { cn } from "@utils/cn.ts";
 import { IconHandGrab, IconResize, IconTrash } from "@utils/icons.ts";
 import { createRef } from "https://esm.sh/v128/preact@10.19.6/src/index.js";
-import { cn } from "@utils/cn.ts";
 
 type MNodeGenProps = {
   nodeProp: MNode;
 };
 
 export default function MNodeGen({ nodeProp }: MNodeGenProps) {
-  const renderCount = useRenderCount();
   const {
     MCNodes,
     deleteNode,
@@ -69,9 +54,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
 
   /** FIXME: This is a workaround to make the getFreeSpace work, but for now it the pos with one "frame" of
    * delay, so it checks the previopus pos of each node, instead of the current one */
-  const useIsomorphicLayoutEffect = (typeof window !== "undefined")
-    ? useLayoutEffect
-    : useEffect;
+  const useIsomorphicLayoutEffect = (typeof window !== "undefined") ? useLayoutEffect : useEffect;
   useIsomorphicLayoutEffect(() => {
     const ctx = gsap.context(() => {
       if (
@@ -148,9 +131,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
                           key={`${size.width}x${size.height}`}
                           className={cn(
                             "text-text py-1 px-1 bg-text bg-opacity-0 hover:bg-opacity-10 w-full cursor-pointer text-left",
-                            isSelected
-                              ? "underline font-semibold"
-                              : "font-normal",
+                            isSelected ? "underline font-semibold" : "font-normal",
                           )}
                           onClick={() => {
                             if (!isSelected) {
@@ -202,15 +183,6 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
 
       {/* Actual node content */}
       {getBrickFromCanvaNode(node, { isMovable: !isPreview, disableAnimations: true })}
-
-      {/* debug */}
-      {!isPreview && (
-        <div className={"absolute bottom-0 left-0 bg-black text-white"}>
-          <p>{renderCount}</p>
-          <p>id: {node.id.slice(0, 5)}</p>
-          <p>x: {node.x}, y: {node.y}</p>
-        </div>
-      )}
     </foreignObject>
   );
 }

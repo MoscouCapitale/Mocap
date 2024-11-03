@@ -15,7 +15,6 @@ import {
 } from "@utils/icons.ts";
 import { cn } from "@utils/cn.ts";
 
-//TODO: use Fresh Partials to render all admin pages
 export default function Navbar(path: { path: string }) {
   const [isExpanded, setIsExpanded] = useState<boolean>(
     getAppStorage()?.navbarExpanded || false,
@@ -36,12 +35,12 @@ export default function Navbar(path: { path: string }) {
       label: "Collection",
       icon: IconPhotoPlus,
     },
-    {
-      name: "stats",
-      path: "/admin/stats",
-      label: "Stats",
-      icon: IconChartDonut,
-    },
+    // {
+    //   name: "stats",
+    //   path: "/admin/stats",
+    //   label: "Stats",
+    //   icon: IconChartDonut,
+    // },
     {
       name: "users",
       path: "/admin/users",

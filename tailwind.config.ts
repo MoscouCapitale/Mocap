@@ -1,7 +1,7 @@
 import { type Config } from "tailwindcss";
 // tailwindcss-animate
 import * as twAnimate from "tailwindcss-animate";
-import * as twScrollbar from "tailwind-scrollbar";
+import type { PluginAPI } from "tailwindcss/types/config";
 import plugin from "tailwindcss/plugin";
 
 export default {
@@ -99,16 +99,23 @@ export default {
           from: { opacity: "0", transform: "translateY(10px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        "height-collapse": {
+          from: { maxHeight: "1000px", opacity: "1" },
+          to: { maxHeight: "0", opacity: "0" },
+        },
+        "height-expand": {
+          from: { maxHeight: "0", opacity: "0" },
+          to: { maxHeight: "1000px", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "contextualdots-bounce":
-          "contextualdots-bounce 0.5s ease-in-out infinite alternate",
-        "contextualdots-bounce-delayed":
-          "contextualdots-bounce 0.5s ease-in-out infinite alternate 0.2s",
-        "tooltip-slideAndFade":
-          "tooltip-slideAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "contextualdots-bounce": "contextualdots-bounce 0.5s ease-in-out infinite alternate",
+        "contextualdots-bounce-delayed": "contextualdots-bounce 0.5s ease-in-out infinite alternate 0.2s",
+        "tooltip-slideAndFade": "tooltip-slideAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "height-collapse": "height-collapse 0.4s ease-out forwards",
+        "height-expand": "height-expand 0.4s ease-out forwards",
       },
       outline: {
         inputerror: ["2px solid #EA5959", "2px"],
@@ -136,7 +143,7 @@ export default {
   },
   plugins: [
     twAnimate,
-    function ({ addUtilities }) {
+    function ({ addUtilities }: any) {
       const newUtilities = {
         ".pos-center": {
           top: "50%",
@@ -151,15 +158,17 @@ export default {
 
       addUtilities(newUtilities, ["responsive", "hover"]);
     },
-    plugin(function ({ matchUtilities, theme }) {
-      matchUtilities(
-        {
-          "animate-delay": (value) => ({
-            animationDelay: value,
-          }),
-        },
-        { values: theme("transitionDelay") },
-      );
-    }),
+    plugin(
+      function ({ matchUtilities, theme }: { matchUtilities: PluginAPI["matchUtilities"]; theme: PluginAPI["theme"] }) {
+        matchUtilities(
+          {
+            "animate-delay": (value) => ({
+              animationDelay: value,
+            }),
+          },
+          { values: theme("transitionDelay") },
+        );
+      },
+    ),
   ],
 } satisfies Config;
