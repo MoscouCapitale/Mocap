@@ -38,7 +38,7 @@ export interface Album extends Brick {
 
 export interface Text extends Brick {
   text: string;
-  special: string;
+  media: Image | Video | null;
 }
 
 export type Track = {
@@ -181,7 +181,6 @@ export function createDefaultBrick(
       return {
         name: "",
         text: "",
-        special: "",
       } as Text;
     case BricksType.Platform_Link:
       return {

@@ -35,7 +35,6 @@
     "tailwindcss/": "npm:/tailwindcss@3.3.5/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.3.5/plugin.js",
     "tailwindcss-animate": "npm:tailwindcss-animate",
-    "tailwind-scrollbar": "npm:tailwind-scrollbar@3.1.0",
     "class-variance-authority": "https://esm.sh/class-variance-authority@0.7.0",
     "clsx": "https://esm.sh/clsx@2.0.0",
     "tailwind-merge": "https://esm.sh/tailwind-merge@1.14.0",
@@ -43,6 +42,7 @@
     "@babel/runtime/helpers/esm/extends": "https://esm.sh/@babel/runtime@7.23.1/helpers/esm/extends",
     "lodash": "https://esm.sh/lodash@4.17.21",
     "react-player": "https://esm.sh/react-player@2.16.0?alias=react:preact/compat,@types/react:preact/compat",
+    "react-markdown": "https://esm.sh/react-markdown@9.0.1?alias=react:preact/compat,@types/react:preact/compat",
 
     "@radix-ui/react-toast": "https://esm.sh/*@radix-ui/react-toast@1.1.5?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
     "@radix-ui/primitive": "https://esm.sh/*@radix-ui/primitive@1.0.1",
