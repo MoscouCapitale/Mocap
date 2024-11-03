@@ -72,17 +72,18 @@ export const handler: Handlers<FormType> = {
 
     const res = new Response();
 
-    setTimeout(async () => {
-      const render = await ctx.render({
-        type: "default",
-        additional_data: {
-          email: formData.email,
-        },
-      });
-      return new Response(render.body, {
-        headers: res.headers,
-      });
-    }, 5000);
+    // FIXME: What is this ???
+    // setTimeout(async () => {
+    //   const render = await ctx.render({
+    //     type: "default",
+    //     additional_data: {
+    //       email: formData.email,
+    //     },
+    //   });
+    //   return new Response(render.body, {
+    //     headers: res.headers,
+    //   });
+    // }, 5000);
 
     if (!formData.email || verifyEmailIntegrity(formData.email) !== "") {
       const render = await ctx.render({ type: "default", error: "Invalid email" });
