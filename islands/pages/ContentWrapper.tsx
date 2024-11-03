@@ -5,61 +5,62 @@ import { effect, signal } from "@preact/signals-core";
 import { cn } from "@utils/cn.ts";
 import { IconTrash } from "@utils/icons.ts";
 import { createRef } from "preact";
-import { Ref, useEffect, useRef, useCallback } from "preact/hooks";
+import { Ref, useCallback, useEffect, useRef } from "preact/hooks";
 import Button from "@islands/Button.tsx";
 import _ from "lodash";
+import { CANVA_GUTTER } from "@models/Canva.ts";
 
 function MCFrameEvents(frame: SVGElement, initialViewBox: MCViewBox, setViewBox: (viewBox: MCViewBox) => void) {
-  if (!frame) return
+  if (!frame) return;
 
-  let viewBox = initialViewBox
-  frame.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`)
+  let viewBox = initialViewBox;
+  frame.setAttribute("viewBox", `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
   let isDragging = false;
-  const zoomFactor = 1.1
+  const zoomFactor = 1.1;
 
   function onMouseDown(e: MouseEvent) {
-    if (!isDragging) isDragging = true
+    if (!isDragging) isDragging = true;
   }
 
   function onMouseUp(e: MouseEvent) {
-    if (isDragging) isDragging = false
+    if (isDragging) isDragging = false;
   }
 
   function onMouseMove(e: MouseEvent) {
-    if (!isDragging) return
+    if (!isDragging) return;
     viewBox = {
       ...viewBox,
       x: viewBox.x - e.movementX,
       y: viewBox.y - e.movementY,
-    }
-    frame.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`)
-    setViewBox(viewBox)
+    };
+    frame.setAttribute("viewBox", `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+    setViewBox(viewBox);
   }
 
   function onMouseWheel(e: WheelEvent) {
     if (e.ctrlKey) {
-      e.preventDefault()
+      e.preventDefault();
       viewBox = {
         ...viewBox,
         width: e.deltaY >= 0 ? viewBox.width * zoomFactor : viewBox.width / zoomFactor,
         height: e.deltaY >= 0 ? viewBox.height * zoomFactor : viewBox.height / zoomFactor,
-      }
-      frame.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`)
-      setViewBox(viewBox)
+      };
+      frame.setAttribute("viewBox", `${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`);
+      setViewBox(viewBox);
     }
   }
 
-  frame.addEventListener('mousedown', onMouseDown)
-  frame.addEventListener('mouseup', onMouseUp)
-  frame.addEventListener('mousemove', onMouseMove)
-  frame.addEventListener('wheel', onMouseWheel)
+  frame.addEventListener("mousedown", onMouseDown);
+  frame.addEventListener("mouseup", onMouseUp);
+  frame.addEventListener("mousemove", onMouseMove);
+  frame.addEventListener("wheel", onMouseWheel);
 
   return () => {
-    frame.removeEventListener('mousedown', onMouseDown)
-    frame.removeEventListener('mouseup', onMouseUp)
-    frame.removeEventListener('mousemove', onMouseMove)
-    frame.removeEventListener('wheel', onMouseWheel)
-  }
+    frame.removeEventListener("mousedown", onMouseDown);
+    frame.removeEventListener("mouseup", onMouseUp);
+    frame.removeEventListener("mousemove", onMouseMove);
+    frame.removeEventListener("wheel", onMouseWheel);
+  };
 }
 
 export default function MCanva() {
@@ -73,23 +74,23 @@ export default function MCanva() {
     hasPendingChanges,
     writeNodes,
     autoSaved,
-    setPreview
+    setPreview,
   } = useMNodeContext();
-  
+
   const throttledSetViewBox = useCallback(
     // @ts-expect-error - lodash types are not correct
     _.throttle((viewBox: MCViewBox) => {
       setViewBox(viewBox);
     }, 500),
-    []
+    [],
   );
 
   /* All hotkeys and mouse logic are in native event listener to avoid useless re-renders of states */
   useEffect(() => {
     if (MCFrame.current && viewBox) {
-      MCFrameEvents(MCFrame.current, viewBox, throttledSetViewBox)
+      MCFrameEvents(MCFrame.current, viewBox, throttledSetViewBox);
     }
-  }, [MCFrame.current])
+  }, [MCFrame.current]);
 
   useEffect(() => {
     if (autoSaved) {
@@ -121,14 +122,14 @@ export default function MCanva() {
             <Button
               onClick={() => writeNodes()}
               variant={"secondary"}
-            >Save bricks</Button>
+            >
+              Save bricks
+            </Button>
           )}
           <button
             className={cn(
               "flex p-[2px] align-middle h-[30px] w-[60px] cursor-pointer rounded-full border-[1px] border-solid transition",
-              isPreview
-                ? "justify-end bg-text border-transparent"
-                : "justify-start bg-black border-text",
+              isPreview ? "justify-end bg-text border-transparent" : "justify-start bg-black border-text",
             )}
             onClick={() => setPreview(!isPreview)}
           >
@@ -144,7 +145,22 @@ export default function MCanva() {
         <svg
           ref={MCFrame}
           className={"relative w-full h-full grow rounded-3xl border border-text_grey"}
+          style={{ '--pattern-color': '#FFFFFF30' }}
         >
+          {/* Define a dotted background pattern, to display the grid */}
+          <defs>
+            <pattern
+              id="pattern-circles"
+              x="10"
+              y="10"
+              width={CANVA_GUTTER}
+              height={CANVA_GUTTER}
+              patternUnits="userSpaceOnUse"
+            >
+              <circle cx="10" cy="10" r="1" fill="var(--pattern-color)" />
+            </pattern>
+          </defs>
+          <rect x="-99999" y="-99999" width={99999 * 2} height={99999 * 2} fill="url(#pattern-circles)" />
           {MCNodes.length &&
             MCNodes.map((node) => <MNodeGen nodeProp={node} />)}
         </svg>
