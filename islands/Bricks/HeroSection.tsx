@@ -1,14 +1,7 @@
 import { HeroSection as HeroSectionType } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
-import {
-  Ref,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "preact/hooks";
-import Video from "@islands/Video.tsx";
+import { Ref, useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
+import Video from "@islands/Video/index.tsx";
 import { IconArrowUpRight } from "@utils/icons.ts";
 
 import gsap from "gsap";
@@ -53,6 +46,7 @@ export default function HeroSection(
               delay: asMainHeroSection ? 1200 : undefined,
               controlOnHover: true,
               disablePauseOnHover: asMainHeroSection,
+              volumeControl: "bottom-right",
             }}
             loopVideo
             disableControls
@@ -63,7 +57,7 @@ export default function HeroSection(
         return (
           <img
             className={cn(
-              "absolute group-hover/main:brightness-75 object-cover w-[calc(100%-2px)] h-[calc(100%-2px)]",
+              "absolute group-hover/main:brightness-75 object-cover w-full h-full",
               asMainHeroSection ? "rounded-none" : "rounded-[20px]",
             )}
             src={content.media?.public_src}
@@ -110,6 +104,7 @@ export default function HeroSection(
             end: animateConfig.y - ANIMATION_Y_DEADZONE,
             scrub: true,
             onUpdate: onAnimationProgress,
+            invalidateOnRefresh: true,
           },
         });
         break;
@@ -120,7 +115,7 @@ export default function HeroSection(
     return () => {
       tween.scrollTrigger.kill();
     };
-  }, []);
+  }, [animateConfig]);
 
   return (
     <div
@@ -129,13 +124,16 @@ export default function HeroSection(
         "group/main w-full h-full overflow-y-auto",
         asMainHeroSection ? "rounded-none" : "rounded-[20px]",
       )}
+      data-hover-card={!asMainHeroSection}
+      style={animateConfig && {
+        "--offset-x": `${animateConfig.x}px`,
+        "--offset-y": `${animateConfig.y}px`,
+      }}
     >
       <div
         className={cn(
-          "w-full h-full opacity-70 group-hover/main:opacity-50 transition-opacity ease-in-out relative",
-          asMainHeroSection
-            ? mainSectionTransitions
-            : `group-hover/main:opacity-30`,
+          "w-full h-full brightness-75 group-hover/main:brightness-[0.4] transition-all ease-in-out relative",
+          asMainHeroSection ? mainSectionTransitions : ``,
         )}
       >
         {asMainHeroSection &&
@@ -146,6 +144,7 @@ export default function HeroSection(
               className={cn(
                 "absolute inset-0 w-full h-full object-cover z-20",
                 "group-hover/main:opacity-80 opacity-0 transition-opacity ease-in-out",
+                "pointer-events-none",
                 mainSectionTransitions,
               )}
             />
@@ -178,9 +177,7 @@ export default function HeroSection(
           className={cn(
             "invisible group-hover/title:visible opacity-0 group-hover/title:opacity-100 cursor-pointer absolute left-full bottom-0 text-text_grey hover:text-text",
             " translate-x-0 translate-y-0 group-hover/title:translate-x-[10%] group-hover/title:-translate-y-[10%]", // Special effect on hover
-            asMainHeroSection
-              ? "w-[clamp(1rem,10vw,4rem)] h-[clamp(1rem,10vw,4rem)]"
-              : "w-8 h-8",
+            asMainHeroSection ? "w-[clamp(1rem,10vw,4rem)] h-[clamp(1rem,10vw,4rem)]" : "w-8 h-8",
           )}
           style={{ // Only delay the translation
             transition:

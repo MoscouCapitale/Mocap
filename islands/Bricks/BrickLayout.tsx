@@ -1,17 +1,8 @@
-import Node from "@islands/Bricks/Node.tsx";
-import { MNode } from "@models/Canva.ts";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "preact/hooks";
-import { VNode } from "preact";
-import { getBrickFromCanvaNode } from "@utils/bricks.tsx";
-import { cn } from "@utils/cn.ts";
-import _ from "lodash";
 import { BricksType } from "@models/Bricks.ts";
+import { MNode } from "@models/Canva.ts";
+import { getBrickFromCanvaNode } from "@utils/bricks.tsx";
+import _ from "lodash";
+import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 
 type BrickLayoutProps = {
   nodes: MNode[];
@@ -26,6 +17,15 @@ type LayoutCanvaSize = {
 
 const CONTENT_MARGIN = 80;
 
+const followPointer = (e: PointerEvent) => {
+  // Because the bricks are layed (on the x axis) from the 0, the x mouse pos is correct
+  const x = (e.x).toFixed(3);
+  // But the y axis is not, so we have to add the current scroll position to the y mouse pos minus the height of the bricks from the height (100vh) of the window
+  const y = (e.y + (globalThis.window.scrollY - (globalThis.window.innerHeight + 80))).toFixed(3)
+  globalThis.document.documentElement.style.setProperty("--mouse-x", x);
+  globalThis.document.documentElement.style.setProperty("--mouse-y", y);
+};
+
 export default function BrickLayout({ nodes }: BrickLayoutProps) {
   useEffect(() => console.log(nodes), [nodes]);
 
@@ -34,6 +34,13 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
     { x: number; y: number } | null
   >();
 
+  /** Calculate the size of the canva
+   *
+   * It takes all the nodes, and calculate the size of the "rectangle" that contains all the nodes,
+   *  using the x and y coordinates of the nodes (excluding the hero section(s))
+   *
+   * @returns {LayoutCanvaSize} The size of the canva
+   */
   const canvaSize: LayoutCanvaSize = useMemo(() => {
     const nodesCanvaSize = {
       x1: Infinity,
@@ -42,6 +49,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
       y2: -Infinity,
     };
     nodes.forEach((node) => {
+      if (node.type === BricksType.HeroSection) return;
       if (node.x <= nodesCanvaSize.x1) nodesCanvaSize.x1 = node.x;
       if (node.x + node.width >= nodesCanvaSize.x2) {
         nodesCanvaSize.x2 = node.x + node.width;
@@ -54,23 +62,35 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
     return nodesCanvaSize;
   }, []);
 
-  useEffect(() => console.log(canvaSize), [canvaSize]);
-
+  /** Get the hero section node
+   *
+   * Get the hero section node from the nodes, and create the brick from it.
+   * It calculate the position of the hero section to display it at the top of the canva (
+   *  when animated on scroll).
+   */
   const HeroSection = useMemo(() => {
     const heroNode = nodes.find((n) => n.type === BricksType.HeroSection);
     if (!heroNode) return null;
 
+    /** Configuration for the gsap animation, that tells where is the end position of the hero section */
+    const animateConfig = {
+      x: heroNode.x + (heroSectionPos?.x ?? 0),
+      y: heroNode.y + (heroSectionPos?.y ?? 0),
+      width: heroNode.width,
+      height: heroNode.height,
+    };
+
     return getBrickFromCanvaNode(heroNode, {
       asMainHeroSection: true,
-      animateConfig: {
-        x: heroNode.x + (heroSectionPos?.x ?? 0),
-        y: heroNode.y + (heroSectionPos?.y ?? 0),
-        width: heroNode.width,
-        height: heroNode.height,
-      },
+      animateConfig,
     });
   }, [heroSectionPos]);
 
+  /** Calculate the coordinates the nodes
+   *
+   * Using the canva size (rectangle containing all the nodes), it calculate the position of the nodes
+   *  depending on the screen size. We do that to make the canva centered on the screen.
+   */
   const calculateRenderedNodes = useCallback(() => {
     if (!globalThis?.innerHeight || !globalThis?.innerWidth) return;
 
@@ -122,6 +142,14 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
     };
   }, [calculateRenderedNodes]);
 
+  useEffect(() => {
+    if (globalThis) globalThis.addEventListener("pointermove", followPointer);
+
+    return () => {
+      if (globalThis) globalThis.removeEventListener("pointermove", followPointer);
+    };
+  }, []);
+
   return renderedNodes
     ? (
       <>
@@ -146,7 +174,9 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
                 style={{
                   width: `${node.width}px`,
                   height: `${node.height}px`,
-                  transform: `translate3d(${node.x}px, ${node.y}px, 0)`,
+                  '--offset-x': `${node.x}px`,
+                  '--offset-y': `${node.y}px`,
+                  transform: `translate3d(var(--offset-x), var(--offset-y), 0)`,
                 }}
               >
                 {getBrickFromCanvaNode(node, {})}

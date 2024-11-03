@@ -19,7 +19,8 @@ export default function PlatformLink(
 ) {
   return (
     <div
-      className={"group/main w-full h-full p-[1px] bg-gradient-to-b from-[#7da7d9] to-[#313131] rounded-[20px]"}
+      data-hover-card
+      className={"group/main w-full h-full rounded-[20px]"}
     >
       <a
         href={content.url}

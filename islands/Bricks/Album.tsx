@@ -4,7 +4,7 @@ import { IconArrowUpRight } from "@utils/icons.ts";
 import gsap from "gsap";
 import { TextPlugin } from "gsap/TextPlugin";
 import { useCallback, useMemo, useState } from "preact/hooks";
-import Video from "@islands/Video.tsx";
+import Video from "@islands/Video/index.tsx";
 gsap.registerPlugin(TextPlugin);
 
 type AlbumProps = {
@@ -50,7 +50,7 @@ export default function Album({ content }: AlbumProps) {
         return (
           <img
             className={cn(
-              "absolute rounded-[20px] group-hover/main:brightness-50 object-cover w-[calc(100%-2px)] h-[calc(100%-2px)]",
+              "absolute rounded-[20px] group-hover/main:brightness-50 object-cover w-full h-full",
               isOpen ? "brightness-50" : "",
               transitionsStyles,
             )}
@@ -64,8 +64,9 @@ export default function Album({ content }: AlbumProps) {
 
   return (
     <div
+      data-hover-card
       data-open={isOpen}
-      className={"group/main w-full h-full p-[1px] bg-gradient-to-b from-[#7da7d9] to-[#313131] rounded-[20px]"}
+      className={"group/main w-full h-full rounded-[20px]"}
       onMouseLeave={() => {
         if (isOpen) setIsOpen(false);
       }}
