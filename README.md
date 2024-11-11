@@ -40,9 +40,9 @@ Started supabase local development setup.
 ...
 ```
 
-3. Copy the `.env.example` file to `.env.local` and fill in the api keys from the Supabase instance
+3. Copy the `.env.basic` file to `.env.local` and fill in the api keys from the Supabase instance
 ```Bash
-cp .env.example .env
+cp .env.basic .env.local
 
 # Fill in the .env file with the api keys from the Supabase instance
 SUPABASE_KEY=the_service_role_key_from_the_supabase_instance
