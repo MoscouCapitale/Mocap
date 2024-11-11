@@ -40,7 +40,7 @@ Started supabase local development setup.
 ...
 ```
 
-3. Copy the `.env.example` file to `.env` and fill in the api keys from the Supabase instance
+3. Copy the `.env.example` file to `.env.local` and fill in the api keys from the Supabase instance
 ```Bash
 cp .env.example .env
 
@@ -65,6 +65,13 @@ The Supabase expose the following services:
 - [Supabase Inbucket @ `localhost:54324`](http://localhost:54324): the Supabase email inbox to manage the emails sent by the project. Used in local developement because the smtp server is not configured here.
 - [Supabase API @ `localhost:54321`](http://localhost:54321): the Supabase API to interact with the database. Should probably not be used directly, but by the Fresh server instead.
 - [Supabase DB @ `postgresql://postgres:postgres@localhost:54322/postgres`](postgresql://postgres:postgres@localhost:54322/postgres): the Supabase database to interact with the data.
+
+### Additionnal configuration
+
+- To configure the Supabase instance, check the `/supabase/config.toml` file. It contains the configuration for the Supabase instance, like the database name, the port, and more.
+- The database schema is based off the `/supabase/migrations` folder. The migrations are at Supabase start, and can be used to create the database schema.
+- Supabase allows seeding the database with the `/supabase/seeds` folder. The seeds are run at the start of the Supabase instance, and can be used to populate the database with default data. Keep in mind that the default seeding file populate de base configuration for Mocap (some enums, storage buckets, etc).
+- To apply migrations and/or seeds, you can use the `supabase db reset` command. It will fully reset the database, apply the migrations, and seed the database. For more infos, check the [Supabase docs](https://supabase.com/docs/reference/cli/start) about it.
 
 
 ## Connect to a Supabase instance

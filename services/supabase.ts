@@ -6,12 +6,12 @@ import { User, UserMetadatas } from "@models/Authentication.ts";
 
 // TODO: find a way to avoid using the service key
 export const supabase = createClient<Database>(
-  Deno.env.get("API_URL") as string,
+  Deno.env.get("SUPABASE_URL") as string,
   Deno.env.get("SUPABASE_KEY") as string,
 );
 export const supabaseSSR = (req: Request, res: Response) =>
   createClient(
-    Deno.env.get("API_URL") as string,
+    Deno.env.get("SUPABASE_URL") as string,
     Deno.env.get("SUPABASE_KEY") as string,
     {
       auth: {

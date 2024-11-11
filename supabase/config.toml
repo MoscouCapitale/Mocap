@@ -3,7 +3,6 @@
 project_id = "sb_mocap_v1"
 
 [api]
-# TODO: Because we use SSR only, do we need this to be active ?
 enabled = true
 # Port to use for the API URL.
 port = 54321
