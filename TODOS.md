@@ -48,6 +48,10 @@ ___
 - Bugs:
   - [ ] Herosection - when you hover the title with disablePauseOnHover, it stops the video (maybe we can tie the mouseEnter on a specific element)
   - [ ] If you delete a brick, it is still present in the bricks list
+  - [x] When you click on a brick on the select on the bricksidebar, the hover effect is not removed
+  - [ ] When you update a brick, the preview is not updated. YOu have to reload the page to see the changes
+  - [ ] When you update a brick, the bricksidebar is reseted, but the select is still on the previous brick
+  - [ ] When you move a node, the new position is not saved
 
 ## Collection
 - [x] Supabase init
@@ -143,7 +147,7 @@ ___
 
 ___
 - Bugs:
-  - [ ] Fix lodash bad types
+  - [x] Fix lodash bad types
   - [ ] Make partials WORK
     - [ ] Set partial content displayed on page load, instead of click (because for now it is only on subnav items, and specifically on the content page. It should be global, for each "page")
   - [ ] Why is database fetching empty when first connexion ? - Sometime you cannot retrieve any content from supabase, and need to login again to see it, or even restart the app ?

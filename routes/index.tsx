@@ -20,7 +20,7 @@ export default async function Home(req: Request, ctx: RouteContext) {
   }
 
   const platforms = await getFooterLinks();
-  const { data, error } = await fetchNode(undefined, true);
+  const { data, error } = await fetchNode();
 
   return (
     <>

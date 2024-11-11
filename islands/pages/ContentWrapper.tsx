@@ -7,7 +7,7 @@ import { IconTrash } from "@utils/icons.ts";
 import { createRef } from "preact";
 import { Ref, useCallback, useEffect, useRef } from "preact/hooks";
 import Button from "@islands/Button.tsx";
-import _ from "lodash";
+import { throttle } from "lodash";
 import { CANVA_GUTTER } from "@models/Canva.ts";
 
 function MCFrameEvents(frame: SVGElement, initialViewBox: MCViewBox, setViewBox: (viewBox: MCViewBox) => void) {
@@ -78,8 +78,7 @@ export default function MCanva() {
   } = useMNodeContext();
 
   const throttledSetViewBox = useCallback(
-    // @ts-expect-error - lodash types are not correct
-    _.throttle((viewBox: MCViewBox) => {
+    throttle((viewBox: MCViewBox) => {
       setViewBox(viewBox);
     }, 500),
     [],

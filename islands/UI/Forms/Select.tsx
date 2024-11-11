@@ -2,8 +2,15 @@ import { baseInputStyle, FormField, FormFieldOptions, FormFieldValue } from "@mo
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { cn } from "@utils/cn.ts";
 import { IconChevronDown } from "@utils/icons.ts";
+import { effect } from "https://esm.sh/v135/@preact/signals-core@1.5.1/dist/signals-core.js";
 import { VNode } from "preact";
-import { useCallback, useState } from "preact/compat";
+import { useCallback, useEffect, useState } from "preact/compat";
+
+const getDefaultSelectValue = (field: FormField | SelectField, min: number) => {
+  if (field.defaultValue) return [field.defaultValue as string].flat();
+  if (min) return field.options?.slice(0, min).map((o) => o.value) as string[];
+  return [];
+};
 
 interface CustomSelectOption extends FormFieldOptions {
   onMouseEnter?: (e: MouseEvent, id: number | string) => void;
@@ -26,10 +33,11 @@ type SelectProps = {
   min?: number;
   error: string | null;
   sx?: string;
+  reset?: boolean;
 };
 
 export default function Select(
-  { field, multiSelect, onChange, customLabels, min = 0, error, sx }: SelectProps,
+  { field, multiSelect, onChange, customLabels, min = 0, error, sx, reset }: SelectProps,
 ) {
   if (min && min > (field.options ?? []).length) {
     throw new Error(
@@ -37,14 +45,10 @@ export default function Select(
     );
   }
 
-  // TODO: set default value to string[]
-  const [selected, setSelected] = useState<FormFieldOptions["value"][]>(
-    field.defaultValue
-      ? [field.defaultValue as string].flat()
-      : min
-      ? field.options?.slice(0, min).map((o) => o.value) as string[]
-      : [],
-  );
+  const [selected, setSelected] = useState<FormFieldOptions["value"][]>(getDefaultSelectValue(field, min));
+
+  // If available options are changed, reset the selection to avoid selected options not present anymore
+  useEffect(() => setSelected(getDefaultSelectValue(field, min)), [field.options]);
 
   /** We need to create a state, because two dropdown on same level on the DOM have their Trigger interfering */
   const [open, setOpen] = useState<boolean>(false);
@@ -115,7 +119,12 @@ export default function Select(
           {field.options?.map(({ value, label, ...rest }, index) => (
             <DropdownMenu.Item
               key={index}
-              onClick={() => selectItem(value)}
+              onClick={(e: MouseEvent) => {
+                selectItem(value)
+                // If set, we need to trigger the onMouseLeave event because the dropdown will close, and the default event will not be triggered
+                const onMouseLeave = (rest as CustomSelectOption).onMouseLeave;
+                if (onMouseLeave) onMouseLeave(e, value);
+              }}
               // Keep the menu open when click on item
               onSelect={(e: Event) => multiSelect && e.preventDefault()}
               onMouseEnter={(e: MouseEvent) => {

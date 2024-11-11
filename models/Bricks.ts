@@ -71,25 +71,6 @@ export type Platform = {
   updated_at: string;
 };
 
-const BrickModifiableAttributes = {
-  name: "Nom",
-  title: "Titre",
-  media: "Média",
-  subtitle: "Sous-titre",
-  cta: "Lien",
-  hoverable: "Effet au survol",
-  platforms: "Plateformes",
-  tracklist: "Tracklist",
-  text: "Texte",
-  special: "Spécial",
-  plateform: "Plateforme",
-  url: "Lien",
-  icon: "Icone",
-  track: "Track",
-  artist: "Artistes",
-  style: "Style",
-};
-
 enum BricksType {
   HeroSection = "HeroSection",
   Single = "Single",
@@ -138,7 +119,6 @@ const getBrickTypeTableName = (type: BricksType): TableNames => {
 export type availBricks = HeroSection | Single | Album | Text | PlatformLink;
 
 export { 
-  BrickModifiableAttributes, 
   BricksType, 
   getBrickTypeLabel,
    getBrickTypeTableName,  

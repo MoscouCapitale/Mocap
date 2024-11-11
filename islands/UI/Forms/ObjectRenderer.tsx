@@ -104,8 +104,8 @@ function createEmptyObject(
       };
     case BricksType.Text:
       return {
+        name: "",
         text: "",
-        special: "",
       };
     case BricksType.Platform_Link:
       return {

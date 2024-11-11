@@ -1,23 +1,11 @@
 import { computed, effect, Signal, signal } from "@preact/signals-core";
 
 import { createContext, createRef, Ref, RefObject, VNode } from "preact";
-import {
-  StateUpdater,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "preact/hooks";
-import {
-  CANVA_GUTTER,
-  MNode,
-  TRASH_DEADZONE_MULTIPLIER,
-} from "@models/Canva.ts";
+import { StateUpdater, useCallback, useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
+import { CANVA_GUTTER, MNode, TRASH_DEADZONE_MULTIPLIER } from "@models/Canva.ts";
 import { getBaseUrl } from "@utils/pathHandler.ts";
 import { BricksType } from "@models/Bricks.ts";
-import _ from "lodash";
+import { merge } from "lodash";
 
 export type MCViewBox = {
   x: number;
@@ -55,10 +43,13 @@ type autoSaveType = {
   currentTimer?: any; // TODO: find this type
 };
 
-type getClosestFreePositionReturnType = (
-  a: rectCollideProps,
-  overlap: isOverlappingType,
-) => rectCollideProps;
+type getClosestFreePositionReturnType = (a: rectCollideProps, overlap: isOverlappingType) => rectCollideProps;
+
+type SaveNodeProps = {
+  node: MNode;
+  rerender?: boolean;
+  partial?: boolean;
+};
 
 type MNodeContextType = {
   MCFrame: RefObject<SVGSVGElement>;
@@ -68,7 +59,7 @@ type MNodeContextType = {
   isOverlapping: (a: rectCollideProps) => isOverlappingType;
   getClosestFreePosition: getClosestFreePositionReturnType;
   getFreeSpace: (a: rectCollideProps) => rectCollideProps;
-  saveNode: (node: MNode, rerender?: boolean) => void;
+  saveNode: (props: SaveNodeProps) => void;
   deleteNode: (nodeId: string) => Promise<void>;
   isPreview: boolean;
   setPreview: (preview: boolean) => void;
@@ -99,10 +90,44 @@ type MNodeContextType = {
 //   if (val) stateUpdater(val);
 // }
 
+type UpsertNodeToNodesArrayProps =
+  | {
+      /** If strategy is `merge`, we only need to provide a partial node with the id */
+      strategy: "merge";
+      nodes: MNode[];
+      node: Partial<MNode> & { id: string };
+    }
+  | {
+      nodes: MNode[];
+      node: MNode;
+      strategy?: "overwrite";
+    };
+
+/** Update the nodes array with the provided node.
+ *
+ * @param {MNode[]} nodes - The nodes array to update
+ * @param {MNode} node - The node to update
+ * @param {"overwrite" | "merge"} strategy - The strategy to use. Use `overwrite` to replace the node, `merge` to merge the node with the existing one. Default is `overwrite`
+ * @param {boolean} mutate - Whether to mutate the nodes array or not. Used for, in state, to avoid triggering a re-render. Default is false.
+ */
+const upsertNodeToNodesArray = ({ nodes, node, strategy = "overwrite" }: UpsertNodeToNodesArrayProps) => {
+  const isNodeIn = Boolean(nodes.find((n) => n.id === node.id));
+
+  if (isNodeIn) {
+    return nodes.map((n) => {
+      if (n.id === node.id) {
+        if (strategy === "overwrite") return node;
+        if (strategy === "merge") return merge(n, node);
+      }
+      return n;
+    });
+  } else {
+    return [...nodes, node];
+  }
+};
+
 // Create the MNode context
-const MNodeContext = createContext<MNodeContextType>(
-  {} as MNodeContextType,
-);
+const MNodeContext = createContext<MNodeContextType>({} as MNodeContextType);
 
 export const useMNodeContext = () => {
   return useContext(MNodeContext);
@@ -121,20 +146,20 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   effect(() => setTimeout(() => nodesChanged && setNodesChanged(false), 100));
 
   useEffect(() => {
-    if (
-      MCNodes.length > 0 &&
-      MCNodes.find((n) => n.type === BricksType.HeroSection)
-    ) {
+    if (MCNodes.length > 0 && MCNodes.find((n) => n.type === BricksType.HeroSection)) {
       setMCNodes((prev) => {
         let isModified = false;
         const calc = prev.map((node) => {
           if (node.type === BricksType.HeroSection) {
-            const size = prev.reduce((acc, n) => {
-              if (n.id === node.id) return acc;
-              if (n.x < acc.x1) acc.x1 = n.x;
-              if ((n.x + n.width) > acc.x2) acc.x2 = n.x + n.width;
-              return acc;
-            }, { x1: 999999, x2: -999999 });
+            const size = prev.reduce(
+              (acc, n) => {
+                if (n.id === node.id) return acc;
+                if (n.x < acc.x1) acc.x1 = n.x;
+                if (n.x + n.width > acc.x2) acc.x2 = n.x + n.width;
+                return acc;
+              },
+              { x1: 999999, x2: -999999 }
+            );
             if (node.x !== size.x1 || node.width !== size.x2 - size.x1) {
               isModified = true;
             }
@@ -193,6 +218,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     }
   }, [MCFrame]);
 
+  // #region Fetch and save nodes
   useEffect(() => {
     let isMounted = true;
 
@@ -203,17 +229,17 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
         }
         console.error("No response from server: ", res);
         return [];
-      }).then((data: MNode[]) => {
+      })
+      .then((data: MNode[]) => {
         if (isMounted && MCNodes.length === 0) {
           // setMCNodes(applyAdditionalMNodeLogic(data));
           setMCNodes(data);
         }
-      }).catch(
-        (e) => {
-          console.error(e);
-          return [];
-        },
-      );
+      })
+      .catch((e) => {
+        console.error(e);
+        return [];
+      });
 
     return () => {
       isMounted = false;
@@ -228,46 +254,42 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
         }
         console.error("No response from server: ", res);
         return [];
-      }).then((data: MNode[]) => {
+      })
+      .then((data: MNode[]) => {
         setMCNodes(data);
-      }).catch(
-        (e) => {
-          console.error(e);
-          return [];
-        },
-      );
+      })
+      .catch((e) => {
+        console.error(e);
+        return [];
+      });
   };
 
   /**
    * Save a single node to the context MCNode
    *
    * @param {MNode} node - The node to save
-   * @param {boolean} rerender - Whether to rerender the node. If true, all nodes w<ill be re-render. If false, the state will be updated in a non-reactive way. Default is false.
+   * @param {boolean} rerender - Whether to rerender the node. If true, all nodes will be re-render. If false, the state will be updated in a non-reactive way. Default is false.
    */
-  const saveNode = (node: MNode, rerender = false) => {
+  const saveNode = ({ node, rerender = false, partial }: SaveNodeProps) => {
+    console.log("Saving node: ", node)
     if (!hasPendingChanges) setHasPendingChanges(true);
     if (rerender) {
-      const nodeIndex = MCNodes.findIndex((n) => n.id === node.id);
-      if (nodeIndex !== -1) {
-        setMCNodes((prev) => [
-          ...prev.slice(0, nodeIndex),
-          node,
-          ...prev.slice(nodeIndex + 1),
-        ]);
-      } else {
-        setMCNodes((prev) => [...prev, node]);
-        setNodesChanged(true);
-      }
+      setMCNodes((prev) => {
+        const res = upsertNodeToNodesArray({ nodes: prev, node, strategy: partial ? "merge" : "overwrite" })
+        console.log("result of upserting: ", res)
+        return res
+    });
+      setNodesChanged(true);
     } else {
       setMCNodes((prev) => {
+        setNodesChanged(true);
         const nodeIndex = prev.findIndex((n) => n.id === node.id);
         if (nodeIndex !== -1) {
           prev[nodeIndex] = node;
+          return prev;
         } else {
-          setNodesChanged(true);
           return [...prev, node];
         }
-        return prev;
       });
     }
     autoSave.value = { ...autoSave.value, triggerTimeout: true };
@@ -280,10 +302,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
       try {
         const res = await fetch(`/api/node/${nodeId}`, { method: "DELETE" });
         if (res.status === 204) {
-          setMCNodes([
-            ...MCNodes.slice(0, nodeIndex),
-            ...MCNodes.slice(nodeIndex + 1),
-          ]);
+          setMCNodes([...MCNodes.slice(0, nodeIndex), ...MCNodes.slice(nodeIndex + 1)]);
           setNodesChanged(true);
         } else throw new Error(`Generic error while deleting node ${nodeId}`);
       } catch (e) {
@@ -292,26 +311,30 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     }
   };
 
-  const writeNodes = useCallback((nodes?: MNode[]) => {
-    const nodesToSave = nodes || MCNodes;
-    if (hasPendingChanges) setHasPendingChanges(false);
-    fetch(getBaseUrl() + "/api/node", {
-      method: "PUT",
-      body: JSON.stringify({ nodes: nodesToSave }),
-    }).then((res) => {
-      if (res.status) {
-        setHasPendingChanges(false);
-        setAutoSaved(true);
-      }
-    });
-  }, [MCNodes]);
+  /** Save the nodes to the server.
+   *
+   * @param {MNode[]} nodes - The nodes to save. If not provided, it will save all nodes in the context.
+   */
+  const writeNodes = useCallback(
+    (nodes?: MNode[]) => {
+      const nodesToSave = nodes || MCNodes;
+      if (hasPendingChanges) setHasPendingChanges(false);
+      fetch(getBaseUrl() + "/api/node", {
+        method: "PUT",
+        body: JSON.stringify({ nodes: nodesToSave }),
+      }).then((res) => {
+        if (res.status) {
+          setHasPendingChanges(false);
+          setAutoSaved(true);
+        }
+      });
+    },
+    [MCNodes]
+  );
 
-  // #region Nodes overlap management
+  // #region Overlap management
   const MAX_RECURSION_DEPTH = 10;
-  const getFreeSpace = (
-    a: rectCollideProps,
-    depth?: number,
-  ): rectCollideProps => {
+  const getFreeSpace = (a: rectCollideProps, depth?: number): rectCollideProps => {
     if (depth === undefined) depth = 0;
     if (depth > MAX_RECURSION_DEPTH) return a;
 
@@ -337,13 +360,10 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
       });
       return { isOverlapping: nodes.length > 0, overlappingNode: nodes };
     },
-    [MCNodes],
+    [MCNodes]
   );
 
-  const getClosestFreePosition: getClosestFreePositionReturnType = (
-    a,
-    overlap,
-  ) => {
+  const getClosestFreePosition: getClosestFreePositionReturnType = (a, overlap) => {
     const singleNode = overlap.overlappingNode[0];
 
     if (!overlap.isOverlapping || !singleNode) {
@@ -362,20 +382,12 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     const closestX = (): { pos: number; dist: number } => {
       // console.log("a: ", JSON.stringify(a), "b: ", JSON.stringify(b));
       if (a.x1 < b.x1 && a.x2 <= b.x2) {
-        const min = Math.min(...[
-          Math.abs(a.x1 - b.x1),
-          Math.abs(a.x1 - b.x2),
-          Math.abs(a.x2 - b.x1),
-        ]);
+        const min = Math.min(...[Math.abs(a.x1 - b.x1), Math.abs(a.x1 - b.x2), Math.abs(a.x2 - b.x1)]);
         // console.log("Left Min: ", min);
         return { pos: b.x1, dist: min };
       }
       if (a.x2 > b.x2 && a.x1 >= b.x1) {
-        const min = Math.min(...[
-          Math.abs(a.x2 - b.x2),
-          Math.abs(a.x1 - b.x2),
-          Math.abs(a.x2 - b.x1),
-        ]);
+        const min = Math.min(...[Math.abs(a.x2 - b.x2), Math.abs(a.x1 - b.x2), Math.abs(a.x2 - b.x1)]);
         // console.log("Right Min: ", min);
         return { pos: b.x2, dist: min };
       }
@@ -384,18 +396,12 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
 
     const closestY = (): { pos: number; dist: number } => {
       if (a.y2 < b.y2 && a.y1 <= b.y1) {
-        const min = Math.min(...[
-          Math.abs(a.y1 - b.y2),
-          Math.abs(a.y2 - b.y1),
-        ]);
+        const min = Math.min(...[Math.abs(a.y1 - b.y2), Math.abs(a.y2 - b.y1)]);
         // console.log("Top Min: ", min);
         return { pos: b.y1, dist: min };
       }
       if (a.y1 > b.y1 && a.y2 >= b.y2) {
-        const min = Math.min(...[
-          Math.abs(a.y1 - b.y2),
-          Math.abs(a.y2 - b.y1),
-        ]);
+        const min = Math.min(...[Math.abs(a.y1 - b.y2), Math.abs(a.y2 - b.y1)]);
         // console.log("Bottom Min: ", min);
         return { pos: b.y2, dist: min };
       }
@@ -408,14 +414,9 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     // console.log("Closest: ", JSON.stringify(rectPos));
 
     const getReturnedPos = (): { x: number; y: number } => {
-      if (
-        ((rectPos.x.dist < rectPos.y.dist) && rectPos.x.dist !== -1) ||
-        rectPos.y.dist === -1
-      ) {
+      if ((rectPos.x.dist < rectPos.y.dist && rectPos.x.dist !== -1) || rectPos.y.dist === -1) {
         const pos = {
-          x: a.x1 > b.x1
-            ? rectPos.x.pos + CANVA_GUTTER
-            : rectPos.x.pos - (a.x2 - a.x1) - CANVA_GUTTER,
+          x: a.x1 > b.x1 ? rectPos.x.pos + CANVA_GUTTER : rectPos.x.pos - (a.x2 - a.x1) - CANVA_GUTTER,
           y: a.y1,
         };
         // console.log("X is closer: ", pos);
@@ -423,9 +424,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
       }
       const pos = {
         x: a.x1,
-        y: a.y1 > b.y1
-          ? rectPos.y.pos + CANVA_GUTTER
-          : rectPos.y.pos - (a.y2 - a.y1) - CANVA_GUTTER,
+        y: a.y1 > b.y1 ? rectPos.y.pos + CANVA_GUTTER : rectPos.y.pos - (a.y2 - a.y1) - CANVA_GUTTER,
       };
       return pos;
     };
@@ -440,36 +439,27 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     };
   };
 
-  const value = useMemo(() => ({
-    MCFrame,
-    viewBox,
-    setViewBox,
-    MCNodes,
-    isOverlapping,
-    getClosestFreePosition,
-    getFreeSpace,
-    saveNode,
-    deleteNode,
-    isPreview,
-    setPreview,
-    refetchNodes,
-    autoSaved,
-    writeNodes,
-    nodesChanged,
-    hasPendingChanges,
-  }), [
-    MCFrame,
-    viewBox,
-    MCNodes,
-    isPreview,
-    nodesChanged,
-    hasPendingChanges,
-    autoSaved,
-  ]);
-
-  return (
-    <MNodeContext.Provider value={value}>
-      {children}
-    </MNodeContext.Provider>
+  const value = useMemo(
+    () => ({
+      MCFrame,
+      viewBox,
+      setViewBox,
+      MCNodes,
+      isOverlapping,
+      getClosestFreePosition,
+      getFreeSpace,
+      saveNode,
+      deleteNode,
+      isPreview,
+      setPreview,
+      refetchNodes,
+      autoSaved,
+      writeNodes,
+      nodesChanged,
+      hasPendingChanges,
+    }),
+    [MCFrame, viewBox, MCNodes, isPreview, nodesChanged, hasPendingChanges, autoSaved]
   );
+
+  return <MNodeContext.Provider value={value}>{children}</MNodeContext.Provider>;
 };

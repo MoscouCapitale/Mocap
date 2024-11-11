@@ -94,7 +94,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
   ) => {
     setNode((prev) => {
       const newNode = { ...prev, ...newNodeDatas };
-      if (saveToContext) saveNode(newNode, rerender);
+      if (saveToContext) saveNode({ node: newNode, rerender });
       return newNode;
     });
   };

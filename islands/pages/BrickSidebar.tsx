@@ -29,9 +29,10 @@ export default function BrickSidebar() {
   }), []);
 
   const [userBricks, setUserBricks] = useState<availBricks[]>();
-  const bricksField = useMemo<SelectField>(() => ({
+  const bricksField = useMemo<SelectField | undefined>(() => userBricks ? ({
     name: "userbricks",
     type: "select",
+    defaultValue: "create",
     options: [
       ...userBricks?.map((b) => ({
         value: b.id.toString(),
@@ -46,8 +47,9 @@ export default function BrickSidebar() {
         label: "Créer une nouvelle brique",
       },
     ],
-  }), [userBricks]);
+  }) : undefined, [userBricks]);
   const [selectedUserBrick, setSelectedUserBrick] = useState<availBricks>();
+  const [ resetSelectedUserBrick, setResetSelectedUserBrick ] = useState<boolean>();
 
   const { nodesChanged, isPreview } = useMNodeContext();
   const { toast } = useToast();
@@ -87,8 +89,11 @@ export default function BrickSidebar() {
   };
 
   // When CreateBrickBar calls this function, it will pass an empty brick (on delete, or on create)
-  const handleSetBrick = (brick: availBricks | undefined) => {
-    setSelectedUserBrick(brick);
+  const handleSetBrick = (brick: availBricks | undefined, action: "add" | "rm") => {
+    if (action === "rm") {
+      setUserBricks(p => p?.filter(b => b.id !== brick?.id) ?? [])
+    }
+    setSelectedUserBrick(undefined)
   };
 
   return (
@@ -109,7 +114,11 @@ export default function BrickSidebar() {
         {/* Brick type Dropdown */}
         <Select
           field={bricksTypeField}
-          onChange={setCreateBrickType}
+          onChange={(v) => {
+            setCreateBrickType(v as BricksType)
+            setResetSelectedUserBrick(p => p ? true : !p)
+            setSelectedUserBrick(undefined)
+          }}
           min={1}
           error={null}
           sx={"max-w-full"}
@@ -120,9 +129,10 @@ export default function BrickSidebar() {
           <Select
             field={bricksField}
             onChange={(v) => setSelectedUserBrick(userBricks?.find((b) => b.id === Number(v)))}
-            min={1}
+            // min={1}
             error={null}
             sx={"max-w-full"}
+            reset={resetSelectedUserBrick}
           />
         )}
       </div>

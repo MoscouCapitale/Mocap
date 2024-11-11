@@ -1,7 +1,7 @@
 import { BricksType } from "@models/Bricks.ts";
 import { MNode } from "@models/Canva.ts";
 import { getBrickFromCanvaNode } from "@utils/bricks.tsx";
-import _ from "lodash";
+import { throttle } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 
 type BrickLayoutProps = {
@@ -123,8 +123,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
   }, [globalThis?.innerHeight, globalThis?.innerWidth]);
 
   // TODO: this can be optimized
-  // @ts-ignore - Bad lodash
-  const handleResize = _.throttle(() => {
+  const handleResize = throttle(() => {
     calculateRenderedNodes();
   }, 500);
 
