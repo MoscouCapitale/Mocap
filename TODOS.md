@@ -147,3 +147,7 @@ ___
   - [ ] Make partials WORK
     - [ ] Set partial content displayed on page load, instead of click (because for now it is only on subnav items, and specifically on the content page. It should be global, for each "page")
   - [ ] Why is database fetching empty when first connexion ? - Sometime you cannot retrieve any content from supabase, and need to login again to see it, or even restart the app ?
+
+# Dev & self-hosting
+- [ ] Find a way to fix API keys for local developement
+- [ ] Re-implement RLS (not working on local, and is needed on to have migration files similar to prod)
