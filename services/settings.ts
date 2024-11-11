@@ -18,7 +18,6 @@ export const FetchableSettingsKeysArray: FetchableSettingsKeys[] = [
 export const getSettings = async (
   field: FetchableSettingsKeys,
 ): Promise<Record<FormField["name"], string> | null> => {
-  console.log("Fetching settings for", field, " from supabase");
   const { data, error } = await supa.from("Settings").select(
     `id, user, ${field}`,
   );

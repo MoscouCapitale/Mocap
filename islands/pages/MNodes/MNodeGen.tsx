@@ -27,7 +27,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
     isPreview,
   } = useMNodeContext();
 
-  useEffect(() => setNode(node), [nodeProp]);
+  useEffect(() => setNode(nodeProp), [nodeProp]);
 
   const [node, setNode] = useState<MNode>(nodeProp);
 

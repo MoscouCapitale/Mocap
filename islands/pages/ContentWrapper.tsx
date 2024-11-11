@@ -160,8 +160,7 @@ export default function MCanva() {
             </pattern>
           </defs>
           <rect x="-99999" y="-99999" width={99999 * 2} height={99999 * 2} fill="url(#pattern-circles)" />
-          {MCNodes.length &&
-            MCNodes.map((node) => <MNodeGen nodeProp={node} />)}
+          {MCNodes.map((node) => <MNodeGen nodeProp={node} />)}
         </svg>
       </div>
     </>

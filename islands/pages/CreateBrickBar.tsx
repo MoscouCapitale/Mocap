@@ -15,7 +15,7 @@ import { isEqual } from "lodash";
 type CreateBrickBarProps = {
   brickType: BricksType; // The general type of the brick to create
   brickData?: availBricks;
-  setBrick: (brick: availBricks | undefined, action: "add" | "rm") => void; // Callback function to pass data to the parent
+  returnBrick: (brick: number | availBricks) => void; // Callback function to pass data to the parent
 };
 
 type brickState = "creating" | "modifying" | "modifyingIncanvas" | "addIncanvas";
@@ -23,7 +23,7 @@ type brickState = "creating" | "modifying" | "modifyingIncanvas" | "addIncanvas"
 // FIXME: When updating an already inserted brick, the MCNodes is updated, but it does not trigger a re-render of the nodes,
 // so the displayed content in the canva is not up to date
 
-export default function CreateBrickBar({ brickType, brickData, setBrick: bubbleUpBrick }: CreateBrickBarProps) {
+export default function CreateBrickBar({ brickType, brickData, returnBrick }: CreateBrickBarProps) {
   const { MCNodes, saveNode, deleteNode } = useMNodeContext();
 
   const [displayMedias, setDisplayMedias] = useState<boolean>(false);
@@ -71,13 +71,13 @@ export default function CreateBrickBar({ brickType, brickData, setBrick: bubbleU
         })
         .then((res) => {
           if (res) {
-            const result: availBricks & { newNode: MNode } = res;
+            const { newNode, ...result }: availBricks & { newNode?: MNode } = res;
             toast({
               title: "Brick saved",
               description: `The brick ${brick.name} has been saved.`,
             });
-            if (withCanvaInsert && result.newNode) saveNode({ node: result.newNode, rerender: true });
-            bubbleUpBrick(undefined, "add");
+            if (withCanvaInsert && newNode) saveNode({ node: newNode, rerender: true });
+            returnBrick({ ...result, nodeId: newNode?.id ?? result.nodeId });
           }
         });
     },
@@ -103,7 +103,7 @@ export default function CreateBrickBar({ brickType, brickData, setBrick: bubbleU
           title: "Brick deleted",
           description: `The brick has been deleted.`,
         });
-        bubbleUpBrick(brick, "rm");
+        returnBrick(brick.id);
       } catch (e) {
         console.error(e);
         toast({

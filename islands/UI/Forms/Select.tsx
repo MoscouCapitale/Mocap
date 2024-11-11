@@ -2,7 +2,6 @@ import { baseInputStyle, FormField, FormFieldOptions, FormFieldValue } from "@mo
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { cn } from "@utils/cn.ts";
 import { IconChevronDown } from "@utils/icons.ts";
-import { effect } from "https://esm.sh/v135/@preact/signals-core@1.5.1/dist/signals-core.js";
 import { VNode } from "preact";
 import { useCallback, useEffect, useState } from "preact/compat";
 
@@ -33,11 +32,10 @@ type SelectProps = {
   min?: number;
   error: string | null;
   sx?: string;
-  reset?: boolean;
 };
 
 export default function Select(
-  { field, multiSelect, onChange, customLabels, min = 0, error, sx, reset }: SelectProps,
+  { field, multiSelect, onChange, customLabels, min = 0, error, sx }: SelectProps,
 ) {
   if (min && min > (field.options ?? []).length) {
     throw new Error(
