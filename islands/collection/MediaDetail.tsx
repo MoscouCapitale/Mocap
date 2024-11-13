@@ -31,10 +31,11 @@ export default function MediaDetail({ media }: MediaDetailProps) {
       })
         .then((res) => res.json())
         .then((data: DatabaseMedia[]) => {
-          data[0] &&
-            setReactiveMedia(
-              filterOutNonValideAttributes(data[0]) as MediaByType<MediaType>,
-            );
+          /** FIXME: This is a temporary fix, to allow for the media to be fully updated before reloading the page.
+           * The correct solution should be to refacto the collection grid system a bit to use a context,
+           * to allow for updating the media in the grid without reloading the page.
+          */
+          globalThis.location.reload();
         }).finally(() => setMediaState("updatedone"));
     }
   };

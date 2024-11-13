@@ -3,6 +3,7 @@ import { supabase, supabase as supa } from "@services/supabase.ts";
 import { isUUIDValid } from "@utils/database.ts";
 import { Media } from "@models/Medias.ts";
 import { Image } from "@models/Medias.ts";
+import { Database } from "@models/database.ts";
 
 export const handler: Handlers<Media | null> = {
   /**
@@ -16,9 +17,16 @@ export const handler: Handlers<Media | null> = {
     if (!isUUIDValid(id)) return new Response("Bad request", { status: 400 });
 
     const body = await _req.json();
-    const modifiedMedia: Partial<Media> = {
+
+    console.log("Received body for update:", body);
+
+    const modifiedMedia: Partial<Database['public']['Tables']['Medias']['Row']> = {
       display_name: body.display_name,
       alt: body.alt,
+      object_fit: body.object_fit,
+      cta: body.cta?.id ?? null,
+      autoplay: body.autoplay ?? false,
+      autodetect_source: body.autodetect_sources ?? false,
     };
 
     const { data, error } = await supa.from("Medias").update(modifiedMedia).eq(

@@ -1,7 +1,7 @@
 import { baseInputStyle, FormField, FormFieldOptions, FormFieldValue } from "@models/Form.ts";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { cn } from "@utils/cn.ts";
-import { IconChevronDown } from "@utils/icons.ts";
+import { IconChevronDown, IconX } from "@utils/icons.ts";
 import { VNode } from "preact";
 import { useCallback, useEffect, useState } from "preact/compat";
 
@@ -32,6 +32,8 @@ type SelectProps = {
   min?: number;
   error: string | null;
   sx?: string;
+  /** Allow to clear the current selection */
+  clearable?: boolean;
 };
 
 export default function Select(
@@ -81,32 +83,38 @@ export default function Select(
   }, [selected]);
 
   return (
-    <DropdownMenu.Root
-      open={open}
-      onOpenChange={(isOpen: boolean) => setOpen(isOpen)}
-    >
-      <DropdownMenu.Trigger asChild>
-        <div
-          className={cn(
-            baseInputStyle,
-            "min-w-[150px] flex items-center gap-1 w-fit",
-            error && "border-error",
-            field.label && "mt-2",
-            error && !field.tooltipError && "mb-1",
-            sx,
-          )}
-        >
-          <p className={"grow max-w-[400px] truncate"}>
-            {getSelectTriggerLabelling()}
-          </p>
+    <DropdownMenu.Root open={open} onOpenChange={(isOpen: boolean) => setOpen(isOpen)}>
+      <div
+        className={cn(
+          baseInputStyle,
+          "min-w-[150px] flex items-center gap-1 w-fit",
+          error && "border-error",
+          field.label && "mt-2",
+          error && !field.tooltipError && "mb-1",
+          sx
+        )}
+      >
+        <p className={"grow max-w-[400px] truncate"}>{getSelectTriggerLabelling()}</p>
+        {min === 0 && selected.length > 0 && (
           <button
             className=""
-            aria-label="Customise options"
+            aria-label="Delete selected"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setSelected([]);
+              onChange(null);
+            }}
           >
-            <IconChevronDown />
+            <IconX className={"hover:backdrop-brightness-150"} />
           </button>
-        </div>
-      </DropdownMenu.Trigger>
+        )}
+        <DropdownMenu.Trigger asChild>
+          <button className="" aria-label="Open options">
+            <IconChevronDown className={"hover:backdrop-brightness-150"} />
+          </button>
+        </DropdownMenu.Trigger>
+      </div>
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content
@@ -118,7 +126,7 @@ export default function Select(
             <DropdownMenu.Item
               key={index}
               onClick={(e: MouseEvent) => {
-                selectItem(value)
+                selectItem(value);
                 // If set, we need to trigger the onMouseLeave event because the dropdown will close, and the default event will not be triggered
                 const onMouseLeave = (rest as CustomSelectOption).onMouseLeave;
                 if (onMouseLeave) onMouseLeave(e, value);
@@ -136,23 +144,17 @@ export default function Select(
               className={cn(
                 "inline-flex align-center justify-start px-4 py-2 text-sm text-text bg-black bg-opacity-0 select-none",
                 "hover:outline-none",
-                isSelected(value)
-                  ? "bg-text bg-opacity-10 hover:bg-opacity-20"
-                  : "bg-black bg-opacity-0 hover:bg-opacity-60",
+                isSelected(value) ? "bg-text bg-opacity-10 hover:bg-opacity-20" : "bg-black bg-opacity-0 hover:bg-opacity-60"
               )}
             >
-              <div
-                className={"relative max-w-[300px] flex gap-2 items-center grow truncate text-left"}
-              >
+              <div className={"relative max-w-[300px] flex gap-2 items-center grow truncate text-left"}>
                 {/* TODO: find a better way to show the selected items with checks */}
-                {
-                  /* {multiSelect &&
+                {/* {multiSelect &&
                   (
                     <div className="inline-flex w-4 items-center justify-center">
                       {isSelected(value) && <IconChecks className={"text-text opacity-80"} size={18} />}
                     </div>
-                  )} */
-                }
+                  )} */}
                 {label}
               </div>
             </DropdownMenu.Item>

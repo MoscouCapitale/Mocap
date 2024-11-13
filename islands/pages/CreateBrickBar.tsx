@@ -20,9 +20,6 @@ type CreateBrickBarProps = {
 
 type brickState = "creating" | "modifying" | "modifyingIncanvas" | "addIncanvas";
 
-// FIXME: When updating an already inserted brick, the MCNodes is updated, but it does not trigger a re-render of the nodes,
-// so the displayed content in the canva is not up to date
-
 export default function CreateBrickBar({ brickType, brickData, returnBrick }: CreateBrickBarProps) {
   const { MCNodes, saveNode, deleteNode } = useMNodeContext();
 
@@ -161,8 +158,6 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
               <CollectionGrid onMediaClick={mediaClickHandler} fetchingRoute={val as MediaType} mediaSize={150} />
             </div>
           ))}
-          {/* TODO: add support to upload media here. For now nested modals are working properly */}
-          <AddButton position="absolute top-3 right-7" />
         </div>
       </InpagePopup>
       {/* <Toaster /> */}

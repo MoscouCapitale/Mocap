@@ -345,28 +345,36 @@ export type Database = {
         Row: {
           created_at: string
           id: number
+          media: string | null
           name: string
-          special: string | null
           text: string | null
           updated_at: string | null
         }
         Insert: {
           created_at?: string
           id?: number
+          media?: string | null
           name: string
-          special?: string | null
           text?: string | null
           updated_at?: string | null
         }
         Update: {
           created_at?: string
           id?: number
+          media?: string | null
           name?: string
-          special?: string | null
           text?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "Bricks_Text_media_fkey"
+            columns: ["media"]
+            isOneToOne: false
+            referencedRelation: "Medias"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       CTA_Link: {
         Row: {
@@ -442,7 +450,7 @@ export type Database = {
           filesize: number | null
           id: string
           name: string
-          object_fit: number | null
+          object_fit: Database["public"]["Enums"]["media_fit"] | null
           public_src: string | null
           type: Database["public"]["Enums"]["media_type"] | null
           updated_at: string | null
@@ -460,7 +468,7 @@ export type Database = {
           filesize?: number | null
           id: string
           name: string
-          object_fit?: number | null
+          object_fit?: Database["public"]["Enums"]["media_fit"] | null
           public_src?: string | null
           type?: Database["public"]["Enums"]["media_type"] | null
           updated_at?: string | null
@@ -478,7 +486,7 @@ export type Database = {
           filesize?: number | null
           id?: string
           name?: string
-          object_fit?: number | null
+          object_fit?: Database["public"]["Enums"]["media_fit"] | null
           public_src?: string | null
           type?: Database["public"]["Enums"]["media_type"] | null
           updated_at?: string | null
@@ -503,13 +511,6 @@ export type Database = {
             columns: ["cta"]
             isOneToOne: false
             referencedRelation: "CTA_Link"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "medias_object_fit_fkey"
-            columns: ["object_fit"]
-            isOneToOne: false
-            referencedRelation: "Media_Adjustement"
             referencedColumns: ["id"]
           },
         ]
@@ -727,15 +728,7 @@ export type Database = {
           updated_at?: string | null
           user?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "Settings_user_fkey"
-            columns: ["user"]
-            isOneToOne: false
-            referencedRelation: "Users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       Track: {
         Row: {
@@ -818,45 +811,24 @@ export type Database = {
           },
         ]
       }
-      Users: {
-        Row: {
-          accepted: boolean
-          id: string
-          requested: boolean
-          username: string | null
-        }
-        Insert: {
-          accepted?: boolean
-          id: string
-          requested?: boolean
-          username?: string | null
-        }
-        Update: {
-          accepted?: boolean
-          id?: string
-          requested?: boolean
-          username?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "Users_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_id_by_email: {
+        Args: {
+          email: string
+        }
+        Returns: {
+          id: string
+        }[]
+      }
     }
     Enums: {
       brick_type: "HeroSection" | "Single" | "Album" | "Text" | "Platform_Link"
       herosection_style: "scrolling-hero"
+      media_fit: "best" | "cover" | "contain"
       media_type: "Audios" | "Videos" | "Images" | "Misc"
     }
     CompositeTypes: {
@@ -1261,5 +1233,18 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
     : never
-  
-export type TableNames = keyof PublicSchema["Tables"]
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never

@@ -65,7 +65,7 @@ const VideoFormFields: ObjFormField<Video>[] = [
     type: "checkbox",
     label: "Lecture auto.",
   },
-  ObjectRelations.controls as ObjFormField<Video>,
+  // ObjectRelations.controls as ObjFormField<Video>, // FIXME: add better video controls
   ObjectRelations.cta as ObjFormField<Video>,
 ];
 
@@ -76,7 +76,6 @@ const AudioFormFields: ObjFormField<Audio>[] = [
     type: "checkbox",
     label: "Source auto.",
   },
-  ObjectRelations.controls as ObjFormField<Audio>,
 ];
 
 const MiscFormFields: ObjFormField<Misc>[] = [
