@@ -142,7 +142,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
   }, [calculateRenderedNodes]);
 
   useEffect(() => {
-    if (globalThis) globalThis.addEventListener("pointermove", followPointer);
+    if (globalThis) globalThis.addEventListener("pointermove", throttle(followPointer, 80));
 
     return () => {
       if (globalThis) globalThis.removeEventListener("pointermove", followPointer);

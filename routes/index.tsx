@@ -24,7 +24,6 @@ export default async function Home(req: Request, ctx: RouteContext) {
 
   return (
     <>
-      <link rel="stylesheet" href="/main.css" />
       <link rel="stylesheet" href="/cardsglow.css" />
       <Cursor />
       <AdminPanelButton />
