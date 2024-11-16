@@ -84,7 +84,7 @@ const DatabaseAttributes: DatabaseAttributesType = {
   media: {
     name: "Média",
     table: "Medias",
-    parentTables: ["Bricks_Single", "Bricks_Album", "Bricks_HeroSection", "Bricks_Text"],
+    parentTables: ["Bricks_Single", "Bricks_Album", "Bricks_HeroSection", "Bricks_Text", "Bricks_Highlight"],
   },
   cover: {
     name: "Cover",

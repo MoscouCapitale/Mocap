@@ -22,6 +22,7 @@ interface MNode {
     Album?: Album;
     Text?: Text;
     PlatformLink?: PlatformLink;
+    Highlight?: Highlight;
     content: HeroSection | Single | Album | Text | PlatformLink;
     sizes: MNodeSize[];
     isHighlighted?: boolean;
@@ -43,6 +44,7 @@ interface DBMNode {
     Album?: number;
     Text?: number;
     PlatformLink?: number;
+    Highlight?: number;
 }
 
 export type { MNode, DBMNode };

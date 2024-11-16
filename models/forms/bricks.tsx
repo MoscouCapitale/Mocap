@@ -1,5 +1,5 @@
 import { LabeledToolTip } from "@islands/UI/Tooltip.tsx";
-import { Album, Artist, HeroSection, Platform, PlatformLink, Single, Text, Track } from "@models/Bricks.ts";
+import { Album, Highlight, Artist, HeroSection, Platform, PlatformLink, Single, Text, Track } from "@models/Bricks.ts";
 import { AvailableFormRelation, FormField, ObjFormField } from "@models/Form.ts";
 import {
   MediaControls,
@@ -9,6 +9,7 @@ import {
 export type AllMocapObjectsTypes =
   | "HeroSection"
   | "Single"
+  | "Highlight"
   | "Album"
   | "Track"
   | "Artist"
@@ -29,6 +30,8 @@ export const getObjectFormFromType = (
   switch (type) {
     case "HeroSection":
       return HeroSectionFormFields;
+    case "Highlight":
+      return HighlightFormFields;
     case "Single":
       return SingleFormFields;
     case "Album":
@@ -192,6 +195,35 @@ const HeroSectionFormFields: ObjFormField<HeroSection>[] = [
         value: "scrolling-hero",
       },
     ],
+  },
+];
+
+const HighlightFormFields: ObjFormField<Highlight>[] = [
+  ...DefaultBricksFormValues,
+  {
+    name: "title",
+    type: "string",
+    label: "Titre",
+    required: true,
+  },
+  {
+    name: "subtitle",
+    type: "string",
+    label: "Sous-titre",
+  },
+  {
+    name: "media",
+    type: "file",
+    label: "Média",
+    inputConfig: {
+      onClickInput: () => {},
+      customLabel: "Parcourir la médiathèque",
+    },
+  },
+  {
+    name: "link",
+    type: "string",
+    label: "Lien",
   },
 ];
 

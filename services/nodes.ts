@@ -128,6 +128,9 @@ const createNodeFromBrick = async (
     case "Platform_Link":
       savedNode.PlatformLink = brick.id;
       break;
+    case "Highlight":
+      savedNode.Highlight = brick.id;
+      break;
     default:
       console.error(
         `Could not find a suitable type for "${type}" in createNodeFromBrick`,

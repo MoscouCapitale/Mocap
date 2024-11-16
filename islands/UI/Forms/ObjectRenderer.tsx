@@ -82,6 +82,14 @@ function createEmptyObject(
         cta: {},
         style: "scrolling-hero",
       };
+    case BricksType.Highlight:
+      return {
+        name: "",
+        title: "",
+        subtitle: "",
+        media: null,
+        link: "",
+      };
     case BricksType.Single:
       return {
         name: "",

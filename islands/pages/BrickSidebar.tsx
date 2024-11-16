@@ -11,10 +11,6 @@ const defaultBrick = BricksType.Album;
 
 type BrickSideBarSelects = Record<BricksType, availBricks[] | undefined>;
 
-function getKeyByValue<T extends Record<string, unknown>, U extends T[keyof T]>(object: T, value: U): keyof T | undefined {
-  return Object.keys(object).find((key) => object[key] === value);
-}
-
 export default function BrickSidebar() {
   const [allBricksMap, setAllBricksMap] = useState<BrickSideBarSelects>({
     [BricksType.Album]: undefined,
@@ -22,6 +18,7 @@ export default function BrickSidebar() {
     [BricksType.Single]: undefined,
     [BricksType.Text]: undefined,
     [BricksType.Platform_Link]: undefined,
+    [BricksType.Highlight]: undefined,
   });
 
   const [selectedBrickType, setSelectedBrickType] = useState<BricksType>(defaultBrick);
