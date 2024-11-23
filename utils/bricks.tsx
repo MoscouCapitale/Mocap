@@ -6,6 +6,7 @@ import {
   PlatformLink as PlatformLinkType,
   Single as SingleType,
   Text as TextType,
+  Highlight as HighlightType,
   availBricks
 } from "@models/Bricks.ts";
 
@@ -16,6 +17,7 @@ import Text from "@islands/Bricks/Text.tsx";
 import PlatformLink from "@islands/Bricks/PlatformLink.tsx";
 import { MNode } from "@models/Canva.ts";
 import Placeholder from "@islands/Bricks/Placeholder.tsx";
+import Highlight from "@islands/Bricks/Highlight.tsx";
 
 interface AdditionalProps {
   isMovable?: boolean;
@@ -44,6 +46,7 @@ export const getBrickFromCanvaNode = (
     if (type === "Album") return <Album content={content as AlbumType}  {...args} />
     if (type === "Text") return <Text content={content as TextType} {...args} />
     if (type === "Platform_Link") return <PlatformLink content={content as PlatformLinkType} sizeIndex={getBrickSizeIndex(node)} {...args} />
+    if (type === "Highlight") return <Highlight content={content as HighlightType} {...args} />
     return null;
 };
 
@@ -64,5 +67,6 @@ export const getBrickFromBrickData= (
   if (type === "Album") return <Album content={content as AlbumType}  {...args} />
   if (type === "Text") return <Text content={content as TextType} {...args} />
   if (type === "Platform_Link") return <PlatformLink content={content as PlatformLinkType} sizeIndex={1} {...args} />
+  if (type === "Highlight") return <Highlight content={content as HighlightType} {...args} />
   return null;
 };
