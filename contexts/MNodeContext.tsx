@@ -2,7 +2,7 @@ import { computed, effect, Signal, signal } from "@preact/signals-core";
 
 import { createContext, createRef, Ref, RefObject, VNode } from "preact";
 import { StateUpdater, useCallback, useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { CANVA_GUTTER, MNode, TRASH_DEADZONE_MULTIPLIER } from "@models/Canva.ts";
+import { CANVA_GUTTER, MNode } from "@models/Canva.ts";
 import { getBaseUrl } from "@utils/pathHandler.ts";
 import { BricksType } from "@models/Bricks.ts";
 import { merge } from "lodash";
@@ -68,6 +68,8 @@ type MNodeContextType = {
   writeNodes: () => void;
   nodesChanged: boolean;
   hasPendingChanges: boolean;
+  lockViewBox: boolean;
+  setLockViewBox: (lock: boolean) => void;
 };
 
 // const asyncGnal = function<T>(defaultValue: T, callback: () => Promise<T>): ReadonlySignal<T> {
@@ -140,6 +142,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const [hasPendingChanges, setHasPendingChanges] = useState(false);
   const setPreview = (preview: boolean) => setIsPreview(preview);
+  const [lockViewBox, setLockViewBox] = useState(false);
 
   // Trigger a nodesChanged when a node is added/removed
   const [nodesChanged, setNodesChanged] = useState(false);
@@ -173,6 +176,9 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
       });
     }
   }, [MCNodes]);
+
+  // #region Lock viewBox states
+  useEffect(() => setLockViewBox(isPreview), [isPreview]);
 
   // #region AutoSave management
   const autoSave = signal<autoSaveType>({
@@ -457,8 +463,10 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
       writeNodes,
       nodesChanged,
       hasPendingChanges,
+      lockViewBox,
+      setLockViewBox,
     }),
-    [MCFrame, viewBox, MCNodes, isPreview, nodesChanged, hasPendingChanges, autoSaved]
+    [MCFrame, viewBox, MCNodes, isPreview, nodesChanged, hasPendingChanges, autoSaved, lockViewBox]
   );
 
   return <MNodeContext.Provider value={value}>{children}</MNodeContext.Provider>;

@@ -236,3 +236,24 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/** Styles for the node size grabber. Too difficult to do in Tailwind */
+.grabberStyle {
+  --col1: var(--color-accent-main, rgb(225, 151, 47));
+  --col2: var(--color-accent-secondary, rgb(207, 195, 68));
+  --col3: #141414;
+  --col4: rgb(45, 45, 45);
+
+  padding: 0.25rem 1.25rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(145deg, var(--col1), var(--col2));
+  box-shadow: 20px 20px 66px var(--col3), -20px -20px 66px var(--col4);
+}
+
+.grabberStyle.horizontal {
+  padding: 1rem 0.25rem;
+}
+
+.grabberStyle:active {
+  background: linear-gradient(145deg, var(--col2), var(--col1));
+}

@@ -83,7 +83,7 @@
     "@radix-ui/react-visually-hidden": "https://esm.sh/v132/*@radix-ui/react-visually-hidden@1.0.3?alias=react:preact/compat,@types/react:preact/compat",
     "gsap": "https://esm.sh/gsap@3.12.5/",
     "gsap/": "https://esm.sh/gsap@3.12.5/",
-    "@gsap/react": "https://esm.sh/@gsap/react?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
+    "@gsap/react": "https://esm.sh/@gsap/react@2.1.1?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
     "hotkeys-js": "https://esm.sh/hotkeys-js@3.13.7",
     "@radix-ui/react-popover": "https://esm.sh/*@radix-ui/react-popover@1.0.7?alias=react:preact/compat,@types/react:preact/compat",
     "aria-hidden": "https://esm.sh/aria-hidden@1.2.3",

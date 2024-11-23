@@ -75,6 +75,7 @@ export default function MCanva() {
     writeNodes,
     autoSaved,
     setPreview,
+    lockViewBox
   } = useMNodeContext();
 
   const throttledSetViewBox = useCallback(
@@ -86,10 +87,18 @@ export default function MCanva() {
 
   /* All hotkeys and mouse logic are in native event listener to avoid useless re-renders of states */
   useEffect(() => {
-    if (MCFrame.current && viewBox) {
-      MCFrameEvents(MCFrame.current, viewBox, throttledSetViewBox);
+    let cleanup: (() => void) | undefined;
+
+    if (MCFrame.current && viewBox && !lockViewBox) {
+      cleanup = MCFrameEvents(MCFrame.current, viewBox, throttledSetViewBox);
     }
-  }, [MCFrame.current]);
+  
+    return () => {
+      if (cleanup) {
+        cleanup();
+      }
+    };
+  }, [MCFrame.current, lockViewBox]);
 
   useEffect(() => {
     if (autoSaved) {

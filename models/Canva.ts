@@ -1,13 +1,13 @@
 import { HeroSection, Single, Album, Text, PlatformLink, BricksType } from "@models/Bricks.ts";
 
 // Canva constants
-export const CANVA_GUTTER = 20;
-export const TRASH_DEADZONE_MULTIPLIER = 0.05;
+export const CANVA_GUTTER = 20; // The space between nodes
+export const NODE_MIN_SIZE = 100; // The minimum width/height of a node
 
 type MNodeSize = {
     width: number;
     height: number;
-};
+}
 
 interface MNode {
     id: string;
@@ -53,6 +53,8 @@ export const getAvailableSizes = (type: keyof typeof BricksType): MNodeSize[] | 
     switch (type) {
         case "HeroSection":
             return null;
+        case "Highlight":
+            return [{ width: 300, height: 400 }];
         case "Single":
             return [{ width: 300, height: 400 }];
         case "Album":

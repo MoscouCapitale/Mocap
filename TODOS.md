@@ -37,9 +37,9 @@ ___
     - [x] Markdown support
     - [x] Better scrollbar
     - [x] Better fade in/out
-  - [ ] Better way to show the sizes list (using navigation menu viewport)
+  - [x] Better way to show the sizes list (using navigation menu viewport)
   - [ ] When deleting a brick, maybe add an "intelligent" way of deleting related unused content ?
-  - [ ] Mettre les tailles de certaines briques (link, texte) en "libre" (snap à 100px)
+  - [x] Mettre les tailles de certaines briques (link, texte) en "libre" (snap à 100px)
   - [ ] After-canva feature fixes
       - [ ] Add toasts
       - [ ] Add supa error management
