@@ -27,9 +27,9 @@ ___
   - [x] UI
   - [ ] Implement bricks
     - [ ] Tiles
-    - [ ] Simple video/image with text/cta (maybe re-use the Single ?)
-    - [ ] Youtube embed
-    - [ ] Audio (soundcloud, spotify, etc...) embed
+    - [x] Simple video/image with text/cta (maybe re-use the Single ?)
+    - [x] Youtube embed
+    - [x] Audio (soundcloud, spotify, etc...) embed
   - [x] Manage saved bricks (in canva page)
   - [ ] Error management
       - [ ] Brick with this name already exists

@@ -11,7 +11,8 @@ type cursorState =
   | "text" // text cursor
   | "resize"
   | "resize-x"
-  | "resize-y";
+  | "resize-y"
+  | "hidden"; // hidden cursor on some elements (ex. iframe)
 
 /**
  * Retrieves the cursor state based on the provided element.
@@ -20,8 +21,11 @@ type cursorState =
  * @returns The cursor state as a string.
  */
 const getCursorsState = (element: HTMLElement): cursorState => {
-  if (element.attributes.getNamedItem("data-hover")) return "hover";
-  if (element.attributes.getNamedItem("data-hover-card")) return "hover-card";
+  /** We need to hide the cursor on iframes because the pointer events are not passed to the parent (document)
+   * from the iframe that we cannot control (ex. youtube/spotify embeds). For now the solution is to hide the cursor */
+  if (element.attributes.getNamedItem("data-hover-card-embed")?.value === 'true') return "hidden";
+  if (element.attributes.getNamedItem("data-hover")?.value === 'true') return "hover";
+  if (element.attributes.getNamedItem("data-hover-card")?.value === 'true') return "hover-card";
   const tag = element.tagName.toLowerCase();
   switch (tag) {
     case "input":
@@ -31,8 +35,9 @@ const getCursorsState = (element: HTMLElement): cursorState => {
     case "col":
     case "colgroup":
       return "resize-x";
-    case "a":
     case "iframe":
+      return "hidden";
+    case "a":
     case "object":
     case "embed":
     case "canvas":
@@ -106,7 +111,7 @@ export default function Cursor() {
     init() {
       globalThis.document.body.setAttribute("data-custom-cursor", "true");
       this.bindAll();
-      globalThis.addEventListener("mousemove", throttle(this.onMouseMove, 50));
+      globalThis.addEventListener("pointermove", throttle(this.onMouseMove, 50));
       this.raf = requestAnimationFrame(this.render);
     }
   }

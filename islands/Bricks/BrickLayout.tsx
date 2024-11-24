@@ -178,7 +178,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
                   transform: `translate3d(var(--offset-x), var(--offset-y), 0)`,
                 }}
               >
-                {getBrickFromCanvaNode(node, {})}
+                {getBrickFromCanvaNode(node, { brickSize: { width: node.width, height: node.height } })}
               </article>
             );
           })}

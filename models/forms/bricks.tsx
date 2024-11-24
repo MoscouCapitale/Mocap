@@ -1,10 +1,7 @@
 import { LabeledToolTip } from "@islands/UI/Tooltip.tsx";
 import { Album, Highlight, Artist, HeroSection, Platform, PlatformLink, Single, Text, Track } from "@models/Bricks.ts";
 import { AvailableFormRelation, FormField, ObjFormField } from "@models/Form.ts";
-import {
-  MediaControls,
-  MediaCTA
-} from "@models/Medias.ts";
+import { MediaControls, MediaCTA } from "@models/Medias.ts";
 
 export type AllMocapObjectsTypes =
   | "HeroSection"
@@ -24,9 +21,7 @@ export type AllMocapObjectsTypes =
  *
  * Include the bricks, but also the secondary objects like cta, controls, object_fit, etc. */
 
-export const getObjectFormFromType = (
-  type: AllMocapObjectsTypes,
-): FormField[] | null => {
+export const getObjectFormFromType = (type: AllMocapObjectsTypes): FormField[] | null => {
   switch (type) {
     case "HeroSection":
       return HeroSectionFormFields;
@@ -55,18 +50,11 @@ export const getObjectFormFromType = (
   }
 };
 
-const DefaultBricksFormValues: ObjFormField<
-  HeroSection | Single | Album | Track | Artist | Platform | Text
->[] = [
+const DefaultBricksFormValues: ObjFormField<HeroSection | Single | Album | Track | Artist | Platform | Text>[] = [
   {
     name: "name",
     type: "string",
-    label: (
-      <LabeledToolTip
-        label="Nom"
-        text="Le nom unique, de l'élément qui permettera de l'identifier"
-      />
-    ),
+    label: <LabeledToolTip label="Nom" text="Le nom unique, de l'élément qui permettera de l'identifier" />,
     required: true,
   },
 ];
@@ -223,7 +211,12 @@ const HighlightFormFields: ObjFormField<Highlight>[] = [
   {
     name: "link",
     type: "string",
-    label: "Lien",
+    label: (
+      <LabeledToolTip
+        label="Lien"
+        text="Si un lien Youtube/Spotify/Soundcloud est renseigné, alors le 'média' sera remplacé par une intégration vers ce lien."
+      />
+    ),
   },
 ];
 
@@ -285,12 +278,7 @@ const TextFormFields: ObjFormField<Text>[] = [
   {
     name: "text",
     type: "markdown",
-    label: (
-      <LabeledToolTip
-        label="Texte"
-        text="Texte de la brique. Supporte la mise en forme en markdown."
-      />
-    ),
+    label: <LabeledToolTip label="Texte" text="Texte de la brique. Supporte la mise en forme en markdown." />,
   },
   {
     name: "media",

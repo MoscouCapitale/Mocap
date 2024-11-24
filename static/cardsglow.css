@@ -10,7 +10,7 @@
 }
 
 /* This is the CSS for the card glow effect. You can change the colors and sizes of the glow effect by modifying the variables in the :root selector. */
-[data-hover-card] {
+[data-hover-card="true"] {
     --radial-x: calc(var(--mouse-x, 0) * 1px - var(--offset-x, 0px));
     --radial-y: calc(var(--mouse-y, 0) * 1px - var(--offset-y, 0px));
 

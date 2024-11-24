@@ -1,6 +1,6 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { useGSAP } from "@gsap/react";
-import { CANVA_GUTTER, MNode } from "@models/Canva.ts";
+import { CANVA_GUTTER, MNode, getAvailableSizes } from "@models/Canva.ts";
 import { signal } from "@preact/signals-core";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
@@ -20,7 +20,7 @@ type MNodeGenProps = {
 export default function MNodeGen({ nodeProp }: MNodeGenProps) {
   const { MCNodes, deleteNode, getFreeSpace, saveNode, MCFrame, isPreview } = useMNodeContext();
 
-  useEffect(() => setNode(nodeProp), [nodeProp]);
+  useEffect(() => setNode({...nodeProp, sizes: getAvailableSizes(nodeProp)}), [nodeProp]);
 
   const [node, setNode] = useState<MNode>(nodeProp);
 
@@ -117,7 +117,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
       </div>
 
       {/* Actual node content */}
-      {getBrickFromCanvaNode(node, { isMovable: !isPreview, disableAnimations: true })}
+      {getBrickFromCanvaNode(node, { isMovable: !isPreview, disableAnimations: true, brickSize: { width: node.width, height: node.height } })}
     </foreignObject>
   );
 }

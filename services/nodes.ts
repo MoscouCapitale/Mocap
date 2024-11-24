@@ -34,9 +34,10 @@ export const fetchNode = async (
     const addedNode: MNode = {
       ...n,
       content: res.data[0],
-      sizes: getAvailableSizes(n.type) || [],
+      sizes: getAvailableSizes(n as unknown as MNode),
     };
 
+    // FIXME: Not sure about this
     // If badly saved, reset the size (HeroSection have a dynamic size so except them)
     const nodeSize = { width: n.width, height: n.height };
     if (addedNode.type !== "HeroSection" && !assertEqualSizes(addedNode.sizes, nodeSize)) {
@@ -102,7 +103,7 @@ const createNodeFromBrick = async (
   type: BricksType,
   brick: availBricks,
 ): Promise<DBMNode | null> => {
-  const sizes = getAvailableSizes(type);
+  const sizes = getAvailableSizes({ type, content: brick });
 
   const savedNode: DBMNode = {
     type,

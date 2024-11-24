@@ -9,6 +9,8 @@ import { IconGripHorizontal, IconGripVertical, IconResize } from "@utils/icons.t
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
+import { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
+import { Highlight as HighlightType } from "@models/Bricks.ts";
 
 type SizeSelectorProps = {
   node: MNode;
@@ -17,6 +19,13 @@ type SizeSelectorProps = {
 
 export default function SizeSelector({ node, setSize }: SizeSelectorProps) {
   const { lockViewBox, setLockViewBox } = useMNodeContext();
+
+  const canFreeSize = useMemo(() => {
+    if ((node.content as unknown as HighlightType).link) {
+      return getEmbedTargetFromLink((node.content as unknown as HighlightType).link ?? "") !== "spotify";
+    }
+    return true;
+  }, [node.content]);
 
   const isCurrentSizeFreeSized = useMemo(
     () => !node.sizes.some((s) => s.width === node.width && s.height === node.height),
@@ -110,19 +119,21 @@ export default function SizeSelector({ node, setSize }: SizeSelectorProps) {
                     />
                   );
                 })}
-                <SizeChoiceItem
-                  size={null}
-                  onClick={() => {
-                    setIsFreeSizing((p) => {
-                      if (!p) {
-                        setLockViewBox(true);
-                        return true;
-                      }
-                      return p;
-                    });
-                  }}
-                  isSelected={isCurrentSizeFreeSized}
-                />
+                {canFreeSize && (
+                  <SizeChoiceItem
+                    size={null}
+                    onClick={() => {
+                      setIsFreeSizing((p) => {
+                        if (!p) {
+                          setLockViewBox(true);
+                          return true;
+                        }
+                        return p;
+                      });
+                    }}
+                    isSelected={isCurrentSizeFreeSized}
+                  />
+                )}
               </ul>
             </NavigationMenu.Content>
           </NavigationMenu.Item>

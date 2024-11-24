@@ -46,6 +46,10 @@
     transform: rotateY(85deg);
 }
 
+#cursor-inner[data-state="hidden"] {
+    transform: scale(0);
+}
+
 body[data-custom-cursor] * {
     cursor: none;
 }

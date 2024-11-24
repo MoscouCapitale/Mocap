@@ -1,4 +1,5 @@
 import { HeroSection, Single, Album, Text, PlatformLink, BricksType } from "@models/Bricks.ts";
+import { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
 
 // Canva constants
 export const CANVA_GUTTER = 20; // The space between nodes
@@ -49,12 +50,30 @@ interface DBMNode {
 
 export type { MNode, DBMNode };
 
-export const getAvailableSizes = (type: keyof typeof BricksType): MNodeSize[] | null => {
+export const getAvailableSizes = (node: Partial<MNode> & { type: keyof typeof BricksType }): MNodeSize[] => {
+    const { type } = node;
+    const embed = node.content && "link" in node.content ? getEmbedTargetFromLink(node.content.link as string ?? "") : null;
+
     switch (type) {
         case "HeroSection":
-            return null;
+            return []
         case "Highlight":
-            return [{ width: 300, height: 400 }];
+            switch (embed) {
+                // Define some custom sizes for the embeds. Spotify needs precise sizes to be displayed correctly
+                case "spotify":
+                    return [
+                        { height: 80, width: 200 },
+                        { height: 80, width: 300 },
+                        { height: 80, width: 400 },
+                        { height: 152, width: 300 }, 
+                        { height: 152, width: 400 }, 
+                        { height: 152, width: 600 }, 
+                        { height: 352, width: 300 }, 
+                        { height: 352, width: 360 }, 
+                        { height: 352, width: 600 }];
+                default:
+                    return [{ width: 300, height: 400 }];
+            }
         case "Single":
             return [{ width: 300, height: 400 }];
         case "Album":
@@ -65,6 +84,6 @@ export const getAvailableSizes = (type: keyof typeof BricksType): MNodeSize[] | 
             return [{ width: 100, height: 100 }, { width: 200, height: 100 }];
         default:
             console.error(`Type ${type} not recognized in getAvailableSizes`);
-            return null;
+            return [];
     }
 };
