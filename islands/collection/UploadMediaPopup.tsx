@@ -1,5 +1,5 @@
-import Button from "@islands/Button.tsx";
-import FileInput from "@islands/UI/Forms/FileInput/index.tsx";
+import Button from "../UI/Button.tsx";
+import { FileInput } from "@islands/UI";
 import { IconTrash } from "@utils/icons.ts";
 import { useState } from "preact/hooks";
 

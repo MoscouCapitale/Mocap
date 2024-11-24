@@ -1,7 +1,5 @@
 import UserActions from "@islands/Settings/Users/UsersList/UserActions.tsx";
-import ContextualDots from "@islands/UI/ContextualDots.tsx";
-import Select from "@islands/UI/Forms/Select.tsx";
-import { Tooltip } from "@islands/UI/Tooltip.tsx";
+import { Tooltip, ContextualDots, Select } from "@islands/UI";
 import { User, UserRole, UserStatus } from "@models/Authentication.ts";
 import { FormField } from "@models/Form.ts";
 import { cn } from "@utils/cn.ts";

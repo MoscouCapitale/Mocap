@@ -1,15 +1,11 @@
-import Select from "@islands/UI/Forms/Select.tsx";
 import { AvailableFormRelation, FormField, FormFieldOptions, FormFieldValue } from "@models/Form.ts";
 import { MediaSettingsAttributes } from "@models/Medias.ts";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import { AvailableAttributes, getAttributes } from "@islands/UI/Forms/RelationInput/relationManager.ts";
-import ContextualDots from "@islands/UI/ContextualDots.tsx";
 import InpagePopup from "@islands/Layout/InpagePopup.tsx";
-import ConfirmationModal from "@islands/ConfirmationModal.tsx";
-import ObjectRenderer from "@islands/UI/Forms/ObjectRenderer.tsx";
 import { AllMocapObjectsTypes } from "@models/forms/bricks.tsx";
 import { DatabaseAttributes } from "@models/App.ts";
-import Button from "@islands/Button.tsx";
+import { Button, ContextualDots, ObjectRenderer, Select } from "@islands/UI";
 import { IconPlus, IconTrash } from "@utils/icons.ts";
 
 type RelationInputProps = {

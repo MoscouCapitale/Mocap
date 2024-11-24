@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import Button from "@islands/Button.tsx";
+import Button from "../UI/Button.tsx";
 import InpagePopup from "@islands/Layout/InpagePopup.tsx";
 import UploadMediaPopup from "./UploadMediaPopup.tsx";
 

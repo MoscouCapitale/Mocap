@@ -1,5 +1,5 @@
-import { LabeledToolTip } from "@islands/UI/Tooltip.tsx";
-import { Album, Highlight, Artist, HeroSection, Platform, PlatformLink, Single, Text, Track, AudioBrick } from "@models/Bricks.ts";
+import { LabeledToolTip } from "@islands/UI";
+import { Album, Highlight, Artist, HeroSection, Platform, PlatformLink, Single, Text, Track } from "@models/Bricks.ts";
 import { AvailableFormRelation, FormField, ObjFormField } from "@models/Form.ts";
 import { MediaControls, MediaCTA } from "@models/Medias.ts";
 

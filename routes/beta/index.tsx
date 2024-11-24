@@ -1,8 +1,7 @@
 import { FreshContext, Handlers, PageProps, RouteContext } from "$fresh/server.ts";
-import ToasterWrapper from "@islands/UI/ToasterWrapper.tsx";
+import { ToasterWrapper, Input } from "@islands/UI";
 import { getHashedCode, verifyBetaCode } from "@utils/app.ts";
-import Button from "@islands/Button.tsx";
-import Input from "@islands/UI/Forms/Input.tsx";
+import Button from "../../islands/UI/Button.tsx";
 import { cn } from "@utils/cn.ts";
 import { getCookies, setCookie } from "$std/http/cookie.ts";
 

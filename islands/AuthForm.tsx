@@ -14,8 +14,8 @@ import {
 import { Toaster } from "@components/UI/Toast/Toaster.tsx";
 import { useToast } from "@hooks/toast.tsx";
 import { FormField, FormFieldValue } from "@models/Form.ts";
-import Input from "@islands/UI/Forms/Input.tsx";
-import Button from "@islands/Button.tsx";
+import { Input } from "@islands/UI";
+import Button from "./UI/Button.tsx";
 import { cn } from "@utils/cn.ts";
 
 type AuthFormFields = "email" | "password" | "confirmpassword";

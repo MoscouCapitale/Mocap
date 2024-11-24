@@ -1,6 +1,6 @@
 import { RouteContext } from "$fresh/server.ts";
-import Button from "@islands/Button.tsx";
-import { Tooltip } from "@islands/UI/Tooltip.tsx";
+import Button from "../../../islands/UI/Button.tsx";
+import { Tooltip } from "@islands/UI";
 import UsersList from "@islands/Users/UsersList.tsx";
 import { User, UserStatus } from "@models/Authentication.ts";
 import { supabase as supa } from "@services/supabase.ts";

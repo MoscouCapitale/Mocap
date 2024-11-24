@@ -1,6 +1,6 @@
 import { PlatformLink } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
-import Link from "@islands/UI/Link.tsx";
+import { Link } from "@islands/UI";
 
 interface FooterProps {
   platforms: PlatformLink[] | null;

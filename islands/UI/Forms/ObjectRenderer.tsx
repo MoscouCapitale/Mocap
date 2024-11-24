@@ -2,8 +2,8 @@ import { Artist, AudioBrick, availBricks, BricksType, Platform, Track } from "@m
 import { MediaControls, MediaCTA } from "@models/Medias.ts";
 import { AllMocapObjectsTypes, getObjectFormFromType } from "@models/forms/bricks.tsx";
 import { useEffect, useMemo, useState } from "preact/hooks";
-import ContentForm from "@islands/UI/ContentForm.tsx";
-import { ContentFormValue } from "@islands/UI/ContentForm.tsx";
+import ContentForm from "./ContentForm.tsx";
+import { ContentFormValue } from "./ContentForm.tsx";
 
 type SupportedObjects =
   | availBricks

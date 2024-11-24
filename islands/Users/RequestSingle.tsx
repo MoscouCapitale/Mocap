@@ -2,7 +2,7 @@ import RequestButton from "@islands/Users/RequestButton.tsx";
 import { useMemo, useState } from "preact/hooks";
 import { User, UserRole, UserStatus } from "@models/Authentication.ts";
 import { FormField } from "@models/Form.ts";
-import Select from "@islands/UI/Forms/Select.tsx";
+import { Select } from "@islands/UI";
 import { Toaster } from "@components/UI/Toast/Toaster.tsx";
 import { toast } from "@hooks/toast.tsx";
 

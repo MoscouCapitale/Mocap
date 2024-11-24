@@ -1,4 +1,4 @@
-import Button from "@islands/Button.tsx";
+import { Button } from "@islands/UI";
 import { effect } from "@preact/signals-core";
 import { VNode } from "preact";
 import { useState } from "preact/hooks";

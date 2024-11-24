@@ -1,7 +1,7 @@
-import Button from "@islands/Button.tsx";
+import Button from "../UI/Button.tsx";
 import MediaPreview from "@islands/collection/MediaPreview.tsx";
-import ConfirmationModal from "@islands/ConfirmationModal.tsx";
-import ContentForm, { ContentFormValue } from "@islands/UI/ContentForm.tsx";
+import ConfirmationModal from "../UI/ConfirmationModal.tsx";
+import ContentForm, { ContentFormValue } from "../UI/Forms/ContentForm.tsx";
 import { getMediaFormFromType } from "@models/forms/media.ts";
 import { Audio, DatabaseMedia, Image, MediaByType, MediaType, Misc, Video } from "@models/Medias.ts";
 import { cn } from "@utils/cn.ts";

@@ -1,9 +1,8 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { toast } from "@hooks/toast.tsx";
-import Button from "@islands/Button.tsx";
+import Button from "../UI/Button.tsx";
 import InpagePopup from "@islands/Layout/InpagePopup.tsx";
-import ObjectRenderer from "@islands/UI/Forms/ObjectRenderer.tsx";
-import AddButton from "@islands/collection/AddButton.tsx";
+import { ObjectRenderer } from "@islands/UI";
 import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
 import { availBricks, BricksType } from "@models/Bricks.ts";
 import { MNode } from "@models/Canva.ts";

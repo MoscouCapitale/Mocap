@@ -1,11 +1,10 @@
-import { Audio, Image, Misc, Video } from "@models/Medias.ts";
-import { useState } from "preact/hooks";
-import InpagePopup from "@islands/Layout/InpagePopup.tsx";
 import MediaDetail from "@islands/collection/MediaDetail.tsx";
-import { MediaType } from "@models/Medias.ts";
 import MediaPreview from "@islands/collection/MediaPreview.tsx";
-import ContextualDots from "@islands/UI/ContextualDots.tsx";
-import Button from "@islands/Button.tsx";
+import InpagePopup from "@islands/Layout/InpagePopup.tsx";
+import { ContextualDots } from "@islands/UI";
+import { Audio, Image, MediaType, Misc, Video } from "@models/Medias.ts";
+import { useState } from "preact/hooks";
+import Button from "../UI/Button.tsx";
 
 export default function CollectionTile({
   media,

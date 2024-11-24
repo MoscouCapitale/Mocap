@@ -3,10 +3,7 @@ import { cn } from "@utils/cn.ts";
 import { IconEye, IconEyeClosed, IconInfoSquareRounded } from "@utils/icons.ts";
 import { VNode } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import Select from "@islands/UI/Forms/Select.tsx";
-import FileInput from "@islands/UI/Forms/FileInput/index.tsx";
-import PreviewImage from "@islands/UI/Forms/FileInput/PreviewImage.tsx";
-import RelationInput from "@islands/UI/Forms/RelationInput/index.tsx";
+import { Select, FileInput, PreviewImage, RelationInput } from "@islands/UI";
 
 type InputFromTypeProps = {
   field: FormField;

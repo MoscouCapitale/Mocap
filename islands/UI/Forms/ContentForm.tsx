@@ -1,4 +1,4 @@
-import BaseInput from "@islands/UI/Forms/Input.tsx";
+import { Input as BaseInput } from "@islands/UI";
 import { FormField, FormFieldValue } from "@models/Form.ts";
 import { effect } from "@preact/signals-core";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
