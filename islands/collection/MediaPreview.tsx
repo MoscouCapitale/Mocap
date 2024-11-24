@@ -35,23 +35,18 @@ export default function MediaPreview(
     ) => {
       switch (media.type) {
         case MediaType.Images:
-          if (from === "collection") {
-            return (
-              <img
-                className={"h-full w-full object-cover max-h-[200px] rounded"}
-                src={media.public_src}
-                alt={media.alt}
-              />
-            );
-          } else {
-            return (
-              <img
-                className={"h-full object-cover rounded"}
-                src={media.public_src}
-                alt={media.alt}
-              />
-            );
-          }
+          return (
+            <img
+              className={cn("h-full rounded",
+                from === "collection" ? "w-full max-h-[200px]" : "",
+                (media as Image).object_fit === "contain"
+                ? "object-contain"
+                : "object-cover",
+              )}
+              src={media.public_src}
+              alt={media.alt}
+            />
+          );
         case MediaType.Videos:
           if (from === "collection") {
             return (

@@ -6,25 +6,8 @@ import { BricksType } from "@models/Bricks.ts";
 import { getBrickFromType } from "@services/bricks.ts";
 
 export const fetchNode = async (
-  id?: string,
-  force?: boolean,
+  id?: string
 ): Promise<{ data: MNode[] | null; error: Response | null }> => {
-  const debug = force; // TODO: just a temp var to have the savedNodes.json file
-
-  debug
-    ? console.log("Fetch from db")
-    : console.log("Fetch from savedNodes.json");
-
-  if (!debug) {
-    try {
-      const nodes = await Deno.readTextFile("./savedNodes.json");
-      return { data: JSON.parse(nodes), error: null };
-    } catch (e) {
-      console.error("Error while trying to retrieve savedNodes.json: ", e);
-      return { data: null, error: new Response(null, { status: 304 }) };
-    }
-  }
-
   let res;
   const nodes: MNode[] = [];
   if (id) res = await supa.from("Node").select("*").eq("id", id);
@@ -34,18 +17,7 @@ export const fetchNode = async (
     return { data: null, error: new Response(null, { status: 500 }) };
   }
 
-  // FIXME: this is to debug
-  if (!res.data || res.data.length === 0) {
-    try {
-      const nodes = await Deno.readTextFile("./savedNodes.json");
-      return { data: JSON.parse(nodes), error: null };
-    } catch (e) {
-      console.error("Error while trying to retrieve savedNodes.json: ", e);
-      return { data: null, error: new Response(null, { status: 304 }) };
-    }
-  }
-
-  for (const n of res.data) {
+  for (const n of res.data ?? []) {
     if (!n.type) continue;
     // @ts-ignore - I don't care ahahah
     const res = await getBrickFromType(n.type, n[n.type]);
@@ -62,9 +34,10 @@ export const fetchNode = async (
     const addedNode: MNode = {
       ...n,
       content: res.data[0],
-      sizes: getAvailableSizes(n.type) || [],
+      sizes: getAvailableSizes(n as unknown as MNode),
     };
 
+    // FIXME: Not sure about this
     // If badly saved, reset the size (HeroSection have a dynamic size so except them)
     const nodeSize = { width: n.width, height: n.height };
     if (addedNode.type !== "HeroSection" && !assertEqualSizes(addedNode.sizes, nodeSize)) {
@@ -76,14 +49,6 @@ export const fetchNode = async (
     if (n.y < 40) n.y = 40;
 
     nodes.push(addedNode);
-  }
-
-  if (!debug) {
-    try {
-      await Deno.writeTextFile("./savedNodes.json", JSON.stringify(nodes));
-    } catch (e) {
-      console.error("Error while writing to 'savedNode.json': ", e);
-    }
   }
 
   return { data: nodes, error: null };
@@ -119,7 +84,7 @@ export const createOrUpdateNodeFromBrick = async (
   if (!nodeId) return await createNodeFromBrick(type, brick);
 
   //   const { data, error } = await supa.from("Node").select().eq("id", nodeId);
-  const { data, error } = await fetchNode(nodeId, true);
+  const { data, error } = await fetchNode(nodeId);
 
   if (error) {
     console.error(
@@ -138,7 +103,7 @@ const createNodeFromBrick = async (
   type: BricksType,
   brick: availBricks,
 ): Promise<DBMNode | null> => {
-  const sizes = getAvailableSizes(type);
+  const sizes = getAvailableSizes({ type, content: brick });
 
   const savedNode: DBMNode = {
     type,
@@ -164,6 +129,9 @@ const createNodeFromBrick = async (
     case "Platform_Link":
       savedNode.PlatformLink = brick.id;
       break;
+    case "Highlight":
+      savedNode.Highlight = brick.id;
+      break;
     default:
       console.error(
         `Could not find a suitable type for "${type}" in createNodeFromBrick`,
@@ -175,7 +143,7 @@ const createNodeFromBrick = async (
   if (evaluateSupabaseResponse(newNode, error)) return null;
 
   if (newNode && newNode[0].id) {
-    const { data } = await fetchNode(newNode[0].id, true);
+    const { data } = await fetchNode(newNode[0].id);
     return Array.isArray(data) ? data[0] as DBMNode : null;
   }
 

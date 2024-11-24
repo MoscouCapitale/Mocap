@@ -7,7 +7,7 @@ import { IconTrash } from "@utils/icons.ts";
 import { createRef } from "preact";
 import { Ref, useCallback, useEffect, useRef } from "preact/hooks";
 import Button from "@islands/Button.tsx";
-import _ from "lodash";
+import { throttle } from "lodash";
 import { CANVA_GUTTER } from "@models/Canva.ts";
 
 function MCFrameEvents(frame: SVGElement, initialViewBox: MCViewBox, setViewBox: (viewBox: MCViewBox) => void) {
@@ -75,11 +75,11 @@ export default function MCanva() {
     writeNodes,
     autoSaved,
     setPreview,
+    lockViewBox
   } = useMNodeContext();
 
   const throttledSetViewBox = useCallback(
-    // @ts-expect-error - lodash types are not correct
-    _.throttle((viewBox: MCViewBox) => {
+    throttle((viewBox: MCViewBox) => {
       setViewBox(viewBox);
     }, 500),
     [],
@@ -87,10 +87,18 @@ export default function MCanva() {
 
   /* All hotkeys and mouse logic are in native event listener to avoid useless re-renders of states */
   useEffect(() => {
-    if (MCFrame.current && viewBox) {
-      MCFrameEvents(MCFrame.current, viewBox, throttledSetViewBox);
+    let cleanup: (() => void) | undefined;
+
+    if (MCFrame.current && viewBox && !lockViewBox) {
+      cleanup = MCFrameEvents(MCFrame.current, viewBox, throttledSetViewBox);
     }
-  }, [MCFrame.current]);
+  
+    return () => {
+      if (cleanup) {
+        cleanup();
+      }
+    };
+  }, [MCFrame.current, lockViewBox]);
 
   useEffect(() => {
     if (autoSaved) {
@@ -161,8 +169,7 @@ export default function MCanva() {
             </pattern>
           </defs>
           <rect x="-99999" y="-99999" width={99999 * 2} height={99999 * 2} fill="url(#pattern-circles)" />
-          {MCNodes.length &&
-            MCNodes.map((node) => <MNodeGen nodeProp={node} />)}
+          {MCNodes.map((node) => <MNodeGen nodeProp={node} />)}
         </svg>
       </div>
     </>

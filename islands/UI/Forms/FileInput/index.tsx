@@ -30,6 +30,7 @@ type FileInputProps = {
   label?: VNode | string;
   /** If you use overwriteOnFileZoneClick but want to keep some default behaviour, customFile is used to set the file state */
   customFile?: File;
+  inputName?: string;
 };
 
 // TODO: better separate the file, be creating a base component, then two component for both variants
@@ -45,6 +46,7 @@ export default function FileInput(
     bgElement,
     label,
     customFile,
+    inputName
   }: FileInputProps,
 ) {
   const acceptedFileTypes = useMemo(
@@ -122,6 +124,7 @@ export default function FileInput(
         className="w-[200px] h-[200px] relative group/filezone"
       >
         <input
+          name={inputName}
           className="opacity-0 cursor-pointer absolute left-0 w-full top-0 bottom-0 z-10"
           type="file"
           accept={acceptedFileTypes}
@@ -172,6 +175,7 @@ export default function FileInput(
           className={"relative rounded-[3px] justify-start items-center gap-2.5 inline-flex cursor-pointer px-[5px] py-[3px] bg-main"}
         >
           <input
+            name={inputName}
             className="opacity-0 cursor-pointer absolute left-0 w-full top-0 bottom-0 z-10"
             type="file"
             accept={acceptedFileTypes}

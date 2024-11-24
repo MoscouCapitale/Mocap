@@ -1,33 +1,26 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { useGSAP } from "@gsap/react";
-import { CANVA_GUTTER, MNode } from "@models/Canva.ts";
+import { CANVA_GUTTER, MNode, getAvailableSizes } from "@models/Canva.ts";
 import { signal } from "@preact/signals-core";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
-import { Ref, useCallback, useEffect, useLayoutEffect, useState } from "preact/hooks";
-
-import * as NavigationMenu from "@radix-ui/react-navigation-menu";
+import { Ref, useCallback, useEffect, useMemo, useState } from "preact/hooks";
 
 import { getBrickFromCanvaNode } from "@utils/bricks.tsx";
 import { cn } from "@utils/cn.ts";
-import { IconHandGrab, IconResize, IconTrash } from "@utils/icons.ts";
+import { IconHandGrab, IconTrash } from "@utils/icons.ts";
 import { createRef } from "https://esm.sh/v128/preact@10.19.6/src/index.js";
+import SizeSelector from "@islands/pages/MNodes/SizeSelector.tsx";
+import { useIsomorphicLayoutEffect } from "@hooks/useIsomorphicLayoutEffect.ts";
 
 type MNodeGenProps = {
   nodeProp: MNode;
 };
 
 export default function MNodeGen({ nodeProp }: MNodeGenProps) {
-  const {
-    MCNodes,
-    deleteNode,
-    getFreeSpace,
-    saveNode,
-    MCFrame,
-    isPreview,
-  } = useMNodeContext();
+  const { MCNodes, deleteNode, getFreeSpace, saveNode, MCFrame, isPreview } = useMNodeContext();
 
-  useEffect(() => setNode(node), [nodeProp]);
+  useEffect(() => setNode({...nodeProp, sizes: getAvailableSizes(nodeProp)}), [nodeProp]);
 
   const [node, setNode] = useState<MNode>(nodeProp);
 
@@ -35,6 +28,8 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
 
   const MNodeRef = signal<Ref<SVGForeignObjectElement>>(createRef());
   const GrabberRef = signal<Ref<HTMLDivElement>>(createRef());
+
+  const canResizeNode = useMemo(() => node.sizes.length > 0, [node.sizes]);
 
   const onDragEnd = useCallback(function (this: Draggable) {
     const nodePos = {
@@ -54,14 +49,9 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
 
   /** FIXME: This is a workaround to make the getFreeSpace work, but for now it the pos with one "frame" of
    * delay, so it checks the previopus pos of each node, instead of the current one */
-  const useIsomorphicLayoutEffect = (typeof window !== "undefined") ? useLayoutEffect : useEffect;
   useIsomorphicLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      if (
-        node &&
-        MNodeRef.value.current && MCFrame.current &&
-        GrabberRef.value.current
-      ) {
+      if (node && MNodeRef.value.current && MCFrame.current && GrabberRef.value.current) {
         Draggable.create(MNodeRef.value.current, {
           type: "x,y",
           edgeResistance: 0.65,
@@ -87,80 +77,28 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
     });
   }, [node]);
 
-  const updateNode = (
-    newNodeDatas: Partial<MNode> = node,
-    saveToContext = false,
-    rerender = true,
-  ) => {
+  const updateNode = (newNodeDatas: Partial<MNode> = node, saveToContext = false, rerender = true) => {
     setNode((prev) => {
       const newNode = { ...prev, ...newNodeDatas };
-      if (saveToContext) saveNode(newNode, rerender);
+      if (saveToContext) saveNode({ node: newNode, rerender });
       return newNode;
     });
   };
 
   return (
-    <foreignObject
-      className={"group select-none overflow-visible"}
-      ref={MNodeRef.value}
-      width={node.width}
-      height={node.height}
-    >
+    <foreignObject data-nodeId={`canva_node_${node.id}`} className={"group select-none overflow-visible"} ref={MNodeRef.value} width={node.width} height={node.height}>
       {/* We need to display none the toolbar if we wanna hide it, because otherwise we cannot get the ref of the grabber */}
       <div
         className={cn(
-          "p-3 flex-row justify-end items-center gap-3 bg-black bg-opacity-60 z-50 absolute top-px right-px rounded-bl-[20px] rounded-tr-[20px] opacity-0 invisible group-hover:opacity-100 group-hover:visible",
-          isPreview ? "hidden" : "flex",
+          "p-3 flex-row justify-end items-center gap-3 bg-black bg-opacity-60 z-50 absolute top-px right-px rounded-bl-[20px] rounded-tr-[20px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all",
+          isPreview ? "hidden" : "flex"
         )}
       >
-        {/* Sizes selector */}
-        {node.sizes.length > 1 && (
-          <NavigationMenu.Root className="relative z-[1] flex justify-center">
-            <NavigationMenu.List className="center m-0 flex list-none rounded-[6px] p-1">
-              <NavigationMenu.Item>
-                <NavigationMenu.Trigger className="text-text flex select-none items-center leading-none outline-none">
-                  <IconResize />
-                </NavigationMenu.Trigger>
-                <NavigationMenu.Content className="absolute top-full right-0">
-                  <ul className="flex flex-col justify-start list-none m-0 rounded-md bg-black overflow-hidden border border-text_grey w-28">
-                    {node.sizes.map((size) => {
-                      const isSelected = size.width === node.width &&
-                        size.height === node.height;
-                      return (
-                        <li
-                          key={`${size.width}x${size.height}`}
-                          className={cn(
-                            "text-text py-1 px-1 bg-text bg-opacity-0 hover:bg-opacity-10 w-full cursor-pointer text-left",
-                            isSelected ? "underline font-semibold" : "font-normal",
-                          )}
-                          onClick={() => {
-                            if (!isSelected) {
-                              updateNode(
-                                {
-                                  width: size.width,
-                                  height: size.height,
-                                },
-                                true,
-                              );
-                            }
-                          }}
-                        >
-                          {size.width}x{size.height}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </NavigationMenu.Content>
-              </NavigationMenu.Item>
-            </NavigationMenu.List>
-          </NavigationMenu.Root>
-        )}
+        {/* Size selector & setter */}
+        {canResizeNode && <SizeSelector node={node} setSize={updateNode} />}
 
         {/* Grabber to move the node */}
-        <div
-          ref={GrabberRef.value}
-          className={"text-text flex items-center justify-center"}
-        >
+        <div ref={GrabberRef.value} className={"text-text flex items-center justify-center"}>
           <IconHandGrab />
         </div>
 
@@ -169,10 +107,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
           className="rounded-full w-[35px] h-[35px] inline-flex items-center justify-center text-text outline-none"
           aria-label="Delete node"
           onClick={() => {
-            if (
-              !isPreview &&
-              globalThis.confirm("Are you sure you want to delete this node?")
-            ) {
+            if (!isPreview && globalThis.confirm("Are you sure you want to delete this node?")) {
               deleteNode(node.id);
             }
           }}
@@ -182,7 +117,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
       </div>
 
       {/* Actual node content */}
-      {getBrickFromCanvaNode(node, { isMovable: !isPreview, disableAnimations: true })}
+      {getBrickFromCanvaNode(node, { isMovable: !isPreview, disableAnimations: true, brickSize: { width: node.width, height: node.height } })}
     </foreignObject>
   );
 }

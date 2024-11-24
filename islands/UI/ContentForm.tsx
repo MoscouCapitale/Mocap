@@ -46,12 +46,14 @@ export default function ContentForm({
   /** Custom dependency trigger for the Input element.
    * 
    * This is a hack with React, in which I can only select a few attributes of a state to create a dependency.
-   * Here If the id change (so the form is changing element), or if the media changes (on CollectionGrid select)
+   * Here If the id change (so the form is changing element), or if the media changes (on CollectionGrid select),
+   * or simply if the form structure changes.
    */
   const inputDependencies = useMemo(() =>
     JSON.stringify({
       id: formData.id,
       media: formData.media,
+      keys: Object.keys(formData),
     }), [formData]);
 
   const Input = useCallback(({ name }: { name: FormField["name"] }) => {

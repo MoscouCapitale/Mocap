@@ -27,9 +27,9 @@ ___
   - [x] UI
   - [ ] Implement bricks
     - [ ] Tiles
-    - [ ] Simple video/image with text/cta (maybe re-use the Single ?)
-    - [ ] Youtube embed
-    - [ ] Audio (soundcloud, spotify, etc...) embed
+    - [x] Simple video/image with text/cta (maybe re-use the Single ?)
+    - [x] Youtube embed
+    - [x] Audio (soundcloud, spotify, etc...) embed
   - [x] Manage saved bricks (in canva page)
   - [ ] Error management
       - [ ] Brick with this name already exists
@@ -37,9 +37,9 @@ ___
     - [x] Markdown support
     - [x] Better scrollbar
     - [x] Better fade in/out
-  - [ ] Better way to show the sizes list (using navigation menu viewport)
+  - [x] Better way to show the sizes list (using navigation menu viewport)
   - [ ] When deleting a brick, maybe add an "intelligent" way of deleting related unused content ?
-  - [ ] Mettre les tailles de certaines briques (link, texte) en "libre" (snap à 100px)
+  - [x] Mettre les tailles de certaines briques (link, texte) en "libre" (snap à 100px)
   - [ ] After-canva feature fixes
       - [ ] Add toasts
       - [ ] Add supa error management
@@ -47,7 +47,11 @@ ___
 ___
 - Bugs:
   - [ ] Herosection - when you hover the title with disablePauseOnHover, it stops the video (maybe we can tie the mouseEnter on a specific element)
-  - [ ] If you delete a brick, it is still present in the bricks list
+  - [x] If you delete a brick, it is still present in the bricks list
+  - [x] When you click on a brick on the select on the bricksidebar, the hover effect is not removed
+  - [x] When you update a brick, the preview is not updated. YOu have to reload the page to see the changes
+  - [x] When you update a brick, the bricksidebar is reseted, but the select is still on the previous brick
+  - [x] When you move a node, the new position is not saved
 
 ## Collection
 - [x] Supabase init
@@ -143,7 +147,7 @@ ___
 
 ___
 - Bugs:
-  - [ ] Fix lodash bad types
+  - [x] Fix lodash bad types
   - [ ] Make partials WORK
     - [ ] Set partial content displayed on page load, instead of click (because for now it is only on subnav items, and specifically on the content page. It should be global, for each "page")
   - [ ] Why is database fetching empty when first connexion ? - Sometime you cannot retrieve any content from supabase, and need to login again to see it, or even restart the app ?

@@ -1,7 +1,7 @@
 import { BricksType } from "@models/Bricks.ts";
 import { MNode } from "@models/Canva.ts";
 import { getBrickFromCanvaNode } from "@utils/bricks.tsx";
-import _ from "lodash";
+import { throttle } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 
 type BrickLayoutProps = {
@@ -123,8 +123,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
   }, [globalThis?.innerHeight, globalThis?.innerWidth]);
 
   // TODO: this can be optimized
-  // @ts-ignore - Bad lodash
-  const handleResize = _.throttle(() => {
+  const handleResize = throttle(() => {
     calculateRenderedNodes();
   }, 500);
 
@@ -143,7 +142,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
   }, [calculateRenderedNodes]);
 
   useEffect(() => {
-    if (globalThis) globalThis.addEventListener("pointermove", followPointer);
+    if (globalThis) globalThis.addEventListener("pointermove", throttle(followPointer, 80));
 
     return () => {
       if (globalThis) globalThis.removeEventListener("pointermove", followPointer);
@@ -179,7 +178,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
                   transform: `translate3d(var(--offset-x), var(--offset-y), 0)`,
                 }}
               >
-                {getBrickFromCanvaNode(node, {})}
+                {getBrickFromCanvaNode(node, { brickSize: { width: node.width, height: node.height } })}
               </article>
             );
           })}

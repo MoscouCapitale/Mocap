@@ -16,7 +16,7 @@ export const handler: Handlers<Media | null> = {
   async POST(_req, ctx) {
     const formData = await _req.formData();
 
-    const file: File = formData.get("file") as File;
+    const file = formData.get("file") as File;
 
     const bucket = getMediaTypeFromFiletype(file.type);
 

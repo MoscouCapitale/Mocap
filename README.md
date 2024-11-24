@@ -29,24 +29,14 @@ cd Mocap
 
 2. Start the Supabase local development server
 ```Bash
-# Note: this command will try to start the Supabase server using the `supabase` command. If not found, it will use the `npx supabase` command instead, making npm a requirement.
+# Note: this command will try to start the Supabase server using the `supabase` command. If not
+# found, it will use the `npx supabase` command instead, making npm a requirement.
 deno task start supa-start
-
-# The Supabase instance will run, and logs its status in the terminal, including the API keys to use in the `.env` file.
-Started supabase local development setup.
-...
-  anon key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
-  service_role key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
-...
 ```
 
-3. Copy the `.env.basic` file to `.env.local` and fill in the api keys from the Supabase instance
+3. Copy the `.env.basic` file to `.env.local`
 ```Bash
 cp .env.basic .env.local
-
-# Fill in the .env file with the api keys from the Supabase instance
-SUPABASE_KEY=the_service_role_key_from_the_supabase_instance
-SUPABASE_PUBLIC_KEY=the_anon_key_from_the_supabase_instance
 ```
 
 4. Start the Fresh server

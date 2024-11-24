@@ -1,15 +1,21 @@
 import { Image, MediaCTA, Video } from "@models/Medias.ts";
 import { TableNames } from "@models/database.ts";
 
+/** The default base brick interface. */
 interface Brick {
   id: number;
   name: string;
   created_at: string;
   updated_at: string;
+  /** The type of the brick, to allow for dynamic management */
   type?: BricksType;
+  /** The id of the node (from `Node` table) associated with the brick */
   nodeId?: string;
 }
 
+/** The HeroSection brick interface.
+ * 
+ * Its a brick positionned at the top of a page, used a the main brick. It is animated and can have a scrolling effect. */
 export interface HeroSection extends Brick {
   title?: string;
   subtitle?: string;
@@ -18,6 +24,9 @@ export interface HeroSection extends Brick {
   style?: HeroSectionStyle;
 }
 
+/** The Single brick interface.
+ * 
+ * It is a brick that represents a single music track. */
 export interface Single extends Brick {
   title: string;
   media: Image | Video | null;
@@ -27,6 +36,9 @@ export interface Single extends Brick {
   cta?: MediaCTA;
 }
 
+/** The Album brick interface.
+ * 
+ * It is a brick that represents a music album. Contains multiple tracks, each with artists and links to platforms. */
 export interface Album extends Brick {
   title: string;
   media: Image | Video | null;
@@ -36,9 +48,31 @@ export interface Album extends Brick {
   cta?: MediaCTA;
 }
 
+/** The Text brick interface.
+ * 
+ * Represents a simple text section. */
 export interface Text extends Brick {
+  /** The text content of the brick. Supports markdown. */
   text: string;
   media: Image | Video | null;
+}
+
+/** The PlatformLink brick interface.
+ * 
+ * Represents a simple link to a platform. */
+export interface PlatformLink extends Brick {
+  platform: Platform;
+  url: string;
+};
+
+/** The Highlight brick interface.
+ * 
+ * A simple brick with a media, optionnaly title/subtitle and a link. */
+export interface Highlight extends Brick {
+  media: Image | Video | null;
+  title?: string;
+  subtitle?: string;
+  link?: string;
 }
 
 export type Track = {
@@ -58,10 +92,6 @@ export type Artist = {
   updated_at: string;
 };
 
-export interface PlatformLink extends Brick {
-  platform: Platform;
-  url: string;
-};
 
 export type Platform = {
   id: number;
@@ -71,31 +101,13 @@ export type Platform = {
   updated_at: string;
 };
 
-const BrickModifiableAttributes = {
-  name: "Nom",
-  title: "Titre",
-  media: "Média",
-  subtitle: "Sous-titre",
-  cta: "Lien",
-  hoverable: "Effet au survol",
-  platforms: "Plateformes",
-  tracklist: "Tracklist",
-  text: "Texte",
-  special: "Spécial",
-  plateform: "Plateforme",
-  url: "Lien",
-  icon: "Icone",
-  track: "Track",
-  artist: "Artistes",
-  style: "Style",
-};
-
 enum BricksType {
   HeroSection = "HeroSection",
   Single = "Single",
   Album = "Album",
   Text = "Text",
   Platform_Link = "Platform_Link",
+  Highlight = "Highlight",
 }
 
 type HeroSectionStyle = "scrolling-hero";
@@ -112,6 +124,8 @@ const getBrickTypeLabel = (type: BricksType): string => {
       return "Texte";
     case BricksType.Platform_Link:
       return "Réseaux sociaux";
+    case BricksType.Highlight:
+      return "Média";
     default:
       console.error(`Unsupported label brick type: ${type}`);
       return "";
@@ -130,65 +144,17 @@ const getBrickTypeTableName = (type: BricksType): TableNames => {
       return "Bricks_Text";
     case BricksType.Platform_Link:
       return "Platform_Link";
+    case BricksType.Highlight:
+      return "Bricks_Highlight";
     default:
       throw new Error(`Unsupported brick type: ${type}`);
   }
 }
 
-export type availBricks = HeroSection | Single | Album | Text | PlatformLink;
+export type availBricks = HeroSection | Single | Album | Text | PlatformLink | Highlight;
 
 export { 
-  BrickModifiableAttributes, 
   BricksType, 
   getBrickTypeLabel,
    getBrickTypeTableName,  
 };
-
-export function createDefaultBrick(
-  brickType: BricksType,
-): availBricks {
-  switch (brickType) {
-    case BricksType.HeroSection:
-      return {
-        name: "",
-        title: "",
-        subtitle: "",
-        media: null,
-        cta: {},
-        style: "scrolling-hero",
-      } as HeroSection;
-    case BricksType.Single:
-      return {
-        name: "",
-        title: "",
-        media: null,
-        track: {},
-        hoverable: false,
-        cta: {},
-        platforms: [{}],
-      } as Single;
-    case BricksType.Album:
-      return {
-        name: "",
-        title: "",
-        media: null,
-        hoverable: false,
-        platforms: [{}],
-        tracklist: [{}],
-        cta: {},
-      } as Album;
-    case BricksType.Text:
-      return {
-        name: "",
-        text: "",
-      } as Text;
-    case BricksType.Platform_Link:
-      return {
-        name: "",        
-        url: "",
-        platform: {},
-      } as PlatformLink;
-    default:
-      throw new Error(`Unsupported brick type: ${brickType}`);
-  }
-}

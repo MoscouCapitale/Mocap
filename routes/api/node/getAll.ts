@@ -4,7 +4,7 @@ import { fetchNode } from "@services/nodes.ts";
 
 export const handler: Handlers<MNode | null> = {
   async GET(req: Request, ctx: FreshContext) {
-    const { data, error } = await fetchNode(undefined, ctx.url.searchParams.get("force") === "true");
+    const { data, error } = await fetchNode();
     if (error) return error;
     return new Response(JSON.stringify(data), { status: 200 });
   },

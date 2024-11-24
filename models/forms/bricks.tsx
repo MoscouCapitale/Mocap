@@ -1,14 +1,12 @@
 import { LabeledToolTip } from "@islands/UI/Tooltip.tsx";
-import { Album, Artist, HeroSection, Platform, PlatformLink, Single, Text, Track } from "@models/Bricks.ts";
+import { Album, Highlight, Artist, HeroSection, Platform, PlatformLink, Single, Text, Track } from "@models/Bricks.ts";
 import { AvailableFormRelation, FormField, ObjFormField } from "@models/Form.ts";
-import {
-  MediaControls,
-  MediaCTA
-} from "@models/Medias.ts";
+import { MediaControls, MediaCTA } from "@models/Medias.ts";
 
 export type AllMocapObjectsTypes =
   | "HeroSection"
   | "Single"
+  | "Highlight"
   | "Album"
   | "Track"
   | "Artist"
@@ -23,12 +21,12 @@ export type AllMocapObjectsTypes =
  *
  * Include the bricks, but also the secondary objects like cta, controls, object_fit, etc. */
 
-export const getObjectFormFromType = (
-  type: AllMocapObjectsTypes,
-): FormField[] | null => {
+export const getObjectFormFromType = (type: AllMocapObjectsTypes): FormField[] | null => {
   switch (type) {
     case "HeroSection":
       return HeroSectionFormFields;
+    case "Highlight":
+      return HighlightFormFields;
     case "Single":
       return SingleFormFields;
     case "Album":
@@ -52,18 +50,11 @@ export const getObjectFormFromType = (
   }
 };
 
-const DefaultBricksFormValues: ObjFormField<
-  HeroSection | Single | Album | Track | Artist | Platform | Text
->[] = [
+const DefaultBricksFormValues: ObjFormField<HeroSection | Single | Album | Track | Artist | Platform | Text>[] = [
   {
     name: "name",
     type: "string",
-    label: (
-      <LabeledToolTip
-        label="Nom"
-        text="Le nom unique, de l'élément qui permettera de l'identifier"
-      />
-    ),
+    label: <LabeledToolTip label="Nom" text="Le nom unique, de l'élément qui permettera de l'identifier" />,
     required: true,
   },
 ];
@@ -78,7 +69,7 @@ export const ObjectRelations: Record<AvailableFormRelation, FormField> = {
       type: "cta",
       configurable: true,
       multiple: false,
-      allowEmpty: false,
+      allowEmpty: true,
       allowInsert: true,
     },
   },
@@ -91,7 +82,7 @@ export const ObjectRelations: Record<AvailableFormRelation, FormField> = {
       type: "track",
       configurable: true,
       multiple: false,
-      allowEmpty: false,
+      allowEmpty: true,
       allowInsert: true,
     },
   },
@@ -103,7 +94,7 @@ export const ObjectRelations: Record<AvailableFormRelation, FormField> = {
       type: "tracklist",
       configurable: true,
       multiple: true,
-      allowEmpty: false,
+      allowEmpty: true,
       allowInsert: true,
     },
   },
@@ -115,7 +106,7 @@ export const ObjectRelations: Record<AvailableFormRelation, FormField> = {
       type: "artist",
       configurable: true,
       multiple: true,
-      allowEmpty: false,
+      allowEmpty: true,
       allowInsert: true,
     },
   },
@@ -127,7 +118,7 @@ export const ObjectRelations: Record<AvailableFormRelation, FormField> = {
       type: "platforms",
       configurable: true,
       multiple: true,
-      allowEmpty: false,
+      allowEmpty: true,
       allowInsert: true,
     },
   },
@@ -140,7 +131,7 @@ export const ObjectRelations: Record<AvailableFormRelation, FormField> = {
       type: "platform",
       configurable: true,
       multiple: false,
-      allowEmpty: false,
+      allowEmpty: true,
       allowInsert: true,
     },
   },
@@ -153,7 +144,7 @@ export const ObjectRelations: Record<AvailableFormRelation, FormField> = {
       type: "controls",
       configurable: true,
       multiple: false,
-      allowEmpty: false,
+      allowEmpty: true,
       allowInsert: true,
     },
   },
@@ -192,6 +183,40 @@ const HeroSectionFormFields: ObjFormField<HeroSection>[] = [
         value: "scrolling-hero",
       },
     ],
+  },
+];
+
+const HighlightFormFields: ObjFormField<Highlight>[] = [
+  ...DefaultBricksFormValues,
+  {
+    name: "title",
+    type: "string",
+    label: "Titre",
+    required: true,
+  },
+  {
+    name: "subtitle",
+    type: "string",
+    label: "Sous-titre",
+  },
+  {
+    name: "media",
+    type: "file",
+    label: "Média",
+    inputConfig: {
+      onClickInput: () => {},
+      customLabel: "Parcourir la médiathèque",
+    },
+  },
+  {
+    name: "link",
+    type: "string",
+    label: (
+      <LabeledToolTip
+        label="Lien"
+        text="Si un lien Youtube/Spotify/Soundcloud est renseigné, alors le 'média' sera remplacé par une intégration vers ce lien."
+      />
+    ),
   },
 ];
 
@@ -253,12 +278,7 @@ const TextFormFields: ObjFormField<Text>[] = [
   {
     name: "text",
     type: "markdown",
-    label: (
-      <LabeledToolTip
-        label="Texte"
-        text="Texte de la brique. Supporte la mise en forme en markdown."
-      />
-    ),
+    label: <LabeledToolTip label="Texte" text="Texte de la brique. Supporte la mise en forme en markdown." />,
   },
   {
     name: "media",

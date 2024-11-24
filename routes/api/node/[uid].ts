@@ -12,7 +12,7 @@ export const handler: Handlers<MNode | null> = {
         return new Response("Invalid id", { status: 400 });
     }
 
-    const { data, error } = await fetchNode(uid, true);
+    const { data, error } = await fetchNode(uid);
     if (error) return error;
     return new Response(JSON.stringify(data ? data[0] : null), { status: 200 });
   },

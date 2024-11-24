@@ -13,7 +13,7 @@ import Button from "@islands/Button.tsx";
 import { IconPlus, IconTrash } from "@utils/icons.ts";
 
 type RelationInputProps = {
-  field: FormField;
+    field: FormField;
   onChange: (value: FormFieldValue) => void;
 };
 
@@ -33,7 +33,7 @@ export default function RelationInput(
 
   const handleSelectChange = useCallback((v: FormFieldOptions["value"][]) => {
     if (!allAttributes) return;
-    const elements = allAttributes.filter((att) => v.includes(String(att.id)));
+    const elements = v ? allAttributes.filter((att) => v.includes(String(att.id))) : [];
     onChange(elements);
   }, [allAttributes]);
 
