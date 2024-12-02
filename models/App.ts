@@ -4,6 +4,7 @@ import { BricksType } from "@models/Bricks.ts";
 
 interface AppStorage {
   navbarExpanded?: boolean;
+  acknowledgedMobileWarning?: boolean;
 }
 
 type ConfirmationModalProps = {

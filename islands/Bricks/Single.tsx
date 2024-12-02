@@ -58,7 +58,11 @@ export default function Single({ content }: SingleProps) {
       data-hover-card
       data-open={isOpen}
       className={"group/main w-full h-full rounded-[20px]"}
+      tabIndex={0}
       onMouseLeave={() => {
+        if (isOpen) setIsOpen(false);
+      }}
+      onBlur={() => {
         if (isOpen) setIsOpen(false);
       }}
     >

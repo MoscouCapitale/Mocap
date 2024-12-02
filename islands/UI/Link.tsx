@@ -21,7 +21,7 @@ export default function Link({
     variants: {
       variant: {
         default: "",
-        footer: "text-grey font-semibold hover:text-text",
+        footer: "text-grey font-semibold hover:text-text text-sm md:text-base",
       },
     },
     defaultVariants: {
