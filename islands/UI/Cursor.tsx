@@ -1,5 +1,6 @@
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { throttle } from "lodash";
+import { useIsMobile } from "@hooks/useIsMobile.ts";
 
 /**
  * The possible cursor states.
@@ -55,7 +56,13 @@ const getCursorsState = (element: HTMLElement): cursorState => {
 };
 
 export default function Cursor() {
-  const [useCustomCursors, setUseCustomCursors] = useState(true);
+  const isMobile = useIsMobile();
+
+  const [useCustomCursors, setUseCustomCursors] = useState(false);
+
+  useEffect(() => {
+    if (!isMobile) setUseCustomCursors(true);
+  }, [isMobile]);
 
   const lerp = (a: number, b: number, n: number) => (1 - n) * a + n * b;
 
@@ -123,7 +130,7 @@ export default function Cursor() {
         <>
           <link rel="stylesheet" href="/cursor.css" />
           <div id="cursor">
-            <div id="cursor-inner" onLoad={(e) => console.log("loaded", e)}>
+            <div id="cursor-inner">
               <div id="cursor-front">
                 <img src="/cursor/default.svg" width="120" height="120" />
               </div>

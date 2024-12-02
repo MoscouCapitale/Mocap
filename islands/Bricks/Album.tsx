@@ -67,7 +67,11 @@ export default function Album({ content }: AlbumProps) {
       data-hover-card
       data-open={isOpen}
       className={"group/main w-full h-full rounded-[20px]"}
+      tabIndex={0}
       onMouseLeave={() => {
+        if (isOpen) setIsOpen(false);
+      }}
+      onBlur={() => {
         if (isOpen) setIsOpen(false);
       }}
     >
@@ -124,9 +128,10 @@ const AlbumTrack = ({ track }: { track: Track }) => {
           />
           <div
             className={cn(
-              "w-64 h-64 absolute bottom-[-300%] left-[-300%] rounded-full bg-[#000000b7] z-20", // Element is just placed at the tip of the arrow
+              "absolute rounded-full bg-[#000000b7] z-20", // Element is just placed at the tip of the arrow
               "invisible group-hover/trackptfm:visible opacity-0 group-hover/trackptfm:opacity-100 scale-0 group-hover/trackptfm:scale-100",
               "transition-all duration-300 ease-in-out",
+              "w-44 h-44 bottom-[-400%] left-[-400%] md:w-64 md:h-64 md:bottom-[-300%] md:left-[-300%]"
             )}
           >
             {track.platforms.map((pfl, i) => {
@@ -141,10 +146,11 @@ const AlbumTrack = ({ track }: { track: Track }) => {
                   href={pfl.url}
                   target="_blank"
                   className={cn(
-                    "w-12 h-12 flex absolute top-1/2 left-1/2 justify-center items-center",
+                    "flex absolute top-1/2 left-1/2 justify-center items-center",
+                    "w-8 h-8 md:w-12 md:h-12",
+                    "translate-x-[40px] md:translate-x-[60px] -translate-y-1/2", // Place the element in-between the radius of the circle
                   )}
                   style={{
-                    transform: "translate(60px, -50%)", // Place the element in-between the radius of the circle
                     transformOrigin: "0 0",
                     rotate: `${i * (360 / plNb)}deg`, // Place the element on the circle parent
                   }}

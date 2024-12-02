@@ -4,21 +4,16 @@ import { NavItemType } from "@models/Layout.ts";
 import { getAppStorage, saveAppStorage } from "@utils/localStorage.ts";
 import LogoutButton from "@islands/Misc/LogoutButton.tsx";
 
-import {
-  IconChartDonut,
-  IconChevronLeft,
-  IconMailbox,
-  IconPencilStar,
-  IconPhotoPlus,
-  IconSettings2,
-  IconUsers,
-} from "@utils/icons.ts";
+import { IconChartDonut, IconChevronLeft, IconMailbox, IconPencilStar, IconPhotoPlus, IconSettings2, IconUsers } from "@utils/icons.ts";
 import { cn } from "@utils/cn.ts";
+import { useIsMobile } from "@hooks/useIsMobile.ts";
+import InpagePopup from "@islands/Layout/InpagePopup.tsx";
 
 export default function Navbar(path: { path: string }) {
-  const [isExpanded, setIsExpanded] = useState<boolean>(
-    getAppStorage()?.navbarExpanded || false,
-  );
+  const isMobile = useIsMobile();
+  const [acknowledgedMobileWarning, setAcknowledgedMobileWarning] = useState(getAppStorage()?.acknowledgedMobileWarning || false);
+
+  const [isExpanded, setIsExpanded] = useState<boolean>(getAppStorage()?.navbarExpanded || false);
 
   const [readyToRender, setReadyToRender] = useState(false);
 
@@ -63,13 +58,7 @@ export default function Navbar(path: { path: string }) {
 
   useEffect(() => {
     async function init() {
-      setNavItems((prev) =>
-        prev.map((item) =>
-          path.path == item.path
-            ? { ...item, active: true }
-            : { ...item, active: false }
-        )
-      );
+      setNavItems((prev) => prev.map((item) => (path.path == item.path ? { ...item, active: true } : { ...item, active: false })));
       // FIXME: temp disable for slow internet
       // let requestNb = 0;
       // const res = await fetch("/api/request/getNotifications");
@@ -92,58 +81,46 @@ export default function Navbar(path: { path: string }) {
     <nav
       className={cn(
         "bg-black h-screen p-[30px] flex-col justify-between items-start inline-flex transition-all duration-300 ease-in-out overflow-hidden shrink-0",
-        isExpanded ? "w-[190px]" : "w-[84px]",
+        isExpanded ? "w-[190px]" : "w-[84px]"
       )}
     >
-      <div class="flex-col justify-start items-start gap-10 inline-flex">
-        {readyToRender && navItems.map((item) => NavbarItem(item, isExpanded))}
-      </div>
+      <div class="flex-col justify-start items-start gap-10 inline-flex">{readyToRender && navItems.map((item) => NavbarItem(item, isExpanded))}</div>
       <div class="w-full items-start inline-flex flex-col gap-5">
         <LogoutButton />
         <a class="w-full justify-start items-center gap-5 inline-flex">
           <IconChevronLeft
-            className={cn(
-              "hover:cursor-pointer",
-              !isExpanded && "transform rotate-180",
-            )}
+            className={cn("hover:cursor-pointer", !isExpanded && "transform rotate-180")}
             color="white"
             onClick={() => {
               saveAppStorage({ navbarExpanded: !isExpanded });
               setIsExpanded((p) => !p);
             }}
           />
-          <span
-            class={cn("text-base text-text", isExpanded ? "visible" : "hidden")}
-          >
-            Fermer
-          </span>
+          <span class={cn("text-base text-text", isExpanded ? "visible" : "hidden")}>Fermer</span>
         </a>
       </div>
+      {isMobile &&
+        <InpagePopup
+          isOpen={!acknowledgedMobileWarning}
+          closePopup={() => {
+            saveAppStorage({ acknowledgedMobileWarning: true });
+            setAcknowledgedMobileWarning(true);
+          }}
+        >
+          <div class="flex-col justify-start items-start gap-5 inline-flex">
+            <p class="text-text">Attention ! Le panel admin n'est pas optimisé pour les mobiles. Utilisez un ordinateur pour une meilleure expérience.</p>
+          </div>
+        </InpagePopup>
+      }
     </nav>
   );
 }
 
 function NavbarItem(item: NavItemType, isExpanded: boolean) {
   return (
-    <a
-      href={item.path}
-      class="w-full justify-start items-center gap-5 inline-flex relative"
-    >
-      {item.icon && (
-        <item.icon
-          color={item.active ? "white" : "grey"}
-          className={cn(item.badge && "z-20")}
-        />
-      )}
-      <span
-        class={cn(
-          "text-base",
-          item.active ? "text-text" : "text-text_grey",
-          isExpanded ? "visible" : "hidden",
-        )}
-      >
-        {item.label}
-      </span>
+    <a href={item.path} class="w-full justify-start items-center gap-5 inline-flex relative">
+      {item.icon && <item.icon color={item.active ? "white" : "grey"} className={cn(item.badge && "z-20")} />}
+      <span class={cn("text-base", item.active ? "text-text" : "text-text_grey", isExpanded ? "visible" : "hidden")}>{item.label}</span>
       {item.badge && (
         <span
           class={`absolute bg-${item.badge.color} rounded-full text-white text-xs w-[20px] h-[20px] flex justify-center items-center top-[-7px] right-[-7px] z-10`}

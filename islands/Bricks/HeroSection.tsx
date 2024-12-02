@@ -165,19 +165,21 @@ export default function HeroSection(
           className={cn(
             "inline-block whitespace-nowrap transition-all ease-in-out relative text-text font-bold",
             "after:content-[var(--title-subcontent)]",
-            asMainHeroSection ? "text-clamp" : "text-[20px]",
+            asMainHeroSection ? "text-clamp" : "text-4xl md:text-[20px]",
             content.subtitle
-              ? `after:absolute after:top-full after:left-0 after:max-w-0 after:inline-block [&:after]:text-text_grey after:text-clamp-sm after:overflow-hidden group-hover/title:after:max-w-screen-2xl after:duration-3000`
-              : `after:w-0 after:h-[2px] after:block after:bg-text group-hover/title:after:w-full after:duration-500`,
+              ? `after:absolute after:top-full after:left-0 after:max-w-0 after:inline-block [&:after]:text-text_grey after:text-3xl md:after:text-clamp-sm after:overflow-hidden group-hover/main:after:max-w-screen-2xl md:group-hover/title:after:max-w-screen-2xl after:duration-3000`
+              : `after:w-0 after:h-[2px] after:block after:bg-text group-hover/main:after:w-full md:group-hover/title:after:w-full after:duration-500`,
           )}
         >
           {content.title ?? ""}
         </h2>
         <IconArrowUpRight
           className={cn(
-            "invisible group-hover/title:visible opacity-0 group-hover/title:opacity-100 cursor-pointer absolute left-full bottom-0 text-text_grey hover:text-text",
-            " translate-x-0 translate-y-0 group-hover/title:translate-x-[10%] group-hover/title:-translate-y-[10%]", // Special effect on hover
-            asMainHeroSection ? "w-[clamp(1rem,10vw,4rem)] h-[clamp(1rem,10vw,4rem)]" : "w-8 h-8",
+            "invisible opacity-0 cursor-pointer absolute left-full bottom-0 text-text_grey hover:text-text",
+            "group-hover/main:visible group-hover/main:opacity-100 md:group-hover/title:visible md:group-hover/title:opacity-100",
+            " translate-x-0 translate-y-0", // Special effect on hover
+            "group-hover/main:translate-x-[10%] group-hover/main:-translate-y-[10%] md:group-hover/title:translate-x-[10%] md:group-hover/title:-translate-y-[10%]",
+            asMainHeroSection ? "w-[clamp(1rem,10vw,4rem)] h-[clamp(1rem,10vw,4rem)]" : "w-12 h-12 md:w-8 md:h-8",
           )}
           style={{ // Only delay the translation
             transition:

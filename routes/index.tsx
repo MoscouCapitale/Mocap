@@ -27,7 +27,7 @@ export default async function Home(req: Request, ctx: RouteContext) {
       <link rel="stylesheet" href="/cardsglow.css" />
       <Cursor />
       <AdminPanelButton />
-      <main className={"min-h-screen w-full flex flex-col justify-center items-start"}>
+      <main className={"min-h-screen w-full flex flex-col items-center justify-start"}>
         <img
           src="/assets/gradients/001.webp"
           loading={"lazy"}
