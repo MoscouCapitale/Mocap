@@ -16,7 +16,7 @@ type FileInputProps = {
   /** If specified, on click on the icon to delete the file, the default behaviour will be prevented and overwriteOnFileDeleteClick called */
   overwriteOnFileDeleteClick?: (e: Event) => void;
   /** Type of the file we want to accept */
-  filetype?: "Images" | "Videos" | "Audios" | "Misc";
+  filetype?: Array<"Images" | "Videos" | "Audios" | "Misc">;
   /** Full string query of file types that are accepted */
   accept?: string;
   /** The file zone styling variant. Default is `full-size`
@@ -50,9 +50,11 @@ export default function FileInput(
   }: FileInputProps,
 ) {
   const acceptedFileTypes = useMemo(
-    () =>
-      accept ?? getMediaTypeFromFiletype(filetype ?? "") ??
-        convertAcceptFileTypeMapToInputAccept(),
+    () => {
+      if (accept) return accept;
+      if (filetype?.length) return filetype.map((f) => getMediaTypeFromFiletype(f)).join(",");
+      return convertAcceptFileTypeMapToInputAccept();
+    },
     [filetype, accept],
   );
 

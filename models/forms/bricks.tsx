@@ -171,6 +171,7 @@ const HeroSectionFormFields: ObjFormField<HeroSection>[] = [
     type: "file",
     label: "Média",
     inputConfig: {
+      filetype: ["Images", "Videos"],
       onClickInput: () => {},
       customLabel: "Parcourir la médiathèque",
     },
@@ -207,6 +208,7 @@ const HighlightFormFields: ObjFormField<Highlight>[] = [
     type: "file",
     label: "Média",
     inputConfig: {
+      filetype: ["Images", "Videos"],
       onClickInput: () => {},
       customLabel: "Parcourir la médiathèque",
     },
@@ -236,6 +238,7 @@ const SingleFormFields: ObjFormField<Single>[] = [
     type: "file",
     label: "Média",
     inputConfig: {
+      filetype: ["Images", "Videos"],
       onClickInput: () => {},
       customLabel: "Parcourir la médiathèque",
     },
@@ -263,6 +266,7 @@ const AlbumFormFields: ObjFormField<Album>[] = [
     type: "file",
     label: "Média",
     inputConfig: {
+      filetype: ["Images", "Videos"],
       onClickInput: () => {},
       customLabel: "Parcourir la médiathèque",
     },
@@ -293,6 +297,7 @@ const TextFormFields: ObjFormField<Text>[] = [
       />
     ),
     inputConfig: {
+      filetype: ["Images", "Videos"],
       onClickInput: () => {},
       customLabel: "Parcourir la médiathèque",
     },
@@ -412,6 +417,7 @@ export const AudioFormFields: ObjFormField<AudioBrick>[] = [
     type: "file",
     label: <LabeledToolTip label="Média" text="Cover du son. Si aucun média n'est renseigné, la couleur du site sera utilisée." />,
     inputConfig: {
+      filetype: ["Images", "Videos"],
       onClickInput: () => {},
       customLabel: "Parcourir la médiathèque",
     },
@@ -421,7 +427,7 @@ export const AudioFormFields: ObjFormField<AudioBrick>[] = [
     type: "file",
     label: "Audio",
     inputConfig: {
-      filetype: "Audios",
+      filetype: ["Audios"],
       onClickInput: () => {},
       customLabel: "Parcourir la médiathèque",
     },

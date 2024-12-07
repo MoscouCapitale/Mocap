@@ -31,7 +31,7 @@ export interface FormField {
   realtime?: boolean; // TODO:
   relation?: FormFieldRelation;
   inputConfig?: {
-    filetype?: "Images" | "Videos" | "Audios" | "Misc";
+    filetype?: Array<"Images" | "Videos" | "Audios" | "Misc">;
     media?: Media;
     onClickInput?: (el?: FormField["name"]) => void;
     customLabel?: string | JSX.Element;
