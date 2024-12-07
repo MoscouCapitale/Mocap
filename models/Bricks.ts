@@ -1,4 +1,4 @@
-import { Image, MediaCTA, Video } from "@models/Medias.ts";
+import { Image, MediaCTA, Video, Audio } from "@models/Medias.ts";
 import { TableNames } from "@models/database.ts";
 
 /** The default base brick interface. */
@@ -75,6 +75,17 @@ export interface Highlight extends Brick {
   link?: string;
 }
 
+/** The AudioBrick interface.
+ * 
+ * A brick that can hold an audio file.
+ */
+export interface AudioBrick extends Brick {
+  media: Image | Video | null;
+  audio: Audio;
+  track: Track;
+  link?: string;
+}
+
 export type Track = {
   id: number;
   name: string;
@@ -108,6 +119,7 @@ enum BricksType {
   Text = "Text",
   Platform_Link = "Platform_Link",
   Highlight = "Highlight",
+  Audio = "Audio",
 }
 
 type HeroSectionStyle = "scrolling-hero";
@@ -126,6 +138,8 @@ const getBrickTypeLabel = (type: BricksType): string => {
       return "Réseaux sociaux";
     case BricksType.Highlight:
       return "Média";
+    case BricksType.Audio:
+      return "Son";
     default:
       console.error(`Unsupported label brick type: ${type}`);
       return "";
@@ -146,12 +160,14 @@ const getBrickTypeTableName = (type: BricksType): TableNames => {
       return "Platform_Link";
     case BricksType.Highlight:
       return "Bricks_Highlight";
+    case BricksType.Audio:
+      return "Bricks_Audio";
     default:
       throw new Error(`Unsupported brick type: ${type}`);
   }
 }
 
-export type availBricks = HeroSection | Single | Album | Text | PlatformLink | Highlight;
+export type availBricks = HeroSection | Single | Album | Text | PlatformLink | Highlight | AudioBrick;
 
 export { 
   BricksType, 

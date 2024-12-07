@@ -97,6 +97,7 @@ const InputFromType = (
             )
             : undefined}
           label={field.inputConfig?.customLabel}
+          filetype={field.inputConfig?.filetype}
         />
       );
     case "relation":

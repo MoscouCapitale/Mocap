@@ -1,5 +1,5 @@
 import { LabeledToolTip } from "@islands/UI/Tooltip.tsx";
-import { Album, Highlight, Artist, HeroSection, Platform, PlatformLink, Single, Text, Track } from "@models/Bricks.ts";
+import { Album, Highlight, Artist, HeroSection, Platform, PlatformLink, Single, Text, Track, AudioBrick } from "@models/Bricks.ts";
 import { AvailableFormRelation, FormField, ObjFormField } from "@models/Form.ts";
 import { MediaControls, MediaCTA } from "@models/Medias.ts";
 
@@ -11,6 +11,7 @@ export type AllMocapObjectsTypes =
   | "Track"
   | "Artist"
   | "Platform"
+  | "Audio"
   | "Text"
   | "Platform_Link"
   | "CTA_Link"
@@ -37,6 +38,8 @@ export const getObjectFormFromType = (type: AllMocapObjectsTypes): FormField[] |
       return ArtistFormFields;
     case "Platform":
       return PlatformFormFields;
+    case "Audio":
+      return AudioFormFields;
     case "Text":
       return TextFormFields;
     case "Platform_Link":
@@ -395,4 +398,38 @@ export const PlatformLinkFormFields: ObjFormField<PlatformLink>[] = [
     required: true,
   },
   ObjectRelations.platform as ObjFormField<PlatformLink>,
+];
+
+export const AudioFormFields: ObjFormField<AudioBrick>[] = [
+  {
+    name: "name",
+    type: "string",
+    label: "Nom",
+    required: true,
+  },
+  {
+    name: "media",
+    type: "file",
+    label: <LabeledToolTip label="Média" text="Cover du son. Si aucun média n'est renseigné, la couleur du site sera utilisée." />,
+    inputConfig: {
+      onClickInput: () => {},
+      customLabel: "Parcourir la médiathèque",
+    },
+  },
+  {
+    name: "audio",
+    type: "file",
+    label: "Audio",
+    inputConfig: {
+      filetype: "Audios",
+      onClickInput: () => {},
+      customLabel: "Parcourir la médiathèque",
+    },
+  },
+  ObjectRelations.track as ObjFormField<AudioBrick>,
+  {
+    name: "link",
+    type: "string",
+    label: "Lien",
+  },
 ];
