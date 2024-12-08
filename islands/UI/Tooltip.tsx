@@ -61,13 +61,15 @@ export const Tooltip = (
 
 type LabeledToolTipProps = {
   label: string;
+  sx?: string;
 };
 
 export const LabeledToolTip = ({
   label,
+  sx,
   ...props
 }: LabeledToolTipProps & TooltipProps) => (
-  <div className={"flex items-center gap-1"}>
+  <div className={cn("flex items-center gap-1", sx)}>
     <span>{label}</span>
     <Tooltip Icon={"no-border"} {...props} />
   </div>

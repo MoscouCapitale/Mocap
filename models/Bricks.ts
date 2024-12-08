@@ -7,8 +7,6 @@ interface Brick {
   name: string;
   created_at: string;
   updated_at: string;
-  /** The type of the brick, to allow for dynamic management */
-  type?: BricksType;
   /** The id of the node (from `Node` table) associated with the brick */
   nodeId?: string;
 }
@@ -17,6 +15,7 @@ interface Brick {
  * 
  * Its a brick positionned at the top of a page, used a the main brick. It is animated and can have a scrolling effect. */
 export interface HeroSection extends Brick {
+  type: BricksType.HeroSection;
   title?: string;
   subtitle?: string;
   media: Image | Video | null;
@@ -28,6 +27,7 @@ export interface HeroSection extends Brick {
  * 
  * It is a brick that represents a single music track. */
 export interface Single extends Brick {
+  type: BricksType.Single;
   title: string;
   media: Image | Video | null;
   track: Track;
@@ -40,6 +40,7 @@ export interface Single extends Brick {
  * 
  * It is a brick that represents a music album. Contains multiple tracks, each with artists and links to platforms. */
 export interface Album extends Brick {
+  type: BricksType.Album;
   title: string;
   media: Image | Video | null;
   hoverable: boolean;
@@ -52,6 +53,7 @@ export interface Album extends Brick {
  * 
  * Represents a simple text section. */
 export interface Text extends Brick {
+  type: BricksType.Text;
   /** The text content of the brick. Supports markdown. */
   text: string;
   media: Image | Video | null;
@@ -61,6 +63,7 @@ export interface Text extends Brick {
  * 
  * Represents a simple link to a platform. */
 export interface PlatformLink extends Brick {
+  type: BricksType.Platform_Link;
   platform: Platform;
   url: string;
 };
@@ -69,6 +72,7 @@ export interface PlatformLink extends Brick {
  * 
  * A simple brick with a media, optionnaly title/subtitle and a link. */
 export interface Highlight extends Brick {
+  type: BricksType.Highlight;
   media: Image | Video | null;
   title?: string;
   subtitle?: string;
@@ -80,6 +84,7 @@ export interface Highlight extends Brick {
  * A brick that can hold an audio file.
  */
 export interface AudioBrick extends Brick {
+  type: BricksType.Audio;
   media: Image | Video | null;
   audio: Audio;
   track: Track;

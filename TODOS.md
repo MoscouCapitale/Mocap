@@ -52,7 +52,7 @@ ___
   - [x] When you update a brick, the preview is not updated. YOu have to reload the page to see the changes
   - [x] When you update a brick, the bricksidebar is reseted, but the select is still on the previous brick
   - [x] When you move a node, the new position is not saved
-  - [ ] Embeds do not have a placeholder on the canva
+  - [x] Embeds do not have a placeholder on the canva
 
 ## Collection
 - [x] Supabase init
