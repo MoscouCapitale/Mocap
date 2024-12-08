@@ -202,6 +202,58 @@ export type Database = {
           },
         ]
       }
+      Bricks_Audio: {
+        Row: {
+          audio: string | null
+          created_at: string
+          id: number
+          media: string | null
+          name: string
+          track: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          audio?: string | null
+          created_at?: string
+          id?: number
+          media?: string | null
+          name: string
+          track?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          audio?: string | null
+          created_at?: string
+          id?: number
+          media?: string | null
+          name?: string
+          track?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Bricks_Audio_audio_fkey"
+            columns: ["audio"]
+            isOneToOne: false
+            referencedRelation: "Medias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Bricks_Audio_media_fkey"
+            columns: ["media"]
+            isOneToOne: false
+            referencedRelation: "Medias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Bricks_Audio_track_fkey"
+            columns: ["track"]
+            isOneToOne: false
+            referencedRelation: "Track"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Bricks_HeroSection: {
         Row: {
           created_at: string
@@ -246,6 +298,47 @@ export type Database = {
           },
           {
             foreignKeyName: "Bricks_HeroSection_media_fkey"
+            columns: ["media"]
+            isOneToOne: false
+            referencedRelation: "Medias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Bricks_Highlight: {
+        Row: {
+          created_at: string
+          id: number
+          link: string | null
+          media: string | null
+          name: string
+          subtitle: string | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          link?: string | null
+          media?: string | null
+          name: string
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          link?: string | null
+          media?: string | null
+          name?: string
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Bricks_Highlight_media_fkey1"
             columns: ["media"]
             isOneToOne: false
             referencedRelation: "Medias"
@@ -554,9 +647,11 @@ export type Database = {
       Node: {
         Row: {
           Album: number | null
+          Audio: number | null
           created_at: string
           height: number
           HeroSection: number | null
+          Highlight: number | null
           id: string
           locked: boolean
           Platform_Link: number | null
@@ -569,9 +664,11 @@ export type Database = {
         }
         Insert: {
           Album?: number | null
+          Audio?: number | null
           created_at?: string
           height: number
           HeroSection?: number | null
+          Highlight?: number | null
           id?: string
           locked?: boolean
           Platform_Link?: number | null
@@ -584,9 +681,11 @@ export type Database = {
         }
         Update: {
           Album?: number | null
+          Audio?: number | null
           created_at?: string
           height?: number
           HeroSection?: number | null
+          Highlight?: number | null
           id?: string
           locked?: boolean
           Platform_Link?: number | null
@@ -606,10 +705,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "Node_Audio_fkey"
+            columns: ["Audio"]
+            isOneToOne: false
+            referencedRelation: "Bricks_Audio"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "Node_HeroSection_fkey"
             columns: ["HeroSection"]
             isOneToOne: false
             referencedRelation: "Bricks_HeroSection"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "Node_Highlight_fkey"
+            columns: ["Highlight"]
+            isOneToOne: false
+            referencedRelation: "Bricks_Highlight"
             referencedColumns: ["id"]
           },
           {
@@ -826,7 +939,14 @@ export type Database = {
       }
     }
     Enums: {
-      brick_type: "HeroSection" | "Single" | "Album" | "Text" | "Platform_Link"
+      brick_type:
+        | "HeroSection"
+        | "Single"
+        | "Album"
+        | "Text"
+        | "Platform_Link"
+        | "Highlight"
+        | "Audio"
       herosection_style: "scrolling-hero"
       media_fit: "best" | "cover" | "contain"
       media_type: "Audios" | "Videos" | "Images" | "Misc"

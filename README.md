@@ -63,6 +63,20 @@ The Supabase expose the following services:
 - Supabase allows seeding the database with the `/supabase/seeds` folder. The seeds are run at the start of the Supabase instance, and can be used to populate the database with default data. Keep in mind that the default seeding file populate de base configuration for Mocap (some enums, storage buckets, etc).
 - To apply migrations and/or seeds, you can use the `supabase db reset` command. It will fully reset the database, apply the migrations, and seed the database. For more infos, check the [Supabase docs](https://supabase.com/docs/reference/cli/start) about it.
 
+#### Remote db management
+```Bash
+# Before doing any local work on the db, pull the remote db
+supabase db pull
+# After changing the local db, push the local db to the remote
+supabase db diff --file <changes>.sql
+supabase db push
+
+# To update the database.ts model (from local db)
+supabase gen types typescript --local > models/database.ts
+# Note: Add the following line at the end, to get the tables types:
+# export type TableNames = keyof PublicSchema["Tables"] | keyof PublicSchema["Views"]
+```
+
 
 ## Connect to a Supabase instance
 
