@@ -1,4 +1,4 @@
-import Video from "@islands/Video/index.tsx";
+import Player from "@islands/Player/index.tsx";
 import { Highlight as HighlightType } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
 import { IconArrowUpRight } from "@utils/icons.ts";
@@ -18,7 +18,7 @@ export default function Highlight({ content, size }: HighlightProps) {
 
     if (content.media) {
       if (content.media.extension?.includes("video")) {
-        return <Video src={content.media.public_src ?? ""} autoplay loopVideo additionnalConfig={{ controlOnHover: true }} sx={"z-10"} />;
+        return <Player type="video" src={content.media.public_src ?? ""} autoplay loopVideo additionnalConfig={{ controlOnHover: true }} sx={"z-10"} />;
       } else if (content.media.extension?.includes("image")) {
         return (
           <img

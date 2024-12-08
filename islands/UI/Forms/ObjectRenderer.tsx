@@ -1,4 +1,4 @@
-import { Artist, availBricks, BricksType, Platform, Track } from "@models/Bricks.ts";
+import { Artist, AudioBrick, availBricks, BricksType, Platform, Track } from "@models/Bricks.ts";
 import { MediaControls, MediaCTA } from "@models/Medias.ts";
 import { AllMocapObjectsTypes, getObjectFormFromType } from "@models/forms/bricks.tsx";
 import { useEffect, useMemo, useState } from "preact/hooks";
@@ -11,7 +11,8 @@ type SupportedObjects =
   | Platform
   | MediaCTA
   | MediaControls
-  | Artist;
+  | Artist
+  | AudioBrick;
 
 type ObjectRendererProps = {
   /** The type of the element to the form be rendered */
@@ -120,6 +121,14 @@ function createEmptyObject(
         name: "",
         url: "",
         platform: {},
+      };
+    case BricksType.Audio:
+      return {
+        name: "",
+        media: null,
+        audio: null,
+        track: {},
+        link: "",
       };
     case "CTA_Link":
       return {

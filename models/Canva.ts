@@ -1,4 +1,4 @@
-import { HeroSection, Single, Album, Text, PlatformLink, BricksType } from "@models/Bricks.ts";
+import { HeroSection, Single, Album, Text, PlatformLink, BricksType, AudioBrick } from "@models/Bricks.ts";
 import { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
 
 // Canva constants
@@ -24,6 +24,7 @@ interface MNode {
     Text?: Text;
     PlatformLink?: PlatformLink;
     Highlight?: Highlight;
+    Audio?: AudioBrick;
     content: HeroSection | Single | Album | Text | PlatformLink;
     sizes: MNodeSize[];
     isHighlighted?: boolean;
@@ -46,6 +47,7 @@ interface DBMNode {
     Text?: number;
     PlatformLink?: number;
     Highlight?: number;
+    Audio?: number;
 }
 
 export type { MNode, DBMNode };
@@ -82,6 +84,8 @@ export const getAvailableSizes = (node: Partial<MNode> & { type: keyof typeof Br
             return [{ width: 300, height: 100 }, { width: 400, height: 200 }];
         case "Platform_Link":
             return [{ width: 100, height: 100 }, { width: 200, height: 100 }];
+        case "Audio":
+            return [{ width: 400, height: 200 }, { width: 300, height: 100 }];
         default:
             console.error(`Type ${type} not recognized in getAvailableSizes`);
             return [];

@@ -27,6 +27,15 @@ export default function ContentForm({
 
   const getFieldFromName = (name: FormField["name"]) => form.find((f) => f.name === name);
 
+  const getFileTypeFromName = (name: FormField["name"]): [string, MediaType][] => {
+    const field = getFieldFromName(name);
+    if (Array.isArray(field?.inputConfig?.filetype) && field.inputConfig.filetype.length > 0) {
+      return field.inputConfig.filetype.map((f) => [f, f as MediaType]);
+    } else {
+      return Object.entries(MediaType);
+    }
+  };
+
   const onValueChange = useCallback(
     (value: FormFieldValue, name: FormField["name"]) => {
       if (formData && Object.keys(formData).includes(name)) {
@@ -53,6 +62,7 @@ export default function ContentForm({
     JSON.stringify({
       id: formData.id,
       media: formData.media,
+      audio: formData.audio,
       keys: Object.keys(formData),
     }), [formData]);
 
@@ -90,7 +100,7 @@ export default function ContentForm({
         closePopup={() => setOpenMediaCollectionForField(null)}
       >
         <div class="w-full overflow-auto min-h-[0] flex-col justify-start items-start gap-10 inline-flex">
-          {Object.entries(MediaType)?.map((
+          {getFileTypeFromName(openMediaCollectionForField ?? "").map((
             [_, val]: [string, MediaType],
           ) => (
             <div class="w-full flex-col justify-start items-start gap-2.5 inline-flex">

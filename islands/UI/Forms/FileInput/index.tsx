@@ -8,6 +8,7 @@ import {
 import { IconCloudUpload, IconPlus, IconX } from "@utils/icons.ts";
 import { VNode } from "preact";
 import { useMemo, useRef, useState } from "preact/hooks";
+import { intersection } from "lodash";
 
 type FileInputProps = {
   handleFileChange?: (file: File | null) => void;
@@ -16,7 +17,7 @@ type FileInputProps = {
   /** If specified, on click on the icon to delete the file, the default behaviour will be prevented and overwriteOnFileDeleteClick called */
   overwriteOnFileDeleteClick?: (e: Event) => void;
   /** Type of the file we want to accept */
-  filetype?: "Images" | "Videos" | "Audios" | "Misc";
+  filetype?: Array<"Images" | "Videos" | "Audios" | "Misc">;
   /** Full string query of file types that are accepted */
   accept?: string;
   /** The file zone styling variant. Default is `full-size`
@@ -31,6 +32,8 @@ type FileInputProps = {
   /** If you use overwriteOnFileZoneClick but want to keep some default behaviour, customFile is used to set the file state */
   customFile?: File;
   inputName?: string;
+  /** If overwriteOnFileZoneClick if specified, to know if a file is currently selected */
+  hasFile?: boolean;
 };
 
 // TODO: better separate the file, be creating a base component, then two component for both variants
@@ -46,13 +49,16 @@ export default function FileInput(
     bgElement,
     label,
     customFile,
-    inputName
+    inputName,
+    hasFile
   }: FileInputProps,
 ) {
   const acceptedFileTypes = useMemo(
-    () =>
-      accept ?? getMediaTypeFromFiletype(filetype ?? "") ??
-        convertAcceptFileTypeMapToInputAccept(),
+    () => {
+      if (accept) return accept;
+      if (filetype?.length) return filetype.map((f) => getMediaTypeFromFiletype(f)).join(",");
+      return convertAcceptFileTypeMapToInputAccept();
+    },
     [filetype, accept],
   );
 
@@ -60,6 +66,11 @@ export default function FileInput(
   const [file, setFile] = useState<File | null>(null);
 
   effect(() => customFile && setFile(customFile));
+
+  /** This memo is used to, if the file input is only audio/misc, to be a smaller size */
+  const isSmallerSize = useMemo(() => {
+    return (filetype ?? []).length && !intersection(filetype, ["Videos", "Images"]).length
+  }, [filetype])
 
   const handleSetRawFile = (e: Event) => {
     if (e.target && e.target instanceof HTMLInputElement && e.target.files) {
@@ -121,7 +132,9 @@ export default function FileInput(
     ? (
       <div
         ref={fileInputRef}
-        className="w-[200px] h-[200px] relative group/filezone"
+        className={cn("relative group/filezone",
+          isSmallerSize ? "w-[200px] h-[100px]" : "w-[200px] h-[200px]"
+        )}
       >
         <input
           name={inputName}
@@ -143,7 +156,7 @@ export default function FileInput(
         >
           {RenderedFileZone}
         </div>
-        {file && (
+        {(file || hasFile) && (
           <div // Div wrapper, to make the hover zone a lot bigger, improving ux
             class="absolute top-0 right-0 z-10 w-12 h-12 cursor-pointer group/delFile"
             onClick={(e) => {

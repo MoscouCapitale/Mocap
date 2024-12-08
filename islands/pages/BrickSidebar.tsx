@@ -7,7 +7,7 @@ import { cn } from "@utils/cn.ts";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 
 // Default is the value of the key of BricksType.Single
-const defaultBrick = BricksType.Album;
+const defaultBrick = BricksType.Audio;
 
 type BrickSideBarSelects = Record<BricksType, availBricks[] | undefined>;
 
@@ -19,6 +19,7 @@ export default function BrickSidebar() {
     [BricksType.Text]: undefined,
     [BricksType.Platform_Link]: undefined,
     [BricksType.Highlight]: undefined,
+    [BricksType.Audio]: undefined,
   });
 
   const [selectedBrickType, setSelectedBrickType] = useState<BricksType>(defaultBrick);

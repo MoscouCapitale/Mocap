@@ -85,7 +85,12 @@ const DatabaseAttributes: DatabaseAttributesType = {
   media: {
     name: "Média",
     table: "Medias",
-    parentTables: ["Bricks_Single", "Bricks_Album", "Bricks_HeroSection", "Bricks_Text", "Bricks_Highlight"],
+    parentTables: ["Bricks_Single", "Bricks_Album", "Bricks_HeroSection", "Bricks_Text", "Bricks_Highlight", "Bricks_Audio"],
+  },
+  audio: {
+    name: "Audio",
+    table: "Medias",
+    parentTables: ["Bricks_Audio"],
   },
   cover: {
     name: "Cover",
@@ -121,7 +126,7 @@ const DatabaseAttributes: DatabaseAttributesType = {
     table: "Track",
     modifiable: true,
     linkedTables: ["platforms", "artist"],
-    parentTables: ["Bricks_Single"]
+    parentTables: ["Bricks_Single", "Bricks_Audio"]
   }, 
   tracklist: {
     name: "Track",

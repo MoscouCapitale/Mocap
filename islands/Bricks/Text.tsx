@@ -1,6 +1,6 @@
 import { Text as TextType } from "@models/Bricks.ts";
 import MarkdownWrapper from "@components/UI/MarkdownWrapper.tsx";
-import Video from "@islands/Video/index.tsx";
+import Player from "@islands/Player/index.tsx";
 
 type TextProps = {
   content: TextType;
@@ -17,7 +17,8 @@ export default function Text({ content }: TextProps) {
     >
       <div className={"bg-black flex p-3 rounded-[20px] w-full h-full text-text relative overflow-hidden"}>
         {content.media?.extension?.includes("video") && (
-          <Video
+          <Player
+            type="video"
             src={content.media.public_src ?? ""}
             disabled
             sx={backgroundImageSx}

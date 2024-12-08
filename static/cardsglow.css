@@ -12,8 +12,9 @@
 /* This is the CSS for the card glow effect. You can change the colors and sizes of the glow effect by modifying the variables in the :root selector. */
 @media only screen and (min-width: 768px) {
     [data-hover-card="true"] {
-        --radial-x: calc(var(--mouse-x, 0) * 1px - var(--offset-x, 0px));
-        --radial-y: calc(var(--mouse-y, 0) * 1px - var(--offset-y, 0px));
+        /* Set default to -1000, to avoid the spotlight effect when the mouse is not registered */
+        --radial-x: calc(var(--mouse-x, -1000) * 1px - var(--offset-x, 0px));
+        --radial-y: calc(var(--mouse-y, -1000) * 1px - var(--offset-y, 0px));
 
         /* Here is the CSS for the card glow effect
         Change the colors and percentage to change how much color for each gradient color */

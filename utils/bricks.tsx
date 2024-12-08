@@ -7,7 +7,7 @@ import {
   Single as SingleType,
   Text as TextType,
   Highlight as HighlightType,
-  availBricks
+  AudioBrick as AudioType
 } from "@models/Bricks.ts";
 
 import Single from "@islands/Bricks/Single.tsx";
@@ -18,6 +18,7 @@ import PlatformLink from "@islands/Bricks/PlatformLink.tsx";
 import { MNode } from "@models/Canva.ts";
 import Placeholder from "@islands/Bricks/Placeholder.tsx";
 import Highlight from "@islands/Bricks/Highlight.tsx";
+import Audio from "@islands/Bricks/Audio.tsx";
 
 interface AdditionalProps {
   isMovable?: boolean;
@@ -48,6 +49,7 @@ export const getBrickFromCanvaNode = (
     if (type === "Text") return <Text content={content as TextType} {...args} />
     if (type === "Platform_Link") return <PlatformLink content={content as PlatformLinkType} sizeIndex={getBrickSizeIndex(node)} {...args} />
     if (type === "Highlight") return <Highlight content={content as HighlightType} size={args.brickSize} {...args} />
+    if (type === "Audio") return <Audio content={content as AudioType} size={args.brickSize} {...args} />
     return null;
 };
 

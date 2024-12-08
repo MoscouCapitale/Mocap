@@ -7,7 +7,7 @@ import {
   Video as VideoType,
 } from "@models/Medias.ts";
 import Button from "@islands/Button.tsx";
-import Video from "@islands/Video/index.tsx";
+import Player from "@islands/Player/index.tsx";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import { cn } from "@utils/cn.ts";
 
@@ -51,7 +51,7 @@ export default function MediaPreview(
           if (from === "collection") {
             return (
               <div className="relative h-full w-full max-h-[200px] rounded">
-                <Video src={media.public_src ?? ""} disabled />
+                <Player type="video" src={media.public_src ?? ""} disabled />
               </div>
             );
           } else {
@@ -71,7 +71,8 @@ export default function MediaPreview(
               );
             }
             return (
-              <Video
+              <Player
+                type="video"
                 src={media.public_src ?? ""}
                 sx={"h-full rounded"}
                 autoplay={!!(media as VideoType).autoplay}
