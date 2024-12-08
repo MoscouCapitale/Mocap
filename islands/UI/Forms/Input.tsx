@@ -87,6 +87,7 @@ const InputFromType = (
               field.inputConfig?.onClickInput();
             }
           }}
+          overwriteOnFileDeleteClick={() => onChange(null)}
           bgElement={field.defaultValue?.public_src
             ? (
               <PreviewImage
@@ -98,6 +99,7 @@ const InputFromType = (
             : undefined}
           label={field.inputConfig?.customLabel}
           filetype={field.inputConfig?.filetype}
+          hasFile={Boolean(field.defaultValue)}
         />
       );
     case "relation":

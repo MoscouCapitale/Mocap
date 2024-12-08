@@ -1,4 +1,4 @@
-import Video from "@islands/Video/index.tsx";
+import Player from "@islands/Player/index.tsx";
 import { Single as SingleType } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
 import { useCallback, useMemo, useState } from "preact/hooks";
@@ -20,7 +20,8 @@ export default function Single({ content }: SingleProps) {
     if (content.media) {
       if (content.media.extension?.includes("video")) {
         return (
-          <Video
+          <Player
+            type="video"
             src={content.media.public_src ?? ""}
             autoplay
             additionnalConfig={{

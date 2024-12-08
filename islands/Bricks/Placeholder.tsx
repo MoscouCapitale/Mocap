@@ -1,6 +1,6 @@
 import { availBricks, BricksType } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
-import Video from "@islands/Video/index.tsx";
+import Player from "@islands/Player/index.tsx";
 
 type PlaceholderProps = {
   type: BricksType;
@@ -41,7 +41,8 @@ export default function Placeholder(
           // @ts-ignore - content is not a PlatformLink nor Text
           if (content.media.extension?.includes("video")) {
             return (
-              <Video
+              <Player
+                type="video"
                 // @ts-ignore - content is not a PlatformLink nor Text
                 src={content.media.public_src ?? ""}
                 disabled

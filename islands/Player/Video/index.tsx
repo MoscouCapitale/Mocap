@@ -5,9 +5,9 @@ import { cn } from "@utils/cn.ts";
 import * as Slider from "@radix-ui/react-slider";
 import Loader from "@components/UI/Loader.tsx";
 import { MediaObjectFit } from "@models/Medias.ts";
-import Volume from "@islands/Video/Volume.tsx";
+import Volume from "./Volume.tsx";
 
-type VideoProps = {
+export type VideoProps = {
   src: string;
   autoplay?: boolean;
   additionnalConfig?: AdditionnalConfig;

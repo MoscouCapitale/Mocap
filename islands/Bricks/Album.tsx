@@ -4,7 +4,8 @@ import { IconArrowUpRight } from "@utils/icons.ts";
 import gsap from "gsap";
 import { TextPlugin } from "gsap/TextPlugin";
 import { useCallback, useMemo, useState } from "preact/hooks";
-import Video from "@islands/Video/index.tsx";
+import Player from "@islands/Player/index.tsx";
+import PlatformLinksBubble from "@islands/Bricks/Common/PlatformLinksBubble.tsx";
 gsap.registerPlugin(TextPlugin);
 
 type AlbumProps = {
@@ -29,7 +30,8 @@ export default function Album({ content }: AlbumProps) {
     if (content.media) {
       if (content.media.extension?.includes("video")) {
         return (
-          <Video
+          <Player
+            type="video"
             src={content.media.public_src ?? ""}
             // autoplay // TODO: is autoplay good ?
             additionnalConfig={{
@@ -118,54 +120,7 @@ const AlbumTrack = ({ track }: { track: Track }) => {
           ))}
         </div>
       </div>
-      {track.platforms && track.platforms.length > 0 && (
-        <div className={"w-8 h-8 relative group/trackptfm"}>
-          <IconArrowUpRight
-            className={cn(
-              "z-30 w-full h-full  text-text_grey transition-all ease-in-out duration-300",
-              "translate-x-0 translate-y-0 group-hover/trackptfm:translate-x-[10%] group-hover/trackptfm:-translate-y-[10%]",
-            )}
-          />
-          <div
-            className={cn(
-              "absolute rounded-full bg-[#000000b7] z-20", // Element is just placed at the tip of the arrow
-              "invisible group-hover/trackptfm:visible opacity-0 group-hover/trackptfm:opacity-100 scale-0 group-hover/trackptfm:scale-100",
-              "transition-all duration-300 ease-in-out",
-              "w-44 h-44 bottom-[-400%] left-[-400%] md:w-64 md:h-64 md:bottom-[-300%] md:left-[-300%]"
-            )}
-          >
-            {track.platforms.map((pfl, i) => {
-              if (!pfl.platform.icon || i >= MAX_PLATFORMS) {
-                return <></>;
-              }
-              const plNb = (track.platforms ?? []).length < MAX_PLATFORMS
-                ? (track.platforms ?? []).length
-                : MAX_PLATFORMS;
-              return (
-                <a
-                  href={pfl.url}
-                  target="_blank"
-                  className={cn(
-                    "flex absolute top-1/2 left-1/2 justify-center items-center",
-                    "w-8 h-8 md:w-12 md:h-12",
-                    "translate-x-[40px] md:translate-x-[60px] -translate-y-1/2", // Place the element in-between the radius of the circle
-                  )}
-                  style={{
-                    transformOrigin: "0 0",
-                    rotate: `${i * (360 / plNb)}deg`, // Place the element on the circle parent
-                  }}
-                >
-                  <img
-                    style={{ rotate: `${-1 * (i * (360 / plNb))}deg` }} // Set the element to be in the correct orientation (top up)
-                    className={"max-w-full max-h-full w-auto h-auto hover:drop-shadow-platformIcon transition-all ease-in-out duration-500"}
-                    src={pfl.platform.icon}
-                  />
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      <PlatformLinksBubble platforms={track.platforms} />
     </div>
   );
 };

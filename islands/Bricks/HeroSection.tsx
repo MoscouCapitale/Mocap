@@ -1,7 +1,7 @@
 import { HeroSection as HeroSectionType } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
 import { Ref, useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
-import Video from "@islands/Video/index.tsx";
+import Player from "@islands/Player/index.tsx";
 import { IconArrowUpRight } from "@utils/icons.ts";
 
 import gsap from "gsap";
@@ -39,7 +39,8 @@ export default function HeroSection(
     if (content.media) {
       if (content.media.extension?.includes("video")) {
         return (
-          <Video
+          <Player
+            type={"video"}
             src={content.media.public_src ?? ""}
             autoplay={asMainHeroSection}
             additionnalConfig={{
