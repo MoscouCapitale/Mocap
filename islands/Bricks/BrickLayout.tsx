@@ -236,7 +236,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
   return renderedNodes ? (
     <>
       {/** Hero section */}
-      {/* {!isMobile && <div className={`h-screen w-full`}>{HeroSection}</div>} */}
+      {!isMobile && <div className={`h-screen w-full`}>{HeroSection}</div>}
 
       {/* Overlay on mobile, to intercept the user interaction */}
       {isMobile && (
@@ -278,7 +278,6 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
           ></div>
         )}
         {renderedNodes.map((node) => {
-          if (node.type === "Highlight") return null; // FIXME:
           return (
             <article
               data-node-id={node.id}
