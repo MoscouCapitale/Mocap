@@ -24,6 +24,7 @@ export default function SizeSelector({ node, setSize }: SizeSelectorProps) {
     if ((node.content as unknown as HighlightType).link) {
       return getEmbedTargetFromLink((node.content as unknown as HighlightType).link ?? "") !== "spotify";
     }
+    if (node.type === "Audio") return false; // FIXME: Audio should be free sized. For now disabled for responsive reasons.
     return true;
   }, [node.content]);
 

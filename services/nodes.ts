@@ -132,6 +132,9 @@ const createNodeFromBrick = async (
     case "Highlight":
       savedNode.Highlight = brick.id;
       break;
+    case "Audio":
+      savedNode.Audio = brick.id;
+      break;
     default:
       console.error(
         `Could not find a suitable type for "${type}" in createNodeFromBrick`,

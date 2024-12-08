@@ -304,6 +304,31 @@ const TextFormFields: ObjFormField<Text>[] = [
   },
 ];
 
+export const AudioFormFields: ObjFormField<AudioBrick>[] = [
+  ...DefaultBricksFormValues,
+  {
+    name: "media",
+    type: "file",
+    label: <LabeledToolTip label="Média" text="Cover du son. Si aucun média n'est renseigné, la couleur du site sera utilisée." />,
+    inputConfig: {
+      filetype: ["Images", "Videos"],
+      onClickInput: () => {},
+      customLabel: "Parcourir la médiathèque",
+    },
+  },
+  {
+    name: "audio",
+    type: "file",
+    label: "Audio",
+    inputConfig: {
+      filetype: ["Audios"],
+      onClickInput: () => {},
+      customLabel: "Parcourir la médiathèque",
+    },
+  },
+  ObjectRelations.track as ObjFormField<AudioBrick>
+];
+
 const CTAFormFields: ObjFormField<MediaCTA>[] = [
   {
     name: "label",
@@ -403,39 +428,4 @@ export const PlatformLinkFormFields: ObjFormField<PlatformLink>[] = [
     required: true,
   },
   ObjectRelations.platform as ObjFormField<PlatformLink>,
-];
-
-export const AudioFormFields: ObjFormField<AudioBrick>[] = [
-  {
-    name: "name",
-    type: "string",
-    label: "Nom",
-    required: true,
-  },
-  {
-    name: "media",
-    type: "file",
-    label: <LabeledToolTip label="Média" text="Cover du son. Si aucun média n'est renseigné, la couleur du site sera utilisée." />,
-    inputConfig: {
-      filetype: ["Images", "Videos"],
-      onClickInput: () => {},
-      customLabel: "Parcourir la médiathèque",
-    },
-  },
-  {
-    name: "audio",
-    type: "file",
-    label: "Audio",
-    inputConfig: {
-      filetype: ["Audios"],
-      onClickInput: () => {},
-      customLabel: "Parcourir la médiathèque",
-    },
-  },
-  ObjectRelations.track as ObjFormField<AudioBrick>,
-  {
-    name: "link",
-    type: "string",
-    label: "Lien",
-  },
 ];

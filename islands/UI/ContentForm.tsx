@@ -62,6 +62,7 @@ export default function ContentForm({
     JSON.stringify({
       id: formData.id,
       media: formData.media,
+      audio: formData.audio,
       keys: Object.keys(formData),
     }), [formData]);
 

@@ -28,10 +28,13 @@ export const getBrickFromType = async (
       return DatabaseAttributes[key].parentTables?.includes(tableName);
     },
   );
-  const nestedQuery = "*" + nestedAttributes?.map(([key, _val], index) => {
+  let nestedQuery = "*" + nestedAttributes?.map(([key, _val], index) => {
     return `${index === 0 ? ", " : ""}` +
       createQueryFromAttributesTables(key, false, true)?.query;
   });
+
+  // FIXME: This is a temporary fix to get the audio data. Should update createQueryFromAttributesTables to handle ON join clauses
+  if (type === "Audio") nestedQuery = "*, media:Medias!media (*),audio:Medias!audio (*),track:Track (*, platforms:Platform_Link (*, platform:Platform (*)), artist:Artist (*))"
 
   const { data: rawData, error } = id
     ? await supa.from(tableName).select(nestedQuery).eq("id", id)
