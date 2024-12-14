@@ -1,8 +1,6 @@
-import BaseInput from "@islands/UI/Forms/Input.tsx";
+import { Input as BaseInput, Modal } from "@islands/UI";
 import { FormField, FormFieldValue } from "@models/Form.ts";
-import { effect } from "@preact/signals-core";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
-import InpagePopup from "@islands/Layout/InpagePopup.tsx";
 import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
 import AddButton from "@islands/collection/AddButton.tsx";
 import { Media, MediaType } from "@models/Medias.ts";
@@ -95,9 +93,8 @@ export default function ContentForm({
   return (
     <>
       {form.map((row, index) => <Input key={index} name={row.name} />)}
-      <InpagePopup
-        isOpen={!!openMediaCollectionForField}
-        closePopup={() => setOpenMediaCollectionForField(null)}
+      <Modal
+        openState={{ isOpen: !!openMediaCollectionForField, setIsOpen: () => setOpenMediaCollectionForField(null) }}
       >
         <div class="w-full overflow-auto min-h-[0] flex-col justify-start items-start gap-10 inline-flex">
           {getFileTypeFromName(openMediaCollectionForField ?? "").map((
@@ -115,7 +112,7 @@ export default function ContentForm({
           {/* TODO: add support to upload media here. For now nested modals are working properly */}
           <AddButton position="absolute top-3 right-7" />
         </div>
-      </InpagePopup>
+      </Modal>
     </>
   );
 }

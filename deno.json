@@ -32,6 +32,7 @@
     "@contexts/": "./contexts/",
     "@services/": "./services/",
     "@islands/": "./islands/",
+    "@islands/UI": "./islands/UI/index.tsx",
     "@styles/": "./styles/",
     "@utils/": "./utils/",
     "@hooks/": "./hooks/",

@@ -1,4 +1,4 @@
-import PreviewImage from "@islands/UI/Forms/FileInput/PreviewImage.tsx";
+import { PreviewImage } from "@islands/UI";
 import { effect } from "@preact/signals-core";
 import { cn } from "@utils/cn.ts";
 import {

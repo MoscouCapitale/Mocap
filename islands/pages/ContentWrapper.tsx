@@ -6,7 +6,7 @@ import { cn } from "@utils/cn.ts";
 import { IconTrash } from "@utils/icons.ts";
 import { createRef } from "preact";
 import { Ref, useCallback, useEffect, useRef } from "preact/hooks";
-import Button from "@islands/Button.tsx";
+import Button from "../UI/Button.tsx";
 import { throttle } from "lodash";
 import { CANVA_GUTTER } from "@models/Canva.ts";
 

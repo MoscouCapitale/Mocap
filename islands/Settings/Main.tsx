@@ -1,4 +1,4 @@
-import BaseInput from "@islands/UI/Forms/Input.tsx";
+import { Input as BaseInput } from "@islands/UI";
 import { FormField, FormFieldValue } from "@models/Form.ts";
 import { useCallback, useMemo, useState } from "preact/hooks";
 import {
@@ -7,7 +7,7 @@ import {
 } from "@models/Settings.ts";
 import { effect } from "@preact/signals-core";
 import { getBaseUrl } from "@utils/pathHandler.ts";
-import Button from "@islands/Button.tsx";
+import Button from "../UI/Button.tsx";
 
 type SettingsData = typeof MainSettingsDBObject;
 

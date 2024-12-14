@@ -86,6 +86,8 @@ ___
 
 ___
 - Bugs:
+  - [ ] When you delete a media, the Medias table still contains an entry
+
 ## Stats
 - [ ] Stats
 
@@ -95,11 +97,12 @@ ___
 - [ ] Regroup some code that are very similar between pages (and also all the StylesSettingsDBObject). Ex on pages the logic is *almost* the same, only the UI is different
 - [x] Maybe store some settings in context, or in server launch (https://fresh.deno.dev/docs/examples/init-the-server), to avoid fetching them every time, for each client, on each page (very heavy)
 - [x] Check formfields objects, for better placeholder, validation, etc...
+
 # UI
 - [x] Info icon with tooltip on hover
   - [x] tell that bricks names are unique
-- [ ] Cursor
-  - [ ] Hover card state
+- [x] Cursor
+  - [x] Hover card state
 - [ ] Navbar
   - [ ] Smooth animation on expand
   - [x] Set the position as fixed, to have the navbar always displayed same on page scroll
@@ -116,8 +119,8 @@ ___
       - [ ] Animation
       - [ ] Confirm popup
   - [ ] Alerts
-    - [ ] Modals
-      - [ ] Globale confirmation modal
+    - [x] Modals
+      - [x] Globale confirmation modal
     - [ ] Toasts (https://www.npmjs.com/package/react-toastify)
       - [ ] Themes (error, success, info, warning)
   - [ ] Video player
@@ -126,9 +129,7 @@ ___
     - [x] Add a "loading" state
     - [x] Add a "no video" state
   - [ ] Misc
-    - [x] Loader
-    - [ ] InpagePopup
-      - [ ] If you quit one popup showed on top of another, only the last one should be closed
+    - [ ] Better Loader (realistic)
     - [x] The 3 little dots as reusable component
 - [ ] Animations...
 - [ ] Misc

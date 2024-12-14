@@ -4,7 +4,7 @@ import { supabase as supa } from "@services/supabase.ts";
 import UserRevokeAccount from "@components/settings/UserRevokeAccount.tsx";
 
 import { ToasterToast } from "@hooks/toast.tsx";
-import ToasterWrapper from "@islands/UI/ToasterWrapper.tsx";
+import { ToasterWrapper } from "@islands/UI";
 import { User } from "@models/Authentication.ts";
 import { verifyEmailIntegrity } from "@utils/login.ts";
 

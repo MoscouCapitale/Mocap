@@ -7,7 +7,7 @@ import LogoutButton from "@islands/Misc/LogoutButton.tsx";
 import { IconChartDonut, IconChevronLeft, IconMailbox, IconPencilStar, IconPhotoPlus, IconSettings2, IconUsers } from "@utils/icons.ts";
 import { cn } from "@utils/cn.ts";
 import { useIsMobile } from "@hooks/useIsMobile.ts";
-import InpagePopup from "@islands/Layout/InpagePopup.tsx";
+import { Modal } from "@islands/UI";
 
 export default function Navbar(path: { path: string }) {
   const isMobile = useIsMobile();
@@ -99,19 +99,26 @@ export default function Navbar(path: { path: string }) {
           <span class={cn("text-base text-text", isExpanded ? "visible" : "hidden")}>Fermer</span>
         </a>
       </div>
-      {isMobile &&
-        <InpagePopup
-          isOpen={!acknowledgedMobileWarning}
-          closePopup={() => {
-            saveAppStorage({ acknowledgedMobileWarning: true });
-            setAcknowledgedMobileWarning(true);
+      {isMobile && (
+        <Modal
+          openState={{
+            isOpen: !acknowledgedMobileWarning,
+            setIsOpen: (state) => {
+              if (!state) {
+                saveAppStorage({ acknowledgedMobileWarning: true });
+                setAcknowledgedMobileWarning(true);
+              }
+            },
           }}
+          sx="w-[80%]"
         >
-          <div class="flex-col justify-start items-start gap-5 inline-flex">
-            <p class="text-text">Attention ! Le panel admin n'est pas optimisé pour les mobiles. Utilisez un ordinateur pour une meilleure expérience.</p>
+          <div class="flex-col justify-start items-start gap-5 inline-flex text-text">
+            <p>Attention !</p>
+            <p>Le panel admin n'est pas optimisé pour les mobiles.</p>
+            <p>Utilisez un ordinateur pour une meilleure expérience.</p>
           </div>
-        </InpagePopup>
-      }
+        </Modal>
+      )}
     </nav>
   );
 }

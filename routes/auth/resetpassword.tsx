@@ -2,7 +2,7 @@ import { Handlers, RouteContext } from "$fresh/server.ts";
 import { supabase as supa } from "@services/supabase.ts";
 
 import { ToasterToast } from "@hooks/toast.tsx";
-import ToasterWrapper from "@islands/UI/ToasterWrapper.tsx";
+import { ToasterWrapper } from "@islands/UI";
 import ResetPassword from "@islands/Users/ResetPassword.tsx";
 import { verifyPasswordIntegrity } from "@utils/login.ts";
 
