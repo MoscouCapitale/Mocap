@@ -1,7 +1,6 @@
 import MediaDetail from "@islands/collection/MediaDetail.tsx";
 import MediaPreview from "@islands/collection/MediaPreview.tsx";
-import InpagePopup from "@islands/Layout/InpagePopup.tsx";
-import { ContextualDots } from "@islands/UI";
+import { Modal, ContextualDots } from "@islands/UI";
 import { Audio, Image, MediaType, Misc, Video } from "@models/Medias.ts";
 import { useState } from "preact/hooks";
 import Button from "../UI/Button.tsx";
@@ -38,9 +37,9 @@ export default function CollectionTile({
           )
           : <ContextualDots onClick={() => setActive(true)} />}
       </div>
-      <InpagePopup isOpen={active} closePopup={() => setActive(false)}>
+      <Modal openState={{ isOpen: active, setIsOpen: setActive }}>
         <MediaDetail media={media} />
-      </InpagePopup>
+      </Modal>
     </>
   );
 }

@@ -1,6 +1,5 @@
 import { useState } from "preact/hooks";
-import Button from "../UI/Button.tsx";
-import InpagePopup from "@islands/Layout/InpagePopup.tsx";
+import { Button, Modal } from "@islands/UI";
 import UploadMediaPopup from "./UploadMediaPopup.tsx";
 
 type AddButtonProps = {
@@ -18,9 +17,9 @@ export default function AddButton({position}: AddButtonProps) {
         }}
         className={{ wrapper: position || "absolute top-[calc(2.5rem+0.625rem)] right-10" }}
       >Ajouter un média</Button>
-      <InpagePopup isOpen={openAddMediaInterface} closePopup={() => setOpenAddMediaInterface(false)}>
+      <Modal openState={{ isOpen: openAddMediaInterface, setIsOpen: setOpenAddMediaInterface }}>
         <UploadMediaPopup />
-      </InpagePopup>      
+      </Modal>      
     </>
   );
 }

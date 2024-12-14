@@ -2,10 +2,9 @@ import { AvailableFormRelation, FormField, FormFieldOptions, FormFieldValue } fr
 import { MediaSettingsAttributes } from "@models/Medias.ts";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import { AvailableAttributes, getAttributes } from "@islands/UI/Forms/RelationInput/relationManager.ts";
-import InpagePopup from "@islands/Layout/InpagePopup.tsx";
 import { AllMocapObjectsTypes } from "@models/forms/bricks.tsx";
 import { DatabaseAttributes } from "@models/App.ts";
-import { Button, ContextualDots, ObjectRenderer, Select } from "@islands/UI";
+import { Button, ContextualDots, ObjectRenderer, Select, Modal } from "@islands/UI";
 import { IconPlus, IconTrash } from "@utils/icons.ts";
 
 type RelationInputProps = {
@@ -77,7 +76,7 @@ export default function RelationInput(
 
     let defaultValue = field.defaultValue ?? "";
     // On a select field (with options), we need to convert the value to string to match the options in the select
-    if (field.relation && Array.isArray(defaultValue)) defaultValue = defaultValue.map((v: any) => String(v.id));
+    if (field.relation && Array.isArray(defaultValue)) defaultValue = defaultValue.map((v) => String(v.id));
     if (field.relation && defaultValue.id) defaultValue = [String(defaultValue.id)];
 
     return (
@@ -153,9 +152,8 @@ export default function RelationInput(
         />
       )}
       {attributeTable && upsertedItem && (
-        <InpagePopup
-          isOpen={!!upsertedItem}
-          closePopup={() => setUpsertedItem(undefined)}
+        <Modal
+          openState={{ isOpen: !!upsertedItem, setIsOpen: (state) => setUpsertedItem(state ? true : undefined) }}
         >
           <div class="w-full flex flex-col gap-5">
             <div className={"flex flex-col w-full gap-4"}>
@@ -174,7 +172,7 @@ export default function RelationInput(
                 <IconTrash className={"text-error cursor-pointer"} onClick={deleteAttribute} />}
             </div>
           </div>
-        </InpagePopup>
+        </Modal>
       )}
     </>
   );

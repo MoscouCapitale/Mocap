@@ -1,7 +1,6 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { toast } from "@hooks/toast.tsx";
-import Button from "../UI/Button.tsx";
-import InpagePopup from "@islands/Layout/InpagePopup.tsx";
+import { Button, Modal } from "@islands/UI";
 import { ObjectRenderer } from "@islands/UI";
 import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
 import { availBricks, BricksType } from "@models/Bricks.ts";
@@ -149,7 +148,7 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
           </Button>
         )}
       </div>
-      <InpagePopup isOpen={displayMedias} closePopup={() => setDisplayMedias(false)}>
+      <Modal openState={{ isOpen: displayMedias, setIsOpen: setDisplayMedias }}>
         <div class="w-full overflow-auto min-h-[0] flex-col justify-start items-start gap-10 inline-flex">
           {Object.entries(MediaType)?.map(([key, val]: [string, MediaType]) => (
             <div class="w-full flex-col justify-start items-start gap-2.5 inline-flex">
@@ -158,7 +157,7 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
             </div>
           ))}
         </div>
-      </InpagePopup>
+      </Modal>
       {/* <Toaster /> */}
     </>
   );

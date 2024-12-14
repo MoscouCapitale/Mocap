@@ -5,6 +5,7 @@ export { default as ContextualDots } from "./ContextualDots.tsx";
 export { default as ToasterWrapper } from "./ToasterWrapper.tsx";
 export { Tooltip } from "./Tooltip.tsx";
 export { LabeledToolTip } from "./Tooltip.tsx";
+export { default as Modal } from "./Modal.tsx";
 export { default as ConfirmationModal } from "./ConfirmationModal.tsx";
 
 /** Forms */

@@ -1,9 +1,5 @@
-
+import DebugPage from '@islands/test.tsx';
 
 export default function Debug() {
-  return (
-    <>
-      <h1>Debug page</h1>
-    </>
-  );
+  return <DebugPage />
 }
