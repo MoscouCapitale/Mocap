@@ -1,6 +1,7 @@
 import { Artist, Platform, PlatformLink, Track } from "@models/Bricks.ts";
 import { MediaControls, MediaCTA } from "@models/Medias.ts";
 import { AvailableFormRelation } from "@models/Form.ts";
+import ky from "ky";
 
 export type AvailableAttributes = MediaControls | MediaCTA | PlatformLink | Platform | Track | Artist;
 
@@ -32,9 +33,7 @@ export async function getAttributes(
 }
 
 const fetchAttributeFromDB = async (attribute: AvailableFormRelation): Promise<AvailableAttributes[]> => {
-  const res = await fetch(`/api/content/attributes/${attribute}`);
-  if (res.status !== 204) return res.json();
-  return [];
+  return await ky.get(`/api/content/attributes/${attribute}`).json();
 };
 
 const isLocalStorageAvailable = () => typeof localStorage !== "undefined" && localStorage !== null;

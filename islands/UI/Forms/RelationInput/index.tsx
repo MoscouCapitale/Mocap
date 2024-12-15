@@ -6,6 +6,7 @@ import { AllMocapObjectsTypes } from "@models/forms/bricks.tsx";
 import { DatabaseAttributes } from "@models/App.ts";
 import { Button, ContextualDots, ObjectRenderer, Select, Modal } from "@islands/UI";
 import { IconPlus, IconTrash } from "@utils/icons.ts";
+import ky from "ky";
 
 type RelationInputProps = {
     field: FormField;
@@ -110,10 +111,8 @@ export default function RelationInput(
       if (typeof sendedBody[key] === "object" && sendedBody[key]?.id) sendedBody[key] = sendedBody[key].id;
     });
 
-    console.log("sendedBody", sendedBody);
-
-    fetch(`/api/content/attributes/${field.relation?.type}`, { method: "PUT", body: JSON.stringify(sendedBody) })
-      .finally(() => {
+    ky.put(`/api/content/attributes/${field.relation?.type}`, { json: sendedBody })
+      .then(() => {
         setUpdating(false);
         fetchAttr(true);
       });
@@ -121,13 +120,11 @@ export default function RelationInput(
 
   const deleteAttribute = () => {
     if (upsertedItem !== true && upsertedItem?.id) {
-      fetch(`/api/content/attributes/${field.relation?.type}`, { method: "DELETE", body: JSON.stringify(upsertedItem) })
+      ky.delete(`/api/content/attributes/${field.relation?.type}`, { json: upsertedItem })
         .then(() => {
           setUpsertedItem(undefined);
-          // setDropdownItems(dropdownItems?.filter((item) => item.id !== itemDetail.id));
-          // selectItem(createEmptyItem(table));
-        })
-        .finally(() => fetchAttr(true));
+          fetchAttr(true);
+        });
     }
   };
 

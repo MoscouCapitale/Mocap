@@ -7,6 +7,7 @@ import { cn } from "@utils/cn.ts";
 import { filterOutNonValideAttributes } from "@utils/database.ts";
 import { IconTrash } from "@utils/icons.ts";
 import { useMemo, useState } from "preact/hooks";
+import ky from "ky";
 
 interface MediaDetailProps {
   media: Image | Video | Audio | Misc;
@@ -24,27 +25,21 @@ export default function MediaDetail({ media }: MediaDetailProps) {
   const updateMedia = () => {
     if (reactiveMedia.id) {
       setMediaState("updating");
-      fetch(`/api/medias/${reactiveMedia.id}`, {
-        method: "PUT",
-        body: JSON.stringify(reactiveMedia),
-      })
-        .then((res) => res.json())
-        .then((data: DatabaseMedia[]) => {
+      ky.put(`/api/medias/${reactiveMedia.id}`, { json: reactiveMedia })
+        .then(() => {
           /** FIXME: This is a temporary fix, to allow for the media to be fully updated before reloading the page.
            * The correct solution should be to refacto the collection grid system a bit to use a context,
            * to allow for updating the media in the grid without reloading the page.
           */
           globalThis.location.reload();
-        }).finally(() => setMediaState("updatedone"));
+        })
+        .finally(() => setMediaState("updatedone"));
     }
   };
 
   const onDeleteMediaClick = () => setShowConfirmationModal(true);
   const onConfirmDeleteMedia = () => {
-    reactiveMedia.id &&
-      fetch(`/api/medias/${reactiveMedia.id}`, { method: "DELETE" }).then(
-        () => window.location.reload(),
-      );
+    reactiveMedia.id && ky.delete(`/api/medias/${reactiveMedia.id}`).then(() => window.location.reload());
     setShowConfirmationModal(false);
   };
 

@@ -3,6 +3,7 @@ import { DatabaseMedia, MediaByType } from "@models/Medias.ts";
 import { Audio, Image, Media, MediaType, Misc, Video } from "@models/Medias.ts";
 import { useEffect, useState } from "preact/hooks";
 import { filterOutNonValideAttributes } from "@utils/database.ts";
+import ky from "ky";
 
 interface GridProps {
   fetchingRoute: MediaType;
@@ -27,14 +28,12 @@ export default function CollectionGrid(
   >();
 
   useEffect(() => {
-    fetch(`/api/medias/all/${fetchingRoute}`)
-      .then((res) => {
-        return res.status === 200 ? res.json() : setCollection([]);
-      })
-      .then((data: DatabaseMedia[]) => {
+    ky.get(`/api/medias/all/${fetchingRoute}`)
+      .json<DatabaseMedia[]>()
+      .then((data) => {
         data &&
           setCollection(
-            data.map((media: DatabaseMedia) => filterOutNonValideAttributes(media)) as CollectionType<MediaType>,
+            data.map((media: DatabaseMedia) => filterOutNonValideAttributes(media)) as CollectionType<typeof fetchingRoute>,
           );
       });
   }, [fetchingRoute]);

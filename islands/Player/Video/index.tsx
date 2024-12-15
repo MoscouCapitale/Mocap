@@ -6,6 +6,7 @@ import * as Slider from "@radix-ui/react-slider";
 import Loader from "@components/UI/Loader.tsx";
 import { MediaObjectFit } from "@models/Medias.ts";
 import Volume from "./Volume.tsx";
+import ky from "ky";
 
 export type VideoProps = {
   src: string;
@@ -90,7 +91,7 @@ export default function Video(
   });
 
   useEffect(() => {
-    fetch(src, { method: "HEAD" }).then((res) => {
+    ky.head(src).then((res) => {
       setVideoState((p) => ({
         ...p,
         isInit: true,

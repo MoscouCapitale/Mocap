@@ -5,6 +5,7 @@ import Select, { SelectField } from "@islands/UI/Forms/Select.tsx";
 import { availBricks, BricksType, getBrickTypeLabel } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
+import ky from "ky";
 
 // Default is the value of the key of BricksType.Single
 const defaultBrick = BricksType.Audio;
@@ -28,9 +29,9 @@ export default function BrickSidebar() {
   /** UseEffect triggered when you select a type of brick to manage */
   useEffect(() => {
     if (!allBricksMap[selectedBrickType]) {
-      fetch(`/api/brick/getUserBricks/${selectedBrickType}`)
-        .then((res) => res && res.json())
-        .then((data: availBricks[]) => {
+      ky.get(`/api/brick/getUserBricks/${selectedBrickType}`)
+        .json<availBricks[]>()
+        .then((data) => {
           setAllBricksMap((p) => ({ ...p, [selectedBrickType]: data }));
         });
     }

@@ -5,6 +5,7 @@ import { FormField } from "@models/Form.ts";
 import { Select } from "@islands/UI";
 import { Toaster } from "@components/UI/Toast/Toaster.tsx";
 import { toast } from "@hooks/toast.tsx";
+import ky from "ky";
 
 export default function RequestSingle(user: User) {
   const [currentUser, setCurrentUser] = useState<User | null>(user);
@@ -28,9 +29,13 @@ export default function RequestSingle(user: User) {
 
   const handleRequest = (accept: boolean) => {
     setLoading(true);
-    fetch(`/api/users/manage/${user.id}/request`, {
-      method: "PUT",
-      body: JSON.stringify({ user: { role: currentUser?.role, status: accept ? UserStatus.ACTV : UserStatus.DECL } }),
+    ky.put(`/api/users/manage/${user.id}/request`, {
+      json: {
+        user: {
+          role: currentUser?.role,
+          status: accept ? UserStatus.ACTV : UserStatus.DECL,
+        },
+      },
     }).then((res) => {
       if (res.status === 200) {
         setCurrentUser(null);

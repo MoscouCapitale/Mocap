@@ -9,6 +9,7 @@ import { Media, MediaType } from "@models/Medias.ts";
 import { IconTrash } from "@utils/icons.ts";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import { isEqual } from "lodash";
+import ky from "ky";
 
 type CreateBrickBarProps = {
   brickType: BricksType; // The general type of the brick to create
@@ -53,20 +54,17 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
   const saveBrick = useCallback(
     (withCanvaInsert?: boolean) => {
       if (!brick) return;
-      fetch("/api/brick", {
-        method: "PUT",
-        body: JSON.stringify({
+      ky.put("/api/brick", {
+        json: {
           type: brickType,
           data: brick,
           withCanvaInsert: Boolean(withCanvaInsert),
-        }),
+        },
       })
-        .then(async (res) => {
-          if (res.ok && res.status !== 204) return await res.json();
-        })
+        .json<availBricks & { newNode?: MNode }>()
         .then((res) => {
           if (res) {
-            const { newNode, ...result }: availBricks & { newNode?: MNode } = res;
+            const { newNode, ...result } = res;
             toast({
               title: "Brick saved",
               description: `The brick ${brick.name} has been saved.`,
@@ -86,12 +84,11 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
       globalThis.confirm(`Are you sure ? The will NOT be recoverable.${brickData.nodeId ? " The brick will also be removed from the canvas." : ""}`)
     ) {
       try {
-        await fetch(`/api/brick`, {
-          method: "DELETE",
-          body: JSON.stringify({
+        ky.delete("/api/brick", {
+          json: {
             data: brick,
             type: brickType,
-          }),
+          },
         });
         if (brickData?.nodeId) await deleteNode(brickData.nodeId);
         toast({
