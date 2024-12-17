@@ -25,7 +25,7 @@ export default async function Home(req: Request, ctx: RouteContext) {
   return (
     <>
       <link rel="stylesheet" href="/cardsglow.css" />
-      <Cursor />
+      {/* <Cursor /> */}
       <AdminPanelButton />
       <main className={"min-h-screen w-full flex flex-col items-center justify-start"}>
         <img
