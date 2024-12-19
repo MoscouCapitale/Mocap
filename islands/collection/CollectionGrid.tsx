@@ -33,7 +33,7 @@ export default function CollectionGrid(
       .then((data) => {
         data &&
           setCollection(
-            data.map((media: DatabaseMedia) => filterOutNonValideAttributes(media)) as CollectionType<typeof fetchingRoute>,
+            data.filter(m => m.name !== "website_icon").map((media: DatabaseMedia) => filterOutNonValideAttributes(media)) as CollectionType<typeof fetchingRoute>,
           );
       });
   }, [fetchingRoute]);
