@@ -86,7 +86,7 @@ ___
 
 ___
 - Bugs:
-  - [ ] When you delete a media, the Medias table still contains an entry
+  - [ ] When you delete a media, the Medias table still contains an entry (use a cron to cleanup medias)
 
 ## Stats
 - [ ] Stats
@@ -94,7 +94,7 @@ ___
 ## Settings
 - [x] Refacto settings following the same pattern as collections
 - [ ] Support api keys (support, hash, etc...)
-- [ ] Regroup some code that are very similar between pages (and also all the StylesSettingsDBObject). Ex on pages the logic is *almost* the same, only the UI is different
+- [x] Regroup some code that are very similar between pages (and also all the StylesSettingsDBObject). Ex on pages the logic is *almost* the same, only the UI is different
 - [x] Maybe store some settings in context, or in server launch (https://fresh.deno.dev/docs/examples/init-the-server), to avoid fetching them every time, for each client, on each page (very heavy)
 - [x] Check formfields objects, for better placeholder, validation, etc...
 

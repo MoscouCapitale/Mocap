@@ -54,10 +54,18 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
   const saveBrick = useCallback(
     (withCanvaInsert?: boolean) => {
       if (!brick) return;
+      const brickDatas = ({ ...brick, type: brickType } as availBricks);  
+      if (withCanvaInsert && brickState === "addIncanvas" && MCNodes.find((n) => n.type === BricksType.HeroSection) && brickDatas.type === BricksType.HeroSection) {
+        toast({
+          title: "Error lors de la sauvegarde",
+          description: `Vous ne pouvez avoir qu'une seule "Hero Section" par page. Cette brique ne peut pas être insérée au canva.`,
+        });
+        return;
+      };
       ky.put("/api/brick", {
         json: {
           type: brickType,
-          data: brick,
+          data: brickDatas,
           withCanvaInsert: Boolean(withCanvaInsert),
         },
       })
@@ -67,7 +75,7 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
             const { newNode, ...result } = res;
             toast({
               title: "Brick saved",
-              description: `The brick ${brick.name} has been saved.`,
+              description: `The brick ${brickDatas.name} has been saved.`,
             });
             if (withCanvaInsert && newNode) saveNode({ node: newNode, rerender: true });
             returnBrick({ ...result, nodeId: newNode?.id ?? result.nodeId });

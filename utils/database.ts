@@ -171,6 +171,7 @@ export const createDefaultMediaFromRawFile = (
 export const filterOutNonValideAttributes = (
   media: DatabaseMedia,
 ): Media | Image | Video | Audio | Misc | null => {
+  if (media.name === "website_icon") return null;
   const baseMedia = {
     id: media.id,
     name: media.name,
