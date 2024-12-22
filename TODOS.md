@@ -31,8 +31,8 @@ ___
     - [x] Youtube embed
     - [x] Audio (soundcloud, spotify, etc...) embed
   - [x] Manage saved bricks (in canva page)
-  - [ ] Error management
-      - [ ] Brick with this name already exists
+  - [x] Error management
+      - [x] Brick with this name already exists
   - [x] Texte
     - [x] Markdown support
     - [x] Better scrollbar

@@ -9,7 +9,7 @@ import { Media, MediaType } from "@models/Medias.ts";
 import { IconTrash } from "@utils/icons.ts";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import { isEqual } from "lodash";
-import ky from "ky";
+import ky, { HTTPError } from "ky";
 
 type CreateBrickBarProps = {
   brickType: BricksType; // The general type of the brick to create
@@ -80,6 +80,20 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
             if (withCanvaInsert && newNode) saveNode({ node: newNode, rerender: true });
             returnBrick({ ...result, nodeId: newNode?.id ?? result.nodeId });
           }
+        })
+        .catch((e: HTTPError) => {
+          if (e.response?.status === 409) {
+            toast({
+              title: "Error lors de la sauvegarde",
+              description: `Une brique avec le même nom existe déjà. Veuillez changer le nom de la brique.`,
+            });
+          } else {
+            console.error(e);
+            toast({
+              title: "Error",
+              description: `Une erreur est survenue lors de la sauvegarde de la brique. Veuillez réessayer plus tard.`,
+            });
+          }
         });
     },
     [brick]
@@ -133,7 +147,7 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
 
   return (
     <>
-      <div className={"flex flex-col w-full gap-4"}>
+      <div className={"flex flex-col w-full gap-4 min-h-0 overflow-scroll pr-4"}>
         <ObjectRenderer type={brickType} content={brickData} onChange={(v) => setBrick(v as availBricks)} />
       </div>
       <div class="w-full gap-4 flex flex-col justify-center align-middle">
