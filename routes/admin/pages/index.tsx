@@ -6,7 +6,7 @@ export default defineRoute((req, ctx) => {
   return (
     <>
       <link rel="stylesheet" href="/cardsglow.css" />
-      <MCPageWRapper />;
+      <MCPageWRapper />
     </>
   );
 });

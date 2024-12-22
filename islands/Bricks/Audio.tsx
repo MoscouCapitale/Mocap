@@ -4,6 +4,7 @@ import Link from "@islands/UI/Link.tsx";
 import { AudioBrick as AudioType } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
 import { useMemo } from "preact/hooks";
+import { AudioControls, getPlayerControlsFromMediaControls, getStyleFit } from "@models/Medias.ts";
 
 type AudioProps = {
   content: AudioType;
@@ -22,6 +23,7 @@ export default function Audio({ content, size }: AudioProps) {
           <Player
             type="video"
             src={content.media.public_src ?? ""}
+            fit={content.mediaFit}
             autoplay
             disableControls
             additionnalConfig={{ controlOnHover: true }}
@@ -32,7 +34,7 @@ export default function Audio({ content, size }: AudioProps) {
         );
       }
       if (content.media.extension?.includes("image")) {
-        return <img className={cn("rounded-md object-cover w-full h-full")} src={content.media?.public_src} alt={content.media?.alt} />;
+        return <img className={cn("rounded-md w-full h-full", getStyleFit(content.mediaFit))} src={content.media?.public_src} alt={content.media?.alt} />;
       }
     }
     return <div className={cn("rounded-md object-cover w-full h-full bg-main")}></div>;
@@ -79,7 +81,11 @@ export default function Audio({ content, size }: AudioProps) {
 
       {/* Audio player */}
       <div className={"w-full min-h-fit"}>
-        <Player type="audio" src={content.audio.public_src ?? ""} />
+        <Player
+          type="audio"
+          src={content.audio.public_src ?? ""}
+          additionnalConfig={{ disableSomeControls: getPlayerControlsFromMediaControls(content.controls as AudioControls) }}
+        />
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
+import MediaEmbed, { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
 import Player from "@islands/Player/index.tsx";
 import { Highlight as HighlightType } from "@models/Bricks.ts";
+import { getPlayerControlsFromMediaControls, getStyleFit, VideoControls } from "@models/Medias.ts";
 import { cn } from "@utils/cn.ts";
 import { IconArrowUpRight } from "@utils/icons.ts";
-import { useMemo, useRef } from "preact/hooks";
-import MediaEmbed, { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
+import { useMemo } from "preact/hooks";
 
 type HighlightProps = {
   content: HighlightType;
@@ -18,11 +19,24 @@ export default function Highlight({ content, size }: HighlightProps) {
 
     if (content.media) {
       if (content.media.extension?.includes("video")) {
-        return <Player type="video" src={content.media.public_src ?? ""} autoplay loopVideo additionnalConfig={{ controlOnHover: true }} sx={"z-10"} />;
+        return (
+          <Player
+            type="video"
+            src={content.media.public_src ?? ""}
+            fit={content.mediaFit}
+            autoplay={(content.controls as VideoControls)?.autoplay}
+            loopVideo
+            additionnalConfig={{
+              controlOnHover: true,
+              disableSomeControls: getPlayerControlsFromMediaControls(content.controls as VideoControls),
+            }}
+            sx={"z-10"}
+          />
+        );
       } else if (content.media.extension?.includes("image")) {
         return (
           <img
-            className={cn("absolute group-hover/main:brightness-75 object-cover w-full h-full rounded-[20px]")}
+            className={cn("absolute group-hover/main:brightness-75 w-full h-full rounded-[20px]", getStyleFit(content.mediaFit))}
             src={content.media?.public_src}
             alt={content.media?.alt}
           />

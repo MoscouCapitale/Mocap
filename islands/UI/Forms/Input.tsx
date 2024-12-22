@@ -4,6 +4,7 @@ import { IconEye, IconEyeClosed, IconInfoSquareRounded } from "@utils/icons.ts";
 import { VNode } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { Select, FileInput, PreviewImage, RelationInput } from "@islands/UI";
+import { isEmpty } from "lodash";
 
 type InputFromTypeProps = {
   field: FormField;
@@ -42,7 +43,7 @@ const InputFromType = (
           defaultValue={String(field.defaultValue ?? "")}
           type={field.type}
           placeholder={field.placeholder ?? ""}
-          defaultChecked={field.type === "checkbox" ? Boolean(field.defaultValue) : undefined}
+          defaultChecked={field.type === "checkbox" ? field.defaultValue : undefined}
           onChange={(e) => {
             switch (field.type) {
               case "number":
@@ -134,15 +135,24 @@ type InputProps = {
   onChange: (value: FormFieldValue) => void;
 };
 
-export default function Input({ field: initialField, onChange }: InputProps) {
-  const [field, setField] = useState<FormField>(initialField);
+export default function Input({ field, onChange }: InputProps) {
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  // On field mount, check errors that needs to be displayed
+  useEffect(() => {
+    if (field.relation && (field.validation || field.required)) {
+      let error = field.validation ? field.validation(field.defaultValue) : null;
+      if (field.required && (!field.defaultValue || isEmpty(field.defaultValue))) error = "Ce champ est requis";
+      if (!error) setFieldError(null);
+      else setFieldError(error);
+    }
+  }, [field.name]);
 
   const onValueChange = (value: FormFieldValue) => {
     if (field.validation || field.required) {
       let error = field.validation ? field.validation(value) : null;
-      if (field.required && !value) error = "Ce champ est requis";
+      if (field.required && (!value || isEmpty(value))) error = "Ce champ est requis";
       if (!error) {
         setFieldError(null);
         return onChange(value);

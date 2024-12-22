@@ -1,6 +1,7 @@
 import { cn } from "@utils/cn.ts";
 import { JSX } from "preact/jsx-runtime";
 import { Media } from "@models/Medias.ts";
+import { Paths } from "@models/App.ts";
 
 export type InputError = {
   error: boolean;
@@ -38,6 +39,7 @@ export interface FormField {
   };
   /** Additionnal style for the input. Only works with default input fields (exclude relation, file, select) */
   sx?: string;
+  trigger?: FormTrigger;
 }
 
 export interface FormFieldOptions {
@@ -99,4 +101,14 @@ export const baseInputStyle = cn(
  *
  * This way, the name will always be a key of the object, making it easier to use in forms
  */
-export type ObjFormField<T> = Omit<FormField, "name"> & { name: keyof T };
+export type ObjFormField<T> = Omit<FormField, "name"> & { name: Paths<T> }
+
+/** This type is used to make interactive forms, by displaying forms fields
+ * depending on the value of another field.
+ */
+export type FormTrigger = {
+  /** The field name that will trigger the condition */
+  fieldName: string[];
+  /** The value that will trigger the condition. Must return true to display the field */
+  condition: (v: FormFieldValue) => boolean;
+}

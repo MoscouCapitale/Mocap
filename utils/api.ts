@@ -35,6 +35,8 @@ export const returnErrorReponse = (
     return new Response(null, { status: 204 });
   }
 
+  if (error.code === "23505") return new Response("Conflict", { status: 409 }); // Unique constraint error
+
   return new Response("Server error", { status: 500 });
 };
 

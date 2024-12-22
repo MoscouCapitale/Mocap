@@ -1,18 +1,16 @@
+import PlatformLinksBubble from "@islands/Bricks/Common/PlatformLinksBubble.tsx";
+import Player from "@islands/Player/index.tsx";
 import { Album as AlbumType, Track } from "@models/Bricks.ts";
+import { getPlayerControlsFromMediaControls, getStyleFit, VideoControls } from "@models/Medias.ts";
 import { cn } from "@utils/cn.ts";
-import { IconArrowUpRight } from "@utils/icons.ts";
 import gsap from "gsap";
 import { TextPlugin } from "gsap/TextPlugin";
 import { useCallback, useMemo, useState } from "preact/hooks";
-import Player from "@islands/Player/index.tsx";
-import PlatformLinksBubble from "@islands/Bricks/Common/PlatformLinksBubble.tsx";
 gsap.registerPlugin(TextPlugin);
 
 type AlbumProps = {
   content: AlbumType;
 };
-
-const MAX_PLATFORMS = 8;
 
 export default function Album({ content }: AlbumProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,28 +31,26 @@ export default function Album({ content }: AlbumProps) {
           <Player
             type="video"
             src={content.media.public_src ?? ""}
-            // autoplay // TODO: is autoplay good ?
+            fit={content.mediaFit}
+            autoplay={(content.controls as VideoControls)?.autoplay}
             additionnalConfig={{
-              // delay: 2000,
+              delay: (content.controls as VideoControls)?.autoplay ? 2000 : undefined,
               controlsTrigger: "bottom",
-              disableSomeControls: ["volumeIcon", "duration"],
+              disableSomeControls: content.controls ? getPlayerControlsFromMediaControls(content.controls as VideoControls) : ["volumeIcon", "duration"],
             }}
             loopVideo
             muted
-            sx={cn(
-              "absolute group-hover/main:brightness-50 rounded-[20px] [&_#volbar]:w-[50px]",
-              isOpen ? "brightness-50" : "",
-              transitionsStyles,
-            )}
+            sx={cn("absolute group-hover/main:brightness-50 rounded-[20px] [&_#volbar]:w-[50px]", isOpen ? "brightness-50" : "", transitionsStyles)}
           />
         );
       } else if (content.media.extension?.includes("image")) {
         return (
           <img
             className={cn(
-              "absolute rounded-[20px] group-hover/main:brightness-50 object-cover w-full h-full",
+              "absolute rounded-[20px] group-hover/main:brightness-50 w-full h-full",
               isOpen ? "brightness-50" : "",
-              transitionsStyles,
+              getStyleFit(content.mediaFit),
+              transitionsStyles
             )}
             src={content.media?.public_src}
             alt={content.media?.alt}
@@ -78,27 +74,20 @@ export default function Album({ content }: AlbumProps) {
       }}
     >
       {renderMedia}
-      {(!isOpen) &&
-        (
-          <h2
-            className={cn(
-              "invisible group-hover/main:visible opacity-0 group-hover/main:opacity-100",
-              "absolute pos-center cursor-pointer inline-block",
-              "text-[20px] font-bold text-center text-text", // Font styles
-              transitionsStyles,
-            )}
-            onClick={toggleOpenState}
-          >
-            {content.title}
-          </h2>
-        )}
-      {isOpen && (
-        <div
-          className={"absolute p-7 flex flex-col gap-3 w-full h-full"}
+      {!isOpen && (
+        <h2
+          className={cn(
+            "invisible group-hover/main:visible opacity-0 group-hover/main:opacity-100",
+            "absolute pos-center cursor-pointer inline-block",
+            "text-[20px] font-bold text-center text-text", // Font styles
+            transitionsStyles
+          )}
+          onClick={toggleOpenState}
         >
-          {content.tracklist?.map((t) => <AlbumTrack track={t} />).slice(0, 7)}
-        </div>
+          {content.title}
+        </h2>
       )}
+      {isOpen && <div className={"absolute p-7 flex flex-col gap-3 w-full h-full"}>{content.tracklist?.map((t) => <AlbumTrack track={t} />).slice(0, 7)}</div>}
     </div>
   );
 }
@@ -110,11 +99,7 @@ const AlbumTrack = ({ track }: { track: Track }) => {
         <p className={"text-text font-semibold"}>{track.name}</p>
         <div className={"text-text_grey text-[12px] font-semibold flex gap-1"}>
           {track.artist?.map((artist) => (
-            <a
-              className={"hover:underline"}
-              href={artist.url}
-              target={"_blank"}
-            >
+            <a className={"hover:underline"} href={artist.url} target={"_blank"}>
               {artist.name}
             </a>
           ))}

@@ -2,6 +2,7 @@ import Player from "@islands/Player/index.tsx";
 import { Single as SingleType } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
 import { useCallback, useMemo, useState } from "preact/hooks";
+import { getPlayerControlsFromMediaControls, getStyleFit, VideoControls } from "@models/Medias.ts";
 
 type SingleProps = {
   content: SingleType;
@@ -23,11 +24,12 @@ export default function Single({ content }: SingleProps) {
           <Player
             type="video"
             src={content.media.public_src ?? ""}
-            autoplay
+            fit={content.mediaFit}
+            autoplay={(content.controls as VideoControls)?.autoplay}
             additionnalConfig={{
-              delay: 2000,
+              delay: (content.controls as VideoControls)?.autoplay ? 2000 : undefined,
               controlsTrigger: "bottom",
-              disableSomeControls: ["volumeIcon", "duration"],
+              disableSomeControls: content.controls ? getPlayerControlsFromMediaControls(content.controls as VideoControls) : ["volumeIcon", "duration"],
             }}
             loopVideo
             muted
@@ -42,8 +44,9 @@ export default function Single({ content }: SingleProps) {
         return (
           <img
             className={cn(
-              "absolute rounded-[20px] group-hover/main:brightness-50 object-cover w-full h-full",
+              "absolute rounded-[20px] group-hover/main:brightness-50 w-full h-full",
               isOpen ? "brightness-50" : "",
+              getStyleFit(content.mediaFit),
               transitionsStyles,
             )}
             src={content.media?.public_src}

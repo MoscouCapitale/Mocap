@@ -1,4 +1,6 @@
 import { Database } from "@models/database.ts";
+import { AvailablePlayerControls } from "@islands/Player/Video/index.tsx";
+import { isEmpty, pickBy } from "lodash";
 
 interface Media {
   id: string;
@@ -14,24 +16,24 @@ interface Media {
 }
 
 interface Image extends Media {
-  object_fit: MediaObjectFit;
-  cta: MediaCTA;
+  // object_fit: MediaObjectFit;
+  // cta: MediaCTA;
   type: MediaType.Images;
 }
 
 interface Video extends Media {
   // cover: Image; TODO: Add cover to video
-  object_fit: MediaObjectFit;
-  autoplay: boolean;
-  controls: MediaControls;
-  cta: MediaCTA;
+  // object_fit: MediaObjectFit;
+  // autoplay: boolean;
+  // controls: MediaControls;
+  // cta: MediaCTA;
   type: MediaType.Videos;
 }
 
 interface Audio extends Media {
   // cover: Image; TODO: Add cover to audio
-  autodetect_source: boolean;
-  controls: MediaControls;
+  // autodetect_source: boolean;
+  // controls: MediaControls;
   type: MediaType.Audios;
 }
 
@@ -39,16 +41,7 @@ interface Misc extends Media {
   type: MediaType.Misc;
 }
 
-type DatabaseMedia =
-  & Omit<
-    Database["public"]["Tables"]["Medias"]["Row"],
-    "controls" | "object_fit" | "cta"
-  >
-  & {
-    controls: MediaControls;
-    object_fit: MediaObjectFit;
-    cta: MediaCTA;
-  };
+type DatabaseMedia = Media;
 
 type MediaCTA = {
   id: number;
@@ -56,14 +49,34 @@ type MediaCTA = {
   url: string;
 };
 
-export type MediaControls = {
-  id: number;
-  name: string;
+export type PlayerControls = {
+  autoplay: boolean;
   play: boolean;
-  progress: boolean;
+  timeline: boolean;
   duration: boolean;
-  volume: boolean;
+  volumeIcon: boolean;
+  volumeBar: boolean;
 };
+export type ImageControls = {
+  type: MediaType.Images;
+  fit: MediaObjectFit;
+};
+
+export type VideoControls = {
+  type: MediaType.Videos;
+  fit: MediaObjectFit;
+} & PlayerControls;
+
+export type AudioControls = {
+  type: MediaType.Audios;
+} & PlayerControls;
+
+export type MediaControls = ImageControls | VideoControls | AudioControls;
+
+export const getPlayerControlsFromMediaControls = (controls?: PlayerControls) =>
+  isEmpty(controls) ? [] : Object.keys(pickBy(controls, (v: boolean) => v === false)) as AvailablePlayerControls[];
+
+export const getStyleFit = (fit: MediaObjectFit) => fit === "cover" || fit === "best" ? "object-cover" : "object-contain";
 
 enum MediaType {
   Images = "Images",
@@ -71,6 +84,26 @@ enum MediaType {
   Audios = "Audios",
   Misc = "Misc",
 }
+
+export type MediaControlsFromType<T extends MediaType> = T extends MediaType.Images ? {
+    fit: MediaObjectFit;
+  }
+  : T extends MediaType.Videos ? {
+      fit: MediaObjectFit;
+      autoplay: boolean;
+      play: boolean;
+      progress: boolean;
+      duration: boolean;
+      volume: boolean;
+    }
+  : T extends MediaType.Audios ? {
+      autoplay: boolean;
+      play: boolean;
+      progress: boolean;
+      duration: boolean;
+      volume: boolean;
+    }
+  : null;
 
 export type MediaObjectFit = "best" | "cover" | "contain";
 
@@ -158,16 +191,10 @@ export type {
   Image,
   Media,
   MediaByType,
+  MediaCTA,
   MediaSettingsAttributes,
   Misc,
   uploadFileObject,
   Video,
-  MediaCTA,
 };
-export {
-  acceptedFileTypeMap,
-  defaultPrivateFields,
-  MediaModifiableAttributes,
-  MediaTableNames,
-  MediaType,
-};
+export { acceptedFileTypeMap, defaultPrivateFields, MediaModifiableAttributes, MediaTableNames, MediaType };

@@ -8,7 +8,7 @@ import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import ky from "ky";
 
 // Default is the value of the key of BricksType.Single
-const defaultBrick = BricksType.Audio;
+const defaultBrick = BricksType.Album;
 
 type BrickSideBarSelects = Record<BricksType, availBricks[] | undefined>;
 
@@ -142,7 +142,7 @@ export default function BrickSidebar() {
   );
 
   return (
-    <div class={cn("w-[200px] h-full flex-col justify-start items-start gap-6 inline-flex relative")}>
+    <div class={cn("w-[calc(200px+1rem)] h-full flex-col justify-start items-start gap-6 inline-flex relative")}>
       {isPreview && (
         <div
           className={"absolute inset-0 bg-background opacity-60"}

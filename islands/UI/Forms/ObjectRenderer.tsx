@@ -4,15 +4,10 @@ import { AllMocapObjectsTypes, getObjectFormFromType } from "@models/forms/brick
 import { useEffect, useMemo, useState } from "preact/hooks";
 import ContentForm from "./ContentForm.tsx";
 import { ContentFormValue } from "./ContentForm.tsx";
+import { FormField } from "@models/Form.ts";
+import { set } from "lodash";
 
-type SupportedObjects =
-  | availBricks
-  | Track
-  | Platform
-  | MediaCTA
-  | MediaControls
-  | Artist
-  | AudioBrick;
+type SupportedObjects = availBricks | Track | Platform | MediaCTA | MediaControls | Artist | AudioBrick;
 
 type ObjectRendererProps = {
   /** The type of the element to the form be rendered */
@@ -21,8 +16,6 @@ type ObjectRendererProps = {
   content?: SupportedObjects;
   /** Function returned with the new object when a field changes */
   onChange?: (obj: SupportedObjects) => void;
-  /** Simple function to update the content of the object */
-  triggerContentUpdate?: string; // TODO: it
 };
 
 // TODO: for perf change on blur ?
@@ -35,15 +28,10 @@ type ObjectRendererProps = {
  * @param param0
  * @returns
  */
-export default function ObjectRenderer({
-  type,
-  content,
-  onChange,
-  triggerContentUpdate,
-}: ObjectRendererProps) {
+export default function ObjectRenderer({ type, content, onChange }: ObjectRendererProps) {
   const form = useMemo(() => getObjectFormFromType(type), [type]);
   // Do no set content as a dependency, as it will cause a re-render on each event (if content is set)
-  const initialData = useMemo(() => content ?? createEmptyObject(type), [type, content]);
+  const initialData = useMemo(() => content ?? createEmptyObject(form), [form, content]);
 
   const [data, setDatas] = useState<SupportedObjects | null>();
 
@@ -58,108 +46,43 @@ export default function ObjectRenderer({
 
   return (
     <div class="flex flex-col gap-6 flex-wrap">
-      <ContentForm
-        form={form}
-        initialData={initialData as ContentFormValue}
-        setDatas={setDatas as unknown as (
-          value: ContentFormValue,
-        ) => void}
-      />
+      <ContentForm form={form} initialData={initialData as ContentFormValue} setDatas={setDatas as unknown as (value: ContentFormValue) => void} />
     </div>
   );
 }
 
 /** Create an empty object from the given type */
-function createEmptyObject(
-  type: AllMocapObjectsTypes,
-): Omit<SupportedObjects, "id"> | null {
-  switch (type) {
-    case BricksType.HeroSection:
-      return {
-        name: "",
-        title: "",
-        subtitle: "",
-        media: null,
-        cta: {},
-        style: "scrolling-hero",
-      };
-    case BricksType.Highlight:
-      return {
-        name: "",
-        title: "",
-        subtitle: "",
-        media: null,
-        link: "",
-      };
-    case BricksType.Single:
-      return {
-        name: "",
-        title: "",
-        media: null,
-        track: {},
-        hoverable: false,
-        cta: {},
-        platforms: [],
-      };
-    case BricksType.Album:
-      return {
-        name: "",
-        title: "",
-        media: null,
-        hoverable: true,
-        platforms: [],
-        tracklist: [],
-        cta: {},
-      };
-    case BricksType.Text:
-      return {
-        name: "",
-        text: "",
-      };
-    case BricksType.Platform_Link:
-      return {
-        name: "",
-        url: "",
-        platform: {},
-      };
-    case BricksType.Audio:
-      return {
-        name: "",
-        media: null,
-        audio: null,
-        track: {},
-        link: "",
-      };
-    case "CTA_Link":
-      return {
-        label: "",
-        url: "",
-      };
-    case "Controls":
-      return {
-        name: "",
-        play: false,
-        progress: false,
-        duration: false,
-        volume: false,
-      };
-    case "Platform":
-      return {
-        name: "",
-        icon: "",
-      };
-    case "Artist":
-      return {
-        name: "",
-        url: "",
-      };
-    case "Track":
-      return {
-        name: "",
-        artist: [],
-        platforms: [],
-      };
-    default:
-      return null;
+function createEmptyObject(form: FormField[] | null): Omit<SupportedObjects, "id"> | null {
+  if (!form) return null;
+  const res = {};
+
+  // Get the default value for each field. Either get the default value or create an empty one
+  const getFieldValue = (field: FormField) => {
+    switch (field.type) {
+      case "number":
+        return field.defaultValue ?? 0;
+      case "checkbox":
+        return field.defaultValue ?? false;
+      case "select":
+        return field.defaultValue ?? "";
+      case "multiselect":
+        return field.defaultValue ?? [];
+      case "file":
+        return field.defaultValue ?? null;
+      case "relation":
+        return field.relation?.multiple ? [] : {};
+      case "markdown":
+      case "date":
+      case "color":
+      case "email":
+      case "password":
+      case "NI":
+      case "string":
+        return field.defaultValue ?? "";
+    }
   }
+
+  form.forEach((field) => set(res, field.name, getFieldValue(field)));
+
+  return res;
 }

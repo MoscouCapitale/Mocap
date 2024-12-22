@@ -96,31 +96,37 @@ export type Database = {
       }
       Bricks_Album: {
         Row: {
+          controls: Json | null
           created_at: string
           cta: number | null
           hoverable: boolean
           id: number
           media: string | null
+          mediaFit: Database["public"]["Enums"]["media_fit"] | null
           name: string
           title: string | null
           updated_at: string | null
         }
         Insert: {
+          controls?: Json | null
           created_at?: string
           cta?: number | null
           hoverable?: boolean
           id?: number
           media?: string | null
+          mediaFit?: Database["public"]["Enums"]["media_fit"] | null
           name: string
           title?: string | null
           updated_at?: string | null
         }
         Update: {
+          controls?: Json | null
           created_at?: string
           cta?: number | null
           hoverable?: boolean
           id?: number
           media?: string | null
+          mediaFit?: Database["public"]["Enums"]["media_fit"] | null
           name?: string
           title?: string | null
           updated_at?: string | null
@@ -256,10 +262,12 @@ export type Database = {
       }
       Bricks_HeroSection: {
         Row: {
+          controls: Json | null
           created_at: string
           cta: number | null
           id: number
           media: string | null
+          mediaFit: Database["public"]["Enums"]["media_fit"]
           name: string
           style: Database["public"]["Enums"]["herosection_style"]
           subtitle: string | null
@@ -267,10 +275,12 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          controls?: Json | null
           created_at?: string
           cta?: number | null
           id?: number
           media?: string | null
+          mediaFit?: Database["public"]["Enums"]["media_fit"]
           name: string
           style?: Database["public"]["Enums"]["herosection_style"]
           subtitle?: string | null
@@ -278,10 +288,12 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          controls?: Json | null
           created_at?: string
           cta?: number | null
           id?: number
           media?: string | null
+          mediaFit?: Database["public"]["Enums"]["media_fit"]
           name?: string
           style?: Database["public"]["Enums"]["herosection_style"]
           subtitle?: string | null
@@ -307,30 +319,36 @@ export type Database = {
       }
       Bricks_Highlight: {
         Row: {
+          controls: Json | null
           created_at: string
           id: number
           link: string | null
           media: string | null
+          mediaFit: Database["public"]["Enums"]["media_fit"]
           name: string
           subtitle: string | null
           title: string | null
           updated_at: string | null
         }
         Insert: {
+          controls?: Json | null
           created_at?: string
           id?: number
           link?: string | null
           media?: string | null
+          mediaFit?: Database["public"]["Enums"]["media_fit"]
           name: string
           subtitle?: string | null
           title?: string | null
           updated_at?: string | null
         }
         Update: {
+          controls?: Json | null
           created_at?: string
           id?: number
           link?: string | null
           media?: string | null
+          mediaFit?: Database["public"]["Enums"]["media_fit"]
           name?: string
           subtitle?: string | null
           title?: string | null
@@ -348,33 +366,39 @@ export type Database = {
       }
       Bricks_Single: {
         Row: {
+          controls: Json | null
           created_at: string
           cta: number | null
           hoverable: boolean
           id: number
           media: string | null
+          mediaFit: Database["public"]["Enums"]["media_fit"]
           name: string
           title: string | null
           track: number | null
           updated_at: string | null
         }
         Insert: {
+          controls?: Json | null
           created_at?: string
           cta?: number | null
           hoverable?: boolean
           id?: number
           media?: string | null
+          mediaFit?: Database["public"]["Enums"]["media_fit"]
           name: string
           title?: string | null
           track?: number | null
           updated_at?: string | null
         }
         Update: {
+          controls?: Json | null
           created_at?: string
           cta?: number | null
           hoverable?: boolean
           id?: number
           media?: string | null
+          mediaFit?: Database["public"]["Enums"]["media_fit"]
           name?: string
           title?: string | null
           track?: number | null
@@ -533,17 +557,12 @@ export type Database = {
         Row: {
           alt: string | null
           autodetect_source: boolean | null
-          autoplay: boolean | null
-          controls: number | null
-          cover: string | null
           created_at: string
-          cta: number | null
           display_name: string
           extension: string | null
           filesize: number | null
           id: string
           name: string
-          object_fit: Database["public"]["Enums"]["media_fit"] | null
           public_src: string | null
           type: Database["public"]["Enums"]["media_type"] | null
           updated_at: string | null
@@ -551,17 +570,12 @@ export type Database = {
         Insert: {
           alt?: string | null
           autodetect_source?: boolean | null
-          autoplay?: boolean | null
-          controls?: number | null
-          cover?: string | null
           created_at?: string
-          cta?: number | null
           display_name: string
           extension?: string | null
           filesize?: number | null
           id: string
           name: string
-          object_fit?: Database["public"]["Enums"]["media_fit"] | null
           public_src?: string | null
           type?: Database["public"]["Enums"]["media_type"] | null
           updated_at?: string | null
@@ -569,44 +583,17 @@ export type Database = {
         Update: {
           alt?: string | null
           autodetect_source?: boolean | null
-          autoplay?: boolean | null
-          controls?: number | null
-          cover?: string | null
           created_at?: string
-          cta?: number | null
           display_name?: string
           extension?: string | null
           filesize?: number | null
           id?: string
           name?: string
-          object_fit?: Database["public"]["Enums"]["media_fit"] | null
           public_src?: string | null
           type?: Database["public"]["Enums"]["media_type"] | null
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "medias_controls_fkey"
-            columns: ["controls"]
-            isOneToOne: false
-            referencedRelation: "Medias_Controls"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "medias_cover_fkey"
-            columns: ["cover"]
-            isOneToOne: false
-            referencedRelation: "Medias"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "medias_cta_fkey"
-            columns: ["cta"]
-            isOneToOne: false
-            referencedRelation: "CTA_Link"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       Medias_Controls: {
         Row: {
