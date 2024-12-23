@@ -403,4 +403,10 @@ export const PlatformLinkFormFields: ObjFormField<PlatformLink>[] = [
     required: true,
   },
   ObjectRelations.platform as ObjFormField<PlatformLink>,
+  {
+    name: "in_footer",
+    type: "checkbox",
+    defaultValue: false,
+    label: <LabeledToolTip label="Dans le footer" text="Si coché, le lien sera affiché dans le footer du site." />,
+  }
 ];

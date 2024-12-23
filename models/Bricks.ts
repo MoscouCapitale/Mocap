@@ -70,6 +70,7 @@ export interface PlatformLink extends Brick {
   type: BricksType.Platform_Link;
   platform: Platform;
   url: string;
+  in_footer: boolean;
 };
 
 /** The Highlight brick interface.
