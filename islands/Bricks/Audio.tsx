@@ -46,16 +46,16 @@ export default function Audio({ content, size }: AudioProps) {
       className={cn("group/main w-full h-full rounded-[20px] relative flex flex-col justify-between", isSmallSize ? "p-2 gap-1" : "p-5 gap-4")}
     >
       {/* Backdrop */}
-      {content.media?.extension?.includes("image") && (
-        <img
-          className={cn("absolute top-0 left-0 w-full h-full rounded-[20px] object-cover pointer-events-none", "opacity-20 blur-md")}
-          src={content.media?.public_src}
-          alt={content.media?.alt}
-        />
-      )}
+      <div
+        className={cn("absolute top-0 left-0 w-full h-full flex items-center justify-center rounded-[20px] overflow-hidden pointer-events-none bg-background")}
+      >
+        {content.media?.extension?.includes("image") && (
+          <img className={cn("w-full h-full object-cover", "brightness-50 blur-md")} src={content.media?.public_src} alt={content.media?.alt} />
+        )}
+      </div>
 
       {/* Audio content */}
-      <div className={"flex gap-3 min-h-0"}>
+      <div className={"flex gap-3 min-h-0 z-10"}>
         <div className={"max-w-[120px] max-h-[120px] h-full w-auto aspect-square"}>{renderMedia}</div>
         <div className={cn("flex flex-col justify-start items-start min-w-0", isSmallSize ? "gap-1 w-3/4" : "py-2 gap-3")}>
           <p className={cn("text-text font-semibold w-full", isSmallSize && "truncate")} title={content.track.name}>
