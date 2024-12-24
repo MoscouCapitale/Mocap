@@ -1,7 +1,8 @@
-import { LabeledToolTip } from "@islands/UI/Tooltip.tsx";
-import { Album, Highlight, Artist, HeroSection, Platform, PlatformLink, Single, Text, Track, AudioBrick } from "@models/Bricks.ts";
+import { LabeledToolTip } from "@islands/UI";
+import { Album, Artist, AudioBrick, HeroSection, Highlight, Platform, PlatformLink, Single, Text, Track } from "@models/Bricks.ts";
 import { AvailableFormRelation, FormField, ObjFormField } from "@models/Form.ts";
-import { MediaControls, MediaCTA } from "@models/Medias.ts";
+import { MediaCTA } from "@models/Medias.ts";
+import { MediaControlsFormField } from "@models/forms/media.ts";
 
 export type AllMocapObjectsTypes =
   | "HeroSection"
@@ -46,14 +47,12 @@ export const getObjectFormFromType = (type: AllMocapObjectsTypes): FormField[] |
       return PlatformLinkFormFields;
     case "CTA_Link":
       return CTAFormFields;
-    case "Controls":
-      return ControlsFormFields;
     default:
       return null;
   }
 };
 
-const DefaultBricksFormValues: ObjFormField<HeroSection | Single | Album | Track | Artist | Platform | Text>[] = [
+const DefaultBricksFormValues: ObjFormField<{ name: "name" }>[] = [
   {
     name: "name",
     type: "string",
@@ -81,6 +80,7 @@ export const ObjectRelations: Record<AvailableFormRelation, FormField> = {
     type: "relation",
     label: "Track",
     placeholder: " ",
+    required: true,
     relation: {
       type: "track",
       configurable: true,
@@ -223,6 +223,7 @@ const HighlightFormFields: ObjFormField<Highlight>[] = [
       />
     ),
   },
+  ...MediaControlsFormField,
 ];
 
 const SingleFormFields: ObjFormField<Single>[] = [
@@ -251,6 +252,7 @@ const SingleFormFields: ObjFormField<Single>[] = [
   },
   ObjectRelations.cta as ObjFormField<Single>,
   ObjectRelations.platforms as ObjFormField<Single>,
+  ...MediaControlsFormField,
 ];
 
 const AlbumFormFields: ObjFormField<Album>[] = [
@@ -278,6 +280,7 @@ const AlbumFormFields: ObjFormField<Album>[] = [
     type: "checkbox",
     label: "Effet au survol",
   },
+  ...MediaControlsFormField,
 ];
 
 const TextFormFields: ObjFormField<Text>[] = [
@@ -326,7 +329,8 @@ export const AudioFormFields: ObjFormField<AudioBrick>[] = [
       customLabel: "Parcourir la médiathèque",
     },
   },
-  ObjectRelations.track as ObjFormField<AudioBrick>
+  ObjectRelations.track as ObjFormField<AudioBrick>,
+  ...MediaControlsFormField,
 ];
 
 const CTAFormFields: ObjFormField<MediaCTA>[] = [
@@ -341,35 +345,6 @@ const CTAFormFields: ObjFormField<MediaCTA>[] = [
     type: "string",
     label: "URL",
     required: true,
-  },
-];
-
-const ControlsFormFields: ObjFormField<MediaControls>[] = [
-  {
-    name: "name",
-    type: "string",
-    label: "Nom",
-    required: true,
-  },
-  {
-    name: "play",
-    type: "checkbox",
-    label: "Play",
-  },
-  {
-    name: "progress",
-    type: "checkbox",
-    label: "Progress",
-  },
-  {
-    name: "duration",
-    type: "checkbox",
-    label: "Duration",
-  },
-  {
-    name: "volume",
-    type: "checkbox",
-    label: "Volume",
   },
 ];
 
@@ -428,4 +403,10 @@ export const PlatformLinkFormFields: ObjFormField<PlatformLink>[] = [
     required: true,
   },
   ObjectRelations.platform as ObjFormField<PlatformLink>,
+  {
+    name: "in_footer",
+    type: "checkbox",
+    defaultValue: false,
+    label: <LabeledToolTip label="Dans le footer" text="Si coché, le lien sera affiché dans le footer du site." />,
+  }
 ];

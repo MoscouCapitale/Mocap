@@ -1,9 +1,7 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { toast } from "@hooks/toast.tsx";
-import Button from "@islands/Button.tsx";
-import InpagePopup from "@islands/Layout/InpagePopup.tsx";
-import ObjectRenderer from "@islands/UI/Forms/ObjectRenderer.tsx";
-import AddButton from "@islands/collection/AddButton.tsx";
+import { Button, Modal } from "@islands/UI";
+import { ObjectRenderer } from "@islands/UI";
 import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
 import { availBricks, BricksType } from "@models/Bricks.ts";
 import { MNode } from "@models/Canva.ts";
@@ -11,6 +9,7 @@ import { Media, MediaType } from "@models/Medias.ts";
 import { IconTrash } from "@utils/icons.ts";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import { isEqual } from "lodash";
+import ky, { HTTPError } from "ky";
 
 type CreateBrickBarProps = {
   brickType: BricksType; // The general type of the brick to create
@@ -55,26 +54,45 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
   const saveBrick = useCallback(
     (withCanvaInsert?: boolean) => {
       if (!brick) return;
-      fetch("/api/brick", {
-        method: "PUT",
-        body: JSON.stringify({
+      const brickDatas = ({ ...brick, type: brickType } as availBricks);  
+      if (withCanvaInsert && brickState === "addIncanvas" && MCNodes.find((n) => n.type === BricksType.HeroSection) && brickDatas.type === BricksType.HeroSection) {
+        toast({
+          title: "Error lors de la sauvegarde",
+          description: `Vous ne pouvez avoir qu'une seule "Hero Section" par page. Cette brique ne peut pas être insérée au canva.`,
+        });
+        return;
+      };
+      ky.put("/api/brick", {
+        json: {
           type: brickType,
-          data: brick,
+          data: brickDatas,
           withCanvaInsert: Boolean(withCanvaInsert),
-        }),
+        },
       })
-        .then(async (res) => {
-          if (res.ok && res.status !== 204) return await res.json();
-        })
+        .json<availBricks & { newNode?: MNode }>()
         .then((res) => {
           if (res) {
-            const { newNode, ...result }: availBricks & { newNode?: MNode } = res;
+            const { newNode, ...result } = res;
             toast({
               title: "Brick saved",
-              description: `The brick ${brick.name} has been saved.`,
+              description: `The brick ${brickDatas.name} has been saved.`,
             });
             if (withCanvaInsert && newNode) saveNode({ node: newNode, rerender: true });
             returnBrick({ ...result, nodeId: newNode?.id ?? result.nodeId });
+          }
+        })
+        .catch((e: HTTPError) => {
+          if (e.response?.status === 409) {
+            toast({
+              title: "Error lors de la sauvegarde",
+              description: `Une brique avec le même nom existe déjà. Veuillez changer le nom de la brique.`,
+            });
+          } else {
+            console.error(e);
+            toast({
+              title: "Error",
+              description: `Une erreur est survenue lors de la sauvegarde de la brique. Veuillez réessayer plus tard.`,
+            });
           }
         });
     },
@@ -88,12 +106,11 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
       globalThis.confirm(`Are you sure ? The will NOT be recoverable.${brickData.nodeId ? " The brick will also be removed from the canvas." : ""}`)
     ) {
       try {
-        await fetch(`/api/brick`, {
-          method: "DELETE",
-          body: JSON.stringify({
+        ky.delete("/api/brick", {
+          json: {
             data: brick,
             type: brickType,
-          }),
+          },
         });
         if (brickData?.nodeId) await deleteNode(brickData.nodeId);
         toast({
@@ -130,7 +147,7 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
 
   return (
     <>
-      <div className={"flex flex-col w-full gap-4"}>
+      <div className={"flex flex-col w-full gap-4 min-h-0 overflow-scroll pr-4"}>
         <ObjectRenderer type={brickType} content={brickData} onChange={(v) => setBrick(v as availBricks)} />
       </div>
       <div class="w-full gap-4 flex flex-col justify-center align-middle">
@@ -150,7 +167,7 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
           </Button>
         )}
       </div>
-      <InpagePopup isOpen={displayMedias} closePopup={() => setDisplayMedias(false)}>
+      <Modal openState={{ isOpen: displayMedias, setIsOpen: setDisplayMedias }}>
         <div class="w-full overflow-auto min-h-[0] flex-col justify-start items-start gap-10 inline-flex">
           {Object.entries(MediaType)?.map(([key, val]: [string, MediaType]) => (
             <div class="w-full flex-col justify-start items-start gap-2.5 inline-flex">
@@ -159,7 +176,7 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
             </div>
           ))}
         </div>
-      </InpagePopup>
+      </Modal>
       {/* <Toaster /> */}
     </>
   );

@@ -58,7 +58,7 @@ export default function HeroSection(
         return (
           <img
             className={cn(
-              "absolute group-hover/main:brightness-75 object-cover w-full h-full",
+              "absolute object-cover w-full h-full",
               asMainHeroSection ? "rounded-none" : "rounded-[20px]",
             )}
             src={content.media?.public_src}

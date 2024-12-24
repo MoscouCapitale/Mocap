@@ -1,4 +1,4 @@
-import { Image, MediaCTA, Video, Audio } from "@models/Medias.ts";
+import { Image, MediaCTA, Video, Audio  , MediaControls, MediaObjectFit } from "@models/Medias.ts";
 import { TableNames } from "@models/database.ts";
 
 /** The default base brick interface. */
@@ -34,6 +34,8 @@ export interface Single extends Brick {
   hoverable: boolean;
   platforms?: PlatformLink[];
   cta?: MediaCTA;
+  mediaFit: MediaObjectFit;
+  controls?: MediaControls;
 }
 
 /** The Album brick interface.
@@ -47,6 +49,8 @@ export interface Album extends Brick {
   platforms?: PlatformLink[];
   tracklist?: Track[];
   cta?: MediaCTA;
+  mediaFit: MediaObjectFit;
+  controls?: MediaControls;
 }
 
 /** The Text brick interface.
@@ -66,6 +70,7 @@ export interface PlatformLink extends Brick {
   type: BricksType.Platform_Link;
   platform: Platform;
   url: string;
+  in_footer: boolean;
 };
 
 /** The Highlight brick interface.
@@ -77,6 +82,8 @@ export interface Highlight extends Brick {
   title?: string;
   subtitle?: string;
   link?: string;
+  mediaFit: MediaObjectFit;
+  controls?: MediaControls;
 }
 
 /** The AudioBrick interface.
@@ -89,6 +96,8 @@ export interface AudioBrick extends Brick {
   audio: Audio;
   track: Track;
   link?: string;
+  mediaFit: MediaObjectFit;
+  controls?: MediaControls;
 }
 
 export type Track = {

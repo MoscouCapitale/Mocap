@@ -1,5 +1,6 @@
 import { useEffect, useState } from "preact/hooks";
 import { User } from "@models/Authentication.ts";
+import ky from "ky";
 
 export default function RequestButton(props: { user: User; text: string; accept: boolean }) {
   const { user, text, accept } = props;
@@ -8,14 +9,7 @@ export default function RequestButton(props: { user: User; text: string; accept:
 
   const handleRequest = async () => {
     setLoading(true);
-    const res = await fetch("/admin/requests", {
-      method: accept ? "POST" : "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user),
-    });
-    const data = await res.json();
+    await ky.post("/admin/requests", { json: user });
     setLoading(false);
   };
 

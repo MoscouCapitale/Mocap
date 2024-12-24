@@ -146,6 +146,33 @@ const DatabaseAttributes: DatabaseAttributesType = {
 
 const DatabaseAttributesKeys = Object.keys(DatabaseAttributes)
 
+type Join<
+  Key,
+  Previous,
+  TKey extends number | string = string
+> = Key extends TKey
+  ? Previous extends TKey
+    ? `${Key}${'' extends Previous ? '' : '.'}${Previous}`
+    : never
+  : never;
+
+type Previous = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...0[]];
+
+/** TS utils, to get all keys of an object, and support nested with dot notation */
+export type Paths<
+  TEntity,
+  TDepth extends number = 3,
+  TKey extends number | string = string
+> = [TDepth] extends [never]
+  ? never
+  : TEntity extends object
+  ? {
+      [Key in keyof TEntity]-?: Key extends TKey
+        ? `${Key}` | Join<Key, Paths<TEntity[Key], Previous[TDepth]>>
+        : never;
+    }[keyof TEntity]
+  : '';
+
 export type {
   AppStorage,
   ConfirmationModalProps,

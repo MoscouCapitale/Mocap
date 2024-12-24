@@ -55,6 +55,12 @@ const getCursorsState = (element: HTMLElement): cursorState => {
   }
 };
 
+/** For now disable the custom cursor
+ * 
+ * Maybe checkout https://cursify.vercel.app/ 
+ * 
+ * @returns 
+ */
 export default function Cursor() {
   const isMobile = useIsMobile();
 

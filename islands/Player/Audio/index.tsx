@@ -5,6 +5,7 @@ import { cn } from "@utils/cn.ts";
 import * as Slider from "@radix-ui/react-slider";
 import Loader from "@components/UI/Loader.tsx";
 import Volume from "./Volume.tsx";
+import ky from "ky";
 
 export type AudioProps = {
   src: string;
@@ -57,7 +58,7 @@ export default function Audio({ src, disabled, additionnalConfig, disableControl
   });
 
   useEffect(() => {
-    fetch(src, { method: "HEAD" }).then((res) => {
+    ky.head(src).then((res) => {
       setAudioState((p) => ({
         ...p,
         isInit: true,

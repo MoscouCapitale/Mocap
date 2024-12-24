@@ -2,7 +2,7 @@ import { IconLoader, IconSend } from "@utils/icons.ts";
 import { verifyEmailIntegrity, verifyPasswordIntegrity } from "@utils/login.ts";
 import { useEffect, useState } from "preact/hooks";
 
-import Input from "@islands/UI/Forms/Input.tsx";
+import { Input } from "@islands/UI";
 import { cn } from "@utils/cn.ts";
 
 const customInputsStyle = "w-full border-x-0 border-t-0 border-b-2 rounded-none outline-none";

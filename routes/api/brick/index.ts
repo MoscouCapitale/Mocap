@@ -11,6 +11,7 @@ import {
 } from "@models/Bricks.ts";
 import { TableNames } from "@models/database.ts";
 import { createOrUpdateNodeFromBrick } from "@services/nodes.ts";
+import { isEmpty } from "lodash";
 
 export const handler: Handlers<any | null> = {
   async PUT(req: Request, ctx: FreshContext) {
@@ -52,9 +53,10 @@ export const handler: Handlers<any | null> = {
 
     // Set one-to-one relationships to the id of the linked object
     Object.entries(brick).forEach(([key, value]) => {
-      if (value && typeof value === "object") {
-        brick[key] = brick[key].id || null;
+      if (value && typeof value === "object" && "id" in value) {
+        brick[key] = brick[key].id;
       }
+      if (typeof value === "object" && isEmpty(value)) brick[key] = null;
     });
 
     // Save the brick

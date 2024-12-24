@@ -5,9 +5,10 @@ import Select, { SelectField } from "@islands/UI/Forms/Select.tsx";
 import { availBricks, BricksType, getBrickTypeLabel } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
+import ky from "ky";
 
 // Default is the value of the key of BricksType.Single
-const defaultBrick = BricksType.Audio;
+const defaultBrick = BricksType.Album;
 
 type BrickSideBarSelects = Record<BricksType, availBricks[] | undefined>;
 
@@ -28,9 +29,9 @@ export default function BrickSidebar() {
   /** UseEffect triggered when you select a type of brick to manage */
   useEffect(() => {
     if (!allBricksMap[selectedBrickType]) {
-      fetch(`/api/brick/getUserBricks/${selectedBrickType}`)
-        .then((res) => res && res.json())
-        .then((data: availBricks[]) => {
+      ky.get(`/api/brick/getUserBricks/${selectedBrickType}`)
+        .json<availBricks[]>()
+        .then((data) => {
           setAllBricksMap((p) => ({ ...p, [selectedBrickType]: data }));
         });
     }
@@ -141,7 +142,7 @@ export default function BrickSidebar() {
   );
 
   return (
-    <div class={cn("w-[200px] h-full flex-col justify-start items-start gap-6 inline-flex relative")}>
+    <div class={cn("w-[calc(200px+1rem)] h-full flex-col justify-start items-start gap-6 inline-flex relative")}>
       {isPreview && (
         <div
           className={"absolute inset-0 bg-background opacity-60"}

@@ -1,6 +1,5 @@
 import { FormField, ObjFormField } from "@models/Form.ts";
-import { Audio, Image, MediaType, Misc, Video } from "@models/Medias.ts";
-import { ObjectRelations } from "@models/forms/bricks.tsx";
+import { Audio, Image, MediaObjectFit, MediaType, Misc, PlayerControls, Video } from "@models/Medias.ts";
 
 export const getMediaFormFromType = (type: MediaType): FormField[] => {
   switch (type) {
@@ -31,53 +30,90 @@ const DefaultMediaFormValues: ObjFormField<Image | Video | Audio | Misc>[] = [
   },
 ];
 
-const ObjectFitInput: ObjFormField<Image | Video> = {
-  name: "object_fit",
+const ObjectFitInput: ObjFormField<{ mediaFit: boolean }> = {
+  name: "mediaFit",
   type: "select",
   label: "Ajustement",
+  defaultValue: "best",
   options: [
     {
-      label: "best",
+      label: "Meilleur",
       value: "best",
     },
     {
-      label: "cover",
+      label: "Remplir",
       value: "cover",
     },
     {
-      label: "contain",
+      label: "Contenu",
       value: "contain",
     },
   ],
+  trigger: {
+    fieldName: ["media"],
+    condition: (v) => v?.type === "Images" || v?.type === "Videos",
+  },
 };
+
+const PlayControlsSharedAttributes: Omit<FormField, "name"> = {
+  type: "checkbox",
+  defaultValue: true,
+  trigger: {
+    fieldName: ["media", "audio"],
+    condition: (v) => v?.type === "Videos" || v?.type === "Audios",
+  },
+};
+
+const PlayerControlsInput: ObjFormField<{ mediaFit: MediaObjectFit; controls: PlayerControls }>[] = [
+  {
+    name: "controls.autoplay",
+    label: "Lecture automatique",
+    ...PlayControlsSharedAttributes,
+  },
+  {
+    name: "controls.play",
+    label: "Lecture",
+    ...PlayControlsSharedAttributes,
+  },
+  {
+    name: "controls.timeline",
+    label: "Barre de progression",
+    ...PlayControlsSharedAttributes,
+  },
+  {
+    name: "controls.duration",
+    label: "Durée",
+    ...PlayControlsSharedAttributes,
+  },
+  {
+    name: "controls.volumeIcon",
+    label: "Icône volume",
+    ...PlayControlsSharedAttributes,
+  },
+  {
+    name: "controls.volumeBar",
+    label: "Barre de volume",
+    ...PlayControlsSharedAttributes,
+  },
+];
 
 const ImageFormFields: ObjFormField<Image>[] = [
   ...DefaultMediaFormValues,
-  ObjectFitInput as (Omit<FormField, "name"> & { name: keyof Image }),
-  ObjectRelations.cta as ObjFormField<Image>,
 ];
 
 const VideoFormFields: ObjFormField<Video>[] = [
   ...DefaultMediaFormValues,
-  ObjectFitInput,
-  {
-    name: "autoplay",
-    type: "checkbox",
-    label: "Lecture auto.",
-  },
-  // ObjectRelations.controls as ObjFormField<Video>, // FIXME: add better video controls
-  ObjectRelations.cta as ObjFormField<Video>,
 ];
 
 const AudioFormFields: ObjFormField<Audio>[] = [
   ...DefaultMediaFormValues,
-  {
-    name: "autodetect_source",
-    type: "checkbox",
-    label: "Source auto.",
-  },
 ];
 
 const MiscFormFields: ObjFormField<Misc>[] = [
   ...DefaultMediaFormValues,
+];
+
+export const MediaControlsFormField: ObjFormField<{ mediaFit: MediaObjectFit; controls: PlayerControls }>[] = [
+  ObjectFitInput,
+  ...PlayerControlsInput,
 ];

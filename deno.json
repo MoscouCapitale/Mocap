@@ -16,7 +16,7 @@
   },
   "lint": { "rules": { "tags": ["fresh", "recommended"] } },
   "exclude": ["**/_fresh/*"],
-  "nodeModulesDir": true,
+  "nodeModulesDir": "auto",
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.7.1/",
     "preact": "https://esm.sh/preact@10.19.6",
@@ -32,6 +32,7 @@
     "@contexts/": "./contexts/",
     "@services/": "./services/",
     "@islands/": "./islands/",
+    "@islands/UI": "./islands/UI/index.tsx",
     "@styles/": "./styles/",
     "@utils/": "./utils/",
     "@hooks/": "./hooks/",
@@ -47,6 +48,7 @@
     "lodash": "https://esm.sh/lodash-es@4.17.21",
     "react-player": "https://esm.sh/react-player@2.16.0?alias=react:preact/compat,@types/react:preact/compat",
     "react-markdown": "https://esm.sh/react-markdown@9.0.1?alias=react:preact/compat,@types/react:preact/compat",
+    "ky": "https://esm.sh/ky@1.7.3",
 
     "@radix-ui/react-toast": "https://esm.sh/*@radix-ui/react-toast@1.1.5?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
     "@radix-ui/primitive": "https://esm.sh/*@radix-ui/primitive@1.0.1",

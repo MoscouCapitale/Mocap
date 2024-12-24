@@ -14,7 +14,7 @@ type InpageNavbarItem = {
 
 export default function InpageNavbar(items: InpageNavbarProps) {
   return (
-    <nav class="py-2.5 justify-start items-center gap-[50px] inline-flex">
+    <nav class="py-2.5 justify-start items-center gap-[50px] inline-flex mb-5">
       {items.items.map((item) => (
         <a
           class={`justify-start items-center gap-2.5 inline-flex ${

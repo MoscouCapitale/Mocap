@@ -1,13 +1,12 @@
 import UserActions from "@islands/Settings/Users/UsersList/UserActions.tsx";
-import ContextualDots from "@islands/UI/ContextualDots.tsx";
-import Select from "@islands/UI/Forms/Select.tsx";
-import { Tooltip } from "@islands/UI/Tooltip.tsx";
+import { Tooltip, ContextualDots, Select } from "@islands/UI";
 import { User, UserRole, UserStatus } from "@models/Authentication.ts";
 import { FormField } from "@models/Form.ts";
 import { cn } from "@utils/cn.ts";
 import { useEffect, useMemo, useState } from "preact/hooks";
 import { Toaster } from "@components/UI/Toast/Toaster.tsx";
 import { toast } from "@hooks/toast.tsx";
+import ky from "ky";
 
 type UsersListProps = {
   currentUser: User;
@@ -49,27 +48,28 @@ export default function UsersList({
    * @throws {Error} If the request fails, display a toast with the error message. If 401, user doesn't have the rights.
    */
   const updateUserAccess = (user: User, status: UserStatus) => {
-    fetch(`/api/users/manage/${user.id}/status`, {
-      method: "PUT",
-      body: JSON.stringify({ status }),
-    }).then(async (res) => {
-      if (res.ok) return res ? await res.json() : null;
-      toast({
-        title: "Erreur lors de la mise à jour de l'utilisateur",
-        description: res.status === 401
-          ? "Vous n'avez pas les droits pour effectuer cette action"
-          : "Erreur serveur, veuillez réessayer plus tard",
-      });
-    }).then((newUser: User | null) => {
-      setUsersList((prev) => {
-        console.log("prev", prev, "newUser", newUser);
-        if (!prev) return null;
-        if (!newUser) return prev.filter((u) => u.id !== user.id);
-        return prev.map((u) => (u.id === newUser.id ? newUser : u));
-      });
-      toast({
-        description: "L'utilisateur a été mis à jour avec succès",
-      });
+    ky.put(`/api/users/manage/${user.id}/status`, {
+      json: {
+        status,
+      },
+    }).then((res) => {
+      if (res.status === 200) {
+        setUsersList((prev) => {
+          console.log("prev", prev, "newUser", user);
+          if (!prev) return null;
+          return prev.map((u) => (u.id === user.id ? user : u));
+        });
+        toast({
+          description: "L'utilisateur a été mis à jour avec succès",
+        });
+      } else {
+        toast({
+          title: "Erreur lors de la mise à jour de l'utilisateur",
+          description: res.status === 401
+            ? "Vous n'avez pas les droits pour effectuer cette action"
+            : "Erreur serveur, veuillez réessayer plus tard",
+        });
+      }
     }).catch(
       (e) => {
         console.error("Error updating user access", e);
@@ -82,27 +82,28 @@ export default function UsersList({
   };
 
   const updateUserRole = (user: User, role: string) => {
-    fetch(`/api/users/manage/${user.id}/role`, {
-      method: "PUT",
-      body: JSON.stringify({ role }),
-    }).then(async (res) => {
-      if (res.status === 200) return res ? await res.json() : null;
-      toast({
-        title: "Erreur lors de la mise à jour de l'utilisateur",
-        description: res.status === 401
-          ? "Vous n'avez pas les droits pour effectuer cette action"
-          : "Erreur serveur, veuillez réessayer plus tard",
-      });
-    }).then((newUser: User | null ) => {
-      setUsersList((prev) => {
-        console.log("prev", prev, "newUser", newUser);
-        if (!prev) return null;
-        if (!newUser) return prev;
-        return prev.map((u) => (u.id === newUser.id ? newUser : u));
-      });
-      toast({
-        description: "L'utilisateur a été mis à jour avec succès",
-      });
+    ky.put(`/api/users/manage/${user.id}/role`, {
+      json: {
+        role,
+      },
+    }).then((res) => {
+      if (res.status === 200) {
+        setUsersList((prev) => {
+          console.log("prev", prev, "newUser", user);
+          if (!prev) return null;
+          return prev.map((u) => (u.id === user.id ? user : u));
+        });
+        toast({
+          description: "L'utilisateur a été mis à jour avec succès",
+        });
+      } else {
+        toast({
+          title: "Erreur lors de la mise à jour de l'utilisateur",
+          description: res.status === 401
+            ? "Vous n'avez pas les droits pour effectuer cette action"
+            : "Erreur serveur, veuillez réessayer plus tard",
+        });
+      }
     }).catch(
       (e) => {
         console.error("Error updating user role", e);

@@ -1,7 +1,8 @@
-import Button from "@islands/Button.tsx";
-import FileInput from "@islands/UI/Forms/FileInput/index.tsx";
+import Button from "../UI/Button.tsx";
+import { FileInput } from "@islands/UI";
 import { IconTrash } from "@utils/icons.ts";
 import { useState } from "preact/hooks";
+import ky from "ky";
 
 export default function UploadMediaPopup() {
   const [updating, setUpdating] = useState<boolean>(false);
@@ -13,7 +14,7 @@ export default function UploadMediaPopup() {
     if (mediaToUpload) {
       const formData = new FormData();
       formData.append("file", mediaToUpload);
-      fetch(`/api/medias`, { method: "POST", body: formData }).then(() => {
+      ky.post(`/api/medias`, { body: formData }).then(() => {
         setTimeout(() => {
           window.location.reload();
         }, 1000);

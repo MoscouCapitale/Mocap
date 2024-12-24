@@ -1,6 +1,6 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { useIsomorphicLayoutEffect } from "@hooks/useIsomorphicLayoutEffect.ts";
-import Button from "@islands/Button.tsx";
+import Button from "../../UI/Button.tsx";
 import { CANVA_GUTTER, MNode, NODE_MIN_SIZE } from "@models/Canva.ts";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { Portal } from "@radix-ui/react-portal";

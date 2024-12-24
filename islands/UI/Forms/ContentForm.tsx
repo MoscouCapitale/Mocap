@@ -1,11 +1,10 @@
-import BaseInput from "@islands/UI/Forms/Input.tsx";
+import { Input as BaseInput, Modal } from "@islands/UI";
 import { FormField, FormFieldValue } from "@models/Form.ts";
-import { effect } from "@preact/signals-core";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
-import InpagePopup from "@islands/Layout/InpagePopup.tsx";
 import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
 import AddButton from "@islands/collection/AddButton.tsx";
 import { Media, MediaType } from "@models/Medias.ts";
+import { has, set, get } from "lodash"
 
 export type ContentFormValue = { [key: FormField["name"]]: FormFieldValue };
 
@@ -38,12 +37,10 @@ export default function ContentForm({
 
   const onValueChange = useCallback(
     (value: FormFieldValue, name: FormField["name"]) => {
-      if (formData && Object.keys(formData).includes(name)) {
+      if (formData && has(formData, name)) {
         setFormData((prev) => {
-          const newVal = {
-            ...prev,
-            [name]: value,
-          };
+          const newVal = { ...prev };
+          set(newVal, name, value);
           if (setDatas) setDatas(newVal);
           return newVal;
         });
@@ -72,14 +69,14 @@ export default function ContentForm({
     if (field.inputConfig?.onClickInput) {
       field.inputConfig.onClickInput = () => setOpenMediaCollectionForField(name);
     }
-    let defaultValue = formData[name] ?? "";
+    let defaultValue = get(formData, name) ?? field.defaultValue ?? ""
     // On a select field (with options), we need to convert the value to string to match the options in the select
-    if (field.options && Array.isArray(defaultValue)) defaultValue = defaultValue.map((v: any) => String(v.id));
+    if (field.options && Array.isArray(defaultValue)) defaultValue = defaultValue.map((v) => String(v.id));
     return (
       <BaseInput
         field={{
-          defaultValue,
           ...field,
+          defaultValue,
         }}
         onChange={(v) => onValueChange(v, field.name)}
       />
@@ -94,10 +91,9 @@ export default function ContentForm({
 
   return (
     <>
-      {form.map((row, index) => <Input key={index} name={row.name} />)}
-      <InpagePopup
-        isOpen={!!openMediaCollectionForField}
-        closePopup={() => setOpenMediaCollectionForField(null)}
+      {form.map((row, index) => (row.trigger && !row.trigger.fieldName.some(name => row.trigger?.condition(get(formData, name))) ? null : <Input key={index} name={row.name} />))}
+      <Modal
+        openState={{ isOpen: !!openMediaCollectionForField, setIsOpen: () => setOpenMediaCollectionForField(null) }}
       >
         <div class="w-full overflow-auto min-h-[0] flex-col justify-start items-start gap-10 inline-flex">
           {getFileTypeFromName(openMediaCollectionForField ?? "").map((
@@ -115,7 +111,7 @@ export default function ContentForm({
           {/* TODO: add support to upload media here. For now nested modals are working properly */}
           <AddButton position="absolute top-3 right-7" />
         </div>
-      </InpagePopup>
+      </Modal>
     </>
   );
 }

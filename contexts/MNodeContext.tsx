@@ -6,6 +6,7 @@ import { CANVA_GUTTER, MNode } from "@models/Canva.ts";
 import { getBaseUrl } from "@utils/pathHandler.ts";
 import { BricksType } from "@models/Bricks.ts";
 import { merge } from "lodash";
+import ky from "ky";
 
 export type MCViewBox = {
   x: number;
@@ -227,47 +228,24 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   // #region Fetch and save nodes
   useEffect(() => {
     let isMounted = true;
-
-    fetch("/api/node/getAll?force=true")
-      .then((res) => {
-        if (res) {
-          return res.json();
-        }
-        console.error("No response from server: ", res);
-        return [];
+    
+    ky.get("/api/node/getAll")
+      .json<MNode[]>()
+      .then((data) => {
+        if (isMounted && MCNodes.length === 0) setMCNodes(data);
       })
-      .then((data: MNode[]) => {
-        if (isMounted && MCNodes.length === 0) {
-          // setMCNodes(applyAdditionalMNodeLogic(data));
-          setMCNodes(data);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-        return [];
-      });
-
+      .catch((e) => console.error(e));
+    
     return () => {
       isMounted = false;
     };
   }, []);
 
   const refetchNodes = () => {
-    fetch("/api/node/getAll?force=true")
-      .then((res) => {
-        if (res) {
-          return res.json();
-        }
-        console.error("No response from server: ", res);
-        return [];
-      })
-      .then((data: MNode[]) => {
-        setMCNodes(data);
-      })
-      .catch((e) => {
-        console.error(e);
-        return [];
-      });
+    ky.get("/api/node/getAll")
+      .json<MNode[]>()
+      .then((data) => setMCNodes(data))
+      .catch((e) => console.error(e));
   };
 
   /**
@@ -277,7 +255,6 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
    * @param {boolean} rerender - Whether to rerender the node. If true, all nodes will be re-render. If false, the state will be updated in a non-reactive way. Default is false.
    */
   const saveNode = ({ node, rerender = false, partial }: SaveNodeProps) => {
-    console.log("Saving node: ", node)
     if (!hasPendingChanges) setHasPendingChanges(true);
     if (rerender) {
       setMCNodes((prev) => {
@@ -306,7 +283,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     if (hasPendingChanges) setHasPendingChanges(false);
     if (nodeIndex !== -1) {
       try {
-        const res = await fetch(`/api/node/${nodeId}`, { method: "DELETE" });
+        const res = await ky.delete(`/api/node/${nodeId}`);
         if (res.status === 204) {
           setMCNodes([...MCNodes.slice(0, nodeIndex), ...MCNodes.slice(nodeIndex + 1)]);
           setNodesChanged(true);
@@ -324,16 +301,14 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   const writeNodes = useCallback(
     (nodes?: MNode[]) => {
       const nodesToSave = nodes || MCNodes;
-      if (hasPendingChanges) setHasPendingChanges(false);
-      fetch(getBaseUrl() + "/api/node", {
-        method: "PUT",
-        body: JSON.stringify({ nodes: nodesToSave }),
-      }).then((res) => {
-        if (res.status) {
-          setHasPendingChanges(false);
-          setAutoSaved(true);
-        }
-      });
+      ky.put("/api/node", { json: { nodes: nodesToSave } })
+        .then((res) => {
+          if (res.status === 200) {
+            setHasPendingChanges(false);
+            setAutoSaved(true);
+          }
+        })
+        .catch((e) => console.error(e));
     },
     [MCNodes]
   );

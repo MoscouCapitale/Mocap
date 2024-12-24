@@ -6,6 +6,7 @@ import * as Slider from "@radix-ui/react-slider";
 import Loader from "@components/UI/Loader.tsx";
 import { MediaObjectFit } from "@models/Medias.ts";
 import Volume from "./Volume.tsx";
+import ky from "ky";
 
 export type VideoProps = {
   src: string;
@@ -44,13 +45,13 @@ type AdditionnalConfig = {
    * - "bottom" : The controls will be triggered when the mouse is over the bottom part of the video
    */
   controlsTrigger?: "full" | "bottom";
-  disableSomeControls?: AvailableControls[];
+  disableSomeControls?: AvailablePlayerControls[];
   loader?: boolean;
   /** Adds an additionnal volume control button at the specified location. Only show if `disableControls` is set to true. */
   volumeControl?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
 };
 
-type AvailableControls =
+export type AvailablePlayerControls =
   | "play"
   | "timeline"
   | "duration"
@@ -90,7 +91,7 @@ export default function Video(
   });
 
   useEffect(() => {
-    fetch(src, { method: "HEAD" }).then((res) => {
+    ky.head(src).then((res) => {
       setVideoState((p) => ({
         ...p,
         isInit: true,
@@ -129,7 +130,7 @@ export default function Video(
     if (playerRef?.current) playerRef.current.seekTo(time, "seconds");
   }, [videoState.duration]);
 
-  const canDisplayControl = useCallback((el: AvailableControls) => {
+  const canDisplayControl = useCallback((el: AvailablePlayerControls) => {
     return !(additionnalConfig?.disableSomeControls ?? []).includes(el);
   }, [additionnalConfig]);
 
@@ -179,7 +180,7 @@ export default function Video(
             ref={playerRef}
             className={cn(
               "pointer-events-none",
-              fit === "cover" ? "[&>video]:object-cover" : "[&>video]:object-contain", // Set the object-fit property of the video
+              fit === "cover" || fit === "best" ? "[&>video]:object-cover" : "[&>video]:object-contain", // Set the object-fit property of the video
             )}
             controls={false}
             playing={videoState.playing}
