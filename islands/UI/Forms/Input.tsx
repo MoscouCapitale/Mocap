@@ -10,13 +10,23 @@ type InputFromTypeProps = {
   field: FormField;
   onChange: (value: FormFieldValue) => void;
   error: string | null;
+  /** This attribute is used when rendering this input on SSR.
+   * 
+   * For some reason, on SSR, the defaultValue will not be set, resulting in the input 
+   * containing the correct value, but being visually empty. To know if the input is controlled
+   * or not, we use the `onChange` prop to determine it.
+   * TODO: Open an issue on Fresh to track down this bug
+   */
+  isControlled: boolean;
 };
 
 const InputFromType = (
-  { field, onChange, error }: InputFromTypeProps,
+  { field, onChange, error, isControlled }: InputFromTypeProps,
 ): VNode => {
   const defaultField = (
     <input
+      name={field.name}
+      value={""}
       className={cn(baseInputStyle, "border-text_grey")}
       placeholder={"Not implemented yet"}
       disabled
@@ -41,9 +51,11 @@ const InputFromType = (
             field.sx,
           )}
           defaultValue={String(field.defaultValue ?? "")}
+          {...(!isControlled ? { value: String(field.defaultValue ?? "") } : {})}
           type={field.type}
           placeholder={field.placeholder ?? ""}
           defaultChecked={field.type === "checkbox" ? field.defaultValue : undefined}
+          checked={field.type === "checkbox" ? field.defaultValue : undefined} // TODO: check if this is not breaking anything
           onChange={(e) => {
             switch (field.type) {
               case "number":
@@ -74,30 +86,30 @@ const InputFromType = (
           multiSelect={field.type === "multiselect"}
           min={field.required ? 1 : 0}
           sx={"max-w-[200px]"}
+          inputName={field.name}
         />
       );
     case "file":
       return (
         <FileInput
           // TODO: This way of bubbling up the click event is not ideal, I should find a better more elegant way
-          overwriteOnFileZoneClick={() => {
-            if (field.inputConfig?.onClickInput) {
-              field.inputConfig?.onClickInput();
-            }
-          }}
-          overwriteOnFileDeleteClick={() => onChange(null)}
+          overwriteOnFileZoneClick={field.inputConfig?.onClickInput ? field.inputConfig?.onClickInput : undefined}
+          overwriteOnFileDeleteClick={field.inputConfig?.onClickInput ? () => onChange(null) : undefined}
           bgElement={field.defaultValue?.public_src
             ? (
               <PreviewImage
                 src={field.defaultValue.public_src}
                 filetype={field.defaultValue.type}
                 filename={field.defaultValue.name}
+                variant={field.inputConfig?.variant ?? "full-size"}
               />
             )
             : undefined}
           label={field.inputConfig?.customLabel}
           filetype={field.inputConfig?.filetype}
           hasFile={Boolean(field.defaultValue)}
+          variant={field.inputConfig?.variant}
+          inputName={field.name}
         />
       );
     case "relation":
@@ -132,7 +144,7 @@ const InputFromType = (
 
 type InputProps = {
   field: FormField;
-  onChange: (value: FormFieldValue) => void;
+  onChange?: (value: FormFieldValue) => void;
 };
 
 export default function Input({ field, onChange }: InputProps) {
@@ -155,11 +167,13 @@ export default function Input({ field, onChange }: InputProps) {
       if (field.required && (!value || isEmpty(value))) error = "Ce champ est requis";
       if (!error) {
         setFieldError(null);
-        return onChange(value);
+        return onChange ? onChange(value) : null;
       }
       setFieldError(error);
-      onChange(null);
-    } else onChange(value);
+      if (onChange) onChange(null);
+    } else {
+      if (onChange) onChange(value);
+    }
   };
 
   return (
@@ -174,6 +188,7 @@ export default function Input({ field, onChange }: InputProps) {
                 field={field}
                 onChange={onValueChange}
                 error={fieldError}
+                isControlled={!!onChange}
               />
             </div>
           )}
@@ -185,6 +200,7 @@ export default function Input({ field, onChange }: InputProps) {
                 field={{ ...field, type: isPasswordVisible ? "string" : field.type }}
                 onChange={onValueChange}
                 error={fieldError}
+                isControlled={!!onChange}
               />
               <div
                 className={cn("absolute top-0 bottom-0 right-0 -translate-x-2 flex items-center gap-2 cursor-pointer")}
@@ -206,6 +222,7 @@ export default function Input({ field, onChange }: InputProps) {
                 field={field}
                 onChange={onValueChange}
                 error={fieldError}
+                isControlled={!!onChange}
               />
             </>
           )

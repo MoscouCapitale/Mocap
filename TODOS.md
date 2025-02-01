@@ -83,7 +83,9 @@ ___
   - [x] Extend the base Media interface to specify more clearly the attribute of each medias
   - [ ] Better file handling
   - [ ] Better audio support
-
+- [ ] Handle Media ssettings
+  - [ ] Handle lazy loading (create an media wrapper for every media in app, that will handle the lazy loading)
+  - [ ] Handle media size optimization (find library to optimize medias)
 ___
 - Bugs:
   - [ ] When you delete a media, the Medias table still contains an entry (use a cron to cleanup medias)

@@ -179,7 +179,7 @@ const acceptedFileTypeMap: { [key in MediaType]: string[] } = {
   "Misc": [
     "application/pdf",
     "application/zip",
-    "application/x-rar-compressed",
+    "text/markdown",
   ],
 };
 

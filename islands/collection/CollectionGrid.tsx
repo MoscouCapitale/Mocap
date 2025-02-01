@@ -4,6 +4,7 @@ import { Audio, Image, Media, MediaType, Misc, Video } from "@models/Medias.ts";
 import { useEffect, useState } from "preact/hooks";
 import { filterOutNonValideAttributes } from "@utils/database.ts";
 import ky from "ky";
+import { Toaster } from "@components/UI/Toast/Toaster.tsx";
 
 interface GridProps {
   fetchingRoute: MediaType;
@@ -31,9 +32,9 @@ export default function CollectionGrid(
     ky.get(`/api/medias/all/${fetchingRoute}`)
       .json<DatabaseMedia[]>()
       .then((data) => {
-        if (!data || data === "") setCollection([])
+        if (!data) setCollection([])
         else setCollection(
-          data?.map((media: DatabaseMedia) => filterOutNonValideAttributes(media)) as CollectionType<typeof fetchingRoute>
+          data?.map((media: DatabaseMedia) => filterOutNonValideAttributes(media)).filter(Boolean) as CollectionType<typeof fetchingRoute>
         );
       });
   }, [fetchingRoute]);
@@ -67,6 +68,7 @@ export default function CollectionGrid(
           <div class="text-text">No media found</div>
         </div>
       )}
+      <Toaster />
     </>
   );
 }

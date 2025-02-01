@@ -9,6 +9,7 @@ import { IconCloudUpload, IconPlus, IconX } from "@utils/icons.ts";
 import { VNode } from "preact";
 import { useMemo, useRef, useState } from "preact/hooks";
 import { intersection } from "lodash";
+import { acceptedFileTypeMap } from "@models/Medias.ts";
 
 type FileInputProps = {
   handleFileChange?: (file: File | null) => void;
@@ -56,7 +57,7 @@ export default function FileInput(
   const acceptedFileTypes = useMemo(
     () => {
       if (accept) return accept;
-      if (filetype?.length) return filetype.map((f) => getMediaTypeFromFiletype(f)).join(",");
+      if (filetype?.length) return filetype.map((f) => acceptedFileTypeMap[f]).join(",");
       return convertAcceptFileTypeMapToInputAccept();
     },
     [filetype, accept],
@@ -126,7 +127,7 @@ export default function FileInput(
         </>
       )
       : <></>;
-  }, [bgElement, file]);
+  }, [bgElement, file, variant]);
 
   return variant === "full-size"
     ? (
@@ -211,16 +212,19 @@ export default function FileInput(
           >
             {RenderedFileZone}
           </div>
-          {file && (
+          {file || hasFile && (
             <div
               class={cn(
                 "absolute top-0 bottom-0 left-full flex items-center p-1 z-10 cursor-pointer",
                 "invisible transition-all ease-in-out -translate-x-full group-hover/file:translate-x-0 group-hover/file:visible",
               )}
-              onClick={(e) =>
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 overwriteOnFileDeleteClick
                   ? overwriteOnFileDeleteClick(e)
                   : setFile(null)}
+              }
             >
               <IconX className={"text-text_special"} size={24} />
             </div>

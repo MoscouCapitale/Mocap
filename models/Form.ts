@@ -34,7 +34,8 @@ export interface FormField {
   inputConfig?: {
     filetype?: Array<"Images" | "Videos" | "Audios" | "Misc">;
     media?: Media;
-    onClickInput?: (el?: FormField["name"]) => void;
+    variant?: "full-size" | "inline";
+    onClickInput?: (el?: FormField["name"] | FormFieldValue) => void;
     customLabel?: string | JSX.Element;
   };
   /** Additionnal style for the input. Only works with default input fields (exclude relation, file, select) */

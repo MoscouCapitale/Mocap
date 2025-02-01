@@ -34,10 +34,12 @@ type SelectProps = {
   sx?: string;
   /** Allow to clear the current selection */
   clearable?: boolean;
+  /** Name of the input, for form submission */
+  inputName?: string; 
 };
 
 export default function Select(
-  { field, multiSelect, onChange, customLabels, min = 0, error, sx }: SelectProps,
+  { field, multiSelect, onChange, customLabels, min = 0, error, sx, inputName }: SelectProps,
 ) {
   if (min && min > (field.options ?? []).length) {
     throw new Error(
@@ -84,6 +86,13 @@ export default function Select(
 
   return (
     <DropdownMenu.Root open={open} onOpenChange={(isOpen: boolean) => setOpen(isOpen)}>
+      {inputName && !multiSelect && (
+        <input
+          type="hidden"
+          name={inputName}
+          value={selected.length ? selected[0] : ""}
+        />
+      )}
       <div
         className={cn(
           baseInputStyle,

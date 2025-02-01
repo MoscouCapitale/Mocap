@@ -37,8 +37,20 @@ export const getCachedSettings = async (
     return cachedSettings[field].data;
   } else {
     const data = await getSettings(field);
+
+    // Some entries can be json parseable strings, so we need to parse them
+    for (const key in data) {
+      try {
+        data[key] = JSON.parse(data[key]);
+      } catch (_) {
+        // Do nothing
+      }
+    }
+
+    // Cache entry
     cachedSettings[field].data = data ?? {};
     cachedSettings[field].lastUpdated = Date.now();
+
     return data;
   }
 };
