@@ -113,6 +113,10 @@ export const MainSettingsFormFields: FormField[] = [
   {
     name: "website_icon",
     type: "file",
+    inputConfig: {
+      variant: "inline",
+      filetype: ["Images"]
+    },
     placeholder: "Website Icon",
   },
   {
@@ -130,23 +134,20 @@ export const MainSettingsDBObject: {
 export const MediasSettingsFormFields: FormField[] = [
   {
     name: "media_max_size_mb",
-    type: "NI",
-    placeholder: "Media max size (mb)",
+    type: "number",
   },
   {
     name: "media_max_size_height",
-    type: "NI",
-    placeholder: "Media max size (height)",
+    type: "number",
   },
   {
     name: "media_auto_optimize",
-    type: "NI",
-    placeholder: "Media auto optimize",
+    type: "checkbox",
   },
   {
     name: "media_lazyload",
-    type: "NI",
-    placeholder: "Media lazyload",
+    type: "checkbox",
+    defaultValue: true,
   },
 ];
 
@@ -202,3 +203,32 @@ export const StylesSettingsDBObject: {
   [key: FormField["name"]]: FormFieldValue;
 } = Object
   .fromEntries(StylesSettingsFormFields.map((field) => [field.name, ""]));
+
+export const MiscSettingsFormFields: FormField[] = [
+  {
+    name: "terms_file",
+    type: "file",
+    inputConfig: {
+      variant: "inline",
+      filetype: ["Misc"]
+    },
+  }
+];
+
+export const MiscSettingsDBObject: {
+  [key: FormField["name"]]: FormFieldValue;
+} = Object
+  .fromEntries(MiscSettingsFormFields.map((field) => [field.name, ""]));
+
+export const getSettingsFieldsFromName = (type: FetchableSettingsKeys) => {
+  switch (type) {
+    case "main":
+      return MainSettingsFormFields;
+    case "styles":
+      return StylesSettingsFormFields;
+    case "medias":
+      return MediasSettingsFormFields;
+    case "misc":
+      return MiscSettingsFormFields;
+  }
+}

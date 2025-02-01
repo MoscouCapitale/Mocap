@@ -44,7 +44,7 @@ export default function Button({
       className={cn(ButtonVariants({ variant }), className?.wrapper, disabled && "filter grayscale opacity-50")}
       onClick={(e) => {
         if (onClick) onClick();
-        if (href) window.location.href = href;
+        if (href) globalThis.location.href = href;
       }}
     >
       {icon}

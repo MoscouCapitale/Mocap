@@ -121,37 +121,16 @@ export const createDefaultMediaFromRawFile = (
     case MediaType.Images:
       return {
         ...baseMedia,
-        object_fit: "best", // default value        cta: { id: 0, label: "", url: "" }, // default value
         type: MediaType.Images,
       };
     case MediaType.Videos:
       return {
         ...baseMedia,
-        object_fit: "best", // default value
-        autoplay: false, // default value
-        controls: {
-          id: 0,
-          name: "default",
-          play: true,
-          progress: true,
-          duration: true,
-          volume: true,
-        }, // default value
-        cta: { id: 0, label: "", url: "" }, // default value
         type: MediaType.Videos,
       };
     case MediaType.Audios:
       return {
         ...baseMedia,
-        autodetect_source: false, // default value
-        controls: {
-          id: 0,
-          name: "default",
-          play: true,
-          progress: true,
-          duration: true,
-          volume: true,
-        }, // default value
         type: MediaType.Audios,
       };
     case MediaType.Misc:
@@ -171,7 +150,10 @@ export const createDefaultMediaFromRawFile = (
 export const filterOutNonValideAttributes = (
   media: DatabaseMedia,
 ): Media | Image | Video | Audio | Misc | null => {
-  if (media.name === "website_icon") return null;
+  if (media.name === "website_icon" ||
+    media.name === "terms_file" ||
+    media.name.includes("emptyFolderPlaceholder")
+  ) return null;
   const baseMedia = {
     id: media.id,
     name: media.name,
@@ -186,24 +168,16 @@ export const filterOutNonValideAttributes = (
     case MediaType.Images:
       return {
         ...baseMedia,
-        object_fit: media.object_fit,
-        cta: media.cta,
         type: MediaType.Images,
       };
     case MediaType.Videos:
       return {
         ...baseMedia,
-        object_fit: media.object_fit,
-        autoplay: !!media.autoplay,
-        controls: media.controls,
-        cta: media.cta,
         type: MediaType.Videos,
       };
     case MediaType.Audios:
       return {
         ...baseMedia,
-        autodetect_source: !!media.autodetect_source,
-        controls: media.controls,
         type: MediaType.Audios,
       };
     case MediaType.Misc:

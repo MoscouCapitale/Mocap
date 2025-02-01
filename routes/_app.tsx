@@ -7,9 +7,8 @@ export default async function App(req: Request, ctx: FreshContext) {
 
   const website_title = mainSettings.website_title || "Moscoucap";
   const website_description = mainSettings.website_description || "Moscoucap";
-  const website_keywords = mainSettings.website_keywords ||
-    "moscoucap, moscoucapitale";
-  const website_icon = mainSettings.website_icon || "/logo.svg";
+  const website_keywords = mainSettings.website_keywords || "moscoucap, moscoucapitale";
+  const website_icon = mainSettings.website_icon as unknown as { public_src: string } || "/logo.svg";
 
   const styleSettings = await getCachedSettings("styles") ?? {};
 
@@ -21,7 +20,7 @@ export default async function App(req: Request, ctx: FreshContext) {
         <title>{website_title}</title>
         <meta name="description" content={website_description} />
         <meta name="keywords" content={website_keywords.split(",").join(" ")} />
-        <link rel="icon" href={website_icon} />
+        <link rel="icon" href={website_icon.public_src} />
         <link rel="stylesheet" href="/styles.css" />
         <script src="/loader.js" defer></script>
         
@@ -29,8 +28,8 @@ export default async function App(req: Request, ctx: FreshContext) {
         <style>
           {`
             :root {
-              --color-accent-main: ${styleSettings.style_color_main || "#000"};
-              --color-accent-secondary: ${styleSettings.style_color_secondary || "#000"};
+              --color-accent-main: ${styleSettings.style_color_main || "#007dff"};
+              --color-accent-secondary: ${styleSettings.style_color_secondary || "#4476ab"};
               --font-main: ${styleSettings.style_font_main || "Segoe UI"};
               --font-secondary: ${styleSettings.style_font_secondary || "Segoe UI"};
             }
