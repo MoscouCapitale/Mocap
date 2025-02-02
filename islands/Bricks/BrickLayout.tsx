@@ -76,7 +76,10 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
 
   /** Calculate the full width and height of the content, to center it on the screen. The width is the screen width, and the height is the height of the canva */
   const fullWidth = useMemo(() => globalThis.innerWidth, [globalThis.innerWidth]);
-  const fullHeight = useMemo(() => Math.max(Math.abs(canvaSize.y1 + canvaSize.y2 + CONTENT_MARGIN * 2) * contentScale, globalThis.innerHeight), [contentScale]);
+  const fullHeight = useMemo(() => {
+    const contentHeight = (Math.abs(canvaSize.y1) + canvaSize.y2 + CONTENT_MARGIN * 2) * contentScale;
+    return Math.max(contentHeight, globalThis.innerHeight);
+  }, [contentScale]);
 
   /** Get the hero section node
    *
@@ -160,6 +163,10 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
   /** Get the brick at a specific position on the screen */
   const getBrickAtPosition = useCallback(
     (x: number, y: number) => {
+      // Get the scrolled position
+      x = x + globalThis.window.scrollX;
+      y = y + globalThis.window.scrollY;
+
       // Get the scaled pos, because of the transform3d scaling
       x = x / contentScale;
       y = y / contentScale;
@@ -216,6 +223,9 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
       (domBrick as HTMLElement).style.setProperty("--focus-y", `${yPos}px`);
       (domBrick as HTMLElement).style.setProperty("--focus-scale", `${scaling}`);
       (domBrick as HTMLElement).style.zIndex = "91";
+
+      // Scroll the window to the top of the brick
+      globalThis.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [focusedBrick]);
 
@@ -268,11 +278,12 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
         {/* Background when a brick is focused, to make the other bricks less visible and intercept the clicks */}
         {focusedBrick && (
           <div
-            className={"absolute top-0 left-0 bg-black bg-opacity-80 z-10"}
+            className={"absolute left-0 bg-black bg-opacity-80 z-10"}
             style={{
               // Divide by the content scale to get the real size of the overlay (scaled by his parent)
               width: `${fullWidth / contentScale}px`,
               height: `${fullHeight / contentScale}px`,
+              top: `${-(CONTENT_MARGIN * 2)}px`, 
             }}
             onClick={removeFocus}
           ></div>
