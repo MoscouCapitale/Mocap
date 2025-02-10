@@ -13,6 +13,8 @@ type HighlightProps = {
 
 export default function Highlight({ content, size }: HighlightProps) {
   const isEmbed = useMemo(() => content.link && getEmbedTargetFromLink(content.link), [content.link]);
+  // Some embed can have a displayed title, that will not conflict with the content
+  const hasEmbedTitle = isEmbed === "youtube"
 
   const renderMedia = useMemo(() => {
     if (isEmbed) return <MediaEmbed link={content.link ?? ""} config={size ? { width: size.width, height: size.height } : {}} />;
@@ -49,17 +51,22 @@ export default function Highlight({ content, size }: HighlightProps) {
 
   return (
     <div data-hover-card-embed={isEmbed} data-hover-card={!isEmbed} className={cn("group/main w-full h-full overflow-y-auto rounded-[20px] overflow-hidden")}>
-      <div className={cn("w-full h-full transition-all ease-in-out relative", isEmbed ? "" : "brightness-75 group-hover/main:brightness-[0.4] ")}>
+      <div className={cn(
+          "w-full h-full transition-all ease-in-out relative", 
+          !isEmbed && "brightness-75 group-hover/main:brightness-[0.4]",
+          hasEmbedTitle && "brightness-75 group-hover/main:brightness-[0.6]"
+        )}>
         {/* Media */}
         {renderMedia}
       </div>
-      {!isEmbed && (
+      {!isEmbed || hasEmbedTitle && (
         <a
           className={cn(
             "invisible group-hover/main:visible opacity-0 group-hover/main:opacity-100 group/title absolute pos-center max-w-full cursor-pointerflex items-center justify-center transition-all ease-in-out duration-500",
-            content.link ? "cursor-pointer" : "cursor-default min-w-[80%] text-justify"
+            content.link ? "cursor-pointer" : "cursor-default min-w-[80%] text-justify",
+            isEmbed && "select-none"
           )}
-          href={content.link ?? "#"}
+          {...(content.link && !isEmbed ? { href: content.link } : {})}
           target={"_blank"}
         >
           <h2
@@ -72,7 +79,7 @@ export default function Highlight({ content, size }: HighlightProps) {
           >
             {content.title}
           </h2>
-          {content.link && (
+          {!isEmbed && content.link && (
             <IconArrowUpRight
               className={cn(
                 "invisible group-hover/title:visible opacity-0 group-hover/title:opacity-100 cursor-pointer absolute left-full bottom-0 text-text_grey hover:text-text",
