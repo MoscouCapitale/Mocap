@@ -3,6 +3,8 @@ import YoutubeEmbed from "@islands/Bricks/Embed/Youtube.tsx";
 import SpotifyEmbed from "@islands/Bricks/Embed/Spotify.tsx";
 import SoundcloudEmbed from "@islands/Bricks/Embed/Soundcloud.tsx";
 import { useMemo } from "preact/hooks";
+import DeezerEmbed from "@islands/Bricks/Embed/Deezer.tsx";
+import AppleMusicEmbed from "@islands/Bricks/Embed/AppleMusic.tsx";
 
 type EmbedProps = {
   link: string;
@@ -20,6 +22,10 @@ export default function MediaEmbed({ link, config }: EmbedProps) {
         return <SpotifyEmbed link={link} height={config?.height} />;
       case "soundcloud":
         return <SoundcloudEmbed link={link} height={config?.height} />;
+      case "deezer":
+        return <DeezerEmbed link={link} height={config?.height} />;
+      case "apple-music":
+        return <AppleMusicEmbed link={link} height={config?.height} />;
       default:
         return null;
     }
@@ -38,5 +44,10 @@ export const getEmbedTargetFromLink = (link: string): EmbedTargets | null => {
   if (link.includes("youtube")) return "youtube";
   if (link.includes("spotify")) return "spotify";
   if (link.includes("soundcloud")) return "soundcloud";
+  if (link.includes("deezer")) return "deezer";
+  if (link.includes("music.apple")) return "apple-music";
+  if (link.includes("instagram")) return "instagram";
+  if (link.includes("twitter") || link.includes("x.com")) return "twitter";
+
   return null;
 };
