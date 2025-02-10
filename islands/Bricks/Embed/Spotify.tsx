@@ -22,8 +22,8 @@ export default function SpotifyEmbed({ link, width = "100%", height = "100%", fr
       className={cn("rounded-[20px]", sx)}
       title="Spotify Web Player"
       src={`https://open.spotify.com/embed${url.pathname}`}
-      frameBorder={0}
-      width={"100%"}
+      frameBorder={frameBorder}
+      width={width}
       height={height}
       allow={allow}
       {...props}
