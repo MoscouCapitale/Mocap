@@ -59,14 +59,14 @@ export default function Highlight({ content, size }: HighlightProps) {
         {/* Media */}
         {renderMedia}
       </div>
-      {!isEmbed || hasEmbedTitle && (
+      {(!isEmbed || hasEmbedTitle) && (
         <a
           className={cn(
             "invisible group-hover/main:visible opacity-0 group-hover/main:opacity-100 group/title absolute pos-center max-w-full cursor-pointerflex items-center justify-center transition-all ease-in-out duration-500",
             content.link ? "cursor-pointer" : "cursor-default min-w-[80%] text-justify",
             isEmbed && "select-none"
           )}
-          {...(content.link && !isEmbed ? { href: content.link } : {})}
+          {...(content.link || isEmbed ? { href: content.link } : {})}
           target={"_blank"}
         >
           <h2
@@ -79,7 +79,7 @@ export default function Highlight({ content, size }: HighlightProps) {
           >
             {content.title}
           </h2>
-          {!isEmbed && content.link && (
+          {(!isEmbed && content.link) && (
             <IconArrowUpRight
               className={cn(
                 "invisible group-hover/title:visible opacity-0 group-hover/title:opacity-100 cursor-pointer absolute left-full bottom-0 text-text_grey hover:text-text",
