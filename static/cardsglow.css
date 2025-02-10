@@ -10,14 +10,23 @@
 }
 
 /* This is the CSS for the card glow effect. You can change the colors and sizes of the glow effect by modifying the variables in the :root selector. */
+[data-hover-card="true"] {
+    background-color: var(--backdrop, transparent);
+    background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
+    background-position: 50% 50%;
+    background-attachment: fixed;
+    border: var(--border-size) solid var(--backdrop);
+    position: relative;
+    touch-action: none;
+}
+
 @media only screen and (min-width: 768px) {
     [data-hover-card="true"] {
         /* Set default to -1000, to avoid the spotlight effect when the mouse is not registered */
         --radial-x: calc(var(--mouse-x, -1000) * 1px - var(--offset-x, 0px));
         --radial-y: calc(var(--mouse-y, -1000) * 1px - var(--offset-y, 0px));
-
         /* Here is the CSS for the card glow effect
-        Change the colors and percentage to change how much color for each gradient color */
+    Change the colors and percentage to change how much color for each gradient color */
         background-image: radial-gradient(
             var(--spotlight-size) var(--spotlight-size) at var(--radial-x, 0) var(--radial-y, 0),
             white 0%,
@@ -25,12 +34,11 @@
             color-mix(in srgb, var(--hover-color), transparent 50%) 50%,
             transparent
         );
-        background-color: var(--backdrop, transparent);
-        background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
-        background-position: 50% 50%;
-        background-attachment: fixed;
-        border: var(--border-size) solid var(--backdrop);
-        position: relative;
-        touch-action: none;
+    }
+}
+
+@media only screen and (max-width: 769px) {
+    [data-hover-card="true"] {
+        --backdrop: hsla(0, 0%, 30%, 0.397);
     }
 }

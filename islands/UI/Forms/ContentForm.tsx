@@ -94,23 +94,26 @@ export default function ContentForm({
       {form.map((row, index) => (row.trigger && !row.trigger.fieldName.some(name => row.trigger?.condition(get(formData, name))) ? null : <Input key={index} name={row.name} />))}
       <Modal
         openState={{ isOpen: !!openMediaCollectionForField, setIsOpen: () => setOpenMediaCollectionForField(null) }}
+        sx="flex-col justify-start items-start gap-10 inline-flex"
       >
-        <div class="w-full overflow-auto min-h-[0] flex-col justify-start items-start gap-10 inline-flex">
+        <>
           {getFileTypeFromName(openMediaCollectionForField ?? "").map((
             [_, val]: [string, MediaType],
           ) => (
-            <div class="w-full flex-col justify-start items-start gap-2.5 inline-flex">
+            <div class="w-full flex-col justify-start items-start gap-2.5 inline-flex min-h-[100px]">
               <div class="text-text font-bold">{val}</div>
-              <CollectionGrid
-                onMediaClick={mediaClickHandler}
-                fetchingRoute={val as MediaType}
-                mediaSize={150}
-              />
+              <div class="w-full h-full pb-2 pr-3 overflow-auto">
+                <CollectionGrid
+                  onMediaClick={mediaClickHandler}
+                  fetchingRoute={val as MediaType}
+                  mediaSize={150}
+                  />
+              </div>
             </div>
           ))}
           {/* TODO: add support to upload media here. For now nested modals are working properly */}
           <AddButton position="absolute top-3 right-7" />
-        </div>
+        </>
       </Modal>
     </>
   );
