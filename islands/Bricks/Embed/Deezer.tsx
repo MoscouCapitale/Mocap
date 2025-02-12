@@ -69,5 +69,8 @@ export default function DeezerEmbed({
       allowTransparency
       {...props}
     />
-  ) : null;
+  ) : (
+    // Last resort fallback
+    <span className="absolute inset-0 w-full h-full bg-background"></span>
+  );
 }

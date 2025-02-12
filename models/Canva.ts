@@ -1,4 +1,4 @@
-import { HeroSection, Single, Album, Text, PlatformLink, BricksType, AudioBrick } from "@models/Bricks.ts";
+import { HeroSection, Single, Album, Text, PlatformLink, BricksType, AudioBrick, availBricks } from "@models/Bricks.ts";
 import { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
 
 // Canva constants
@@ -25,7 +25,7 @@ interface MNode {
     PlatformLink?: PlatformLink;
     Highlight?: Highlight;
     Audio?: AudioBrick;
-    content: HeroSection | Single | Album | Text | PlatformLink;
+    content: availBricks;
     sizes: MNodeSize[];
     isHighlighted?: boolean;
 }
@@ -54,7 +54,7 @@ export type { MNode, DBMNode };
 
 export const getAvailableSizes = (node: Partial<MNode> & { type: keyof typeof BricksType }): MNodeSize[] => {
     const { type } = node;
-    const embed = node.content && "link" in node.content ? getEmbedTargetFromLink(node.content.link as string ?? "") : null;
+    const embed = node.content && ("is_embed" in node.content && node.content.is_embed) && "link" in node.content ? getEmbedTargetFromLink(node.content.link as string ?? "") : null;
 
     switch (type) {
         case "HeroSection":
@@ -73,6 +73,14 @@ export const getAvailableSizes = (node: Partial<MNode> & { type: keyof typeof Br
                         { height: 352, width: 300 }, 
                         { height: 352, width: 360 }, 
                         { height: 352, width: 600 }];
+                case "apple-music":
+                    return [
+                        { height: 180, width: 100 },
+                        { height: 180, width: 200 },
+                        { height: 180, width: 300 },
+                        { height: 180, width: 400 },
+                        { height: 180, width: 600 }
+                    ];
                 default:
                     return [{ width: 300, height: 400 }];
             }

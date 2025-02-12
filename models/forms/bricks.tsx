@@ -3,6 +3,7 @@ import { Album, Artist, AudioBrick, HeroSection, Highlight, Platform, PlatformLi
 import { AvailableFormRelation, FormField, ObjFormField } from "@models/Form.ts";
 import { MediaCTA } from "@models/Medias.ts";
 import { MediaControlsFormField } from "@models/forms/media.ts";
+import { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
 
 export type AllMocapObjectsTypes =
   | "HeroSection"
@@ -216,12 +217,21 @@ const HighlightFormFields: ObjFormField<Highlight>[] = [
   {
     name: "link",
     type: "string",
+    label: "Lien",
+  },
+  {
+    name: "is_embed",
+    type: "checkbox",
     label: (
       <LabeledToolTip
-        label="Lien"
-        text="Si un lien Youtube/Spotify/Soundcloud est renseigné, alors le 'média' sera remplacé par une intégration vers ce lien."
+        label="Intégration"
+        text="Le 'média' sera remplacé par une intégration spécifiée dans le 'Lien' (Spotify, SoundCloud, etc)."
       />
     ),
+    trigger: {
+      fieldName: ["link"],
+      condition: (v) => !!getEmbedTargetFromLink(v ?? ""),
+    }
   },
   ...MediaControlsFormField,
 ];

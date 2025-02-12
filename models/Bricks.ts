@@ -84,6 +84,7 @@ export interface Highlight extends Brick {
   link?: string;
   mediaFit: MediaObjectFit;
   controls?: MediaControls;
+  is_embed?: boolean;
 }
 
 /** The AudioBrick interface.

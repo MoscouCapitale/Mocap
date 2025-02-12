@@ -14,7 +14,16 @@ export const handler: Handlers<any | null> = {
         return new Response(data, {
           headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
         });
-    } else {
+    } else if (eUrl?.includes("instagram")) {
+      const instagramUrl = `https://www.instagram.com/api/v1/oembed/?hidecaption=1&url=${encodeURIComponent(eUrl)}`;
+      const data = await ky(instagramUrl).text();
+
+      return new Response(data, {
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+      });
+    }
+    
+    else {
         return new Response("Invalid URL", { status: 400 });
     }
   },

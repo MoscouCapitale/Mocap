@@ -4,8 +4,7 @@ export type EmbedTargets =
     | "soundcloud"
     | "deezer"
     | "apple-music"
-    | "instagram"
-    | "twitter";
+    | "instagram";
 
 export type EmbedConfig = {
     width?: number;

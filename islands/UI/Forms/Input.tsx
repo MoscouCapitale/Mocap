@@ -55,7 +55,7 @@ const InputFromType = (
           type={field.type}
           placeholder={field.placeholder ?? ""}
           defaultChecked={field.type === "checkbox" ? field.defaultValue : undefined}
-          checked={field.type === "checkbox" ? field.defaultValue : undefined} // TODO: check if this is not breaking anything
+          {...(field.type === "checkbox" && !isControlled ? { checked: field.defaultValue } : {})}
           onChange={(e) => {
             switch (field.type) {
               case "number":
