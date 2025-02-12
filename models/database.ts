@@ -211,27 +211,33 @@ export type Database = {
       Bricks_Audio: {
         Row: {
           audio: string | null
+          controls: Json | null
           created_at: string
           id: number
           media: string | null
+          mediaFit: Database["public"]["Enums"]["media_fit"] | null
           name: string
           track: number | null
           updated_at: string | null
         }
         Insert: {
           audio?: string | null
+          controls?: Json | null
           created_at?: string
           id?: number
           media?: string | null
+          mediaFit?: Database["public"]["Enums"]["media_fit"] | null
           name: string
           track?: number | null
           updated_at?: string | null
         }
         Update: {
           audio?: string | null
+          controls?: Json | null
           created_at?: string
           id?: number
           media?: string | null
+          mediaFit?: Database["public"]["Enums"]["media_fit"] | null
           name?: string
           track?: number | null
           updated_at?: string | null
@@ -322,6 +328,7 @@ export type Database = {
           controls: Json | null
           created_at: string
           id: number
+          is_embed: boolean | null
           link: string | null
           media: string | null
           mediaFit: Database["public"]["Enums"]["media_fit"]
@@ -334,6 +341,7 @@ export type Database = {
           controls?: Json | null
           created_at?: string
           id?: number
+          is_embed?: boolean | null
           link?: string | null
           media?: string | null
           mediaFit?: Database["public"]["Enums"]["media_fit"]
@@ -346,6 +354,7 @@ export type Database = {
           controls?: Json | null
           created_at?: string
           id?: number
+          is_embed?: boolean | null
           link?: string | null
           media?: string | null
           mediaFit?: Database["public"]["Enums"]["media_fit"]
@@ -1356,4 +1365,3 @@ export type CompositeTypes<
     ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
-export type TableNames = keyof PublicSchema["Tables"] | keyof PublicSchema["Views"]

@@ -35,6 +35,8 @@ export const handler: Handlers<any | null> = {
     delete brick.nodeId;
     delete brick.type; // On brick update, the type is specified, but we don't want to save it
 
+    console.log("Saving brick ", brick);
+
     // Save many-to-many relationships ids
     const linkedTables: ({ [key: string]: number[] } | undefined)[] = Object
       .entries(brick)

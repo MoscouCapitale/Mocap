@@ -42,14 +42,14 @@ export default async function MediasSettings(req: Request, ctx: RouteContext) {
                 <Input name="media_max_size_height" />
               </td>
             </tr>
-            {/* <tr>
+            <tr>
               <td>
                 <LabeledToolTip label="Auto-optimisation" text="Gestion automatique de la qualité (recommandé)" />
               </td>
               <td>
                 <Input name="media_auto_optimize" />
               </td>
-            </tr> */}
+            </tr>
           </tbody>
         </table>
         <Button

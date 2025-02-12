@@ -12,7 +12,7 @@ type HighlightProps = {
 };
 
 export default function Highlight({ content, size }: HighlightProps) {
-  const isEmbed = useMemo(() => content.link && getEmbedTargetFromLink(content.link), [content.link]);
+  const isEmbed = useMemo(() => (content.link && content.is_embed) && getEmbedTargetFromLink(content.link), [content.link]);
   // Some embed can have a displayed title, that will not conflict with the content
   const hasEmbedTitle = isEmbed === "youtube"
 
@@ -46,7 +46,7 @@ export default function Highlight({ content, size }: HighlightProps) {
       } else return null;
     }
 
-    return null;
+    return <span className="absolute inset-0 w-full h-full bg-background"></span>;
   }, [content.media]);
 
   return (
