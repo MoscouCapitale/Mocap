@@ -1,5 +1,5 @@
 import Footer from "@components/Layout/Footer.tsx";
-import { getFooterLinks, verifyBetaCode } from "@utils/app.ts";
+import { getFooterLinks, isBetaEnabled, verifyBetaCode } from "@utils/app.ts";
 import Cursor from "@islands/UI/Cursor.tsx";
 import { fetchNode } from "@services/nodes.ts";
 import BrickLayout from "@islands/Bricks/BrickLayout.tsx";
@@ -10,7 +10,7 @@ import { getCookies } from "$std/http/cookie.ts";
 export default async function Home(req: Request, ctx: RouteContext) {
   // For the beta, check if the user has a beta code
   const betaCode = getCookies(req.headers).beta_code;
-  if (!betaCode || betaCode && !await verifyBetaCode(betaCode, true)) {
+  if (isBetaEnabled() && (!betaCode || betaCode && !await verifyBetaCode(betaCode, true))) {
     return new Response("", {
       status: 303,
       headers: {

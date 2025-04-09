@@ -24,6 +24,11 @@ export const getFooterLinks = async (): Promise<PlatformLink[] | null> => {
   return data as unknown as PlatformLink[];
 };
 
+export const isBetaEnabled = () => {
+  console.log("BETA_CODES", Deno.env.get("BETA_CODES"));
+  return Deno.env.get("BETA_CODES") !== undefined;
+}
+
 export const verifyBetaCode = async (code: string, isHashed?: boolean) => {
   let hash = code;
   if (!isHashed) {

@@ -1,6 +1,6 @@
 import { FreshContext, Handlers, PageProps, RouteContext } from "$fresh/server.ts";
 import { ToasterWrapper, Input } from "@islands/UI";
-import { getHashedCode, verifyBetaCode } from "@utils/app.ts";
+import { getHashedCode, isBetaEnabled, verifyBetaCode } from "@utils/app.ts";
 import Button from "../../islands/UI/Button.tsx";
 import { cn } from "@utils/cn.ts";
 import { getCookies, setCookie } from "$std/http/cookie.ts";
@@ -48,7 +48,7 @@ export const handler: Handlers<FormType> = {
 
 export default async function Beta(req: Request, ctx: RouteContext) {
   const betaCodeState = getCookies(req.headers).beta_code;
-  if (betaCodeState && await verifyBetaCode(betaCodeState, true)) {
+  if (!isBetaEnabled() || (betaCodeState && await verifyBetaCode(betaCodeState, true))) {
     return new Response("", {
       status: 303,
       headers: {
