@@ -1,13 +1,12 @@
 import { Button, ConfirmationModal, ContentForm } from "@islands/UI";
-import MediaPreview from "@islands/collection/MediaPreview.tsx";
-import { ContentFormValue } from "@islands/UI/Forms/ContentForm.tsx";
 import { getMediaFormFromType } from "@models/forms/media.ts";
-import { Audio, DatabaseMedia, Image, MediaByType, MediaType, Misc, Video } from "@models/Medias.ts";
+import { Audio, Image, MediaType, Misc, Video } from "@models/Medias.ts";
 import { cn } from "@utils/cn.ts";
-import { filterOutNonValideAttributes } from "@utils/database.ts";
 import { IconTrash } from "@utils/icons.ts";
-import { useMemo, useState } from "preact/hooks";
 import ky from "ky";
+import { useMemo, useState } from "preact/hooks";
+import { ContentFormValue } from "../UI/Forms/ContentForm.tsx";
+import MediaPreview from "./MediaPreview.tsx";
 
 interface MediaDetailProps {
   media: Image | Video | Audio | Misc;
@@ -39,7 +38,7 @@ export default function MediaDetail({ media }: MediaDetailProps) {
 
   const onDeleteMediaClick = () => setShowConfirmationModal(true);
   const onConfirmDeleteMedia = () => {
-    reactiveMedia.id && ky.delete(`/api/medias/${reactiveMedia.id}`).then(() => window.location.reload());
+    reactiveMedia.id && ky.delete(`/api/medias/${reactiveMedia.id}`).then(() => globalThis.location.reload());
     setShowConfirmationModal(false);
   };
 
@@ -66,7 +65,7 @@ export default function MediaDetail({ media }: MediaDetailProps) {
             media.type === MediaType.Misc ? "w-[200px]" : "w-[500px]", // Set a fixed width, to avoid making the media jump when the form is updated (on object_fit change for example)
           )}
         >
-          <MediaPreview media={reactiveMedia} from={"detail"} />
+          <MediaPreview media={reactiveMedia} from="detail" />
         </div>
         <div class="w-1/2 flex flex-col gap-5">
           <div class="flex flex-col gap-6 flex-wrap">
@@ -87,7 +86,7 @@ export default function MediaDetail({ media }: MediaDetailProps) {
               {buttonLabel}
             </Button>
             <IconTrash
-              className={"text-error cursor-pointer"}
+              className="text-error cursor-pointer"
               onClick={onDeleteMediaClick}
             />
           </div>
@@ -95,7 +94,7 @@ export default function MediaDetail({ media }: MediaDetailProps) {
       </div>
       <ConfirmationModal
         isOpen={showConfirmationModal}
-        message={"Êtes-vous sûr de vouloir supprimer ce média ? Cette action est irréversible."}
+        message="Êtes-vous sûr de vouloir supprimer ce média ? Cette action est irréversible."
         onConfirm={onConfirmDeleteMedia}
         onCancel={() => setShowConfirmationModal(false)}
       />

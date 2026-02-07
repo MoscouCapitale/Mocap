@@ -1,11 +1,11 @@
+import { useIsMobile } from "@hooks/useIsMobile.ts";
 import { BricksType } from "@models/Bricks.ts";
 import { MNode } from "@models/Canva.ts";
 import { getBrickFromCanvaNode } from "@utils/bricks.tsx";
-import { throttle } from "lodash";
-import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { useIsMobile } from "@hooks/useIsMobile.ts";
 import { cn } from "@utils/cn.ts";
 import { IconX } from "@utils/icons.ts";
+import { throttle } from "lodash";
+import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
 
 type BrickLayoutProps = {
   nodes: MNode[];
@@ -285,7 +285,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
           {/* Background when a brick is focused, to make the other bricks less visible and intercept the clicks */}
           {focusedBrick && (
             <div
-              className={"absolute left-0 bg-black/80 z-10"}
+              className="absolute left-0 bg-black/80 z-10"
               style={{
                 // Divide by the content scale to get the real size of the overlay (scaled by his parent)
                 width: `${fullWidth / contentScale}px`,
@@ -300,7 +300,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
             return (
               <article
                 data-node-id={node.id}
-                className={"absolute transition-transform origin-top-left ease-in-out duration-300"}
+                className="absolute transition-transform origin-top-left ease-in-out duration-300"
                 style={{
                   "--focus-x": `initial`,
                   "--focus-y": `initial`,
@@ -320,7 +320,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
 
         {/* Close button when a brick is focused */}
         {focusedBrick && (
-          <div class={"z-[92] absolute top-2 right-2 p-1 rounded-full bg-black"} onClick={removeFocus}>
+          <div class="z-[92] absolute top-2 right-2 p-1 rounded-full bg-black" onClick={removeFocus}>
             <IconX class="text-text w-8 h-8" />
           </div>
         )}

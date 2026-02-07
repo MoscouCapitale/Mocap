@@ -1,13 +1,12 @@
-import { FreshContext } from "fresh";
-import { supabase as supa } from "@services/supabase.ts";
 import { DatabaseAttributes } from "@models/App.ts";
-import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
 import { availBricks, BricksType, getBrickTypeTableName, PlatformLink, Track } from "@models/Bricks.ts";
 import { TableNames } from "@models/database.ts";
 import { createOrUpdateNodeFromBrick } from "@services/nodes.ts";
-import { isEmpty } from "lodash";
-import { Handlers } from "fresh/compat";
+import { supabase as supa } from "@services/supabase.ts";
+import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
 import { define } from "@utils/app.ts";
+import { FreshContext } from "fresh";
+import { isEmpty } from "lodash";
 
 export const handler = define.handlers({
   async PUT(ctx: FreshContext) {
@@ -28,7 +27,7 @@ export const handler = define.handlers({
     // Remove some attributes that are not in the database
     const attr_isActive = brick.isActive;
     delete brick.isActive;
-    let attr_nodeId = brick.nodeId ?? null;
+    const attr_nodeId = brick.nodeId ?? null;
     delete brick.nodeId;
     delete brick.type; // On brick update, the type is specified, but we don't want to save it
 

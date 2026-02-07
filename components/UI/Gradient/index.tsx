@@ -1,5 +1,5 @@
-import React from "preact/compat";
 import { cn } from "@utils/cn.ts";
+import React from "preact/compat";
 
 type GradientProps = {
   children: React.ReactNode;

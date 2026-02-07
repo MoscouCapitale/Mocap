@@ -1,11 +1,11 @@
 import { EmbedConfig, EmbedTargets } from "@models/Embed.ts";
-import YoutubeEmbed from "@islands/Bricks/Embed/Youtube.tsx";
-import SpotifyEmbed from "@islands/Bricks/Embed/Spotify.tsx";
-import SoundcloudEmbed from "@islands/Bricks/Embed/Soundcloud.tsx";
 import { useMemo } from "preact/hooks";
-import DeezerEmbed from "@islands/Bricks/Embed/Deezer.tsx";
-import AppleMusicEmbed from "@islands/Bricks/Embed/AppleMusic.tsx";
-import InstagramEmbed from "@islands/Bricks/Embed/Instagram.tsx";
+import AppleMusicEmbed from "./AppleMusic.tsx";
+import DeezerEmbed from "./Deezer.tsx";
+import InstagramEmbed from "./Instagram.tsx";
+import SoundcloudEmbed from "./Soundcloud.tsx";
+import SpotifyEmbed from "./Spotify.tsx";
+import YoutubeEmbed from "./Youtube.tsx";
 
 type EmbedProps = {
   link: string;
@@ -37,7 +37,7 @@ export default function MediaEmbed({ link, config }: EmbedProps) {
   return embedContent
     ? (
       <>
-        <div className={"absolute inset-0 w-full h-full pointer-events-none"}></div>
+        <div className="absolute inset-0 w-full h-full pointer-events-none"></div>
         {embedContent}
       </>
     )

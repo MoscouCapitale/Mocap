@@ -1,4 +1,3 @@
-import { FreshContext } from "fresh";
 import { MNode } from "@models/Canva.ts";
 import { fetchNode } from "@services/nodes.ts";
 import { supabase as supa } from "@services/supabase.ts";
@@ -7,7 +6,6 @@ import { define } from "@utils/app.ts";
 
 export const handler = define.handlers<MNode | null>({
   async GET(ctx) {
-    const req = ctx.req;
     const { uid } = ctx.params;
 
     if (!uid) {
@@ -20,7 +18,6 @@ export const handler = define.handlers<MNode | null>({
   },
 
   async DELETE(ctx) {
-    const req = ctx.req;
     const { uid } = ctx.params;
 
     if (!uid) {

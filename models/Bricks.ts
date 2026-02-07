@@ -1,5 +1,5 @@
-import { Audio, Image, MediaControls, MediaCTA, MediaObjectFit, Video } from "@models/Medias.ts";
-import { TableNames } from "@models/database.ts";
+import { Audio, Image, MediaControls, MediaCTA, MediaObjectFit, Video } from "./Medias.ts";
+import { TableNames } from "./database.ts";
 
 /** The default base brick interface. */
 interface Brick {

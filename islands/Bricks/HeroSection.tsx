@@ -1,12 +1,12 @@
+import Player from "../Player/index.tsx";
 import { HeroSection as HeroSectionType } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
-import { Ref, useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
-import Player from "@islands/Player/index.tsx";
 import { IconArrowUpRight } from "@utils/icons.ts";
+import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
 
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { AnimationConfig } from "@utils/bricks.tsx";
+import gsap/ from "gsap/";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 type HeroSectionProps = {
@@ -40,7 +40,7 @@ export default function HeroSection(
       if (content.media.extension?.includes("video")) {
         return (
           <Player
-            type={"video"}
+            type="video"
             src={content.media.public_src ?? ""}
             autoplay={asMainHeroSection}
             additionnalConfig={{
@@ -51,7 +51,7 @@ export default function HeroSection(
             }}
             loopVideo
             disableControls
-            sx={"z-10"}
+            sx="z-10"
           />
         );
       } else if (content.media.extension?.includes("image")) {
@@ -141,7 +141,7 @@ export default function HeroSection(
           (
             <img
               src="/assets/gradients/001.webp"
-              loading={"lazy"}
+              loading="lazy"
               className={cn(
                 "absolute inset-0 w-full h-full object-cover z-20",
                 "group-hover/main:opacity-80 opacity-0 transition-opacity ease-in-out",
@@ -159,7 +159,7 @@ export default function HeroSection(
           asMainHeroSection ? mainSectionTransitions : "duration-500",
         )}
         href={content.cta?.url ?? "#"}
-        target={"_blank"}
+        target="_blank"
       >
         <h2
           style={{ "--title-subcontent": `'${content.subtitle ?? ""}'` }}

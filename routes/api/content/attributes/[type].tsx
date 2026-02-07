@@ -1,8 +1,7 @@
-import { supabase as supa } from "@services/supabase.ts";
 import { DatabaseAttributes } from "@models/App.ts";
-import { createQueryFromAttributesTables, evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
 import { TableNames } from "@models/database.ts";
-import { Handlers } from "fresh/compat";
+import { supabase as supa } from "@services/supabase.ts";
+import { createQueryFromAttributesTables, evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
 import { define } from "@utils/app.ts";
 
 // TODO: any is not a good type
@@ -49,7 +48,7 @@ export const handler = define.handlers({
 
     const tableName = DatabaseAttributes[type].table;
 
-    Object.entries(body).forEach(([key, value]) =>
+    Object.entries(body).forEach(([key]) =>
       Array.isArray(body[key]) && delete cleanedBody[key] && jointAttributes.push(key)
     );
 

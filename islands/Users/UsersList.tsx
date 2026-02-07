@@ -1,12 +1,12 @@
-import UserActions from "@islands/Settings/Users/UsersList/UserActions.tsx";
+import { Toaster } from "@components/UI/Toast/Toaster.tsx";
+import { toast } from "@hooks/toast.tsx";
 import { ContextualDots, Select, Tooltip } from "@islands/UI";
 import { User, UserRole, UserStatus } from "@models/Authentication.ts";
 import { FormField } from "@models/Form.ts";
 import { cn } from "@utils/cn.ts";
-import { useEffect, useMemo, useState } from "preact/hooks";
-import { Toaster } from "@components/UI/Toast/Toaster.tsx";
-import { toast } from "@hooks/toast.tsx";
 import ky from "ky";
+import { useEffect, useMemo, useState } from "preact/hooks";
+import UserActions from "../Settings/Users/UsersList/UserActions.tsx";
 
 type UsersListProps = {
   currentUser: User;
@@ -118,7 +118,7 @@ export default function UsersList({
   const cellSpacing = "px-6 py-3 h-full";
 
   return (
-    <main className={"justify-start items-start inline-flex w-full max-w-7xl"}>
+    <main className="justify-start items-start inline-flex w-full max-w-7xl">
       <table className="min-w-full text-left whitespace-nowrap overflow-x-auto">
         <thead class="sticky">
           <tr>
@@ -141,12 +141,12 @@ export default function UsersList({
                 style={{ clipPath: "xywh(0 0 100% 100% round 0.5em)" }}
               >
                 <td className={cn(cellSpacing)}>
-                  <div className={"flex items-center gap-2"}>
-                    <p className={"truncate"}>{user.email}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="truncate">{user.email}</p>
                     {currentUser.id === user.id && (
                       <Tooltip
-                        text={"Utilisateur actuellement connecté"}
-                        Icon={"no-border"}
+                        text="Utilisateur actuellement connecté"
+                        Icon="no-border"
                       />
                     )}
                   </div>
@@ -162,10 +162,10 @@ export default function UsersList({
                   )}
                 </td>
                 <td className={cn(cellSpacing)}>
-                  <p className={"truncate"}>{new Date(user.created_at).toLocaleDateString()}</p>
+                  <p className="truncate">{new Date(user.created_at).toLocaleDateString()}</p>
                 </td>
                 <td className={cn(cellSpacing)}>
-                  <div className={"justify-end inline-flex relative"}>
+                  <div className="justify-end inline-flex relative">
                     {currentUser.id !== user.id && (
                       <ContextualDots
                         popoverChildren={

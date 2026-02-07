@@ -1,10 +1,10 @@
-import PlatformLinksBubble from "@islands/Bricks/Common/PlatformLinksBubble.tsx";
-import Player from "@islands/Player/index.tsx";
-import Link from "@islands/UI/Link.tsx";
 import { AudioBrick as AudioType } from "@models/Bricks.ts";
+import { AudioControls, getPlayerControlsFromMediaControls, getStyleFit } from "@models/Medias.ts";
 import { cn } from "@utils/cn.ts";
 import { useMemo } from "preact/hooks";
-import { AudioControls, getPlayerControlsFromMediaControls, getStyleFit } from "@models/Medias.ts";
+import Player from "../Player/index.tsx";
+import Link from "../UI/Link.tsx";
+import PlatformLinksBubble from "./Common/PlatformLinksBubble.tsx";
 
 type AudioProps = {
   content: AudioType;
@@ -70,22 +70,22 @@ export default function Audio({ content, size }: AudioProps) {
       </div>
 
       {/* Audio content */}
-      <div className={"flex gap-3 min-h-0 z-10"}>
-        <div className={"max-w-[120px] max-h-[120px] h-full w-auto aspect-square"}>{renderMedia}</div>
+      <div className="flex gap-3 min-h-0 z-10">
+        <div className="max-w-[120px] max-h-[120px] h-full w-auto aspect-square">{renderMedia}</div>
         <div
           className={cn("flex flex-col justify-start items-start min-w-0", isSmallSize ? "gap-1 w-3/4" : "py-2 gap-3")}
         >
           <p className={cn("text-text font-semibold w-full", isSmallSize && "truncate")} title={content.track.name}>
             {content.track.name}
           </p>
-          <div className={"text-text_grey text-[12px] font-semibold flex gap-1 w-full"}>
+          <div className="text-text_grey text-[12px] font-semibold flex gap-1 w-full">
             {content.track.artist?.map((artist) => (
-              <a className={"hover:underline"} href={artist.url} target={"_blank"}>
+              <a className="hover:underline" href={artist.url} target="_blank">
                 {artist.name}
               </a>
             ))}
           </div>
-          <Link href={content.link} className={"mt-auto"}>
+          <Link href={content.link} className="mt-auto">
             {content.link}
           </Link>
         </div>
@@ -97,7 +97,7 @@ export default function Audio({ content, size }: AudioProps) {
       </div>
 
       {/* Audio player */}
-      <div className={"w-full min-h-fit"}>
+      <div className="w-full min-h-fit">
         <Player
           type="audio"
           src={content.audio.public_src ?? ""}

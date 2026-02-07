@@ -1,6 +1,6 @@
+import { Link } from "@islands/UI";
 import { PlatformLink } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
-import { Link } from "@islands/UI";
 
 interface FooterProps {
   platforms: PlatformLink[] | null;
@@ -11,7 +11,7 @@ export default function Footer({ platforms }: FooterProps) {
 
   return (
     <footer className={cn("py-3 px-8 flex items-center justify-center relative bg-black w-full", baseTextStyle)}>
-      <div className={"flex items-center justify-between w-full max-w-screen-2xl"}>
+      <div className="flex items-center justify-between w-full max-w-screen-2xl">
         <div className="flex flex-col items-start">
           {platforms?.map((platform) => (
             <Link key={platform.id} href={platform.url} target="_blank" rel="noopener noreferrer" variant="footer">

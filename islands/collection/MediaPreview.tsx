@@ -1,8 +1,8 @@
 import { Audio, Image, Media, MediaType, Misc, Video as VideoType } from "@models/Medias.ts";
-import Button from "@islands/UI/Button.tsx";
-import Player from "@islands/Player/index.tsx";
-import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import { cn } from "@utils/cn.ts";
+import { useCallback } from "preact/hooks";
+import Player from "../Player/index.tsx";
+import Button from "../UI/Button.tsx";
 
 type MediaPreviewProps = {
   media: Media | Image | VideoType | Audio | Misc;
@@ -64,7 +64,7 @@ export default function MediaPreview(
               <Player
                 type="video"
                 src={media.public_src ?? ""}
-                sx={"h-full rounded"}
+                sx="h-full rounded"
                 autoplay={!!(media as VideoType).autoplay}
                 fit={(media as VideoType).object_fit ?? "cover"}
                 additionnalConfig={{
@@ -77,7 +77,7 @@ export default function MediaPreview(
           if (from === "collection") {
             return (
               <audio
-                className={"h-[34px] w-full object-cover max-h-[200px] rounded"}
+                className="h-[34px] w-full object-cover max-h-[200px] rounded"
                 controls
               >
                 <source src={media.public_src} type="audio/mp3" />
@@ -85,7 +85,7 @@ export default function MediaPreview(
             );
           } else {
             return (
-              <audio className={"w-full object-cover rounded"} controls>
+              <audio className="w-full object-cover rounded" controls>
                 <source src={media.public_src} type="audio/mp3" />
               </audio>
             );
@@ -93,7 +93,7 @@ export default function MediaPreview(
         case MediaType.Misc:
           if (from === "collection") {
             return (
-              <div className={"w-fit p-2 rounded-sm bg-black text-text"}>
+              <div className="w-fit p-2 rounded-sm bg-black text-text">
                 {media.name}
                 <Button
                   onClick={() => {
@@ -106,7 +106,7 @@ export default function MediaPreview(
             );
           } else {
             return (
-              <div className={"w-fit p-2 rounded-sm bg-black text-text"}>
+              <div className="w-fit p-2 rounded-sm bg-black text-text">
                 {media.name}
                 <Button
                   onClick={() => {

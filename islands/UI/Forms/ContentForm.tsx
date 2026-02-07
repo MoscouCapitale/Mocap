@@ -1,10 +1,10 @@
 import { Input as BaseInput, Modal } from "@islands/UI";
 import { FormField, FormFieldValue } from "@models/Form.ts";
-import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
-import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
-import AddButton from "@islands/collection/AddButton.tsx";
 import { Media, MediaType } from "@models/Medias.ts";
 import { get, has, set } from "lodash";
+import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
+import AddButton from "../../collection/AddButton.tsx";
+import CollectionGrid from "../../collection/CollectionGrid.tsx";
 
 export type ContentFormValue = { [key: FormField["name"]]: FormFieldValue };
 

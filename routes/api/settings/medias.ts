@@ -1,5 +1,5 @@
-import { getCachedSettings } from "../../../stores/settings.ts";
 import { define } from "@utils/app.ts";
+import { getCachedSettings } from "../../../stores/settings.ts";
 
 export const handler = define.handlers<ReturnType<typeof getCachedSettings> | null>({
   async GET() {

@@ -1,13 +1,12 @@
 import {
-  acceptedFileTypeMap,
-  Audio,
-  DatabaseMedia,
-  Image,
-  Media,
-  MediaByType,
-  MediaType,
-  Misc,
-  Video,
+    acceptedFileTypeMap,
+    Audio,
+    DatabaseMedia,
+    Image,
+    Media,
+    MediaType,
+    Misc,
+    Video
 } from "@models/Medias.ts";
 
 /**

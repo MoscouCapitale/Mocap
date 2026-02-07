@@ -1,7 +1,7 @@
+import { Popover, PopoverClose, PopoverContent, PopoverPortal, PopoverTrigger } from "@radix-ui/react-popover";
+import { cn } from "@utils/cn.ts";
 import { VNode } from "preact";
 import { useState } from "preact/hooks";
-import { cn } from "@utils/cn.ts";
-import { Popover, PopoverClose, PopoverContent, PopoverPortal, PopoverTrigger } from "@radix-ui/react-popover";
 
 type ContextualDotsProps =
   | { onClick: (e: Event) => void; popoverChildren?: never }

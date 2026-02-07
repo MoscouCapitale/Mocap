@@ -1,12 +1,10 @@
-import Footer from "@components/Layout/Footer.tsx";
-import { getFooterLinks, isBetaEnabled, verifyBetaCode } from "@utils/app.ts";
-import Cursor from "@islands/UI/Cursor.tsx";
-import { fetchNode } from "@services/nodes.ts";
-import BrickLayout from "@islands/Bricks/BrickLayout.tsx";
-import AdminPanelButton from "@components/Misc/AdminPanelButton.tsx";
-import { FreshContext } from "fresh";
 import { getCookies } from "$std/http/cookie.ts";
-import { RouteContext } from "fresh/compat";
+import Footer from "@components/Layout/Footer.tsx";
+import AdminPanelButton from "@components/Misc/AdminPanelButton.tsx";
+import BrickLayout from "@islands/Bricks/BrickLayout.tsx";
+import { fetchNode } from "@services/nodes.ts";
+import { getFooterLinks, isBetaEnabled, verifyBetaCode } from "@utils/app.ts";
+import { FreshContext } from "fresh";
 
 export default async function Home(ctx: FreshContext) {
   const req = ctx.req;
@@ -30,11 +28,11 @@ export default async function Home(ctx: FreshContext) {
       <link rel="stylesheet" href="/cardsglow.css" />
       {/* <Cursor /> */}
       <AdminPanelButton />
-      <main className={"min-h-screen w-full flex flex-col items-center justify-start"}>
+      <main className="min-h-screen w-full flex flex-col items-center justify-start">
         <img
           src="/assets/gradients/001.webp"
-          loading={"lazy"}
-          className={"fixed inset-0 w-full h-full object-cover -z-10 brightness-[0.3] pointer-events-none"}
+          loading="lazy"
+          className="fixed inset-0 w-full h-full object-cover -z-10 brightness-[0.3] pointer-events-none"
         />
         <BrickLayout nodes={data ?? []} />
       </main>

@@ -2,9 +2,9 @@ import { Toast } from "@hooks/toast.tsx";
 import { Input } from "@islands/UI";
 import { FormField } from "@models/Form.ts";
 import {
-  FetchableSettingsKeys,
-  FetchableSettingsKeysArray,
-  getSettingsFieldsFromName,
+    FetchableSettingsKeys,
+    FetchableSettingsKeysArray,
+    getSettingsFieldsFromName,
 } from "@models/forms/Settings.ts";
 import { supabase as supa } from "@services/supabase.ts";
 

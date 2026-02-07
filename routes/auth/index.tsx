@@ -1,12 +1,9 @@
-import { FreshContext, PageProps, RouteHandler } from "fresh";
 import AuthForm from "@islands/AuthForm.tsx";
 import { FormType } from "@models/Authentication.ts";
 import { handleSignInOTP, handleSignInPassword, handleSignUp } from "@services/authentication.ts";
 import { getUserFromSession, supabaseSSR } from "@services/supabase.ts";
-import { verifyEmailIntegrity } from "@utils/login.ts";
-import { Handlers } from "fresh/compat";
 import { define } from "@utils/app.ts";
-import HeroSection from "@islands/Bricks/HeroSection.tsx";
+import { verifyEmailIntegrity } from "@utils/login.ts";
 
 export const handler = define.handlers({
   // When accessing the /auth route
@@ -128,7 +125,7 @@ export default define.page<typeof handler>(({ data }) => {
     <>
       <AuthForm data={data as FormType} />
 
-      <a className={"text-text_grey text-sm absolute bottom-2 right-2 transition-all hover:text-text"} href="/auth/resetpassword">
+      <a className="text-text_grey text-sm absolute bottom-2 right-2 transition-all hover:text-text" href="/auth/resetpassword">
         Mot de passe oublié ?
       </a>
     </>

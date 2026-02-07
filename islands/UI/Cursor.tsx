@@ -1,6 +1,6 @@
-import { useEffect, useState } from "preact/hooks";
-import { throttle } from "lodash";
 import { useIsMobile } from "@hooks/useIsMobile.ts";
+import { throttle } from "lodash";
+import { useEffect, useState } from "preact/hooks";
 
 /**
  * The possible cursor states.

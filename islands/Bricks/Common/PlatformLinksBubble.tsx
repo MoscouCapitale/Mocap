@@ -1,7 +1,7 @@
-import { PlatformLink } from "@models/Bricks.ts";
-import { IconArrowUpRight } from "@utils/icons.ts";
-import { cn } from "@utils/cn.ts";
 import { useIsMobile } from "@hooks/useIsMobile.ts";
+import { PlatformLink } from "@models/Bricks.ts";
+import { cn } from "@utils/cn.ts";
+import { IconArrowUpRight } from "@utils/icons.ts";
 
 type PlatformLinksBubbleProps = {
   platforms?: PlatformLink[];
@@ -15,7 +15,7 @@ export default function PlatformLinksBubble({ platforms, forceMobile }: Platform
 
   return platforms && platforms.length > 0
     ? (
-      <div className={"w-8 h-8 relative group/trackptfm"}>
+      <div className="w-8 h-8 relative group/trackptfm">
         <IconArrowUpRight
           className={cn(
             "z-30 w-full h-full  text-text_grey transition-all ease-in-out duration-300",
@@ -51,7 +51,7 @@ export default function PlatformLinksBubble({ platforms, forceMobile }: Platform
               >
                 <img
                   style={{ rotate: `${-1 * (i * (360 / plNb))}deg` }} // Set the element to be in the correct orientation (top up)
-                  className={"max-w-full max-h-full w-auto h-auto hover:drop-shadow-platformIcon transition-all ease-in-out duration-500"}
+                  className="max-w-full max-h-full w-auto h-auto hover:drop-shadow-platformIcon transition-all ease-in-out duration-500"
                   src={pfl.platform.icon}
                 />
               </a>

@@ -2,20 +2,19 @@ import { useEffect, useState } from "preact/hooks";
 
 import { NavItemType } from "@models/Layout.ts";
 import { getAppStorage, saveAppStorage } from "@utils/localStorage.ts";
-import LogoutButton from "@islands/Misc/LogoutButton.tsx";
+import LogoutButton from "../Misc/LogoutButton.tsx";
 
-import {
-  IconChartDonut,
-  IconChevronLeft,
-  IconMailbox,
-  IconPencilStar,
-  IconPhotoPlus,
-  IconSettings2,
-  IconUsers,
-} from "@utils/icons.ts";
-import { cn } from "@utils/cn.ts";
 import { useIsMobile } from "@hooks/useIsMobile.ts";
 import { Modal } from "@islands/UI";
+import { cn } from "@utils/cn.ts";
+import {
+    IconChevronLeft,
+    IconMailbox,
+    IconPencilStar,
+    IconPhotoPlus,
+    IconSettings2,
+    IconUsers
+} from "@utils/icons.ts";
 
 export default function Navbar(path: { path: string }) {
   const isMobile = useIsMobile();

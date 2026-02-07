@@ -14,7 +14,7 @@ export default function Node({ node }: MNodeGenProps) {
 
   return (
     <foreignObject
-      className={"group select-none overflow-visible"}
+      className="group select-none overflow-visible"
       ref={MNodeRef.value}
       width={node.width}
       height={node.height}

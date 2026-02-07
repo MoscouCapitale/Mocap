@@ -1,8 +1,8 @@
 import { getCookies, setCookie } from "$std/http/cookie.ts";
 import { Input, ToasterWrapper } from "@islands/UI";
+import Button from "@islands/UI/Button.tsx";
 import { define, getHashedCode, isBetaEnabled, verifyBetaCode } from "@utils/app.ts";
 import { cn } from "@utils/cn.ts";
-import Button from "@islands/UI/Button.tsx";
 
 export type FormType = {
   message?: string;

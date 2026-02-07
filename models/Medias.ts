@@ -1,4 +1,3 @@
-import { Database } from "@models/database.ts";
 import { AvailablePlayerControls } from "@islands/Player/Video/index.tsx";
 import { isEmpty, pickBy } from "lodash";
 
@@ -186,16 +185,17 @@ const acceptedFileTypeMap: { [key in MediaType]: string[] } = {
 
 type MediaByType<T extends MediaType> = MediaMap[T];
 
-export type {
-  Audio,
-  DatabaseMedia,
-  Image,
-  Media,
-  MediaByType,
-  MediaCTA,
-  MediaSettingsAttributes,
-  Misc,
-  uploadFileObject,
-  Video,
-};
 export { acceptedFileTypeMap, defaultPrivateFields, MediaModifiableAttributes, MediaTableNames, MediaType };
+export type {
+    Audio,
+    DatabaseMedia,
+    Image,
+    Media,
+    MediaByType,
+    MediaCTA,
+    MediaSettingsAttributes,
+    Misc,
+    uploadFileObject,
+    Video
+};
+

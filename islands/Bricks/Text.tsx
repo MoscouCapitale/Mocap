@@ -1,6 +1,6 @@
-import { Text as TextType } from "@models/Bricks.ts";
 import MarkdownWrapper from "@components/UI/MarkdownWrapper.tsx";
-import Player from "@islands/Player/index.tsx";
+import { Text as TextType } from "@models/Bricks.ts";
+import Player from "../Player/index.tsx";
 
 type TextProps = {
   content: TextType;
@@ -12,9 +12,9 @@ export default function Text({ content }: TextProps) {
   return (
     <div
       data-hover-card
-      className={"group/main w-full h-full rounded-[20px]"}
+      className="group/main w-full h-full rounded-[20px]"
     >
-      <div className={"bg-black flex p-3 rounded-[20px] w-full h-full text-text relative overflow-hidden"}>
+      <div className="bg-black flex p-3 rounded-[20px] w-full h-full text-text relative overflow-hidden">
         {content.media?.extension?.includes("video") && (
           <Player
             type="video"
@@ -30,7 +30,7 @@ export default function Text({ content }: TextProps) {
           />
         )}
         <div
-          className={"hide-scrollbar overflow-y-scroll z-[1] pr-3"}
+          className="hide-scrollbar overflow-y-scroll z-[1] pr-3"
           style={{
             mask: "linear-gradient(#fff0, #fff 10%), linear-gradient( #fff 90%, #0000 100%)",
             maskComposite: "intersect",

@@ -1,7 +1,6 @@
 import { RouteConfig } from "fresh";
-import { Partial } from "fresh/runtime";
-import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
 import { defineRoute } from "fresh/compat";
+import { Partial } from "fresh/runtime";
 
 // We only want to render the content, so disable
 // the `_app.tsx` template as well as any potentially

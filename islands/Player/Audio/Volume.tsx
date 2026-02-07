@@ -69,7 +69,7 @@ export default function Volume({
       {!disabledIcon && VolumeIcon}
       {!disabledSlider && (
         <Slider.Root
-          id={"volbar"}
+          id="volbar"
           className={cn(
             "flex touch-none select-none items-center cursor-pointer",
             variant === "static" && "relative" && orientation === "horizontal" ? `h-5 w-[${width}]` : "h-[100px] w-5",

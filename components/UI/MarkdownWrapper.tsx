@@ -10,7 +10,7 @@ export default function MarkdownWrapper({ content }: MarkdownWrapperProps) {
       components={{
         a(props) {
           // Style links as underlined
-          return <a className={"underline"} {...props} />;
+          return <a className="underline" {...props} />;
         },
       }}
     >

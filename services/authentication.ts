@@ -1,8 +1,7 @@
-import { FreshContext } from "fresh";
+import { defaultUserMetadatas, FormResponse } from "@models/Authentication.ts";
 import { verifyPasswordIntegrity, verifySamePassword } from "@utils/login.ts";
-import { handleErrorStatus } from "@services/authErrors.ts";
-import { setAuthCookie } from "@services/supabase.ts";
-import { defaultUserMetadatas, FormResponse, FormType } from "@models/Authentication.ts";
+import { handleErrorStatus } from "./authErrors.ts";
+import { setAuthCookie } from "./supabase.ts";
 
 export const handleSignInOTP = async (
   supa: any, //FIXME: SupabaseClient

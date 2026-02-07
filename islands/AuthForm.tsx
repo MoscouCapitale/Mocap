@@ -1,22 +1,21 @@
 import { FormType } from "@models/Authentication.ts";
-import { useCallback, useEffect, useMemo } from "preact/hooks";
-import { useState } from "preact/hooks";
-import { verifyEmailIntegrity, verifyPasswordIntegrity, verifySamePassword } from "@utils/login.ts";
-import { IconChevronDown, IconLoader, IconSend } from "@utils/icons.ts";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionHeader,
-  AccordionItem,
-  AccordionTrigger,
+    Accordion,
+    AccordionContent,
+    AccordionHeader,
+    AccordionItem,
+    AccordionTrigger,
 } from "@radix-ui/react-accordion";
+import { IconChevronDown, IconLoader, IconSend } from "@utils/icons.ts";
+import { verifyEmailIntegrity, verifyPasswordIntegrity } from "@utils/login.ts";
+import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 
 import { Toaster } from "@components/UI/Toast/Toaster.tsx";
 import { useToast } from "@hooks/toast.tsx";
-import { FormField, FormFieldValue } from "@models/Form.ts";
 import { Input } from "@islands/UI";
-import Button from "./UI/Button.tsx";
+import { FormField, FormFieldValue } from "@models/Form.ts";
 import { cn } from "@utils/cn.ts";
+import Button from "./UI/Button.tsx";
 
 type AuthFormFields = "email" | "password" | "confirmpassword";
 
@@ -93,8 +92,8 @@ export default function AuthForm({ data: { type, additional_data, error } }: { d
     return (
       <div class="w-full h-screen flex justify-center items-center">
         <div class="w-10/12 max-w-lg flex justify-center items-center flex-col gap-10">
-          <p className={"text-text text-center leading-loose"}>{additional_data.message}</p>
-          <Button href={"/"}>Retourner à l'accueil</Button>
+          <p className="text-text text-center leading-loose">{additional_data.message}</p>
+          <Button href="/">Retourner à l'accueil</Button>
         </div>
       </div>
     );
@@ -107,16 +106,16 @@ export default function AuthForm({ data: { type, additional_data, error } }: { d
           class={cn(
             "w-10/12 max-w-xs flex justify-center items-center flex-col gap-10 relative",
           )}
-          method={"POST"}
+          method="POST"
           onSubmit={() => setIsLoading(true)}
         >
           {type === "default" && (
             <>
-              <input type="hidden" name="authtype" value={"signin"} />
+              <input type="hidden" name="authtype" value="signin" />
               <Input field={formsInputs.email} onChange={(v) => handleInputChange("email", v)} />
               {email && (
-                <button className={`absolute left-[calc(100%+1rem)] ${isLoading && "animate-spin"}`} type={"submit"}>
-                  {isLoading ? <IconLoader color={"white"} /> : <IconSend color={"white"} />}
+                <button className={`absolute left-[calc(100%+1rem)] ${isLoading && "animate-spin"}`} type="submit">
+                  {isLoading ? <IconLoader color="white" /> : <IconSend color="white" />}
                 </button>
               )}
               <Accordion
@@ -127,7 +126,7 @@ export default function AuthForm({ data: { type, additional_data, error } }: { d
                 <AccordionItem value="item-1">
                   <AccordionHeader>
                     <AccordionTrigger className="flex flex-1 cursor-default items-center justify-between outline-hidden w-full p-1 group opacity-60 data-[state=open]:opacity-100">
-                      <span className={"text-text_grey"}>Connexion avec mot de passe ?</span>
+                      <span className="text-text_grey">Connexion avec mot de passe ?</span>
                       <IconChevronDown className="text-text_grey transition-transform duration-300 ease-in-out group-data-[state=open]:rotate-180" />
                     </AccordionTrigger>
                   </AccordionHeader>
@@ -140,7 +139,7 @@ export default function AuthForm({ data: { type, additional_data, error } }: { d
           )}
           {type === "signup" && (
             <>
-              <input type="hidden" name="authtype" value={"signup"} />
+              <input type="hidden" name="authtype" value="signup" />
               <Input field={formsInputs.email} onChange={(v) => handleInputChange("email", v)} />
               <Input field={formsInputs.password} onChange={(v) => handleInputChange("password", v)} />
               <Input field={formsInputs.confirmpassword} onChange={(v) => handleInputChange("confirmpassword", v)} />

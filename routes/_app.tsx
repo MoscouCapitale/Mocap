@@ -1,5 +1,4 @@
-import { FreshContext, type PageProps } from "fresh";
-import { Partial } from "fresh/runtime";
+import { FreshContext } from "fresh";
 import { getCachedSettings } from "../stores/settings.ts";
 
 export default async function App(ctx: FreshContext) {

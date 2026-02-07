@@ -1,4 +1,3 @@
-import { FreshContext } from "fresh";
 import { MNode } from "@models/Canva.ts";
 import { fetchNode } from "@services/nodes.ts";
 import { define } from "@utils/app.ts";

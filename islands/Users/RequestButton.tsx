@@ -1,6 +1,6 @@
-import { useEffect, useState } from "preact/hooks";
 import { User } from "@models/Authentication.ts";
 import ky from "ky";
+import { useState } from "preact/hooks";
 
 export default function RequestButton(props: { user: User; text: string; accept: boolean }) {
   const { user, text, accept } = props;

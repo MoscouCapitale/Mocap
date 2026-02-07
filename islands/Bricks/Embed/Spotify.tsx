@@ -1,5 +1,5 @@
-import { type HTMLAttributes } from "preact/compat";
 import { cn } from "@utils/cn.ts";
+import { type HTMLAttributes } from "preact/compat";
 
 interface SpotifyProps extends HTMLAttributes<HTMLIFrameElement> {
   link: string;

@@ -1,4 +1,3 @@
-import { FreshContext } from "fresh";
 import { FormResponse, FormType } from "@models/Authentication.ts";
 
 type handleErrorStatusProps = {

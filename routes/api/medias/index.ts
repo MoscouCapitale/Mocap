@@ -1,7 +1,7 @@
-import { supabase as supa } from "@services/supabase.ts";
 import { Media } from "@models/Medias.ts";
-import { getMediaTypeFromFiletype, validateObjectForDB } from "@utils/database.ts";
+import { supabase as supa } from "@services/supabase.ts";
 import { define } from "@utils/app.ts";
+import { getMediaTypeFromFiletype, validateObjectForDB } from "@utils/database.ts";
 
 export const handler = define.handlers<Media | null>({
   /**

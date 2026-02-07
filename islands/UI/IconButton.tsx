@@ -1,5 +1,5 @@
-import { cva } from "class-variance-authority";
 import { cn } from "@utils/cn.ts";
+import { cva } from "class-variance-authority";
 import { VNode } from "preact";
 
 type ButtonProps = {
@@ -43,9 +43,9 @@ export default function IconButton({
   return (
     <div
       className={cn(ButtonVariants({ variant }), className?.wrapper, disabled && "filter grayscale opacity-50")}
-      onClick={(e) => {
+      onClick={() => {
         if (onClick) onClick();
-        if (href) window.location.href = href;
+        if (href) globalThis.location.href = href;
       }}
     >
       {icon}

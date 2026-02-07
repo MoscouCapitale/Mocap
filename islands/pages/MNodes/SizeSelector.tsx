@@ -1,16 +1,16 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { useIsomorphicLayoutEffect } from "@hooks/useIsomorphicLayoutEffect.ts";
-import Button from "../../UI/Button.tsx";
+import { getEmbedTargetFromLink } from "../../Bricks/Embed/index.tsx";
+import { Highlight as HighlightType } from "@models/Bricks.ts";
 import { CANVA_GUTTER, MNode, NODE_MIN_SIZE } from "@models/Canva.ts";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { Portal } from "@radix-ui/react-portal";
 import { cn } from "@utils/cn.ts";
 import { IconGripHorizontal, IconGripVertical, IconResize } from "@utils/icons.ts";
-import gsap from "gsap";
+import gsap/ from "gsap/";
 import { Draggable } from "gsap/Draggable";
 import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
-import { Highlight as HighlightType } from "@models/Bricks.ts";
+import Button from "../../UI/Button.tsx";
 
 type SizeSelectorProps = {
   node: MNode;

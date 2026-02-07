@@ -1,7 +1,7 @@
 import { cn } from "@utils/cn.ts";
 import { JSX } from "preact/jsx-runtime";
-import { Media } from "@models/Medias.ts";
-import { Paths } from "@models/App.ts";
+import { Paths } from "./App.ts";
+import { Media } from "./Medias.ts";
 
 export type InputError = {
   error: boolean;

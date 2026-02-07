@@ -1,9 +1,8 @@
 "use client";
 
-import * as React from "preact/compat";
 import * as ToastPrimitives from "@radix-ui/react-toast";
 import { cva, type VariantProps } from "class-variance-authority";
-import { IconX as X } from "@utils/icons.ts";
+import * as React from "preact/compat";
 
 import { cn } from "@utils/cn.ts";
 
@@ -122,13 +121,10 @@ type ToastProps = ComponentPropsWithoutRef<typeof Toast>;
 type ToastActionElement = VNode<typeof ToastAction>;
 
 export {
-  Toast,
-  ToastAction,
-  type ToastActionElement,
-  ToastClose,
-  ToastDescription,
-  type ToastProps,
-  ToastProvider,
-  ToastTitle,
-  ToastViewport,
+    Toast,
+    ToastAction, ToastClose,
+    ToastDescription, ToastProvider,
+    ToastTitle,
+    ToastViewport, type ToastActionElement, type ToastProps
 };
+

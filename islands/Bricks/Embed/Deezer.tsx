@@ -1,6 +1,6 @@
-import { type HTMLAttributes } from "preact/compat";
 import { cn } from "@utils/cn.ts";
 import ky from "ky";
+import { type HTMLAttributes } from "preact/compat";
 import { useEffect, useState } from "preact/hooks";
 
 interface DeezerProps extends HTMLAttributes<HTMLIFrameElement> {

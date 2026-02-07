@@ -1,5 +1,3 @@
-import { supabase as supa } from "@services/supabase.ts";
-import { sendUserRequestNotification } from "@utils/users.ts";
 
 // const channel = supa
 //   .channel("users_requests")

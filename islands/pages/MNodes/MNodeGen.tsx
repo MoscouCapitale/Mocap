@@ -2,15 +2,15 @@ import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { useGSAP } from "@gsap/react";
 import { CANVA_GUTTER, getAvailableSizes, MNode } from "@models/Canva.ts";
 import { signal } from "@preact/signals";
-import gsap from "gsap";
+import gsap/ from "gsap/";
 import { Draggable } from "gsap/Draggable";
 import { Ref, useCallback, useEffect, useMemo, useState } from "preact/hooks";
 
+import { useIsomorphicLayoutEffect } from "@hooks/useIsomorphicLayoutEffect.ts";
+import SizeSelector from "./SizeSelector.tsx";
 import { getBrickFromCanvaNode } from "@utils/bricks.tsx";
 import { cn } from "@utils/cn.ts";
 import { IconHandGrab, IconTrash } from "@utils/icons.ts";
-import SizeSelector from "@islands/pages/MNodes/SizeSelector.tsx";
-import { useIsomorphicLayoutEffect } from "@hooks/useIsomorphicLayoutEffect.ts";
 import { createRef } from "preact";
 
 type MNodeGenProps = {
@@ -88,7 +88,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
   return (
     <foreignObject
       data-nodeId={`canva_node_${node.id}`}
-      className={"group select-none overflow-visible"}
+      className="group select-none overflow-visible"
       ref={MNodeRef.value}
       width={node.width}
       height={node.height}
@@ -104,7 +104,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
         {canResizeNode && <SizeSelector node={node} setSize={updateNode} />}
 
         {/* Grabber to move the node */}
-        <div ref={GrabberRef.value} className={"text-text flex items-center justify-center"}>
+        <div ref={GrabberRef.value} className="text-text flex items-center justify-center">
           <IconHandGrab />
         </div>
 

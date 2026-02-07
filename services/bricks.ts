@@ -1,9 +1,8 @@
-import { availBricks, BricksType } from "@models/Bricks.ts";
 import { DatabaseAttributes } from "@models/App.ts";
-import { createQueryFromAttributesTables } from "@utils/api.ts";
-import { evaluateSupabaseResponse } from "@utils/api.ts";
-import { supabase as supa } from "@services/supabase.ts";
+import { availBricks, BricksType } from "@models/Bricks.ts";
 import { TableNames } from "@models/database.ts";
+import { createQueryFromAttributesTables, evaluateSupabaseResponse } from "@utils/api.ts";
+import { supabase as supa } from "./supabase.ts";
 
 export const getBrickFromType = async (
   type: keyof typeof BricksType,

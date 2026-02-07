@@ -1,5 +1,5 @@
-import { cva } from "class-variance-authority";
 import { cn } from "@utils/cn.ts";
+import { cva } from "class-variance-authority";
 import { JSX } from "preact";
 
 type LinkProps = {

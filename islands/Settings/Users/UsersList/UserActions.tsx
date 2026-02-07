@@ -18,11 +18,12 @@ export default function UserActions({
   return (
     <>
       <div
-        className={"p-[15px] bg-black rounded-[10px] border border-text_grey bg-background flex-col justify-center items-start gap-[15px] inline-flex "}
+        className="p-[15px] bg-black rounded-[10px] border border-text_grey bg-background flex-col justify-center items-start gap-[15px] inline-flex "
       >
         <div class="px-2.5 py-1.5 bg-warning rounded-[10px] justify-center items-center gap-2.5 inline-flex">
           {user.user_metadata.status === UserStatus.ACTV && (
             <button
+              type="button"
               class="text-text font-semibold"
               onClick={() => {
                 if (
@@ -37,6 +38,7 @@ export default function UserActions({
           )}
           {user.user_metadata.status === UserStatus.BLCK && (
             <button
+              type="button"
               class="text-text font-semibold"
               onClick={() => {
                 if (
@@ -53,6 +55,7 @@ export default function UserActions({
         <div class="px-2.5 py-1.5 bg-error rounded-[10px] justify-center items-center gap-2.5 inline-flex">
           {/* add confirmation modal on click */}
           <button
+            type="button"
             class="text-text font-semibold"
             onClick={() => {
               if (

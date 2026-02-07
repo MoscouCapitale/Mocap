@@ -96,7 +96,7 @@ export default define.page<typeof handler>(({ data }) => {
   return (
     <>
       <ResetPassword />
-      <a className={"text-text_grey text-sm absolute bottom-2 right-2 transition-all hover:text-text"} href="/auth">
+      <a className="text-text_grey text-sm absolute bottom-2 right-2 transition-all hover:text-text" href="/auth">
         Retourner en arrière
       </a>
       <ToasterWrapper content={data?.toast} />

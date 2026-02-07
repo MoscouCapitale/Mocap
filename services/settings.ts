@@ -1,6 +1,6 @@
-import { supabase as supa } from "@services/supabase.ts";
-import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
 import { FormField } from "@models/Form.ts";
+import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
+import { supabase as supa } from "./supabase.ts";
 
 export type FetchableSettingsKeys =
   | "main"

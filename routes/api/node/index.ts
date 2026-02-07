@@ -1,4 +1,3 @@
-import { FreshContext } from "fresh";
 import { MNode } from "@models/Canva.ts";
 import { supabase as supa } from "@services/supabase.ts";
 import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";

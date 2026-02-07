@@ -1,12 +1,11 @@
-import { computed, effect, Signal, signal } from "@preact/signals";
+import { effect, signal } from "@preact/signals";
 
-import { createContext, createRef, Ref, RefObject, VNode } from "preact";
-import { StateUpdater, useCallback, useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { CANVA_GUTTER, MNode } from "@models/Canva.ts";
-import { getBaseUrl } from "@utils/pathHandler.ts";
 import { BricksType } from "@models/Bricks.ts";
-import { merge } from "lodash";
+import { CANVA_GUTTER, MNode } from "@models/Canva.ts";
 import ky from "ky";
+import { merge } from "lodash";
+import { createContext, RefObject, VNode } from "preact";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
 
 export type MCViewBox = {
   x: number;

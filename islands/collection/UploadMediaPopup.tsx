@@ -56,7 +56,7 @@ export default function UploadMediaPopup() {
   };
 
   return (
-    <div className={"max-w-4xl flex flex-col items-center gap-4"}>
+    <div className="max-w-4xl flex flex-col items-center gap-4">
       <FileInput handleFileChange={(f) => setMediaToUpload(f)} />
       {mediaToUpload && (
         <div class="text-text flex justify-center align-center gap-4 w-full">
@@ -67,7 +67,7 @@ export default function UploadMediaPopup() {
           >
             {updating ? "Téléversement..." : "Téléverser"}
           </Button>
-          <IconTrash className={"text-error cursor-pointers"} onClick={() => setMediaToUpload(null)} />
+          <IconTrash className="text-error cursor-pointers" onClick={() => setMediaToUpload(null)} />
         </div>
       )}
     </div>

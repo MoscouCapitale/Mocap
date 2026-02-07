@@ -14,3 +14,4 @@ type NavItemType = {
 };
 
 export type { NavItemType };
+

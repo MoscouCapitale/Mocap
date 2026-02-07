@@ -1,7 +1,7 @@
 import { FreshContext } from "fresh";
 
-import { accessTokenExpired, getUserFromSession, refreshAccessToken, setAuthCookie } from "@services/supabase.ts";
 import { Session, User, UserRole, UserStatus } from "@models/Authentication.ts";
+import { accessTokenExpired, getUserFromSession, refreshAccessToken, setAuthCookie } from "@services/supabase.ts";
 
 export interface AppState {
   user: User;

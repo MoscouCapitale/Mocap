@@ -1,10 +1,10 @@
+import { FileInput, PreviewImage, RelationInput, Select } from "@islands/UI";
 import { baseInputStyle, FormField, FormFieldValue } from "@models/Form.ts";
 import { cn } from "@utils/cn.ts";
 import { IconEye, IconEyeClosed, IconInfoSquareRounded } from "@utils/icons.ts";
+import { isEmpty } from "lodash";
 import { VNode } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { FileInput, PreviewImage, RelationInput, Select } from "@islands/UI";
-import { isEmpty } from "lodash";
 
 type InputFromTypeProps = {
   field: FormField;
@@ -26,9 +26,9 @@ const InputFromType = (
   const defaultField = (
     <input
       name={field.name}
-      value={""}
+      value=""
       className={cn(baseInputStyle, "border-text_grey")}
-      placeholder={"Not implemented yet"}
+      placeholder="Not implemented yet"
       disabled
     />
   );
@@ -74,7 +74,7 @@ const InputFromType = (
           readOnly={field.readOnly}
           disabled={field.disabled}
           title={error && field.tooltipError ? error : undefined}
-          autoComplete={"on"}
+          autoComplete="on"
         />
       );
     case "select":
@@ -86,7 +86,7 @@ const InputFromType = (
           onChange={onChange}
           multiSelect={field.type === "multiselect"}
           min={field.required ? 1 : 0}
-          sx={"max-w-[200px]"}
+          sx="max-w-[200px]"
           inputName={field.name}
         />
       );
@@ -136,7 +136,7 @@ const InputFromType = (
           readOnly={field.readOnly}
           disabled={field.disabled}
           title={error && field.tooltipError ? error : undefined}
-          autoComplete={"on"}
+          autoComplete="on"
         >
         </textarea>
       );
@@ -182,11 +182,11 @@ export default function Input({ field, onChange }: InputProps) {
 
   return (
     <>
-      <label className={"flex flex-col w-full"}>
+      <label className="flex flex-col w-full">
         {/* Set the style as inline for checkboxes */}
         {field.type === "checkbox" &&
           (
-            <div className={"w-full flex items-center gap-2 justify-between"}>
+            <div className="w-full flex items-center gap-2 justify-between">
               {field.label}
               <InputFromType
                 field={field}
@@ -199,7 +199,7 @@ export default function Input({ field, onChange }: InputProps) {
         {field.type === "password" && (
           <>
             {field.label}
-            <div className={"w-full relative"}>
+            <div className="w-full relative">
               <InputFromType
                 field={{ ...field, type: isPasswordVisible ? "string" : field.type }}
                 onChange={onValueChange}
@@ -213,7 +213,7 @@ export default function Input({ field, onChange }: InputProps) {
                   setIsPasswordVisible(!isPasswordVisible);
                 }}
               >
-                {isPasswordVisible ? <IconEye color={"#FFF"} /> : <IconEyeClosed color={"#FFF"} />}
+                {isPasswordVisible ? <IconEye color="#FFF" /> : <IconEyeClosed color="#FFF" />}
               </div>
             </div>
           </>
@@ -239,7 +239,7 @@ export default function Input({ field, onChange }: InputProps) {
               )}
             >
               <IconInfoSquareRounded color="#EA5959" size={14} />
-              <p className={"text-error text-xs"}>{fieldError}</p>
+              <p className="text-error text-xs">{fieldError}</p>
             </div>
           )}
       </label>

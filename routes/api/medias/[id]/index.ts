@@ -1,9 +1,8 @@
-import { supabase, supabase as supa } from "@services/supabase.ts";
-import { isUUIDValid } from "@utils/database.ts";
 import { Media } from "@models/Medias.ts";
-import { Image } from "@models/Medias.ts";
 import { Database } from "@models/database.ts";
+import { supabase as supa, supabase } from "@services/supabase.ts";
 import { define } from "@utils/app.ts";
+import { isUUIDValid } from "@utils/database.ts";
 
 export const handler = define.handlers<Media | null>({
   /**

@@ -1,4 +1,3 @@
-import { FreshContext } from "fresh";
 import { supabase as supa } from "@services/supabase.ts";
 
 import UserRevokeAccount from "@components/settings/UserRevokeAccount.tsx";
@@ -6,8 +5,8 @@ import UserRevokeAccount from "@components/settings/UserRevokeAccount.tsx";
 import { ToasterToast } from "@hooks/toast.tsx";
 import { ToasterWrapper } from "@islands/UI";
 import { User } from "@models/Authentication.ts";
-import { verifyEmailIntegrity } from "@utils/login.ts";
 import { define } from "@utils/app.ts";
+import { verifyEmailIntegrity } from "@utils/login.ts";
 
 type HandlerType = {
   toast: Omit<ToasterToast, "id"> | null;
@@ -100,7 +99,7 @@ export default define.page<typeof handler>((ctx) => {
   const user = ctx.state.user as User;
   const toast = ctx.data?.toast;
 
-  if (!user) return <div className={"text-text"}>Not logged in</div>;
+  if (!user) return <div className="text-text">Not logged in</div>;
   return (
     <>
       <form

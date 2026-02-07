@@ -1,10 +1,10 @@
-import MediaEmbed, { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
-import Player from "@islands/Player/index.tsx";
 import { Highlight as HighlightType } from "@models/Bricks.ts";
 import { getPlayerControlsFromMediaControls, getStyleFit, VideoControls } from "@models/Medias.ts";
 import { cn } from "@utils/cn.ts";
 import { IconArrowUpRight } from "@utils/icons.ts";
 import { useMemo } from "preact/hooks";
+import Player from "../Player/index.tsx";
+import MediaEmbed, { getEmbedTargetFromLink } from "./Embed/index.tsx";
 
 type HighlightProps = {
   content: HighlightType;
@@ -36,7 +36,7 @@ export default function Highlight({ content, size }: HighlightProps) {
               controlOnHover: true,
               disableSomeControls: getPlayerControlsFromMediaControls(content.controls as VideoControls),
             }}
-            sx={"z-10"}
+            sx="z-10"
           />
         );
       } else if (content.media.extension?.includes("image")) {
@@ -80,7 +80,7 @@ export default function Highlight({ content, size }: HighlightProps) {
             isEmbed && "select-none",
           )}
           {...(content.link || isEmbed ? { href: content.link } : {})}
-          target={"_blank"}
+          target="_blank"
         >
           <h2
             style={{ "--title-subcontent": `'${content.subtitle ?? ""}'` }}

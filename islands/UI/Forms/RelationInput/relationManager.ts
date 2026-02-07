@@ -1,6 +1,6 @@
 import { Artist, Platform, PlatformLink, Track } from "@models/Bricks.ts";
-import { MediaControls, MediaCTA } from "@models/Medias.ts";
 import { AvailableFormRelation } from "@models/Form.ts";
+import { MediaControls, MediaCTA } from "@models/Medias.ts";
 import ky from "ky";
 
 export type AvailableAttributes = MediaControls | MediaCTA | PlatformLink | Platform | Track | Artist;

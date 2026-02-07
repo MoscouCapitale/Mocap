@@ -1,9 +1,8 @@
-import { FreshContext } from "fresh";
 
 import { Toast } from "@hooks/toast.tsx";
-import { Button, LabeledToolTip, ToasterWrapper } from "@islands/UI";
-import { getSettingsInput, settingPostHandler } from "@utils/settings.tsx";
+import { Button, ToasterWrapper } from "@islands/UI";
 import { define } from "@utils/app.ts";
+import { getSettingsInput, settingPostHandler } from "@utils/settings.tsx";
 
 type HandlerType = {
   toast: Toast | null;

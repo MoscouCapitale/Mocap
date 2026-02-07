@@ -1,24 +1,24 @@
-import { VNode } from "preact";
 import {
-  Album as AlbumType,
-  AudioBrick as AudioType,
-  BricksType,
-  HeroSection as HeroSectionType,
-  Highlight as HighlightType,
-  PlatformLink as PlatformLinkType,
-  Single as SingleType,
-  Text as TextType,
+    Album as AlbumType,
+    AudioBrick as AudioType,
+    BricksType,
+    HeroSection as HeroSectionType,
+    Highlight as HighlightType,
+    PlatformLink as PlatformLinkType,
+    Single as SingleType,
+    Text as TextType,
 } from "@models/Bricks.ts";
+import { VNode } from "preact";
 
-import Single from "@islands/Bricks/Single.tsx";
 import Album from "@islands/Bricks/Album.tsx";
-import HeroSection from "@islands/Bricks/HeroSection.tsx";
-import Text from "@islands/Bricks/Text.tsx";
-import PlatformLink from "@islands/Bricks/PlatformLink.tsx";
-import { MNode } from "@models/Canva.ts";
-import Placeholder from "@islands/Bricks/Placeholder.tsx";
-import Highlight from "@islands/Bricks/Highlight.tsx";
 import Audio from "@islands/Bricks/Audio.tsx";
+import HeroSection from "@islands/Bricks/HeroSection.tsx";
+import Highlight from "@islands/Bricks/Highlight.tsx";
+import Placeholder from "@islands/Bricks/Placeholder.tsx";
+import PlatformLink from "@islands/Bricks/PlatformLink.tsx";
+import Single from "@islands/Bricks/Single.tsx";
+import Text from "@islands/Bricks/Text.tsx";
+import { MNode } from "@models/Canva.ts";
 
 interface AdditionalProps {
   isMovable?: boolean;

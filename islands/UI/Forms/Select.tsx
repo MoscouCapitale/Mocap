@@ -103,7 +103,7 @@ export default function Select(
           sx,
         )}
       >
-        <p className={"grow max-w-[400px] truncate"}>{getSelectTriggerLabelling()}</p>
+        <p className="grow max-w-[400px] truncate">{getSelectTriggerLabelling()}</p>
         {min === 0 && selected.length > 0 && (
           <button
             className=""
@@ -115,12 +115,12 @@ export default function Select(
               onChange(null);
             }}
           >
-            <IconX className={"hover:backdrop-brightness-150"} />
+            <IconX className="hover:backdrop-brightness-150" />
           </button>
         )}
         <DropdownMenu.Trigger asChild>
           <button className="" aria-label="Open options">
-            <IconChevronDown className={"hover:backdrop-brightness-150"} />
+            <IconChevronDown className="hover:backdrop-brightness-150" />
           </button>
         </DropdownMenu.Trigger>
       </div>
@@ -129,7 +129,7 @@ export default function Select(
         <DropdownMenu.Content
           className="min-w-[150px] flex flex-col p-1 rounded-md bg-clip-padding backdrop-filter backdrop-blur-2xl bg-background/20 border border-text z-50"
           sideOffset={5}
-          align={"start"}
+          align="start"
         >
           {field.options?.map(({ value, label, ...rest }, index) => (
             <DropdownMenu.Item
@@ -158,7 +158,7 @@ export default function Select(
                   : "bg-black/0 hover:bg-black/60",
               )}
             >
-              <div className={"relative max-w-[300px] flex gap-2 items-center grow truncate text-left"}>
+              <div className="relative max-w-[300px] flex gap-2 items-center grow truncate text-left">
                 {/* TODO: find a better way to show the selected items with checks */}
                 {
                   /* {multiSelect &&

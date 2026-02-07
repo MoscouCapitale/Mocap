@@ -1,8 +1,8 @@
 import { availBricks, BricksType } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
-import Player from "@islands/Player/index.tsx";
-import { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
-import { LabeledToolTip } from "@islands/UI/Tooltip.tsx";
+import Player from "../Player/index.tsx";
+import { LabeledToolTip } from "../UI/Tooltip.tsx";
+import { getEmbedTargetFromLink } from "./Embed/index.tsx";
 
 type PlaceholderProps = {
   type: BricksType;
@@ -20,7 +20,7 @@ export default function Placeholder({ type, content, nodeId }: PlaceholderProps)
         return (
           <div className={cn("bg-black flex p-3 rounded-[20px] w-full h-full text-text", disabledStyle)}>
             {/* @ts-ignore - this is a Text brick */}
-            <p className={"overflow-hidden"}>{content.text}</p>
+            <p className="overflow-hidden">{content.text}</p>
           </div>
         );
       case BricksType.Platform_Link:
@@ -31,7 +31,7 @@ export default function Placeholder({ type, content, nodeId }: PlaceholderProps)
               disabledStyle,
             )}
           >
-            <p className={"blur-[2px]"}>
+            <p className="blur-[2px]">
               {/* @ts-ignore - this is a PlatformLink brick */}
               {content.platform.name}
             </p>
@@ -66,12 +66,12 @@ export default function Placeholder({ type, content, nodeId }: PlaceholderProps)
 
     return (
       <div
-        className={"w-full h-full rounded-[20px] flex justify-center items-center text-text overflow-hidden relative"}
+        className="w-full h-full rounded-[20px] flex justify-center items-center text-text overflow-hidden relative"
       >
-        <img className={"absolute pos-center w-full h-full object-cover"} src="/assets/gradients/001.webp" />
+        <img className="absolute pos-center w-full h-full object-cover" src="/assets/gradients/001.webp" />
         {content.type === BricksType.Highlight && getEmbedTargetFromLink(content.link ?? "") && (
           <LabeledToolTip
-            sx={"absolute pos-center text-text whitespace-nowrap"}
+            sx="absolute pos-center text-text whitespace-nowrap"
             label={`Intégration ${getEmbedTargetFromLink(content.link ?? "")}`}
             text="Activer la preview pour voir le contenu"
           />
@@ -82,7 +82,7 @@ export default function Placeholder({ type, content, nodeId }: PlaceholderProps)
 
   return (
     <div
-      id={"mcanva-article-placeholder"}
+      id="mcanva-article-placeholder"
       data-node-id={nodeId}
       data-hover-card
       className={cn("group/main w-full h-full rounded-[20px]")}

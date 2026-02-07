@@ -1,15 +1,14 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { toast } from "@hooks/toast.tsx";
-import { Button, Modal } from "@islands/UI";
-import { ObjectRenderer } from "@islands/UI";
-import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
+import { Button, Modal, ObjectRenderer } from "@islands/UI";
 import { availBricks, BricksType } from "@models/Bricks.ts";
 import { MNode } from "@models/Canva.ts";
 import { Media, MediaType } from "@models/Medias.ts";
 import { IconTrash } from "@utils/icons.ts";
-import { useCallback, useEffect, useState } from "preact/hooks";
-import { isEqual } from "lodash";
 import ky, { HTTPError } from "ky";
+import { isEqual } from "lodash";
+import { useCallback, useEffect, useState } from "preact/hooks";
+import CollectionGrid from "../collection/CollectionGrid.tsx";
 
 type CreateBrickBarProps = {
   brickType: BricksType; // The general type of the brick to create
@@ -155,7 +154,7 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
 
   return (
     <>
-      <div className={"flex flex-col w-full gap-4 min-h-0 overflow-scroll pr-4"}>
+      <div className="flex flex-col w-full gap-4 min-h-0 overflow-scroll pr-4">
         <ObjectRenderer type={brickType} content={brickData} onChange={(v) => setBrick(v as availBricks)} />
       </div>
       <div class="w-full gap-4 flex flex-col justify-center align-middle">

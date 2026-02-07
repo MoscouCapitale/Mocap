@@ -1,6 +1,6 @@
-import { FreshContext } from "fresh";
+import { Session, User } from "@models/Authentication.ts";
 import { accessTokenExpired, getUserFromSession, refreshAccessToken, setAuthCookie } from "@services/supabase.ts";
-import { Session, User, UserRole, UserStatus } from "@models/Authentication.ts";
+import { FreshContext } from "fresh";
 
 export async function handler(ctx: FreshContext) {
   const req = ctx.req;

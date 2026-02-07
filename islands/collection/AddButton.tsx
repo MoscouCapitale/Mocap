@@ -1,7 +1,7 @@
-import { useEffect, useState } from "preact/hooks";
 import { Button, Modal } from "@islands/UI";
-import UploadMediaPopup from "./UploadMediaPopup.tsx";
 import ky from "ky";
+import { useEffect, useState } from "preact/hooks";
+import UploadMediaPopup from "./UploadMediaPopup.tsx";
 
 type AddButtonProps = {
   position?: string;

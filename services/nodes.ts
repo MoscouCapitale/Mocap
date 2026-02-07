@@ -1,9 +1,8 @@
-import { availBricks } from "@models/Bricks.ts";
+import { availBricks, BricksType } from "@models/Bricks.ts";
 import { DBMNode, getAvailableSizes, MNode } from "@models/Canva.ts";
 import { evaluateSupabaseResponse } from "@utils/api.ts";
-import { supabase as supa } from "@services/supabase.ts";
-import { BricksType } from "@models/Bricks.ts";
-import { getBrickFromType } from "@services/bricks.ts";
+import { getBrickFromType } from "./bricks.ts";
+import { supabase as supa } from "./supabase.ts";
 
 export const fetchNode = async (
   id?: string,

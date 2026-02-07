@@ -1,12 +1,12 @@
-import ReactPlayer from "react-player";
-import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { IconPlayerPauseFilled, IconPlayerPlayFilled, IconVolume, IconVolume2, IconVolume3 } from "@utils/icons.ts";
-import { cn } from "@utils/cn.ts";
-import * as Slider from "@radix-ui/react-slider";
 import Loader from "@components/UI/Loader.tsx";
 import { MediaObjectFit } from "@models/Medias.ts";
-import Volume from "./Volume.tsx";
+import * as Slider from "@radix-ui/react-slider";
+import { cn } from "@utils/cn.ts";
+import { IconPlayerPauseFilled, IconPlayerPlayFilled } from "@utils/icons.ts";
 import ky from "ky";
+import { useCallback, useEffect, useRef, useState } from "preact/hooks";
+import ReactPlayer from "react-player";
+import Volume from "./Volume.tsx";
 
 export type VideoProps = {
   src: string;
@@ -162,13 +162,13 @@ export default function Video(
       }}
     >
       {videoState.isInit && videoState.error && (
-        <div className={"absolute inset-0 flex justify-center items-center"}>
-          <p className={"text-text underline"}>{videoState.error}</p>
+        <div className="absolute inset-0 flex justify-center items-center">
+          <p className="text-text underline">{videoState.error}</p>
         </div>
       )}
 
       {additionnalConfig?.loader !== false && videoState.isInit && !videoState.error && !videoState.isReady && (
-        <div className={"w-full h-full flex justify-center items-center"}>
+        <div className="w-full h-full flex justify-center items-center">
           <Loader />
         </div>
       )}
@@ -188,8 +188,8 @@ export default function Video(
             volume={videoState.volume}
             loop={!!loopVideo}
             url={src}
-            width={"100%"}
-            height={"100%"}
+            width="100%"
+            height="100%"
             progressInterval={200}
             onDuration={onDuration}
             onProgress={onProgress}
@@ -227,20 +227,20 @@ export default function Video(
                       {videoState.playing
                         ? (
                           <IconPlayerPauseFilled
-                            className={"text-text cursor-pointer"}
+                            className="text-text cursor-pointer"
                             size={ICONS_SIZE}
                           />
                         )
                         : (
                           <IconPlayerPlayFilled
-                            className={"text-text cursor-pointer"}
+                            className="text-text cursor-pointer"
                             size={ICONS_SIZE}
                           />
                         )}
                     </div>
                   )}
                 {/* Timeline */}
-                <div className={"flex items-center gap-2 grow"}>
+                <div className="flex items-center gap-2 grow">
                   {canDisplayControl("timeline") &&
                     (
                       <Slider.Root
@@ -261,7 +261,7 @@ export default function Video(
                     )}
                   {canDisplayControl("duration") && (
                     <div>
-                      <p className={"text-text font-semibold"}>
+                      <p className="text-text font-semibold">
                         {formatTime(
                           videoState.duration - videoState.currentTime,
                         )}

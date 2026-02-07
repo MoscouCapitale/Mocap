@@ -10,7 +10,7 @@ export default function UserRevokeAccount() {
       <div class="w-full p-2.5 rounded-[5px] border-dashed border border-error flex-col justify-center items-start gap-2.5 flex">
         <input
           class="px-2.5 py-[5px] bg-error rounded-[3px] justify-start items-center gap-2.5 inline-flex"
-          value={"Révoquer le compte"}
+          value="Révoquer le compte"
           type="submit"
         />
       </div>

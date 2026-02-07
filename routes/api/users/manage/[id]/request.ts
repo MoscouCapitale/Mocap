@@ -1,5 +1,4 @@
-import { FreshContext } from "fresh";
-import { User, UserRole, UserStatus } from "@models/Authentication.ts";
+import { User, UserRole } from "@models/Authentication.ts";
 import { supabase as supa, updateUserMetadata } from "@services/supabase.ts";
 import { define } from "@utils/app.ts";
 

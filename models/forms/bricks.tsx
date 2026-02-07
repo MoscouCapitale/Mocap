@@ -1,20 +1,20 @@
+import { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
 import { LabeledToolTip } from "@islands/UI";
 import {
-  Album,
-  Artist,
-  AudioBrick,
-  HeroSection,
-  Highlight,
-  Platform,
-  PlatformLink,
-  Single,
-  Text,
-  Track,
-} from "@models/Bricks.ts";
-import { AvailableFormRelation, FormField, ObjFormField } from "@models/Form.ts";
-import { MediaCTA } from "@models/Medias.ts";
-import { MediaControlsFormField } from "@models/forms/media.ts";
-import { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
+    Album,
+    Artist,
+    AudioBrick,
+    HeroSection,
+    Highlight,
+    Platform,
+    PlatformLink,
+    Single,
+    Text,
+    Track,
+} from "../Bricks.ts";
+import { AvailableFormRelation, FormField, ObjFormField } from "../Form.ts";
+import { MediaCTA } from "../Medias.ts";
+import { MediaControlsFormField } from "./media.ts";
 
 export type AllMocapObjectsTypes =
   | "HeroSection"

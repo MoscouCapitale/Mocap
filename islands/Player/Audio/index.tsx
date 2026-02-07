@@ -1,11 +1,11 @@
-import ReactPlayer from "react-player";
-import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { IconPlayerPauseFilled, IconPlayerPlayFilled, IconVolume, IconVolume2, IconVolume3 } from "@utils/icons.ts";
-import { cn } from "@utils/cn.ts";
-import * as Slider from "@radix-ui/react-slider";
 import Loader from "@components/UI/Loader.tsx";
-import Volume from "./Volume.tsx";
+import * as Slider from "@radix-ui/react-slider";
+import { cn } from "@utils/cn.ts";
+import { IconPlayerPauseFilled, IconPlayerPlayFilled } from "@utils/icons.ts";
 import ky from "ky";
+import { useCallback, useEffect, useRef, useState } from "preact/hooks";
+import ReactPlayer from "react-player";
+import Volume from "./Volume.tsx";
 
 export type AudioProps = {
   src: string;
@@ -110,13 +110,13 @@ export default function Audio({ src, disabled, additionnalConfig, disableControl
       }}
     >
       {audioState.isInit && audioState.error && (
-        <div className={"absolute inset-0 flex justify-center items-center"}>
-          <p className={"text-text underline"}>{audioState.error}</p>
+        <div className="absolute inset-0 flex justify-center items-center">
+          <p className="text-text underline">{audioState.error}</p>
         </div>
       )}
 
       {additionnalConfig?.loader !== false && audioState.isInit && !audioState.error && !audioState.isReady && (
-        <div className={"w-full h-full flex justify-center items-center"}>
+        <div className="w-full h-full flex justify-center items-center">
           <Loader />
         </div>
       )}
@@ -154,12 +154,12 @@ export default function Audio({ src, disabled, additionnalConfig, disableControl
                     }))}
                 >
                   {audioState.playing
-                    ? <IconPlayerPauseFilled className={"text-text cursor-pointer"} size={ICONS_SIZE} />
-                    : <IconPlayerPlayFilled className={"text-text cursor-pointer"} size={ICONS_SIZE} />}
+                    ? <IconPlayerPauseFilled className="text-text cursor-pointer" size={ICONS_SIZE} />
+                    : <IconPlayerPlayFilled className="text-text cursor-pointer" size={ICONS_SIZE} />}
                 </div>
               )}
               {/* Timeline */}
-              <div className={"flex items-center gap-2 grow"}>
+              <div className="flex items-center gap-2 grow">
                 {canDisplayControl("timeline") && (
                   <Slider.Root
                     className="relative flex h-5 grow touch-none select-none items-center"
@@ -179,7 +179,7 @@ export default function Audio({ src, disabled, additionnalConfig, disableControl
                 )}
                 {canDisplayControl("duration") && (
                   <div>
-                    <p className={"text-text font-semibold"}>
+                    <p className="text-text font-semibold">
                       {formatTime(audioState.duration - audioState.currentTime)}
                     </p>
                   </div>

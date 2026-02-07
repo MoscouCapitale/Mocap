@@ -1,8 +1,8 @@
-import Player from "@islands/Player/index.tsx";
 import { Single as SingleType } from "@models/Bricks.ts";
+import { getPlayerControlsFromMediaControls, getStyleFit, VideoControls } from "@models/Medias.ts";
 import { cn } from "@utils/cn.ts";
 import { useCallback, useMemo, useState } from "preact/hooks";
-import { getPlayerControlsFromMediaControls, getStyleFit, VideoControls } from "@models/Medias.ts";
+import Player from "../Player/index.tsx";
 
 type SingleProps = {
   content: SingleType;
@@ -63,7 +63,7 @@ export default function Single({ content }: SingleProps) {
     <div
       data-hover-card
       data-open={isOpen}
-      className={"group/main w-full h-full rounded-[20px]"}
+      className="group/main w-full h-full rounded-[20px]"
       tabIndex={0}
       onMouseLeave={() => {
         if (isOpen) setIsOpen(false);
@@ -91,7 +91,7 @@ export default function Single({ content }: SingleProps) {
         )}
       {isOpen && (
         <div
-          className={"absolute inset-0 p-14 grid justify-items-center content-between"}
+          className="absolute inset-0 p-14 grid justify-items-center content-between"
           style={{
             gridTemplateColumns: "repeat(2, 1fr)",
           }}
@@ -108,7 +108,7 @@ export default function Single({ content }: SingleProps) {
                   )}
                 >
                   <img
-                    className={"max-w-full max-h-full w-auto h-auto hover:drop-shadow-platformIcon transition-all ease-in-out duration-500"}
+                    className="max-w-full max-h-full w-auto h-auto hover:drop-shadow-platformIcon transition-all ease-in-out duration-500"
                     src={pfl.platform.icon}
                   />
                 </a>

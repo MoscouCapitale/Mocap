@@ -1,11 +1,11 @@
 import { Button, ContextualDots, Modal, ObjectRenderer, Select } from "@islands/UI";
-import { AvailableAttributes, getAttributes } from "./relationManager.ts";
 import { DatabaseAttributes } from "@models/App.ts";
 import { AvailableFormRelation, FormField, FormFieldOptions, FormFieldValue } from "@models/Form.ts";
 import { AllMocapObjectsTypes } from "@models/forms/bricks.tsx";
 import { IconPlus, IconTrash } from "@utils/icons.ts";
 import ky from "ky";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
+import { AvailableAttributes, getAttributes } from "./relationManager.ts";
 
 type RelationInputProps = {
   field: FormField;
@@ -39,7 +39,7 @@ export default function RelationInput(
         value: String(a.id),
         label: field.relation?.configurable
           ? (
-            <div className={"flex gap-4 justify-between items-center w-full"}>
+            <div className="flex gap-4 justify-between items-center w-full">
               <p>{label}</p>
               <ContextualDots
                 onClick={(e) => {
@@ -59,7 +59,7 @@ export default function RelationInput(
         value: "-1",
         label: (
           <div
-            className={"flex gap-4 justify-between items-center w-full"}
+            className="flex gap-4 justify-between items-center w-full"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -67,7 +67,7 @@ export default function RelationInput(
             }}
           >
             <p>Ajouter un élément</p>
-            <IconPlus className={"text-text"} size={20} />
+            <IconPlus className="text-text" size={20} />
           </div>
         ),
       }];
@@ -153,7 +153,7 @@ export default function RelationInput(
           openState={{ isOpen: !!upsertedItem, setIsOpen: (state) => setUpsertedItem(state ? true : undefined) }}
         >
           <div class="w-full flex flex-col gap-5">
-            <div className={"flex flex-col w-full gap-4"}>
+            <div className="flex flex-col w-full gap-4">
               <ObjectRenderer
                 type={attributeTable}
                 content={defaultObjectContent}
@@ -168,7 +168,7 @@ export default function RelationInput(
                 {updating ? "Enregistrement..." : `${isUpsertedItemNew ? "Créer" : "Modifier"}`}
               </Button>
               {!isUpsertedItemNew &&
-                <IconTrash className={"text-error cursor-pointer"} onClick={deleteAttribute} />}
+                <IconTrash className="text-error cursor-pointer" onClick={deleteAttribute} />}
             </div>
           </div>
         </Modal>

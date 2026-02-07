@@ -1,6 +1,6 @@
 import { PlatformLink as PlatformLinkType } from "@models/Bricks.ts";
-import { IconArrowUpRight } from "@utils/icons.ts";
 import { cn } from "@utils/cn.ts";
+import { IconArrowUpRight } from "@utils/icons.ts";
 
 type PlatformLinkProps = {
   content: PlatformLinkType;
@@ -20,7 +20,7 @@ export default function PlatformLink(
   return (
     <div
       data-hover-card
-      className={"group/main w-full h-full rounded-[20px]"}
+      className="group/main w-full h-full rounded-[20px]"
     >
       <a
         href={content.url}
@@ -31,18 +31,18 @@ export default function PlatformLink(
       >
         {sizeIndex === 0 && (
           <img
-            className={"w-full h-full object-cover"}
+            className="w-full h-full object-cover"
             src={content.platform.icon}
             alt={content.platform.name}
           />
         )}
         {sizeIndex === 1 && (
           <>
-            <p className={"text-white text-[24px] font-bold"}>
+            <p className="text-white text-[24px] font-bold">
               {content.platform.name}
             </p>
             <IconArrowUpRight
-              className={"translate-x-0 translate-y-0 group-hover/main:translate-x-[10%] group-hover/main:-translate-y-[10%] transition-transform ease-in-out duration-500"}
+              className="translate-x-0 translate-y-0 group-hover/main:translate-x-[10%] group-hover/main:-translate-y-[10%] transition-transform ease-in-out duration-500"
               color="white"
               size={40}
             />

@@ -1,8 +1,8 @@
-import { AuthError, createClient } from "supabase";
-import { getCookies, setCookie } from "$std/http/cookie.ts";
 import { decodeBase64 as decode, encodeBase64 as encode } from "$std/encoding/base64.ts";
-import { Database } from "@models/database.ts";
+import { getCookies, setCookie } from "$std/http/cookie.ts";
 import { User, UserMetadatas } from "@models/Authentication.ts";
+import { Database } from "@models/database.ts";
+import { AuthError, createClient } from "supabase";
 
 // TODO: find a way to avoid using the service key
 export const supabase = createClient<Database>(

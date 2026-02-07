@@ -1,8 +1,8 @@
 import { RouteConfig } from "fresh";
 import { Partial } from "fresh/runtime";
 
-import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
 import AddButton from "@islands/collection/AddButton.tsx";
+import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
 import { MediaType } from "@models/Medias.ts";
 import { defineRoute } from "fresh/compat";
 
@@ -11,8 +11,7 @@ export const config: RouteConfig = {
   skipInheritedLayouts: true,
 };
 
-export default defineRoute((ctx) => {
-  const req = ctx.req;
+export default defineRoute(() => {
 
   interface CollectionType {
     title: string;

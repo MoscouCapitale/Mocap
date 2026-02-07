@@ -1,8 +1,8 @@
 import { DatabaseAttributes } from "@models/App.ts";
 import { PlatformLink } from "@models/Bricks.ts";
 import { supabase as supa } from "@services/supabase.ts";
-import { createQueryFromAttributesTables, evaluateSupabaseResponse } from "@utils/api.ts";
 import { encodeHex } from "jsr:@std/encoding/hex";
+import { createQueryFromAttributesTables, evaluateSupabaseResponse } from "./api.ts";
 
 export const getFooterLinks = async (): Promise<PlatformLink[] | null> => {
   // We need to go through the bricks attributes and create a query that will fetch all nested datas
@@ -47,8 +47,8 @@ export const getHashedCode = async (code: string) => {
   return encodeHex(hex);
 };
 
-import { createDefine } from "fresh";
 import { User } from "@models/Authentication.ts";
+import { createDefine } from "fresh";
 
 // Setup, do this once in a file and import it everywhere else.
 export const define = createDefine<User>();

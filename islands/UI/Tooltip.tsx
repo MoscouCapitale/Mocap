@@ -1,9 +1,9 @@
 // import * as Tooltip from "@radix-ui/react-tooltip";
 import { Popover, PopoverClose, PopoverContent, PopoverPortal, PopoverTrigger } from "@radix-ui/react-popover";
+import { cn } from "@utils/cn.ts";
 import { IconInfoCircle as InfoIcon, IconInfoSmall as InfoIconNoBorder } from "@utils/icons.ts";
 import { JSX } from "preact";
-import { cn } from "@utils/cn.ts";
-import { useCallback, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 
 type TooltipProps = {
   text: string;
@@ -26,9 +26,9 @@ export const Tooltip = (
           onMouseLeave={() => open && setOpen(false)}
         >
           {Icon === "default"
-            ? <InfoIcon className={"text-text"} />
+            ? <InfoIcon className="text-text" />
             : Icon === "no-border"
-            ? <InfoIconNoBorder className={"text-text"} />
+            ? <InfoIconNoBorder className="text-text" />
             : Icon}
         </button>
       </PopoverTrigger>
@@ -62,6 +62,6 @@ export const LabeledToolTip = ({
 }: LabeledToolTipProps & TooltipProps) => (
   <div className={cn("flex items-center gap-1", sx)}>
     <span>{label}</span>
-    <Tooltip Icon={"no-border"} {...props} />
+    <Tooltip Icon="no-border" {...props} />
   </div>
 );

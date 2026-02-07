@@ -1,6 +1,6 @@
-import * as React from "preact/compat";
-import { ComponentPropsWithoutRef, ElementRef, PrimitiveForwardRefComponent } from "@models/type-utils.ts";
 import { DismissableLayerProps } from "@models/type-utils-DismissableLayer.d.ts";
+import { ComponentPropsWithoutRef, ElementRef, PrimitiveForwardRefComponent } from "@models/type-utils.ts";
+import * as React from "preact/compat";
 
 /**
  * Following type-definitions are based on "https://esm.sh/v133/@radix-ui/react-toast@1.1.5/X-YS9AdHlwZXMvcmVhY3Q6cHJlYWN0L2NvbXBhdCxyZWFjdC1kb206cHJlYWN0L2NvbXBhdCxyZWFjdDpwcmVhY3QvY29tcGF0CmUvKg/dist/index.d.mts"

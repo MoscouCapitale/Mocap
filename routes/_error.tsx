@@ -1,5 +1,5 @@
-import { Head } from "fresh/runtime";
 import { HttpError, PageProps } from "fresh";
+import { Head } from "fresh/runtime";
 
 export default function Error404(props: PageProps) {
   const error = props.error;

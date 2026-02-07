@@ -1,11 +1,10 @@
-import { Artist, AudioBrick, availBricks, BricksType, Platform, Track } from "@models/Bricks.ts";
+import { Artist, AudioBrick, availBricks, Platform, Track } from "@models/Bricks.ts";
+import { FormField } from "@models/Form.ts";
 import { MediaControls, MediaCTA } from "@models/Medias.ts";
 import { AllMocapObjectsTypes, getObjectFormFromType } from "@models/forms/bricks.tsx";
-import { useEffect, useMemo, useState } from "preact/hooks";
-import ContentForm from "./ContentForm.tsx";
-import { ContentFormValue } from "./ContentForm.tsx";
-import { FormField } from "@models/Form.ts";
 import { set } from "lodash";
+import { useEffect, useMemo, useState } from "preact/hooks";
+import ContentForm, { ContentFormValue } from "./ContentForm.tsx";
 
 type SupportedObjects = availBricks | Track | Platform | MediaCTA | MediaControls | Artist | AudioBrick;
 

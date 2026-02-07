@@ -1,5 +1,5 @@
-import { Album, AudioBrick, availBricks, BricksType, HeroSection, PlatformLink, Single, Text } from "@models/Bricks.ts";
 import { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
+import { Album, AudioBrick, availBricks, BricksType, HeroSection, PlatformLink, Single, Text } from "./Bricks.ts";
 
 // Canva constants
 export const CANVA_GUTTER = 20; // The space between nodes

@@ -1,7 +1,6 @@
+import { define } from "@utils/app.ts";
 import { FreshContext } from "fresh";
 import ky from "ky";
-import { Handlers } from "fresh/compat";
-import { define } from "@utils/app.ts";
 
 export const handler = define.handlers({
   async GET(ctx: FreshContext) {

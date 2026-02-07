@@ -28,7 +28,7 @@ export default function ResetPassword() {
         class={cn(
           "w-10/12 max-w-xs flex justify-center items-center flex-col gap-10 relative",
         )}
-        method={"POST"}
+        method="POST"
         onSubmit={() => setIsLoading(true)}
       >
         {accessToken && <input type="hidden" name="access_token" value={accessToken} />}
@@ -44,8 +44,8 @@ export default function ResetPassword() {
           onChange={setEmail}
         />
         {email && (
-          <button className={`absolute left-[calc(100%+1rem)] ${isLoading && "animate-spin"}`} type={"submit"}>
-            {isLoading ? <IconLoader color={"white"} /> : <IconSend color={"white"} />}
+          <button className={`absolute left-[calc(100%+1rem)] ${isLoading && "animate-spin"}`} type="submit">
+            {isLoading ? <IconLoader color="white" /> : <IconSend color="white" />}
           </button>
         )}
         {accessToken && (

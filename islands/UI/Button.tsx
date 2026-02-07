@@ -1,5 +1,5 @@
-import { cva } from "class-variance-authority";
 import { cn } from "@utils/cn.ts";
+import { cva } from "class-variance-authority";
 import { VNode } from "preact";
 
 type ButtonProps = {

@@ -1,5 +1,5 @@
-import { PageProps } from "fresh";
 import InpageNavbar from "@components/Layout/InpageNavbar.tsx";
+import { PageProps } from "fresh";
 
 type InpageNavbarItem = {
   name: string;
@@ -42,7 +42,7 @@ export default function Layout({ Component, state, route }: PageProps) {
   return (
     <>
       <InpageNavbar items={navItems} />
-      <main className={"flex-col justify-center items-start gap-14 inline-flex"}>
+      <main className="flex-col justify-center items-start gap-14 inline-flex">
         <Component />
       </main>
     </>

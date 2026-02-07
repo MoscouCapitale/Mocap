@@ -1,4 +1,3 @@
-import { JSX as JSXInternal } from "preact";
 import AudioPlayer, { AudioProps } from "./Audio/index.tsx";
 import VideoPlayer, { VideoProps } from "./Video/index.tsx";
 

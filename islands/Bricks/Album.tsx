@@ -1,9 +1,9 @@
-import PlatformLinksBubble from "@islands/Bricks/Common/PlatformLinksBubble.tsx";
-import Player from "@islands/Player/index.tsx";
+import PlatformLinksBubble from "./Common/PlatformLinksBubble.tsx";
+import Player from "../Player/index.tsx";
 import { Album as AlbumType, Track } from "@models/Bricks.ts";
 import { getPlayerControlsFromMediaControls, getStyleFit, VideoControls } from "@models/Medias.ts";
 import { cn } from "@utils/cn.ts";
-import gsap from "gsap";
+import gsap/ from "gsap/";
 import { TextPlugin } from "gsap/TextPlugin";
 import { useCallback, useMemo, useState } from "preact/hooks";
 gsap.registerPlugin(TextPlugin);
@@ -70,7 +70,7 @@ export default function Album({ content }: AlbumProps) {
     <div
       data-hover-card
       data-open={isOpen}
-      className={"group/main w-full h-full rounded-[20px]"}
+      className="group/main w-full h-full rounded-[20px]"
       tabIndex={0}
       onMouseLeave={() => {
         if (isOpen) setIsOpen(false);
@@ -94,7 +94,7 @@ export default function Album({ content }: AlbumProps) {
         </h2>
       )}
       {isOpen && (
-        <div className={"absolute p-7 flex flex-col gap-3 w-full h-full"}>
+        <div className="absolute p-7 flex flex-col gap-3 w-full h-full">
           {content.tracklist?.map((t) => <AlbumTrack track={t} />).slice(0, 7)}
         </div>
       )}
@@ -104,12 +104,12 @@ export default function Album({ content }: AlbumProps) {
 
 const AlbumTrack = ({ track }: { track: Track }) => {
   return (
-    <div className={"flex w-full items-center gap-3"}>
-      <div className={"flex flex-col justify-center items-start grow"}>
-        <p className={"text-text font-semibold"}>{track.name}</p>
-        <div className={"text-text_grey text-[12px] font-semibold flex gap-1"}>
+    <div className="flex w-full items-center gap-3">
+      <div className="flex flex-col justify-center items-start grow">
+        <p className="text-text font-semibold">{track.name}</p>
+        <div className="text-text_grey text-[12px] font-semibold flex gap-1">
           {track.artist?.map((artist) => (
-            <a className={"hover:underline"} href={artist.url} target={"_blank"}>
+            <a className="hover:underline" href={artist.url} target="_blank">
               {artist.name}
             </a>
           ))}

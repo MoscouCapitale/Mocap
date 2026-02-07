@@ -1,12 +1,12 @@
 import { PreviewImage } from "@islands/UI";
+import { acceptedFileTypeMap } from "@models/Medias.ts";
 import { effect } from "@preact/signals";
 import { cn } from "@utils/cn.ts";
-import { convertAcceptFileTypeMapToInputAccept, getMediaTypeFromFiletype } from "@utils/database.ts";
+import { convertAcceptFileTypeMapToInputAccept } from "@utils/database.ts";
 import { IconCloudUpload, IconPlus, IconX } from "@utils/icons.ts";
+import { intersection } from "lodash";
 import { VNode } from "preact";
 import { useMemo, useRef, useState } from "preact/hooks";
-import { intersection } from "lodash";
-import { acceptedFileTypeMap } from "@models/Medias.ts";
 
 type FileInputProps = {
   handleFileChange?: (file: File | null) => void;
@@ -123,7 +123,7 @@ export default function FileInput(
           </div>
         </>
       )
-      : <></>;
+      : null;
   }, [bgElement, file, variant]);
 
   return variant === "full-size"
@@ -169,7 +169,7 @@ export default function FileInput(
                 "scale-0 invisible transition-all ease-in-out group-hover/delFile:scale-100 group-hover/delFile:visible",
               )}
             >
-              <IconX className={"text-text_special"} size={26} />
+              <IconX className="text-text_special" size={26} />
             </div>
           </div>
         )}
@@ -181,7 +181,7 @@ export default function FileInput(
         className="h-6 flex justify-start items-stretch gap-7"
       >
         <div
-          className={"relative rounded-[3px] justify-start items-center gap-2.5 inline-flex cursor-pointer px-[5px] py-[3px] bg-main"}
+          className="relative rounded-[3px] justify-start items-center gap-2.5 inline-flex cursor-pointer px-[5px] py-[3px] bg-main"
         >
           <input
             name={inputName}
@@ -197,12 +197,12 @@ export default function FileInput(
             }}
             onChange={handleSetRawFile}
           />
-          <p className={"text-text font-normal"}>{label ?? "Upload a file"}</p>
+          <p className="text-text font-normal">{label ?? "Upload a file"}</p>
         </div>
 
         <div class="w-6 h-6 justify-center items-center gap-2.5 inline-flex relative group/file">
           <div
-            class={"z-20 w-full h-full rounded-[3px] bg-background overflow-hidden"}
+            class="z-20 w-full h-full rounded-[3px] bg-background overflow-hidden"
             title={file?.name}
           >
             {RenderedFileZone}
@@ -219,7 +219,7 @@ export default function FileInput(
                     overwriteOnFileDeleteClick ? overwriteOnFileDeleteClick(e) : setFile(null);
                   }}
                 >
-                  <IconX className={"text-text_special"} size={24} />
+                  <IconX className="text-text_special" size={24} />
                 </div>
               )}
         </div>

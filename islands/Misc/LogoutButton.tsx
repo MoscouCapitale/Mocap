@@ -6,7 +6,7 @@ export default function LogoutButton() {
     <IconLogout
       className="text-error hover:cursor-pointer"
       onClick={() => {
-        ky.post("/api/auth/logout").then(() => window.location.href = "/");
+        ky.post("/api/auth/logout").then(() => globalThis.location.href = "/");
       }}
     />
   );

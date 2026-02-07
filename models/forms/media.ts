@@ -1,5 +1,5 @@
-import { FormField, ObjFormField } from "@models/Form.ts";
-import { Audio, Image, MediaObjectFit, MediaType, Misc, PlayerControls, Video } from "@models/Medias.ts";
+import { FormField, ObjFormField } from "../Form.ts";
+import { Audio, Image, MediaObjectFit, MediaType, Misc, PlayerControls, Video } from "../Medias.ts";
 
 export const getMediaFormFromType = (type: MediaType): FormField[] => {
   switch (type) {

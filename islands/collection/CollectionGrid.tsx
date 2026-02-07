@@ -1,10 +1,9 @@
-import CollectionTile from "@islands/collection/CollectionTile.tsx";
-import { DatabaseMedia, MediaByType } from "@models/Medias.ts";
-import { Audio, Image, Media, MediaType, Misc, Video } from "@models/Medias.ts";
-import { useEffect, useState } from "preact/hooks";
+import { Toaster } from "@components/UI/Toast/Toaster.tsx";
+import { Audio, DatabaseMedia, Image, Media, MediaType, Misc, Video } from "@models/Medias.ts";
 import { filterOutNonValideAttributes } from "@utils/database.ts";
 import ky from "ky";
-import { Toaster } from "@components/UI/Toast/Toaster.tsx";
+import { useEffect, useState } from "preact/hooks";
+import CollectionTile from "./CollectionTile.tsx";
 
 interface GridProps {
   fetchingRoute: MediaType;

@@ -1,7 +1,6 @@
-import { supabase as supa } from "@services/supabase.ts";
 import { Media, MediaType } from "@models/Medias.ts";
+import { supabase as supa } from "@services/supabase.ts";
 import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
-import { Handlers } from "fresh/compat";
 import { define } from "@utils/app.ts";
 
 // TODO: why is array sometime empty?

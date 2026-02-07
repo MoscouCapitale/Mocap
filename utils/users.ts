@@ -1,5 +1,5 @@
 import { supabase as supa } from "@services/supabase.ts";
-import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
+import { evaluateSupabaseResponse, returnErrorReponse } from "./api.ts";
 
 export const sendUserRequestNotification = async (userId: string) => {
   const { data, error } = await supa.auth.admin.getUserById(userId);

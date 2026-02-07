@@ -30,7 +30,7 @@ export default function InstagramEmbed(
       frameborder="0"
       allow={allow}
       allowTransparency
-      scrolling={"no"}
+      scrolling="no"
       {...props}
     />
   );

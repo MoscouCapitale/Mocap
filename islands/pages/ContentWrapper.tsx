@@ -1,14 +1,11 @@
 import { MCViewBox, useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { useToast } from "@hooks/toast.tsx";
-import MNodeGen from "@islands/pages/MNodes/MNodeGen.tsx";
-import { effect, signal } from "@preact/signals";
-import { cn } from "@utils/cn.ts";
-import { IconTrash } from "@utils/icons.ts";
-import { createRef } from "preact";
-import { Ref, useCallback, useEffect, useRef } from "preact/hooks";
-import Button from "../UI/Button.tsx";
-import { throttle } from "lodash";
 import { CANVA_GUTTER } from "@models/Canva.ts";
+import { cn } from "@utils/cn.ts";
+import { throttle } from "lodash";
+import { useCallback, useEffect } from "preact/hooks";
+import Button from "../UI/Button.tsx";
+import MNodeGen from "./MNodes/MNodeGen.tsx";
 
 function MCFrameEvents(frame: SVGElement, initialViewBox: MCViewBox, setViewBox: (viewBox: MCViewBox) => void) {
   if (!frame) return;
@@ -120,7 +117,7 @@ export default function MCanva() {
 
   return (
     <>
-      <div className={"relative w-full grow flex flex-col gap-4"}>
+      <div className="relative w-full grow flex flex-col gap-4">
         <div
           className={cn(
             "self-end flex justify-end items-center gap-3",
@@ -129,7 +126,7 @@ export default function MCanva() {
           {!isPreview && hasPendingChanges && (
             <Button
               onClick={() => writeNodes()}
-              variant={"secondary"}
+              variant="secondary"
             >
               Save bricks
             </Button>
@@ -152,7 +149,7 @@ export default function MCanva() {
         </div>
         <svg
           ref={MCFrame}
-          className={"relative w-full h-full grow rounded-3xl border border-text_grey"}
+          className="relative w-full h-full grow rounded-3xl border border-text_grey"
           style={{ "--pattern-color": "#FFFFFF30" }}
         >
           {/* Define a dotted background pattern, to display the grid */}

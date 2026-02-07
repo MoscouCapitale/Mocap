@@ -1,6 +1,5 @@
-import { Database } from "@models/database.ts";
-import { BricksType } from "@models/Bricks.ts";
 import { JSX } from "preact/jsx-runtime";
+import { Database } from "./database.ts";
 
 interface AppStorage {
   navbarExpanded?: boolean;
@@ -170,13 +169,14 @@ export type Paths<
   : "";
 
 export type {
-  AppStorage,
-  ConfirmationModalProps,
-  DropdownItem,
-  mainSettings,
-  mediasSettings,
-  miscSettings,
-  stylesSettings,
+    AppStorage,
+    ConfirmationModalProps,
+    DropdownItem,
+    mainSettings,
+    mediasSettings,
+    miscSettings,
+    stylesSettings
 };
 
-export { DatabaseAttributes, DatabaseAttributesKeys };
+    export { DatabaseAttributes, DatabaseAttributesKeys };
+

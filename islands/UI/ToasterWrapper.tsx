@@ -1,6 +1,6 @@
+import { Toaster } from "@components/UI/Toast/Toaster.tsx";
 import { toast, ToasterToast } from "@hooks/toast.tsx";
 import { useEffect } from "preact/hooks";
-import { Toaster } from "@components/UI/Toast/Toaster.tsx";
 
 type ToasterWrapperProps = {
   content?: Omit<ToasterToast, "id"> & { id?: string };

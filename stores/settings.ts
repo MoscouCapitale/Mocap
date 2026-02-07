@@ -1,5 +1,5 @@
-import { FetchableSettingsKeys, getSettings } from "@services/settings.ts";
 import { FormField } from "@models/Form.ts";
+import { FetchableSettingsKeys, getSettings } from "@services/settings.ts";
 
 type cachedSettings = {
   [key in FetchableSettingsKeys]: {

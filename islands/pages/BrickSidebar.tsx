@@ -1,11 +1,11 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { useToast } from "@hooks/toast.tsx";
-import CreateBrickBar from "@islands/pages/CreateBrickBar.tsx";
-import Select, { SelectField } from "@islands/UI/Forms/Select.tsx";
 import { availBricks, BricksType, getBrickTypeLabel } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
-import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import ky from "ky";
+import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
+import Select, { SelectField } from "../UI/Forms/Select.tsx";
+import CreateBrickBar from "./CreateBrickBar.tsx";
 
 // Default is the value of the key of BricksType.Single
 const defaultBrick = BricksType.Album;
@@ -150,7 +150,7 @@ export default function BrickSidebar() {
     <div class={cn("w-[calc(200px+1rem)] h-full flex-col justify-start items-start gap-6 inline-flex relative")}>
       {isPreview && (
         <div
-          className={"absolute inset-0 bg-background opacity-60"}
+          className="absolute inset-0 bg-background opacity-60"
           onClick={() =>
             toast({
               title: "Warning",
@@ -161,7 +161,7 @@ export default function BrickSidebar() {
       )}
       <div class="w-full flex flex-col gap-2">
         {/* Brick type Dropdown */}
-        <Select field={brickTypeOptions} onChange={setSelectedBrickType} min={1} error={null} sx={"max-w-full"} />
+        <Select field={brickTypeOptions} onChange={setSelectedBrickType} min={1} error={null} sx="max-w-full" />
 
         {/* User-created bricks of the chosen type */}
         <Select
@@ -169,7 +169,7 @@ export default function BrickSidebar() {
           onChange={(v) => setSelectedUserBrick(allBricksMap[selectedBrickType]?.find((b) => b.id === Number(v)))}
           min={1}
           error={null}
-          sx={"max-w-full"}
+          sx="max-w-full"
         />
       </div>
       <CreateBrickBar brickType={selectedBrickType} brickData={selectedUserBrick} returnBrick={handleBrickAction} />

@@ -1,5 +1,5 @@
-import { PageProps } from "fresh";
 import InpageNavbar from "@components/Layout/InpageNavbar.tsx";
+import { PageProps } from "fresh";
 import { Partial } from "fresh/runtime";
 
 type InpageNavbarItem = {
