@@ -122,7 +122,10 @@ export const setAuthCookie = (
   });
 };
 
-export const updateUserMetadata = async (user_id: User["id"], metadata: Partial<UserMetadatas>): Promise<User | null> => {
+export const updateUserMetadata = async (
+  user_id: User["id"],
+  metadata: Partial<UserMetadatas>,
+): Promise<User | null> => {
   try {
     const { data, error } = await supabase.auth.admin.getUserById(user_id);
 

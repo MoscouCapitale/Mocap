@@ -63,7 +63,9 @@ export default function Volume({
   }, [audioState.muted, audioState.volume]);
 
   return (
-    <div className={cn("flex items-center gap-2 group relative", variant === "onhover" && "group/volumewrapper flex-col")}>
+    <div
+      className={cn("flex items-center gap-2 group relative", variant === "onhover" && "group/volumewrapper flex-col")}
+    >
       {!disabledIcon && VolumeIcon}
       {!disabledSlider && (
         <Slider.Root
@@ -72,7 +74,7 @@ export default function Volume({
             "flex touch-none select-none items-center cursor-pointer",
             variant === "static" && "relative" && orientation === "horizontal" ? `h-5 w-[${width}]` : "h-[100px] w-5",
             variant === "onhover" &&
-              "absolute bottom-[150%] flex-col order-first h-[70px] w-7 max-h-0 opacity-0 transition-all duration-500 ease-in-out group-hover/volumewrapper:max-h-[150px] group-hover/volumewrapper:opacity-100"
+              "absolute bottom-[150%] flex-col order-first h-[70px] w-7 max-h-0 opacity-0 transition-all duration-500 ease-in-out group-hover/volumewrapper:max-h-[150px] group-hover/volumewrapper:opacity-100",
           )}
           defaultValue={[audioState.volume]}
           max={1}
@@ -82,19 +84,22 @@ export default function Volume({
               ...p,
               volume,
               muted: volume === 0,
-            }))
-          }
+            }))}
           orientation={variant === "onhover" ? "vertical" : orientation}
         >
           <Slider.Track
             className={cn(
               "relative grow rounded-full bg-text_grey",
               orientation === "horizontal" ? "h-[3px]" : "w-[3px]",
-              variant === "onhover" && orientation === "vertical" && "w-[5px]"
+              variant === "onhover" && orientation === "vertical" && "w-[5px]",
             )}
           >
             <Slider.Range
-              className={cn("absolute rounded-full", audioState.muted ? "bg-text_grey" : "bg-text", orientation === "horizontal" ? "h-full" : "w-full")}
+              className={cn(
+                "absolute rounded-full",
+                audioState.muted ? "bg-text_grey" : "bg-text",
+                orientation === "horizontal" ? "h-full" : "w-full",
+              )}
             />
           </Slider.Track>
         </Slider.Root>

@@ -1,7 +1,11 @@
 import { Toast } from "@hooks/toast.tsx";
 import { Input } from "@islands/UI";
 import { FormField } from "@models/Form.ts";
-import { FetchableSettingsKeys, FetchableSettingsKeysArray, getSettingsFieldsFromName } from "@models/forms/Settings.ts";
+import {
+  FetchableSettingsKeys,
+  FetchableSettingsKeysArray,
+  getSettingsFieldsFromName,
+} from "@models/forms/Settings.ts";
 import { supabase as supa } from "@services/supabase.ts";
 
 /**
@@ -92,7 +96,10 @@ export const getSettingsInput = async (type: FetchableSettingsKeys): Promise<Rea
 export const settingPostHandler = async (req: Request, type: FetchableSettingsKeys): Promise<Toast> => {
   if (!FetchableSettingsKeysArray.includes(type)) {
     console.error("Invalid settings type in settingPostHandler for settings: ", type);
-    return { title: "Erreur", description: "Une erreur est survenue lors de la sauvegarde des paramètres. Merci de réessayer." };
+    return {
+      title: "Erreur",
+      description: "Une erreur est survenue lors de la sauvegarde des paramètres. Merci de réessayer.",
+    };
   }
 
   const formDatas = await req.formData();
@@ -103,7 +110,10 @@ export const settingPostHandler = async (req: Request, type: FetchableSettingsKe
 
   if (Object.keys(formDatas).some((k) => !formFieldNames.includes(k))) {
     console.error("Invalid form fields in settingPostHandler for settings: ", type);
-    return { title: "Erreur", description: "Une erreur est survenue lors de la sauvegarde des paramètres. Merci de réessayer." };
+    return {
+      title: "Erreur",
+      description: "Une erreur est survenue lors de la sauvegarde des paramètres. Merci de réessayer.",
+    };
   }
 
   try {
@@ -129,7 +139,7 @@ export const settingPostHandler = async (req: Request, type: FetchableSettingsKe
             updated_at: new Date().toISOString(),
             extension: websiteIcon.type,
           },
-          { onConflict: ["name"] }
+          { onConflict: ["name"] },
         )
         .select("public_src, type, name");
       if (iconEntry.data && iconEntry.data[0].public_src) {
@@ -160,7 +170,7 @@ export const settingPostHandler = async (req: Request, type: FetchableSettingsKe
             updated_at: new Date().toISOString(),
             extension: termsFile.type,
           },
-          { onConflict: ["name"] }
+          { onConflict: ["name"] },
         )
         .select("public_src, type, name, extension");
       if (termsEntry.data && termsEntry.data[0].public_src) {
@@ -184,6 +194,9 @@ export const settingPostHandler = async (req: Request, type: FetchableSettingsKe
     return { description: "Les paramètres ont bien été sauvegardés." };
   } catch (e) {
     console.error("Error while saving main settings: ", e);
-    return { title: "Erreur", description: "Une erreur est survenue lors de la sauvegarde des paramètres. Merci de réessayer." };
+    return {
+      title: "Erreur",
+      description: "Une erreur est survenue lors de la sauvegarde des paramètres. Merci de réessayer.",
+    };
   }
 };

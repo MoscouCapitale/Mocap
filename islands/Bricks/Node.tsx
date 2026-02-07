@@ -1,9 +1,9 @@
 import { MNode } from "@models/Canva.ts";
-import { signal } from "@preact/signals-core";
+import { signal } from "@preact/signals";
 import { Ref } from "preact/hooks";
 
 import { getBrickFromCanvaNode } from "@utils/bricks.tsx";
-import { createRef } from "https://esm.sh/v128/preact@10.19.6/src/index.js";
+import { createRef } from "preact";
 
 type MNodeGenProps = {
   node: MNode;

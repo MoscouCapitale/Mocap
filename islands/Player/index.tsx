@@ -6,9 +6,9 @@ type AudioPlayerProps = AudioProps & { type: "audio" };
 type VideoPlayerProps = VideoProps & { type: "video" };
 
 /** Mapper component for audio and video players
- * 
- * @param param0 
- * @returns 
+ *
+ * @param param0
+ * @returns
  */
 export default function Player({ type, ...props }: AudioPlayerProps | VideoPlayerProps) {
   if (type === "audio") return <AudioPlayer {...props} />;

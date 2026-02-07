@@ -1,4 +1,4 @@
-import { useState, useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { Button, Modal } from "@islands/UI";
 import UploadMediaPopup from "./UploadMediaPopup.tsx";
 import ky from "ky";

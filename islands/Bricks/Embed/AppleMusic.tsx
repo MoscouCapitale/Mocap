@@ -11,9 +11,10 @@ interface AppleMusicProps extends HTMLAttributes<HTMLIFrameElement> {
 }
 
 /** Simple AppleMusic embed component
- *
  */
-export default function AppleMusicEmbed({ link, width = "100%", height = "100%", frameBorder = 0, allow = "encrypted-media", sx, ...props }: AppleMusicProps) {
+export default function AppleMusicEmbed(
+  { link, width = "100%", height = "100%", frameBorder = 0, allow = "encrypted-media", sx, ...props }: AppleMusicProps,
+) {
   // match up everything after the album/
   const query = link.match(/album\/(.*)/)?.[1];
 

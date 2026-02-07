@@ -1,6 +1,6 @@
 import MediaDetail from "@islands/collection/MediaDetail.tsx";
 import MediaPreview from "@islands/collection/MediaPreview.tsx";
-import { Modal, ContextualDots } from "@islands/UI";
+import { ContextualDots, Modal } from "@islands/UI";
 import { Audio, Image, MediaType, Misc, Video } from "@models/Medias.ts";
 import { useState } from "preact/hooks";
 import Button from "../UI/Button.tsx";
@@ -23,9 +23,7 @@ export default function CollectionTile({
   return (
     <>
       <div
-        className={`relative ${
-          specialType && "w-fit"
-        } flex flex-col items-start gap-1`}
+        className={`relative ${specialType && "w-fit"} flex flex-col items-start gap-1`}
       >
         <MediaPreview media={media} from={"collection"} />
         {mediaClick
@@ -33,7 +31,9 @@ export default function CollectionTile({
             <Button
               variant="secondary"
               onClick={() => mediaClick(media)}
-            >Select</Button>
+            >
+              Select
+            </Button>
           )
           : <ContextualDots onClick={() => setActive(true)} />}
       </div>

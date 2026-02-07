@@ -8,7 +8,6 @@ interface SoundcloudProps extends HTMLAttributes<HTMLIFrameElement> {
 }
 
 /** Simple Soundcloud embed component
- *
  */
 export default function SoundcloudEmbed({ link, width = "100%", height = "100%" }: SoundcloudProps) {
   return (

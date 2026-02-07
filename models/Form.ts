@@ -94,15 +94,15 @@ export type AvailableFormRelation =
   | "artist";
 
 export const baseInputStyle = cn(
-  "min-w-[180px] bg-background text-[15px] rounded px-[5px] py-[3px] border-2 border-text text-text mx-0",
-  "focus:border-main focus:outline-none focus:ring-0",
+  "min-w-[180px] bg-background text-[15px] rounded-sm px-[5px] py-[3px] border-2 border-text text-text mx-0",
+  "focus:border-main focus:outline-hidden focus:ring-0",
 );
 
 /** Type for a form field that is related to an object (saved in db)
  *
  * This way, the name will always be a key of the object, making it easier to use in forms
  */
-export type ObjFormField<T> = Omit<FormField, "name"> & { name: Paths<T> }
+export type ObjFormField<T> = Omit<FormField, "name"> & { name: Paths<T> };
 
 /** This type is used to make interactive forms, by displaying forms fields
  * depending on the value of another field.
@@ -112,4 +112,4 @@ export type FormTrigger = {
   fieldName: string[];
   /** The value that will trigger the condition. Must return true to display the field */
   condition: (v: FormFieldValue) => boolean;
-}
+};

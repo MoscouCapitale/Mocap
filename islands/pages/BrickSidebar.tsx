@@ -48,13 +48,16 @@ export default function BrickSidebar() {
         label: getBrickTypeLabel(value),
       })),
     }),
-    []
+    [],
   );
 
   // Custom dependency state trigger value, to re-calculate the userBrickOptions when some of the title changes (so on create/update/delete)
   const ubOptionsTrigger = useMemo(
-    () => JSON.stringify((allBricksMap[selectedBrickType] ?? []).map((b) => ({ id: b.id, name: b.name, nodeId: b.nodeId }))),
-    [selectedBrickType, allBricksMap]
+    () =>
+      JSON.stringify(
+        (allBricksMap[selectedBrickType] ?? []).map((b) => ({ id: b.id, name: b.name, nodeId: b.nodeId })),
+      ),
+    [selectedBrickType, allBricksMap],
   );
 
   /** Select field, to choose the brick to manage */
@@ -78,7 +81,7 @@ export default function BrickSidebar() {
         },
       ],
     }),
-    [ubOptionsTrigger]
+    [ubOptionsTrigger],
   );
 
   useEffect(() => {
@@ -133,12 +136,14 @@ export default function BrickSidebar() {
           const isIn = p[selectedBrickType]?.find((b) => b.id === brick.id);
           return {
             ...p,
-            [selectedBrickType]: isIn ? p[selectedBrickType]?.map((b) => (b.id === brick.id ? brick : b)) : [...(p[selectedBrickType] ?? []), brick],
+            [selectedBrickType]: isIn
+              ? p[selectedBrickType]?.map((b) => (b.id === brick.id ? brick : b))
+              : [...(p[selectedBrickType] ?? []), brick],
           };
         });
       }
     },
-    [selectedBrickType]
+    [selectedBrickType],
   );
 
   return (
@@ -149,9 +154,9 @@ export default function BrickSidebar() {
           onClick={() =>
             toast({
               title: "Warning",
-              description: "You can't create or modify bricks in preview mode. Please exit preview mode to manage bricks.",
-            })
-          }
+              description:
+                "You can't create or modify bricks in preview mode. Please exit preview mode to manage bricks.",
+            })}
         />
       )}
       <div class="w-full flex flex-col gap-2">

@@ -1,11 +1,19 @@
 /* The loader is in a js script, to be loaded independently of the rest of the page,
 to make the loader appear as soon as possible, and disappear as soon as the page is loaded. */
 
-const getRandomColor = (saturation = 100, lightness = 50) => `hsl(${Math.floor(Math.random() * 360)}, ${saturation}%, ${lightness}%)`;
+const getRandomColor = (saturation = 100, lightness = 50) =>
+  `hsl(${Math.floor(Math.random() * 360)}, ${saturation}%, ${lightness}%)`;
 
 // "Manual" colors array, to get some colors that can ressemble a cdèdisc hue
 const generateDiscHue = () => {
-  const hues = [getRandomColor(10, 90), getRandomColor(70, 90), getRandomColor(), getRandomColor(), getRandomColor(0, 0), getRandomColor()];
+  const hues = [
+    getRandomColor(10, 90),
+    getRandomColor(70, 90),
+    getRandomColor(),
+    getRandomColor(),
+    getRandomColor(0, 0),
+    getRandomColor(),
+  ];
   // Return a full rotation of same colors, with a last one for smooth transition
   return [...hues, ...hues, hues[0]];
 };
@@ -35,11 +43,12 @@ document.body.appendChild(loader);
 document.body.style.overflow = "hidden";
 
 const removeLoader = () => {
-  if (document.readyState === "complete")
+  if (document.readyState === "complete") {
     requestAnimationFrame(() => {
       loader.remove();
       document.body.style.overflow = "initial";
     });
+  }
 };
 
 globalThis.addEventListener("DOMContentLoaded", removeLoader);

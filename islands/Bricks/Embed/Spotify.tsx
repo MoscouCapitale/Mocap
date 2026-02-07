@@ -14,7 +14,9 @@ interface SpotifyProps extends HTMLAttributes<HTMLIFrameElement> {
  *
  * @see Heavily inspired from [react-spotify-embed](https://github.com/ctjlewis/react-spotify-embed) by [ctjlewis](https://github.com/ctjlewis)
  */
-export default function SpotifyEmbed({ link, width = "100%", height = "100%", frameBorder = 0, allow = "encrypted-media", sx, ...props }: SpotifyProps) {
+export default function SpotifyEmbed(
+  { link, width = "100%", height = "100%", frameBorder = 0, allow = "encrypted-media", sx, ...props }: SpotifyProps,
+) {
   const url = new URL(link);
   url.pathname = url.pathname.replace(/\/intl-\w+\//, "/");
   return (

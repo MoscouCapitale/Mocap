@@ -1,21 +1,24 @@
-import { Handlers, RouteContext } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 
 import { Toast } from "@hooks/toast.tsx";
 import { Button, LabeledToolTip, ToasterWrapper } from "@islands/UI";
 import { getSettingsInput, settingPostHandler } from "@utils/settings.tsx";
+import { define } from "@utils/app.ts";
 
 type HandlerType = {
   toast: Toast | null;
 };
 
-export const handler: Handlers<HandlerType | null> = {
-  async POST(req, ctx) {
+export const handler = define.handlers<HandlerType | null>({
+  async POST(ctx) {
+    const req = ctx.req;
     const toast = await settingPostHandler(req, "medias");
-    return ctx.render({ toast });
+    return { data: { toast } };
   },
-};
+});
 
-export default async function MediasSettings(req: Request, ctx: RouteContext) {
+export default define.page<typeof handler>(async (ctx) => {
+  const req = ctx.req;
   const Input = await getSettingsInput("medias");
 
   const toast = ctx.data?.toast;
@@ -64,4 +67,4 @@ export default async function MediasSettings(req: Request, ctx: RouteContext) {
       <ToasterWrapper content={toast} />
     </>
   );
-}
+})

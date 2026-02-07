@@ -1,10 +1,12 @@
-import { RouteContext } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 import RequestSingle from "@islands/Users/RequestSingle.tsx";
 import { supabase as supa } from "@services/supabase.ts";
 
 import { User, UserStatus } from "@models/Authentication.ts";
+import { RouteContext } from "fresh/compat";
 
-export default async function Requests(req: Request, ctx: RouteContext) {
+export default async function Requests(ctx: FreshContext) {
+  const req = ctx.req;
   const { data } = await supa.auth.admin.listUsers({
     page: 1,
     perPage: 100,

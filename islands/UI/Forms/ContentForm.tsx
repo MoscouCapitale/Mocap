@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
 import AddButton from "@islands/collection/AddButton.tsx";
 import { Media, MediaType } from "@models/Medias.ts";
-import { has, set, get } from "lodash"
+import { get, has, set } from "lodash";
 
 export type ContentFormValue = { [key: FormField["name"]]: FormFieldValue };
 
@@ -50,7 +50,7 @@ export default function ContentForm({
   );
 
   /** Custom dependency trigger for the Input element.
-   * 
+   *
    * This is a hack with React, in which I can only select a few attributes of a state to create a dependency.
    * Here If the id change (so the form is changing element), or if the media changes (on CollectionGrid select),
    * or simply if the form structure changes.
@@ -69,7 +69,7 @@ export default function ContentForm({
     if (field.inputConfig?.onClickInput) {
       field.inputConfig.onClickInput = () => setOpenMediaCollectionForField(name);
     }
-    let defaultValue = get(formData, name) ?? field.defaultValue ?? ""
+    let defaultValue = get(formData, name) ?? field.defaultValue ?? "";
     // On a select field (with options), we need to convert the value to string to match the options in the select
     if (field.options && Array.isArray(defaultValue)) defaultValue = defaultValue.map((v) => String(v.id));
     return (
@@ -91,12 +91,16 @@ export default function ContentForm({
 
   return (
     <>
-      {form.map((row, index) => (row.trigger && !row.trigger.fieldName.some(name => row.trigger?.condition(get(formData, name))) ? null : <Input key={index} name={row.name} />))}
+      {form.map((row, index) => (row.trigger && !row.trigger.fieldName.some((name) =>
+          row.trigger?.condition(get(formData, name))
+        )
+        ? null
+        : <Input key={index} name={row.name} />)
+      )}
       <Modal
         openState={{ isOpen: !!openMediaCollectionForField, setIsOpen: () => setOpenMediaCollectionForField(null) }}
         sx="flex-col justify-start items-start gap-10 inline-flex"
       >
-        <>
           {getFileTypeFromName(openMediaCollectionForField ?? "").map((
             [_, val]: [string, MediaType],
           ) => (
@@ -107,13 +111,12 @@ export default function ContentForm({
                   onMediaClick={mediaClickHandler}
                   fetchingRoute={val as MediaType}
                   mediaSize={150}
-                  />
+                />
               </div>
             </div>
           ))}
           {/* TODO: add support to upload media here. For now nested modals are working properly */}
           <AddButton position="absolute top-3 right-7" />
-        </>
       </Modal>
     </>
   );

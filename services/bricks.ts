@@ -18,9 +18,7 @@ export const getBrickFromType = async (
   }
 
   // const tableName = `Bricks_${BricksType[type as keyof typeof BricksType]}`;
-  const tableName = type === "Platform_Link"
-    ? type
-    : `Bricks_${type}` as TableNames;
+  const tableName = type === "Platform_Link" ? type : `Bricks_${type}` as TableNames;
 
   // We need to go through the bricks attributes and create a query that will fetch all nested datas
   const nestedAttributes = Object.entries(DatabaseAttributes).filter(
@@ -34,7 +32,10 @@ export const getBrickFromType = async (
   });
 
   // FIXME: This is a temporary fix to get the audio data. Should update createQueryFromAttributesTables to handle ON join clauses
-  if (type === "Audio") nestedQuery = "*, media:Medias!media (*),audio:Medias!audio (*),track:Track (*, platforms:Platform_Link (*, platform:Platform (*)), artist:Artist (*))"
+  if (type === "Audio") {
+    nestedQuery =
+      "*, media:Medias!media (*),audio:Medias!audio (*),track:Track (*, platforms:Platform_Link (*, platform:Platform (*)), artist:Artist (*))";
+  }
 
   const { data: rawData, error } = id
     ? await supa.from(tableName).select(nestedQuery).eq("id", id)
@@ -44,7 +45,7 @@ export const getBrickFromType = async (
   if (evaluateSupabaseResponse(rawData, error)) return { data: null, error: "Error while fetching bricks" };
 
   const data = rawData as unknown as [availBricks];
-  
+
   // Assign some additional properties to the bricks
   data.forEach((d: availBricks) => {
     // Set the type of the brick to ease the management in the front

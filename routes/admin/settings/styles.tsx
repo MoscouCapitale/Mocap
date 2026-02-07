@@ -1,21 +1,24 @@
-import { Handlers, RouteContext } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 
 import { Toast } from "@hooks/toast.tsx";
 import { Button, LabeledToolTip, ToasterWrapper } from "@islands/UI";
 import { getSettingsInput, settingPostHandler } from "@utils/settings.tsx";
+import { define } from "@utils/app.ts";
 
 type HandlerType = {
   toast: Toast | null;
 };
 
-export const handler: Handlers<HandlerType | null> = {
-  async POST(req, ctx) {
+export const handler = define.handlers<HandlerType | null>({
+  async POST(ctx) {
+    const req = ctx.req;
     const toast = await settingPostHandler(req, "styles");
-    return ctx.render({ toast });
+    return { data: { toast } };
   },
-};
+});
 
-export default async function StylesSettings(req: Request, ctx: RouteContext) {
+export default define.page<typeof handler>(async (ctx) => {
+  const req = ctx.req;
   const Input = await getSettingsInput("styles");
 
   const toast = ctx.data?.toast;
@@ -33,14 +36,16 @@ export default async function StylesSettings(req: Request, ctx: RouteContext) {
             </tr>
           </thead>
           <tbody>
-            {/* <tr>
+            {
+              /* <tr>
               <td>
                 <LabeledToolTip label="Couleurs auto" text="Génère automatique 2 couleurs principales en fonction des briques." />
               </td>
               <td>
                 <Input name="style_color_auto" />
               </td>
-            </tr> */}
+            </tr> */
+            }
             <tr>
               <td>
                 <LabeledToolTip label="Couleur principale" text="Boutons, bordures, soulignage..." />
@@ -101,4 +106,4 @@ export default async function StylesSettings(req: Request, ctx: RouteContext) {
       <ToasterWrapper content={toast} />
     </>
   );
-}
+});

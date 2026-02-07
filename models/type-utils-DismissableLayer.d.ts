@@ -1,9 +1,8 @@
-import { PrimitiveForwardRefComponent, ComponentPropsWithoutRef } from "./type-utils.ts"
+import { ComponentPropsWithoutRef, PrimitiveForwardRefComponent } from "./type-utils.ts";
 
 /**
  * Following type-definitions are based on "https://esm.sh/v132/@radix-ui/react-dismissable-layer@1.0.5/X-YS9AdHlwZXMvcmVhY3Q6cHJlYWN0L2NvbXBhdCxyZWFjdDpwcmVhY3QvY29tcGF0CmUvKg/dist/index.d.ts"
-*/ 
-
+ */
 
 type PrimitiveDivProps = ComponentPropsWithoutRef<PrimitiveForwardRefComponent<"div">>;
 type PointerDownOutsideEvent = CustomEvent<{ originalEvent: PointerEvent }>;
@@ -41,7 +40,6 @@ export interface DismissableLayerProps extends PrimitiveDivProps {
    */
   onDismiss?: () => void;
 }
-
 
 export const DismissableLayer: React.ForwardRefExoticComponent<
   DismissableLayerProps & React.RefAttributes<HTMLDivElement>

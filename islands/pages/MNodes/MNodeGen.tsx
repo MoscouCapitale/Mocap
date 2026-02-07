@@ -1,7 +1,7 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { useGSAP } from "@gsap/react";
-import { CANVA_GUTTER, MNode, getAvailableSizes } from "@models/Canva.ts";
-import { signal } from "@preact/signals-core";
+import { CANVA_GUTTER, getAvailableSizes, MNode } from "@models/Canva.ts";
+import { signal } from "@preact/signals";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { Ref, useCallback, useEffect, useMemo, useState } from "preact/hooks";
@@ -9,9 +9,9 @@ import { Ref, useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import { getBrickFromCanvaNode } from "@utils/bricks.tsx";
 import { cn } from "@utils/cn.ts";
 import { IconHandGrab, IconTrash } from "@utils/icons.ts";
-import { createRef } from "https://esm.sh/v128/preact@10.19.6/src/index.js";
 import SizeSelector from "@islands/pages/MNodes/SizeSelector.tsx";
 import { useIsomorphicLayoutEffect } from "@hooks/useIsomorphicLayoutEffect.ts";
+import { createRef } from "preact";
 
 type MNodeGenProps = {
   nodeProp: MNode;
@@ -20,7 +20,7 @@ type MNodeGenProps = {
 export default function MNodeGen({ nodeProp }: MNodeGenProps) {
   const { MCNodes, deleteNode, getFreeSpace, saveNode, MCFrame, isPreview } = useMNodeContext();
 
-  useEffect(() => setNode({...nodeProp, sizes: getAvailableSizes(nodeProp)}), [nodeProp]);
+  useEffect(() => setNode({ ...nodeProp, sizes: getAvailableSizes(nodeProp) }), [nodeProp]);
 
   const [node, setNode] = useState<MNode>(nodeProp);
 
@@ -86,12 +86,18 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
   };
 
   return (
-    <foreignObject data-nodeId={`canva_node_${node.id}`} className={"group select-none overflow-visible"} ref={MNodeRef.value} width={node.width} height={node.height}>
+    <foreignObject
+      data-nodeId={`canva_node_${node.id}`}
+      className={"group select-none overflow-visible"}
+      ref={MNodeRef.value}
+      width={node.width}
+      height={node.height}
+    >
       {/* We need to display none the toolbar if we wanna hide it, because otherwise we cannot get the ref of the grabber */}
       <div
         className={cn(
-          "p-3 flex-row justify-end items-center gap-3 bg-black bg-opacity-60 z-50 absolute top-px right-px rounded-bl-[20px] rounded-tr-[20px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all",
-          isPreview ? "hidden" : "flex"
+          "p-3 flex-row justify-end items-center gap-3 bg-black/60 z-50 absolute top-px right-px rounded-bl-[20px] rounded-tr-[20px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all",
+          isPreview ? "hidden" : "flex",
         )}
       >
         {/* Size selector & setter */}
@@ -104,7 +110,7 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
 
         {/* Delete node */}
         <button
-          className="rounded-full w-[35px] h-[35px] inline-flex items-center justify-center text-text outline-none"
+          className="rounded-full w-[35px] h-[35px] inline-flex items-center justify-center text-text outline-hidden"
           aria-label="Delete node"
           onClick={() => {
             if (!isPreview && globalThis.confirm("Are you sure you want to delete this node?")) {
@@ -117,7 +123,11 @@ export default function MNodeGen({ nodeProp }: MNodeGenProps) {
       </div>
 
       {/* Actual node content */}
-      {getBrickFromCanvaNode(node, { isMovable: !isPreview, disableAnimations: true, brickSize: { width: node.width, height: node.height } })}
+      {getBrickFromCanvaNode(node, {
+        isMovable: !isPreview,
+        disableAnimations: true,
+        brickSize: { width: node.width, height: node.height },
+      })}
     </foreignObject>
   );
 }

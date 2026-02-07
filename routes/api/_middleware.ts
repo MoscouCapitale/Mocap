@@ -1,8 +1,9 @@
-import { FreshContext } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 import { accessTokenExpired, getUserFromSession, refreshAccessToken, setAuthCookie } from "@services/supabase.ts";
 import { Session, User, UserRole, UserStatus } from "@models/Authentication.ts";
 
-export async function handler(req: Request, ctx: FreshContext) {
+export async function handler(ctx: FreshContext) {
+  const req = ctx.req;
   const methodColors: Record<string, string> = {
     GET: "green",
     POST: "blue",

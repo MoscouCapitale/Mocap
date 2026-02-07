@@ -1,5 +1,5 @@
-import DebugPage from '@islands/test.tsx';
+import DebugPage from "@islands/test.tsx";
 
 export default function Debug() {
-  return <DebugPage />
+  return <DebugPage />;
 }

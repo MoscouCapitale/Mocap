@@ -210,7 +210,7 @@ export default function Video(
               <div
                 class={cn(
                   "absolute bottom-0 left-0 w-full flex justify-between items-center gap-4 p-4",
-                  "bg-[#131313] bg-clip-padding backdrop-filter backdrop-blur bg-opacity-70",
+                  "bg-[#131313]/70 bg-clip-padding backdrop-filter backdrop-blur-sm",
                   "transition-all duration-300 translate-y-full group-hover/trgzone:translate-y-0",
                 )}
               >
@@ -254,7 +254,7 @@ export default function Video(
                           <Slider.Range className="absolute h-full rounded-full bg-text" />
                         </Slider.Track>
                         <Slider.Thumb
-                          className="block h-1 w-1 rounded-[10px] bg-text focus:outline-none cursor-pointer"
+                          className="block h-1 w-1 rounded-[10px] bg-text focus:outline-hidden cursor-pointer"
                           aria-label="Volume"
                         />
                       </Slider.Root>

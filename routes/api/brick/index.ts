@@ -1,20 +1,17 @@
-import { FreshContext, Handlers } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 import { supabase as supa } from "@services/supabase.ts";
 import { DatabaseAttributes } from "@models/App.ts";
 import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
-import {
-  availBricks,
-  BricksType,
-  getBrickTypeTableName,
-  PlatformLink,
-  Track,
-} from "@models/Bricks.ts";
+import { availBricks, BricksType, getBrickTypeTableName, PlatformLink, Track } from "@models/Bricks.ts";
 import { TableNames } from "@models/database.ts";
 import { createOrUpdateNodeFromBrick } from "@services/nodes.ts";
 import { isEmpty } from "lodash";
+import { Handlers } from "fresh/compat";
+import { define } from "@utils/app.ts";
 
-export const handler: Handlers<any | null> = {
-  async PUT(req: Request, ctx: FreshContext) {
+export const handler = define.handlers({
+  async PUT(ctx: FreshContext) {
+    const req = ctx.req;
     const body = await req.json();
 
     const type = body.type;
@@ -85,9 +82,7 @@ export const handler: Handlers<any | null> = {
             ) &&
             brickId
           ) {
-            const linkedTableName = `${tableName}_${
-              DatabaseAttributes[ltkey].table
-            }` as TableNames;
+            const linkedTableName = `${tableName}_${DatabaseAttributes[ltkey].table}` as TableNames;
             // first delete all the previous links
             await supa.from(linkedTableName).delete().eq(type, brickId);
 
@@ -138,7 +133,8 @@ export const handler: Handlers<any | null> = {
     );
   },
 
-  async DELETE(req: Request, ctx: FreshContext) {
+  async DELETE(ctx: FreshContext) {
+    const req = ctx.req;
     const body = await req.json();
 
     const type = body.type;
@@ -167,4 +163,4 @@ export const handler: Handlers<any | null> = {
       },
     });
   },
-};
+});

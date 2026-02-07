@@ -3,12 +3,12 @@ import { useEffect } from "preact/hooks";
 import { Toaster } from "@components/UI/Toast/Toaster.tsx";
 
 type ToasterWrapperProps = {
-  content?: ToasterToast;
+  content?: Omit<ToasterToast, "id"> & { id?: string };
 };
 
 /**
  * Simple wrapper to display a toast inb server side rendered pages.
- * 
+ *
  * @param {ToasterWrapperProps} { content } The content of the toast
  * @returns {JSX.Element} The Toaster component
  */

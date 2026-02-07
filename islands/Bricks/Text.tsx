@@ -7,7 +7,6 @@ type TextProps = {
 };
 
 export default function Text({ content }: TextProps) {
-
   const backgroundImageSx = "absolute top-0 left-0 w-full h-full object-cover rounded-[20px] blur-md brightness-50";
 
   return (

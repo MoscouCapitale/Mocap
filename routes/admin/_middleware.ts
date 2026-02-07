@@ -1,4 +1,4 @@
-import { FreshContext } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 
 import { accessTokenExpired, getUserFromSession, refreshAccessToken, setAuthCookie } from "@services/supabase.ts";
 import { Session, User, UserRole, UserStatus } from "@models/Authentication.ts";
@@ -13,9 +13,10 @@ const authorizedRoles = [UserRole.ADMIN, UserRole.SADMIN];
 // TODO: bug: why is user able to see admin page when not authorized and first connexion from confirmation email?
 
 export async function handler(
-  req: Request,
   ctx: FreshContext<AppState>,
 ) {
+  const req = ctx.req;
+
   // // FIXME: temporary solution for slow internet
   // const nextStp = await ctx.next();
   // return nextStp;

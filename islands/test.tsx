@@ -19,7 +19,9 @@ const NestedModalOpenButton = ({ deepness }: { deepness: number }) => {
     <>
       <Button onClick={() => setIsOpen(true)}>Open nested modal</Button>
       <Modal openState={{ isOpen, setIsOpen }}>
-        <><NestedModalOpenButton deepness={deepness - 1} /></>
+        <>
+          <NestedModalOpenButton deepness={deepness - 1} />
+        </>
       </Modal>
     </>
   );

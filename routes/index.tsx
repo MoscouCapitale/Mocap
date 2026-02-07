@@ -4,10 +4,13 @@ import Cursor from "@islands/UI/Cursor.tsx";
 import { fetchNode } from "@services/nodes.ts";
 import BrickLayout from "@islands/Bricks/BrickLayout.tsx";
 import AdminPanelButton from "@components/Misc/AdminPanelButton.tsx";
-import { RouteContext } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 import { getCookies } from "$std/http/cookie.ts";
+import { RouteContext } from "fresh/compat";
 
-export default async function Home(req: Request, ctx: RouteContext) {
+export default async function Home(ctx: FreshContext) {
+  const req = ctx.req;
+
   // For the beta, check if the user has a beta code
   const betaCode = getCookies(req.headers).beta_code;
   if (isBetaEnabled() && (!betaCode || betaCode && !await verifyBetaCode(betaCode, true))) {

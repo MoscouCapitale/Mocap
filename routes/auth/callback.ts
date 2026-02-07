@@ -1,14 +1,14 @@
-import { Handlers } from "$fresh/server.ts";
-import { setAuthCookie, supabase, supabaseSSR } from "@services/supabase.ts";
+import { setAuthCookie, supabaseSSR } from "@services/supabase.ts";
+import { define } from "@utils/app.ts";
 
 /**
  * Handle the callback from the OAuth provider
- * 
+ *
  * This page is only used on OTP sign in and sign up, to provide a PKCE flow callback.
- * 
  */
-export const handler: Handlers = {
-  async GET(req, ctx) {
+export const handler = define.handlers({
+  GET: async(ctx) => {
+    const req = ctx.req;
     const res = new Response();
     const sup = supabaseSSR(req, res);
     const url = new URL(req.url);
@@ -24,11 +24,13 @@ export const handler: Handlers = {
           return new Response("", {
             status: 303,
             headers: {
-              Location: `/auth?error_code=${errorCode}&error_message=${encodeURIComponent('Le lien a expiré ou à déjà été utilisé, merci de réessayer.')}`,
+              Location: `/auth?error_code=${errorCode}&error_message=${
+                encodeURIComponent("Le lien a expiré ou à déjà été utilisé, merci de réessayer.")
+              }`,
             },
           });
         default:
-          return ctx.render({ type: "default" });
+          return { data: { type: "default" }};
       }
     }
 
@@ -70,4 +72,4 @@ export const handler: Handlers = {
       },
     });
   },
-};
+});

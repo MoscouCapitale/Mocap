@@ -1,4 +1,4 @@
-import {ConfirmationModal, Button, ContentForm } from "@islands/UI";
+import { Button, ConfirmationModal, ContentForm } from "@islands/UI";
 import MediaPreview from "@islands/collection/MediaPreview.tsx";
 import { ContentFormValue } from "@islands/UI/Forms/ContentForm.tsx";
 import { getMediaFormFromType } from "@models/forms/media.ts";
@@ -30,7 +30,7 @@ export default function MediaDetail({ media }: MediaDetailProps) {
           /** FIXME: This is a temporary fix, to allow for the media to be fully updated before reloading the page.
            * The correct solution should be to refacto the collection grid system a bit to use a context,
            * to allow for updating the media in the grid without reloading the page.
-          */
+           */
           globalThis.location.reload();
         })
         .finally(() => setMediaState("updatedone"));
@@ -83,7 +83,9 @@ export default function MediaDetail({ media }: MediaDetailProps) {
             <Button
               onClick={updateMedia}
               className={{ wrapper: "grow justify-center" }}
-            >{buttonLabel}</Button>
+            >
+              {buttonLabel}
+            </Button>
             <IconTrash
               className={"text-error cursor-pointer"}
               onClick={onDeleteMediaClick}

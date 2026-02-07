@@ -17,9 +17,7 @@ export default function InpageNavbar(items: InpageNavbarProps) {
     <nav class="py-2.5 justify-start items-center gap-[50px] inline-flex mb-5">
       {items.items.map((item) => (
         <a
-          class={`justify-start items-center gap-2.5 inline-flex ${
-            item.active ? "text-text" : "text-text_grey"
-          }`}
+          class={`justify-start items-center gap-2.5 inline-flex ${item.active ? "text-text" : "text-text_grey"}`}
           href={item.path}
           f-partial={item.fpath}
         >

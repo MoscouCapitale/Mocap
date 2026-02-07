@@ -32,7 +32,6 @@ interface DeezerEmbedResponse {
 }
 
 /** Simple Deezer embed component
- *
  */
 export default function DeezerEmbed({
   link,
@@ -55,22 +54,24 @@ export default function DeezerEmbed({
     }
   }, [link]);
 
-  return embedLink ? (
-    <iframe
-      className={cn("rounded-[20px]", sx)}
-      title="Deezer Web Player"
-      // The link can be extracted from the stringified html iframe in the response.html
-      src={embedLink?.html.match(/src="([^"]+)"/)?.[1]}
-      frameBorder={frameBorder}
-      width={width}
-      height={height}
-      frameborder="0"
-      allow={allow}
-      allowTransparency
-      {...props}
-    />
-  ) : (
-    // Last resort fallback
-    <span className="absolute inset-0 w-full h-full bg-background"></span>
-  );
+  return embedLink
+    ? (
+      <iframe
+        className={cn("rounded-[20px]", sx)}
+        title="Deezer Web Player"
+        // The link can be extracted from the stringified html iframe in the response.html
+        src={embedLink?.html.match(/src="([^"]+)"/)?.[1]}
+        frameBorder={frameBorder}
+        width={width}
+        height={height}
+        frameborder="0"
+        allow={allow}
+        allowTransparency
+        {...props}
+      />
+    )
+    : (
+      // Last resort fallback
+      <span className="absolute inset-0 w-full h-full bg-background"></span>
+    );
 }

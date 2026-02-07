@@ -46,7 +46,11 @@ export default function ObjectRenderer({ type, content, onChange }: ObjectRender
 
   return (
     <div class="flex flex-col gap-6 flex-wrap">
-      <ContentForm form={form} initialData={initialData as ContentFormValue} setDatas={setDatas as unknown as (value: ContentFormValue) => void} />
+      <ContentForm
+        form={form}
+        initialData={initialData as ContentFormValue}
+        setDatas={setDatas as unknown as (value: ContentFormValue) => void}
+      />
     </div>
   );
 }
@@ -80,7 +84,7 @@ function createEmptyObject(form: FormField[] | null): Omit<SupportedObjects, "id
       case "string":
         return field.defaultValue ?? "";
     }
-  }
+  };
 
   form.forEach((field) => set(res, field.name, getFieldValue(field)));
 

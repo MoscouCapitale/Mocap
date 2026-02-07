@@ -31,7 +31,8 @@ export default function UploadMediaPopup() {
           if (img.height > media_max_size_height) {
             toast({
               title: "Erreur lors du téléversement",
-              description: `La hauteur de l'image est trop grande, la hauteur maximale est de ${media_max_size_height} pixels.`,
+              description:
+                `La hauteur de l'image est trop grande, la hauteur maximale est de ${media_max_size_height} pixels.`,
             });
             setDisabledUpload(true);
           }
@@ -59,7 +60,11 @@ export default function UploadMediaPopup() {
       <FileInput handleFileChange={(f) => setMediaToUpload(f)} />
       {mediaToUpload && (
         <div class="text-text flex justify-center align-center gap-4 w-full">
-          <Button onClick={uploadFileToCollection} className={{ wrapper: "min-w-[150px] justify-center" }} disabled={disabledUpload || updating}>
+          <Button
+            onClick={uploadFileToCollection}
+            className={{ wrapper: "min-w-[150px] justify-center" }}
+            disabled={disabledUpload || updating}
+          >
             {updating ? "Téléversement..." : "Téléverser"}
           </Button>
           <IconTrash className={"text-error cursor-pointers"} onClick={() => setMediaToUpload(null)} />

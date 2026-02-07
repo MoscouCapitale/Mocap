@@ -7,9 +7,7 @@ export default async function LegalNotices() {
 
   return (
     <div className={"text-text"}>
-      {extension?.includes("pdf") ? (
-        <embed src={public_src} type="application/pdf" width="100%" height="1200px" />
-      ) : (
+      {extension?.includes("pdf") ? <embed src={public_src} type="application/pdf" width="100%" height="1200px" /> : (
         <p>
           Télécharger les mentions légales -
           <a href={public_src} target="_blank" rel="noreferrer">

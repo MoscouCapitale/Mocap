@@ -76,7 +76,8 @@ export type MediaControls = ImageControls | VideoControls | AudioControls;
 export const getPlayerControlsFromMediaControls = (controls?: PlayerControls) =>
   isEmpty(controls) ? [] : Object.keys(pickBy(controls, (v: boolean) => v === false)) as AvailablePlayerControls[];
 
-export const getStyleFit = (fit: MediaObjectFit) => fit === "cover" || fit === "best" ? "object-cover" : "object-contain";
+export const getStyleFit = (fit: MediaObjectFit) =>
+  fit === "cover" || fit === "best" ? "object-cover" : "object-contain";
 
 enum MediaType {
   Images = "Images",

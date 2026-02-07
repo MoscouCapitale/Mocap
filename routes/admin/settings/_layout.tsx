@@ -1,4 +1,4 @@
-import { PageProps } from "$fresh/server.ts";
+import { PageProps } from "fresh";
 import InpageNavbar from "@components/Layout/InpageNavbar.tsx";
 
 type InpageNavbarItem = {

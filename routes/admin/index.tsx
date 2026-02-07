@@ -1,7 +1,7 @@
-import { FreshContext, Handlers } from "$fresh/server.ts";
+import { define } from "@utils/app.ts";
 
-export const handler: Handlers = {
-  GET(_req: Request, _ctx: FreshContext) {
+export const handler = define.handlers({
+  GET(_ctx) {
     return new Response("", {
       status: 303,
       headers: {
@@ -9,7 +9,7 @@ export const handler: Handlers = {
       },
     });
   },
-};
+});
 
 export default function Home() {
   return;

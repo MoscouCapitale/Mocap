@@ -17,7 +17,6 @@ export default function PreviewImage(
     variant = "full-size",
   }: PreviewImageProps,
 ) {
-
   const fileZoneStyle =
     "absolute inset-0 flex flex-col justify-center items-center transition-all ease-in-out duration-300";
 
@@ -52,9 +51,7 @@ export default function PreviewImage(
       {filetype === "audio" || filetype === "Audios"
         ? <IconFileMusic {...fileZoneIconProps} />
         : <IconFileText {...fileZoneIconProps} />}
-      {variant === "full-size" && (
-        <p class="text-text text-center p-2 break-all">{filename}</p>
-      )}
+      {variant === "full-size" && <p class="text-text text-center p-2 break-all">{filename}</p>}
     </div>
   );
 }

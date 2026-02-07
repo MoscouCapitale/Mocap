@@ -1,9 +1,8 @@
-import { FreshContext, Handlers } from "$fresh/server.ts";
-import { Media } from "@models/Medias.ts";
 import { supabase as supa } from "@services/supabase.ts";
+import { define } from "@utils/app.ts";
 
-export const handler: Handlers<any> = {
-  async GET(req: Request, ctx: FreshContext) {
+export const handler = define.handlers({
+  GET: async  () => {
     let additionalAttributes = {
       controls: [] as any,
       cta: [] as any,
@@ -22,4 +21,4 @@ export const handler: Handlers<any> = {
       },
     });
   },
-};
+});

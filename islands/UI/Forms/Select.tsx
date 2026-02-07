@@ -35,7 +35,7 @@ type SelectProps = {
   /** Allow to clear the current selection */
   clearable?: boolean;
   /** Name of the input, for form submission */
-  inputName?: string; 
+  inputName?: string;
 };
 
 export default function Select(
@@ -100,7 +100,7 @@ export default function Select(
           error && "border-error",
           field.label && "mt-2",
           error && !field.tooltipError && "mb-1",
-          sx
+          sx,
         )}
       >
         <p className={"grow max-w-[400px] truncate"}>{getSelectTriggerLabelling()}</p>
@@ -127,7 +127,7 @@ export default function Select(
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="min-w-[150px] flex flex-col p-1 rounded-md bg-clip-padding backdrop-filter backdrop-blur-2xl bg-opacity-20 border border-text z-50"
+          className="min-w-[150px] flex flex-col p-1 rounded-md bg-clip-padding backdrop-filter backdrop-blur-2xl bg-background/20 border border-text z-50"
           sideOffset={5}
           align={"start"}
         >
@@ -151,19 +151,23 @@ export default function Select(
                 if (onMouseLeave) onMouseLeave(e, value);
               }}
               className={cn(
-                "inline-flex align-center justify-start px-4 py-2 text-sm text-text bg-black bg-opacity-0 select-none",
-                "hover:outline-none",
-                isSelected(value) ? "bg-text bg-opacity-10 hover:bg-opacity-20" : "bg-black bg-opacity-0 hover:bg-opacity-60"
+                "inline-flex align-center justify-start px-4 py-2 text-sm text-text bg-black/0 select-none",
+                "hover:outline-hidden",
+                isSelected(value)
+                  ? "bg-text/10 hover:bg-black/20"
+                  : "bg-black/0 hover:bg-black/60",
               )}
             >
               <div className={"relative max-w-[300px] flex gap-2 items-center grow truncate text-left"}>
                 {/* TODO: find a better way to show the selected items with checks */}
-                {/* {multiSelect &&
+                {
+                  /* {multiSelect &&
                   (
                     <div className="inline-flex w-4 items-center justify-center">
                       {isSelected(value) && <IconChecks className={"text-text opacity-80"} size={18} />}
                     </div>
-                  )} */}
+                  )} */
+                }
                 {label}
               </div>
             </DropdownMenu.Item>

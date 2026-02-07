@@ -20,9 +20,9 @@ import { cn } from "@utils/cn.ts";
 
 type AuthFormFields = "email" | "password" | "confirmpassword";
 
-const customInputsStyle = "w-full border-x-0 border-t-0 border-b-2 rounded-none outline-none";
+const customInputsStyle = "w-full border-x-0 border-t-0 border-b-2 rounded-none outline-hidden";
 
-export default function AuthForm({ type, additional_data, error }: FormType) {
+export default function AuthForm({ data: { type, additional_data, error } }: { data: FormType }) {
   const { toast } = useToast();
   const [email, setEmail] = useState<string>(additional_data?.email ?? "");
   const [password, setPassword] = useState<string>(additional_data?.password ?? "");
@@ -126,14 +126,12 @@ export default function AuthForm({ type, additional_data, error }: FormType) {
               >
                 <AccordionItem value="item-1">
                   <AccordionHeader>
-                    <AccordionTrigger className="flex flex-1 cursor-default items-center justify-between outline-none w-full p-1 group opacity-60 data-[state=open]:opacity-100">
+                    <AccordionTrigger className="flex flex-1 cursor-default items-center justify-between outline-hidden w-full p-1 group opacity-60 data-[state=open]:opacity-100">
                       <span className={"text-text_grey"}>Connexion avec mot de passe ?</span>
                       <IconChevronDown className="text-text_grey transition-transform duration-300 ease-in-out group-data-[state=open]:rotate-180" />
                     </AccordionTrigger>
                   </AccordionHeader>
-                  <AccordionContent
-                    className="overflow-hidden pt-4 data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
-                  >
+                  <AccordionContent className="overflow-hidden pt-4 data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
                     <Input field={formsInputs.password} onChange={(v) => handleInputChange("password", v)} />
                   </AccordionContent>
                 </AccordionItem>

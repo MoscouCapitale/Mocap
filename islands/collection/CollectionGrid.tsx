@@ -32,10 +32,12 @@ export default function CollectionGrid(
     ky.get(`/api/medias/all/${fetchingRoute}`)
       .json<DatabaseMedia[]>()
       .then((data) => {
-        if (!data) setCollection([])
-        else setCollection(
-          data?.map((media: DatabaseMedia) => filterOutNonValideAttributes(media)).filter(Boolean) as CollectionType<typeof fetchingRoute>
-        );
+        if (!data) setCollection([]);
+        else {setCollection(
+            data?.map((media: DatabaseMedia) => filterOutNonValideAttributes(media)).filter(Boolean) as CollectionType<
+              typeof fetchingRoute
+            >,
+          );}
       });
   }, [fetchingRoute]);
 

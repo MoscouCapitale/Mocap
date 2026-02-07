@@ -1,11 +1,13 @@
-import { FreshContext, Handlers } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 import { MNode } from "@models/Canva.ts";
 import { fetchNode } from "@services/nodes.ts";
+import { define } from "@utils/app.ts";
 
-export const handler: Handlers<MNode | null> = {
-  async GET(req: Request, ctx: FreshContext) {
+export const handler = define.handlers<MNode | null>({
+  async GET(ctx) {
+    const req = ctx.req;
     const { data, error } = await fetchNode();
     if (error) return error;
     return new Response(JSON.stringify(data), { status: 200 });
   },
-};
+});

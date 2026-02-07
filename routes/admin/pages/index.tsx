@@ -1,8 +1,9 @@
-import { defineRoute } from "$fresh/server.ts";
-
 import MCPageWRapper from "@islands/pages/MCPageWrapper.tsx";
+import { defineRoute } from "fresh/compat";
 
-export default defineRoute((req, ctx) => {
+export default defineRoute((ctx) => {
+  const req = ctx.req;
+
   return (
     <>
       <link rel="stylesheet" href="/cardsglow.css" />

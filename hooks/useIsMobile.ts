@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from "preact/hooks";
 
 export const useIsMobile = (mobileScreenSize = 768) => {
-
-  if (typeof window === "undefined") return false
+  if (typeof window === "undefined") return false;
 
   const windowGlobal = typeof globalThis.matchMedia === "function" ? globalThis : window;
 

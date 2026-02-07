@@ -6,7 +6,7 @@ import { BricksType } from "@models/Bricks.ts";
 import { getBrickFromType } from "@services/bricks.ts";
 
 export const fetchNode = async (
-  id?: string
+  id?: string,
 ): Promise<{ data: MNode[] | null; error: Response | null }> => {
   let res;
   const nodes: MNode[] = [];
@@ -59,9 +59,7 @@ const assertEqualSizes = (
   size: MNode["sizes"][0],
 ) => {
   if (!availableSizes || availableSizes.length === 0) return false;
-  return availableSizes.some((s) =>
-    s.width === size.width && s.height === size.height
-  );
+  return availableSizes.some((s) => s.width === size.width && s.height === size.height);
 };
 
 /**

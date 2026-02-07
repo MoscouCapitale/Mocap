@@ -1,4 +1,4 @@
-import { computed, effect, Signal, signal } from "@preact/signals-core";
+import { computed, effect, Signal, signal } from "@preact/signals";
 
 import { createContext, createRef, Ref, RefObject, VNode } from "preact";
 import { StateUpdater, useCallback, useContext, useEffect, useMemo, useRef, useState } from "preact/hooks";
@@ -95,16 +95,16 @@ type MNodeContextType = {
 
 type UpsertNodeToNodesArrayProps =
   | {
-      /** If strategy is `merge`, we only need to provide a partial node with the id */
-      strategy: "merge";
-      nodes: MNode[];
-      node: Partial<MNode> & { id: string };
-    }
+    /** If strategy is `merge`, we only need to provide a partial node with the id */
+    strategy: "merge";
+    nodes: MNode[];
+    node: Partial<MNode> & { id: string };
+  }
   | {
-      nodes: MNode[];
-      node: MNode;
-      strategy?: "overwrite";
-    };
+    nodes: MNode[];
+    node: MNode;
+    strategy?: "overwrite";
+  };
 
 /** Update the nodes array with the provided node.
  *
@@ -162,7 +162,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
                 if (n.x + n.width > acc.x2) acc.x2 = n.x + n.width;
                 return acc;
               },
-              { x1: 999999, x2: -999999 }
+              { x1: 999999, x2: -999999 },
             );
             if (node.x !== size.x1 || node.width !== size.x2 - size.x1) {
               isModified = true;
@@ -228,14 +228,14 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   // #region Fetch and save nodes
   useEffect(() => {
     let isMounted = true;
-    
+
     ky.get("/api/node/getAll")
       .json<MNode[]>()
       .then((data) => {
         if (isMounted && MCNodes.length === 0) setMCNodes(data);
       })
       .catch((e) => console.error(e));
-    
+
     return () => {
       isMounted = false;
     };
@@ -258,10 +258,10 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
     if (!hasPendingChanges) setHasPendingChanges(true);
     if (rerender) {
       setMCNodes((prev) => {
-        const res = upsertNodeToNodesArray({ nodes: prev, node, strategy: partial ? "merge" : "overwrite" })
-        console.log("result of upserting: ", res)
-        return res
-    });
+        const res = upsertNodeToNodesArray({ nodes: prev, node, strategy: partial ? "merge" : "overwrite" });
+        console.log("result of upserting: ", res);
+        return res;
+      });
       setNodesChanged(true);
     } else {
       setMCNodes((prev) => {
@@ -310,7 +310,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
         })
         .catch((e) => console.error(e));
     },
-    [MCNodes]
+    [MCNodes],
   );
 
   // #region Overlap management
@@ -341,7 +341,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
       });
       return { isOverlapping: nodes.length > 0, overlappingNode: nodes };
     },
-    [MCNodes]
+    [MCNodes],
   );
 
   const getClosestFreePosition: getClosestFreePositionReturnType = (a, overlap) => {
@@ -441,7 +441,7 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
       lockViewBox,
       setLockViewBox,
     }),
-    [MCFrame, viewBox, MCNodes, isPreview, nodesChanged, hasPendingChanges, autoSaved, lockViewBox]
+    [MCFrame, viewBox, MCNodes, isPreview, nodesChanged, hasPendingChanges, autoSaved, lockViewBox],
   );
 
   return <MNodeContext.Provider value={value}>{children}</MNodeContext.Provider>;

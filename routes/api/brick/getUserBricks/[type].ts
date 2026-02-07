@@ -1,9 +1,12 @@
-import { FreshContext, Handlers } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 import { BricksType } from "@models/Bricks.ts";
 import { getBrickFromType } from "@services/bricks.ts";
+import { Handlers } from "fresh/compat";
+import { define } from "@utils/app.ts";
 
-export const handler: Handlers<any | null> = {
-  async GET(req: Request, ctx: FreshContext) {
+export const handler = define.handlers({
+  async GET(ctx: FreshContext) {
+    const req = ctx.req;
     const type = ctx.params.type;
     const res = await getBrickFromType(type as keyof typeof BricksType, undefined, true);
 
@@ -12,4 +15,4 @@ export const handler: Handlers<any | null> = {
 
     return new Response(JSON.stringify(res.data), { status: 200 });
   },
-};
+});

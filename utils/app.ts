@@ -27,7 +27,7 @@ export const getFooterLinks = async (): Promise<PlatformLink[] | null> => {
 export const isBetaEnabled = () => {
   console.log("BETA_CODES", Deno.env.get("BETA_CODES"));
   return Deno.env.get("BETA_CODES") !== undefined;
-}
+};
 
 export const verifyBetaCode = async (code: string, isHashed?: boolean) => {
   let hash = code;
@@ -46,3 +46,9 @@ export const getHashedCode = async (code: string) => {
   const hex = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(code));
   return encodeHex(hex);
 };
+
+import { createDefine } from "fresh";
+import { User } from "@models/Authentication.ts";
+
+// Setup, do this once in a file and import it everywhere else.
+export const define = createDefine<User>();

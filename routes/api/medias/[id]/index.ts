@@ -1,26 +1,26 @@
-import { Handlers } from "$fresh/server.ts";
 import { supabase, supabase as supa } from "@services/supabase.ts";
 import { isUUIDValid } from "@utils/database.ts";
 import { Media } from "@models/Medias.ts";
 import { Image } from "@models/Medias.ts";
 import { Database } from "@models/database.ts";
+import { define } from "@utils/app.ts";
 
-export const handler: Handlers<Media | null> = {
+export const handler = define.handlers<Media | null>({
   /**
    * GET handler for retrieving all media of a specific type.
    * @param _req - The request object.
    * @param ctx - The context object containing the type parameter.
    * @returns A response object with the retrieved media or an error message.
    */
-  async PUT(_req, ctx) {
+  async PUT(ctx) {
     const id: string = ctx.params.id;
     if (!isUUIDValid(id)) return new Response("Bad request", { status: 400 });
 
-    const body = await _req.json();
+    const body = await ctx.req.json();
 
     console.log("Received body for update:", body);
 
-    const modifiedMedia: Partial<Database['public']['Tables']['Medias']['Row']> = {
+    const modifiedMedia: Partial<Database["public"]["Tables"]["Medias"]["Row"]> = {
       display_name: body.display_name,
       alt: body.alt,
       object_fit: body.object_fit,
@@ -41,7 +41,7 @@ export const handler: Handlers<Media | null> = {
     return new Response(JSON.stringify(data), { status: 200 });
   },
 
-  async DELETE(_req, ctx) {
+  async DELETE(ctx) {
     const id: string = ctx.params.id;
     if (!isUUIDValid(id)) return new Response("Bad request", { status: 400 });
 
@@ -68,12 +68,12 @@ export const handler: Handlers<Media | null> = {
       return new Response("Error while fetching data", { status: 500 });
     }
 
-    const { error: delTableError } = await supabase.from('Medias').delete().eq('id', id)
+    const { error: delTableError } = await supabase.from("Medias").delete().eq("id", id);
 
     if (delTableError) {
-        return new Response("Error while fetching data", { status: 500 });
+      return new Response("Error while fetching data", { status: 500 });
     }
 
     return new Response(null, { status: 200 });
   },
-};
+});

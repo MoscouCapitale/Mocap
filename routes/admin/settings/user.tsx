@@ -1,4 +1,4 @@
-import { Handlers, RouteContext } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 import { supabase as supa } from "@services/supabase.ts";
 
 import UserRevokeAccount from "@components/settings/UserRevokeAccount.tsx";
@@ -7,17 +7,19 @@ import { ToasterToast } from "@hooks/toast.tsx";
 import { ToasterWrapper } from "@islands/UI";
 import { User } from "@models/Authentication.ts";
 import { verifyEmailIntegrity } from "@utils/login.ts";
+import { define } from "@utils/app.ts";
 
 type HandlerType = {
   toast: Omit<ToasterToast, "id"> | null;
 } | Record<string | number | symbol, never>;
 
-export const handler: Handlers<HandlerType | null> = {
-  async POST(req, ctx) {
+export const handler = define.handlers({
+  async POST(ctx) {
+    const req = ctx.req;
     const url = new URL(req.url);
     const user = ctx.state.user as User;
 
-    if (!user) return ctx.render({});
+    if (!user) return { data: {} };
 
     const form = await req.formData();
 
@@ -31,12 +33,14 @@ export const handler: Handlers<HandlerType | null> = {
 
     if (formData.action === "changeEmail") {
       if (verifyEmailIntegrity(formData.newEmail) !== "") {
-        return ctx.render({
-          toast: {
-            title: "Erreur lors du changement d'adresse mail",
-            description: "L'adresse mail n'est pas valide",
+        return {
+          data: {
+            toast: {
+              title: "Erreur lors du changement d'adresse mail",
+              description: "L'adresse mail n'est pas valide",
+            },
           },
-        });
+        };
       }
 
       const { data, error } = await supa.auth.admin.generateLink({
@@ -52,13 +56,15 @@ export const handler: Handlers<HandlerType | null> = {
       console.dir({ data, error }, { depth: null });
 
       if (error || !data.properties?.action_link) {
-        return ctx.render({
-          toast: {
-            title: "Erreur lors du changement d'adresse mail",
-            description:
-              "Une erreur est survenue lors de la génération du lien de confirmation. Merci de réessayer ultérieurement.",
+        return {
+          data: {
+            toast: {
+              title: "Erreur lors du changement d'adresse mail",
+              description:
+                "Une erreur est survenue lors de la génération du lien de confirmation. Merci de réessayer ultérieurement.",
+            },
           },
-        });
+        };
       }
       return new Response("", {
         status: 301,
@@ -74,21 +80,23 @@ export const handler: Handlers<HandlerType | null> = {
           headers: { Location: "/" },
         });
       } else {
-        return ctx.render({
-          toast: {
-            title: "Erreur lors de la révocation du compte",
-            description:
-              "Une erreur est survenue lors de la révocation de votre compte. Merci de réessayer ultérieurement.",
+        return {
+          data: {
+            toast: {
+              title: "Erreur lors de la révocation du compte",
+              description:
+                "Une erreur est survenue lors de la révocation de votre compte. Merci de réessayer ultérieurement.",
+            },
           },
-        });
+        };
       }
     }
 
-    return ctx.render({});
+    return { data: {} };
   },
-};
+});
 
-export default async function UserSettings(req: Request, ctx: RouteContext) {
+export default define.page<typeof handler>((ctx) => {
   const user = ctx.state.user as User;
   const toast = ctx.data?.toast;
 
@@ -156,4 +164,4 @@ export default async function UserSettings(req: Request, ctx: RouteContext) {
       <ToasterWrapper content={toast} />
     </>
   );
-}
+});

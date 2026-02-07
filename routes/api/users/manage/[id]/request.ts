@@ -1,17 +1,19 @@
-import { FreshContext, Handlers } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 import { User, UserRole, UserStatus } from "@models/Authentication.ts";
 import { supabase as supa, updateUserMetadata } from "@services/supabase.ts";
+import { define } from "@utils/app.ts";
 
 const adminRoles = [UserRole.ADMIN, UserRole.SADMIN];
 
-export const handler: Handlers<User | null> = {
+export const handler = define.handlers<User | null>({
   /** Update the user status based on the action provided in the body.
    *
    * @param req
    * @param ctx
    * @returns - The updated user object.
    */
-  async PUT(req: Request, ctx: FreshContext) {
+  async PUT(ctx) {
+    const req = ctx.req;
     const currentUser = ctx.state.user as User;
 
     // If no user is currently logged in or the user is not an admin, return a 401
@@ -38,4 +40,4 @@ export const handler: Handlers<User | null> = {
     const newUser = await updateUserMetadata(id, { role, status });
     return new Response(JSON.stringify(newUser), { status: 200 });
   },
-};
+});

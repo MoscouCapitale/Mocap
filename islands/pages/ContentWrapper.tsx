@@ -1,7 +1,7 @@
 import { MCViewBox, useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { useToast } from "@hooks/toast.tsx";
 import MNodeGen from "@islands/pages/MNodes/MNodeGen.tsx";
-import { effect, signal } from "@preact/signals-core";
+import { effect, signal } from "@preact/signals";
 import { cn } from "@utils/cn.ts";
 import { IconTrash } from "@utils/icons.ts";
 import { createRef } from "preact";
@@ -75,7 +75,7 @@ export default function MCanva() {
     writeNodes,
     autoSaved,
     setPreview,
-    lockViewBox
+    lockViewBox,
   } = useMNodeContext();
 
   const throttledSetViewBox = useCallback(
@@ -92,7 +92,7 @@ export default function MCanva() {
     if (MCFrame.current && viewBox && !lockViewBox) {
       cleanup = MCFrameEvents(MCFrame.current, viewBox, throttledSetViewBox);
     }
-  
+
     return () => {
       if (cleanup) {
         cleanup();
@@ -153,7 +153,7 @@ export default function MCanva() {
         <svg
           ref={MCFrame}
           className={"relative w-full h-full grow rounded-3xl border border-text_grey"}
-          style={{ '--pattern-color': '#FFFFFF30' }}
+          style={{ "--pattern-color": "#FFFFFF30" }}
         >
           {/* Define a dotted background pattern, to display the grid */}
           <defs>

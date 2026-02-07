@@ -1,5 +1,5 @@
 import UserActions from "@islands/Settings/Users/UsersList/UserActions.tsx";
-import { Tooltip, ContextualDots, Select } from "@islands/UI";
+import { ContextualDots, Select, Tooltip } from "@islands/UI";
 import { User, UserRole, UserStatus } from "@models/Authentication.ts";
 import { FormField } from "@models/Form.ts";
 import { cn } from "@utils/cn.ts";
@@ -155,7 +155,7 @@ export default function UsersList({
                   {currentUser.id === user.id ? currentUser.user_metadata.role : (
                     <Select
                       error={null}
-                      field={{...selectField, defaultValue: user.user_metadata.role}}
+                      field={{ ...selectField, defaultValue: user.user_metadata.role }}
                       onChange={(v) => updateUserRole(user, v)}
                       min={1}
                     />

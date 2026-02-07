@@ -30,7 +30,7 @@ export default function SizeSelector({ node, setSize }: SizeSelectorProps) {
 
   const isCurrentSizeFreeSized = useMemo(
     () => !node.sizes.some((s) => s.width === node.width && s.height === node.height),
-    [node.sizes, node.width, node.height]
+    [node.sizes, node.width, node.height],
   );
 
   const [isFreeSizing, setIsFreeSizing] = useState(false);
@@ -57,7 +57,7 @@ export default function SizeSelector({ node, setSize }: SizeSelectorProps) {
         setSize({ width: node.width, height: node.height + val });
       }
     },
-    [node.width, node.height]
+    [node.width, node.height],
   );
 
   useIsomorphicLayoutEffect(() => {
@@ -96,12 +96,15 @@ export default function SizeSelector({ node, setSize }: SizeSelectorProps) {
       <NavigationMenu.Root className="relative z-[1] flex justify-center">
         <NavigationMenu.List className="center m-0 flex list-none rounded-[6px] p-1">
           <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="text-text flex select-none items-center leading-none outline-none">
+            <NavigationMenu.Trigger className="text-text flex select-none items-center leading-none outline-hidden">
               <IconResize />
             </NavigationMenu.Trigger>
             <NavigationMenu.Content className="absolute top-full right-0">
               <ul
-                className={cn("flex justify-start list-none m-0 rounded-md bg-black border border-text_grey", node.height < 200 ? "flex-row" : "flex-col w-28")}
+                className={cn(
+                  "flex justify-start list-none m-0 rounded-md bg-black border border-text_grey",
+                  node.height < 200 ? "flex-row" : "flex-col w-28",
+                )}
               >
                 {node.sizes.map((size) => {
                   const isSelected = size.width === node.width && size.height === node.height;
@@ -112,7 +115,11 @@ export default function SizeSelector({ node, setSize }: SizeSelectorProps) {
                       onClick={() => {
                         if (!isSelected) {
                           if (isCurrentSizeFreeSized) {
-                            if (confirm("Voulez-vous vraiment changer la taille de ce bloc ? La taille actuelle sera perdue.")) setSize(size);
+                            if (
+                              confirm(
+                                "Voulez-vous vraiment changer la taille de ce bloc ? La taille actuelle sera perdue.",
+                              )
+                            ) setSize(size);
                           } else setSize(size);
                         }
                       }}
@@ -143,13 +150,28 @@ export default function SizeSelector({ node, setSize }: SizeSelectorProps) {
 
       {/* FIXME: using a ref should be better, but for now it is not reliable. A queryselect works fine each time, but is not the best practice. */}
       <Portal container={globalThis.document.querySelector(`[data-nodeId=canva_node_${node.id}]`)}>
-        <div className={cn("absolute inset-0 overflow-visible backdrop-brightness-[0.3]", isFreeSizing ? "block" : "hidden")}>
+        <div
+          className={cn(
+            "absolute inset-0 overflow-visible backdrop-brightness-[0.3]",
+            isFreeSizing ? "block" : "hidden",
+          )}
+        >
           {/* Right arrow resize */}
-          <div className={cn("absolute top-1/2 -translate-y-1/2 right-[-16px] flex items-center text-text grabberStyle horizontal")} ref={horizontalGrabRef}>
+          <div
+            className={cn(
+              "absolute top-1/2 -translate-y-1/2 right-[-16px] flex items-center text-text grabberStyle horizontal",
+            )}
+            ref={horizontalGrabRef}
+          >
             <IconGripVertical />
           </div>
           {/* Bottom arrow resize */}
-          <div className={cn("absolute bottom-[-16px] left-1/2 -translate-x-1/2 flex flex-col items-center text-text grabberStyle")} ref={verticalGrabRef}>
+          <div
+            className={cn(
+              "absolute bottom-[-16px] left-1/2 -translate-x-1/2 flex flex-col items-center text-text grabberStyle",
+            )}
+            ref={verticalGrabRef}
+          >
             <IconGripHorizontal />
           </div>
           {/* Middle validation/cancel button */}
@@ -190,8 +212,8 @@ const SizeChoiceItem = ({ size, onClick, isSelected }: SizeChoiceItemProps) => {
   return (
     <li
       className={cn(
-        "text-text py-2 px-3 bg-text bg-opacity-0 hover:bg-opacity-10 w-full cursor-pointer text-left",
-        isSelected ? "underline font-semibold" : "font-normal"
+        "text-text py-2 px-3 bg-text/0 over:bg-text/10 w-full cursor-pointer text-left",
+        isSelected ? "underline font-semibold" : "font-normal",
       )}
       onClick={onClick}
     >

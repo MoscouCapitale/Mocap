@@ -1,11 +1,4 @@
-import {
-  Audio,
-  Image,
-  Media,
-  MediaType,
-  Misc,
-  Video as VideoType,
-} from "@models/Medias.ts";
+import { Audio, Image, Media, MediaType, Misc, Video as VideoType } from "@models/Medias.ts";
 import Button from "@islands/UI/Button.tsx";
 import Player from "@islands/Player/index.tsx";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
@@ -37,11 +30,10 @@ export default function MediaPreview(
         case MediaType.Images:
           return (
             <img
-              className={cn("h-full rounded",
+              className={cn(
+                "h-full rounded",
                 from === "collection" ? "w-full max-h-[200px]" : "",
-                (media as Image).object_fit === "contain"
-                ? "object-contain"
-                : "object-cover",
+                (media as Image).object_fit === "contain" ? "object-contain" : "object-cover",
               )}
               src={media.public_src}
               alt={media.alt}
@@ -61,9 +53,7 @@ export default function MediaPreview(
                 <video
                   className={cn(
                     "w-full h-full rounded",
-                    (media as VideoType).object_fit === "contain"
-                      ? "object-contain"
-                      : "object-cover",
+                    (media as VideoType).object_fit === "contain" ? "object-contain" : "object-cover",
                   )}
                   src={media.public_src}
                   controls
@@ -103,24 +93,28 @@ export default function MediaPreview(
         case MediaType.Misc:
           if (from === "collection") {
             return (
-              <div className={"w-fit p-2 rounded bg-black text-text"}>
+              <div className={"w-fit p-2 rounded-sm bg-black text-text"}>
                 {media.name}
                 <Button
                   onClick={() => {
                     globalThis.open(media.public_src);
                   }}
-                >dl</Button>
+                >
+                  dl
+                </Button>
               </div>
             );
           } else {
             return (
-              <div className={"w-fit p-2 rounded bg-black text-text"}>
+              <div className={"w-fit p-2 rounded-sm bg-black text-text"}>
                 {media.name}
                 <Button
                   onClick={() => {
                     globalThis.open(media.public_src);
                   }}
-                >dl</Button>
+                >
+                  dl
+                </Button>
               </div>
             );
           }

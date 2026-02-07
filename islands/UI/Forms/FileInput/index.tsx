@@ -1,10 +1,7 @@
 import { PreviewImage } from "@islands/UI";
-import { effect } from "@preact/signals-core";
+import { effect } from "@preact/signals";
 import { cn } from "@utils/cn.ts";
-import {
-  convertAcceptFileTypeMapToInputAccept,
-  getMediaTypeFromFiletype,
-} from "@utils/database.ts";
+import { convertAcceptFileTypeMapToInputAccept, getMediaTypeFromFiletype } from "@utils/database.ts";
 import { IconCloudUpload, IconPlus, IconX } from "@utils/icons.ts";
 import { VNode } from "preact";
 import { useMemo, useRef, useState } from "preact/hooks";
@@ -51,7 +48,7 @@ export default function FileInput(
     label,
     customFile,
     inputName,
-    hasFile
+    hasFile,
   }: FileInputProps,
 ) {
   const acceptedFileTypes = useMemo(
@@ -70,8 +67,8 @@ export default function FileInput(
 
   /** This memo is used to, if the file input is only audio/misc, to be a smaller size */
   const isSmallerSize = useMemo(() => {
-    return (filetype ?? []).length && !intersection(filetype, ["Videos", "Images"]).length
-  }, [filetype])
+    return (filetype ?? []).length && !intersection(filetype, ["Videos", "Images"]).length;
+  }, [filetype]);
 
   const handleSetRawFile = (e: Event) => {
     if (e.target && e.target instanceof HTMLInputElement && e.target.files) {
@@ -102,7 +99,7 @@ export default function FileInput(
     return variant === "full-size"
       ? (
         <>
-          <div class="absolute break-all w-[238px] text-text text-opacity-10 text-[127px] z-0 leading-[110px]">
+          <div class="absolute break-all w-[238px] text-text/10 text-[127px] z-0 leading-[110px]">
             media
           </div>
           <div
@@ -133,9 +130,7 @@ export default function FileInput(
     ? (
       <div
         ref={fileInputRef}
-        className={cn("relative group/filezone",
-          isSmallerSize ? "w-[200px] h-[100px]" : "w-[200px] h-[200px]"
-        )}
+        className={cn("relative group/filezone", isSmallerSize ? "w-[200px] h-[100px]" : "w-[200px] h-[200px]")}
       >
         <input
           name={inputName}
@@ -213,22 +208,20 @@ export default function FileInput(
             {RenderedFileZone}
           </div>
           {file || hasFile && (
-            <div
-              class={cn(
-                "absolute top-0 bottom-0 left-full flex items-center p-1 z-10 cursor-pointer",
-                "invisible transition-all ease-in-out -translate-x-full group-hover/file:translate-x-0 group-hover/file:visible",
+                <div
+                  class={cn(
+                    "absolute top-0 bottom-0 left-full flex items-center p-1 z-10 cursor-pointer",
+                    "invisible transition-all ease-in-out -translate-x-full group-hover/file:translate-x-0 group-hover/file:visible",
+                  )}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    overwriteOnFileDeleteClick ? overwriteOnFileDeleteClick(e) : setFile(null);
+                  }}
+                >
+                  <IconX className={"text-text_special"} size={24} />
+                </div>
               )}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                overwriteOnFileDeleteClick
-                  ? overwriteOnFileDeleteClick(e)
-                  : setFile(null)}
-              }
-            >
-              <IconX className={"text-text_special"} size={24} />
-            </div>
-          )}
         </div>
       </div>
     );

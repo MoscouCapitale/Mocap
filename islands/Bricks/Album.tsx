@@ -36,11 +36,17 @@ export default function Album({ content }: AlbumProps) {
             additionnalConfig={{
               delay: (content.controls as VideoControls)?.autoplay ? 2000 : undefined,
               controlsTrigger: "bottom",
-              disableSomeControls: content.controls ? getPlayerControlsFromMediaControls(content.controls as VideoControls) : ["volumeIcon", "duration"],
+              disableSomeControls: content.controls
+                ? getPlayerControlsFromMediaControls(content.controls as VideoControls)
+                : ["volumeIcon", "duration"],
             }}
             loopVideo
             muted
-            sx={cn("absolute group-hover/main:brightness-50 rounded-[20px] [&_#volbar]:w-[50px]", isOpen ? "brightness-50" : "", transitionsStyles)}
+            sx={cn(
+              "absolute group-hover/main:brightness-50 rounded-[20px] [&_#volbar]:w-[50px]",
+              isOpen ? "brightness-50" : "",
+              transitionsStyles,
+            )}
           />
         );
       } else if (content.media.extension?.includes("image")) {
@@ -50,7 +56,7 @@ export default function Album({ content }: AlbumProps) {
               "absolute rounded-[20px] group-hover/main:brightness-50 w-full h-full",
               isOpen ? "brightness-50" : "",
               getStyleFit(content.mediaFit),
-              transitionsStyles
+              transitionsStyles,
             )}
             src={content.media?.public_src}
             alt={content.media?.alt}
@@ -80,14 +86,18 @@ export default function Album({ content }: AlbumProps) {
             "invisible group-hover/main:visible opacity-0 group-hover/main:opacity-100",
             "absolute pos-center cursor-pointer inline-block",
             "text-[20px] font-bold text-center text-text", // Font styles
-            transitionsStyles
+            transitionsStyles,
           )}
           onClick={toggleOpenState}
         >
           {content.title}
         </h2>
       )}
-      {isOpen && <div className={"absolute p-7 flex flex-col gap-3 w-full h-full"}>{content.tracklist?.map((t) => <AlbumTrack track={t} />).slice(0, 7)}</div>}
+      {isOpen && (
+        <div className={"absolute p-7 flex flex-col gap-3 w-full h-full"}>
+          {content.tracklist?.map((t) => <AlbumTrack track={t} />).slice(0, 7)}
+        </div>
+      )}
     </div>
   );
 }

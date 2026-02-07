@@ -8,7 +8,7 @@ type LinkProps = {
 } & JSX.IntrinsicElements["a"];
 
 /** Link wrapper component, using Mocap styling
- * 
+ *
  * @param {string} variant - The variant of the link. Defaults to "default"
  * @param {string} sx - An additional class to apply to the link.
  */

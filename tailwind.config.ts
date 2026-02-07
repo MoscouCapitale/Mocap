@@ -1,14 +1,10 @@
 import { type Config } from "tailwindcss";
-// tailwindcss-animate
-import * as twAnimate from "tailwindcss-animate";
-import type { PluginAPI } from "tailwindcss/types/config";
-import plugin from "tailwindcss/plugin";
 
 export default {
   content: [
     "{routes,islands,components}/**/*.{ts,tsx}",
   ],
-  darkMode: ["class"],
+  darkMode: "class",
   theme: {
     container: {
       center: true,
@@ -141,34 +137,5 @@ export default {
       ],
     },
   },
-  plugins: [
-    twAnimate,
-    function ({ addUtilities }: any) {
-      const newUtilities = {
-        ".pos-center": {
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        },
-        ".node-highlight": {
-          // TODO: better highlight, and using theme colors
-          boxShadow: "0px 0px 30px 10px #FFFFFF33",
-        },
-      };
-
-      addUtilities(newUtilities, ["responsive", "hover"]);
-    },
-    plugin(
-      function ({ matchUtilities, theme }: { matchUtilities: PluginAPI["matchUtilities"]; theme: PluginAPI["theme"] }) {
-        matchUtilities(
-          {
-            "animate-delay": (value) => ({
-              animationDelay: value,
-            }),
-          },
-          { values: theme("transitionDelay") },
-        );
-      },
-    ),
-  ],
+  plugins: [],
 } satisfies Config;

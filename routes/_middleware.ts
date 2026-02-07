@@ -1,6 +1,7 @@
-import { FreshContext } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 
-export async function handler(req: Request, ctx: FreshContext) {
+export async function handler(ctx: FreshContext) {
+  const req = ctx.req;
   const resp = await ctx.next();
   return resp;
 }

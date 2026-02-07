@@ -11,9 +11,10 @@ interface InstagramProps extends HTMLAttributes<HTMLIFrameElement> {
 }
 
 /** Simple Instagram embed component
- *
  */
-export default function InstagramEmbed({ link, width = "100%", height = "100%", frameBorder = 0, allow = "encrypted-media", sx, ...props }: InstagramProps) {
+export default function InstagramEmbed(
+  { link, width = "100%", height = "100%", frameBorder = 0, allow = "encrypted-media", sx, ...props }: InstagramProps,
+) {
   const url = new URL(link);
   // ex https://www.instagram.com/p/DF-17G6M_/?utm_source=ig_web_copy_link  . remove query params, and add /embed after the post id
   const frameSrc = `${url.origin}${url.pathname}embed`;

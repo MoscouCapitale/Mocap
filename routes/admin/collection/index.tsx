@@ -1,11 +1,14 @@
-import { defineRoute, RouteConfig } from "$fresh/server.ts";
-import { Partial } from "$fresh/runtime.ts";
+import { RouteConfig } from "fresh";
+import { Partial } from "fresh/runtime";
 
 import CollectionGrid from "@islands/collection/CollectionGrid.tsx";
 import AddButton from "@islands/collection/AddButton.tsx";
 import { MediaType } from "@models/Medias.ts";
+import { defineRoute } from "fresh/compat";
 
-export default defineRoute((req, ctx) => {
+export default defineRoute((ctx) => {
+  const req = ctx.req;
+
   interface CollectionType {
     title: string;
     apiRoute: MediaType;

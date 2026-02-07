@@ -1,28 +1,26 @@
 {
-  "lock": false,
   "tasks": {
-    "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
-    "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
-    "manifest": "deno task cli manifest $(pwd)",
+    "check": "deno fmt --check && deno lint && deno check",
     "start": "deno run -A --env=.env.local --watch=static/,routes/ dev.ts --allow-write --allow-read",
     "start-prod": "deno run -A --env=.env.production --watch=static/,routes/ dev.ts",
     "supa-start": "supabase start || npx supabase start || echo 'Cannot run supabase. Please install it globally.'",
     "supa-stop": "supabase stop || npx supabase stop || echo 'Cannot stop supabase. Please install it globally.'",
     "supa-restart": "supabase stop && supabase start || npx supabase stop && npx supabase start || echo 'Cannot restart supabase. Please install it globally.'",
     "supabase": "supabase",
-    "build": "deno run -A dev.ts build",
-    "preview": "deno run -A main.ts",
-    "update": "deno run -A -r https://fresh.deno.dev/update ."
+    "update": "deno run -A -r jsr:@fresh/update .",
+    "dev": "deno run -A --env=.env.local npm:vite",
+    "dev-debug": "deno run -A --inspect --env=.env.local npm:vite --debug",
+    "build": "vite build",
+    "preview": "deno serve -A _fresh/server.js"
   },
   "lint": { "rules": { "tags": ["fresh", "recommended"] } },
   "exclude": ["**/_fresh/*"],
   "nodeModulesDir": "auto",
   "imports": {
-    "$fresh/": "https://deno.land/x/fresh@1.7.1/",
-    "preact": "https://esm.sh/preact@10.19.6",
-    "preact/": "https://esm.sh/preact@10.19.6/",
-    "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
-    "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
+    "@fresh/plugin-vite": "jsr:@fresh/plugin-vite@^1.0.8",
+    "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.18",
+    "preact": "npm:preact@^10.27.2",
+    "@preact/signals": "npm:@preact/signals@^2.5.0",
     "$std/": "https://deno.land/std@0.210.0/",
     "supabase": "https://esm.sh/@supabase/supabase-js@2",
     "supabase/": "https://esm.sh/@supabase/supabase-js@2/",
@@ -36,10 +34,8 @@
     "@styles/": "./styles/",
     "@utils/": "./utils/",
     "@hooks/": "./hooks/",
-    "tailwindcss": "npm:tailwindcss@3.3.5",
-    "tailwindcss/": "npm:/tailwindcss@3.3.5/",
-    "tailwindcss/plugin": "npm:/tailwindcss@3.3.5/plugin.js",
-    "tailwindcss-animate": "npm:tailwindcss-animate",
+    "tailwindcss": "npm:tailwindcss@^4.1.18",
+    "tw-animate-css": "npm:tw-animate-css@^1.4.0",
     "class-variance-authority": "https://esm.sh/class-variance-authority@0.7.0",
     "clsx": "https://esm.sh/clsx@2.0.0",
     "tailwind-merge": "https://esm.sh/tailwind-merge@1.14.0",
@@ -49,7 +45,6 @@
     "react-player": "https://esm.sh/react-player@2.16.0?alias=react:preact/compat,@types/react:preact/compat",
     "react-markdown": "https://esm.sh/react-markdown@9.0.1?alias=react:preact/compat,@types/react:preact/compat",
     "ky": "https://esm.sh/ky@1.7.3",
-
     "@radix-ui/react-toast": "https://esm.sh/*@radix-ui/react-toast@1.1.5?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
     "@radix-ui/primitive": "https://esm.sh/*@radix-ui/primitive@1.0.1",
     "@radix-ui/number": "https://esm.sh/@radix-ui/number@1.0.1",
@@ -66,7 +61,6 @@
     "@radix-ui/react-focus-guards": "https://esm.sh/*@radix-ui/react-focus-guards@1.0.1?alias=react:preact/compat,@types/react:preact/compat",
     "@radix-ui/react-focus-scope": "https://esm.sh/*@radix-ui/react-focus-scope@1.0.4?alias=react:preact/compat,@types/react:preact/compat",
     "@radix-ui/react-id": "https://esm.sh/*@radix-ui/react-id@1.0.1?alias=react:preact/compat,@types/react:preact/compat",
-    "@radix-ui/react-label": "https://esm.sh/v132/*@radix-ui/react-label@2.0.2?alias=react:preact/compat,@types/react:preact/compat",
     "@radix-ui/react-menu": "https://esm.sh/*@radix-ui/react-menu@2.0.6?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
     "@radix-ui/react-navigation-menu": "https://esm.sh/*@radix-ui/react-navigation-menu@1.2.0?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
     "@radix-ui/react-popper": "https://esm.sh/*@radix-ui/react-popper@1.1.3?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat",
@@ -101,7 +95,9 @@
     "@tanstack/table-core": "https://esm.sh/@tanstack/table-core@8.10.7",
     "tslib": "https://esm.sh/tslib@2.6.2",
     "use-sidecar": "https://esm.sh/v132/*use-sidecar@1.1.2?alias=react:preact/compat,@types/react:preact/compat",
-    "use-callback-ref": "https://esm.sh/v132/*use-callback-ref@1.3.0?alias=react:preact/compat,@types/react:preact/compat"
+    "use-callback-ref": "https://esm.sh/v132/*use-callback-ref@1.3.0?alias=react:preact/compat,@types/react:preact/compat",
+    "fresh": "jsr:@fresh/core@^2.2.0",
+    "vite": "npm:vite@^7.3.1"
   },
   "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
   "deploy": {
@@ -110,9 +106,5 @@
     "include": [],
     "entrypoint": "main.ts"
   },
-  "fmt": {
-    "options": {
-      "lineWidth": 120
-    }
-  }
+  "fmt": { "options": { "lineWidth": 120 } }
 }

@@ -34,12 +34,14 @@ export default function MediaEmbed({ link, config }: EmbedProps) {
     }
   }, [target, config]);
 
-  return embedContent ? (
-    <>
-      <div className={"absolute inset-0 w-full h-full pointer-events-none"}></div>
-      {embedContent}
-    </>
-  ) : null;
+  return embedContent
+    ? (
+      <>
+        <div className={"absolute inset-0 w-full h-full pointer-events-none"}></div>
+        {embedContent}
+      </>
+    )
+    : null;
 }
 
 // FIXME: better way to detect the embed target

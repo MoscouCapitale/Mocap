@@ -1,18 +1,18 @@
-import { Handlers } from "$fresh/server.ts";
 import { supabase as supa } from "@services/supabase.ts";
 import { Media, MediaType } from "@models/Medias.ts";
 import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
-import { FileObject } from "https://esm.sh/v135/@supabase/storage-js@2.5.5/dist/module/index.js";
+import { Handlers } from "fresh/compat";
+import { define } from "@utils/app.ts";
 
 // TODO: why is array sometime empty?
-export const handler: Handlers<Media | null> = {
+export const handler = define.handlers({
   /**
    * GET handler for retrieving all media of a specific type.
    * @param _req - The request object.
    * @param ctx - The context object containing the type parameter.
    * @returns A response object with the retrieved media or an error message.
    */
-  async GET(_req, ctx) {
+  GET: async (ctx) => {
     const type: string = ctx.params.type;
 
     if (!Object.values(MediaType).includes(type as MediaType)) {
@@ -27,9 +27,11 @@ export const handler: Handlers<Media | null> = {
         sortBy: { column: "name", order: "asc" },
       });
 
-    if (data?.length === 0) console.log(`No media found in bucket '${type}' at ${new Date().toISOString} -- (error: ${error})`)
+    if (data?.length === 0) {
+      console.log(`No media found in bucket '${type}' at ${new Date().toISOString} -- (error: ${error})`);
+    }
 
-      if (evaluateSupabaseResponse(data, error)) return returnErrorReponse(data, error);
+    if (evaluateSupabaseResponse(data, error)) return returnErrorReponse(data, error);
 
     // @ts-ignore: media is never null
     const media: Promise<Media>[] = data!.map(async (item: FileObject) => {
@@ -63,7 +65,7 @@ export const handler: Handlers<Media | null> = {
       },
     });
   },
-};
+});
 
 /**
  * Retrieves media information from the database based on the provided ID.

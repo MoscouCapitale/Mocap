@@ -7,12 +7,12 @@ export default function MCPageWRapper() {
   return (
     <MNodeProvider>
       <>
-      <div className={"w-full h-full grow flex gap-8"}>
-        <MCanva />
-        <BrickSidebar />
-      </div>
-      <Toaster />
+        <div className={"w-full h-full grow flex gap-8"}>
+          <MCanva />
+          <BrickSidebar />
+        </div>
+        <Toaster />
       </>
     </MNodeProvider>
   );
-};
+}

@@ -1,15 +1,6 @@
 // import * as Tooltip from "@radix-ui/react-tooltip";
-import {
-  Popover,
-  PopoverClose,
-  PopoverContent,
-  PopoverPortal,
-  PopoverTrigger,
-} from "@radix-ui/react-popover";
-import {
-  IconInfoCircle as InfoIcon,
-  IconInfoSmall as InfoIconNoBorder,
-} from "@utils/icons.ts";
+import { Popover, PopoverClose, PopoverContent, PopoverPortal, PopoverTrigger } from "@radix-ui/react-popover";
+import { IconInfoCircle as InfoIcon, IconInfoSmall as InfoIconNoBorder } from "@utils/icons.ts";
 import { JSX } from "preact";
 import { cn } from "@utils/cn.ts";
 import { useCallback, useState } from "preact/hooks";
@@ -46,7 +37,7 @@ export const Tooltip = (
           side="top"
           sideOffset={2}
           className={cn(
-            "select-none rounded bg-black px-[15px] py-2.5 text-[15px] leading-none text-text",
+            "select-none rounded-sm bg-black px-[15px] py-2.5 text-[15px] leading-none text-text",
             "shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px]",
             "will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-tooltip-slideAndFade",
           )}

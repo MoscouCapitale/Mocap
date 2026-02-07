@@ -3,7 +3,7 @@ import { cn } from "@utils/cn.ts";
 import { IconEye, IconEyeClosed, IconInfoSquareRounded } from "@utils/icons.ts";
 import { VNode } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { Select, FileInput, PreviewImage, RelationInput } from "@islands/UI";
+import { FileInput, PreviewImage, RelationInput, Select } from "@islands/UI";
 import { isEmpty } from "lodash";
 
 type InputFromTypeProps = {
@@ -11,8 +11,8 @@ type InputFromTypeProps = {
   onChange: (value: FormFieldValue) => void;
   error: string | null;
   /** This attribute is used when rendering this input on SSR.
-   * 
-   * For some reason, on SSR, the defaultValue will not be set, resulting in the input 
+   *
+   * For some reason, on SSR, the defaultValue will not be set, resulting in the input
    * containing the correct value, but being visually empty. To know if the input is controlled
    * or not, we use the `onChange` prop to determine it.
    * TODO: Open an issue on Fresh to track down this bug
@@ -45,6 +45,7 @@ const InputFromType = (
         <input
           className={cn(
             baseInputStyle,
+            ...(field.type === "checkbox" ? ["min-w-auto", "ml-0"] : []),
             error && "border-error",
             field.label && (field.type !== "checkbox") && "mt-2",
             error && !field.tooltipError && "mb-1",
@@ -117,25 +118,28 @@ const InputFromType = (
       return <RelationInput field={field} onChange={(e) => onChange(field.relation?.multiple ? e : (e[0] ?? null))} />;
     case "markdown":
       // For now, markdown will just be a textarea (I do not think a markdown input is really needed)
-      return <textarea
-        className={cn(
-          baseInputStyle,
-          error && "border-error",
-          field.label && "mt-2",
-          error && !field.tooltipError && "mb-1",
-          field.type === "markdown" && "h-40",
-          field.sx,
-        )}
-        defaultValue={String(field.defaultValue ?? "")}
-        placeholder={field.placeholder ?? ""}
-        onChange={(e) => onChange(e.currentTarget.value)}
-        name={field.name}
-        required={field.required}
-        readOnly={field.readOnly}
-        disabled={field.disabled}
-        title={error && field.tooltipError ? error : undefined}
-        autoComplete={"on"}
-      ></textarea>;
+      return (
+        <textarea
+          className={cn(
+            baseInputStyle,
+            error && "border-error",
+            field.label && "mt-2",
+            error && !field.tooltipError && "mb-1",
+            field.type === "markdown" && "h-40",
+            field.sx,
+          )}
+          defaultValue={String(field.defaultValue ?? "")}
+          placeholder={field.placeholder ?? ""}
+          onChange={(e) => onChange(e.currentTarget.value)}
+          name={field.name}
+          required={field.required}
+          readOnly={field.readOnly}
+          disabled={field.disabled}
+          title={error && field.tooltipError ? error : undefined}
+          autoComplete={"on"}
+        >
+        </textarea>
+      );
     case "NI":
     default:
       return defaultField;

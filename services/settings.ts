@@ -28,6 +28,6 @@ export const getSettings = async (
   }
 
   // @ts-ignore - data is an array of objects
-  if (data?.[0]?.[field]) return data[0][field] as Record<FormField["name"], string>
+  if (data?.[0]?.[field]) return data[0][field] as Record<FormField["name"], string>;
   return null;
 };

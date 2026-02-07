@@ -1,6 +1,6 @@
 export type Error = {
-  code: number;
   message: string;
+  code?: number;
   targetElement?: string | HTMLElement;
 };
 
@@ -10,7 +10,6 @@ export enum CustomStatusCodes {
 }
 
 export const statusMessages = {
-  [CustomStatusCodes.EmailNotRegistered]:
-    "This email is not registered yet, please signup first",
+  [CustomStatusCodes.EmailNotRegistered]: "This email is not registered yet, please signup first",
   // Add more status messages here
 };

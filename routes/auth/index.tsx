@@ -1,13 +1,17 @@
-import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
+import { FreshContext, PageProps, RouteHandler } from "fresh";
 import AuthForm from "@islands/AuthForm.tsx";
 import { FormType } from "@models/Authentication.ts";
 import { handleSignInOTP, handleSignInPassword, handleSignUp } from "@services/authentication.ts";
 import { getUserFromSession, supabaseSSR } from "@services/supabase.ts";
 import { verifyEmailIntegrity } from "@utils/login.ts";
+import { Handlers } from "fresh/compat";
+import { define } from "@utils/app.ts";
+import HeroSection from "@islands/Bricks/HeroSection.tsx";
 
-export const handler: Handlers<FormType> = {
+export const handler = define.handlers({
   // When accessing the /auth route
-  async GET(req: Request, ctx: FreshContext) {
+  GET: async (ctx) => {
+    const req = ctx.req;
     const params = new URL(req.url).searchParams;
 
     // Retrieve, from the url, the error code
@@ -15,19 +19,21 @@ export const handler: Handlers<FormType> = {
     const error_message = params.get("error_message");
 
     if (error_code) {
-      return ctx.render({ type: "default", error: { message: error_message } });
+      return { data: { type: "default", error: { message: error_message } } };
     }
 
     /** If we just done an action, we display a message. Primarily used for OTP sign up, when you just
      * confirmed your email and are redirected to the sign in page, waiting to be approved by an admin. */
     const actionDone = params.get("action_done");
     if (actionDone) {
-      return ctx.render({
-        type: "action_done",
-        additional_data: {
-          message: actionDone,
+      return {
+        data: {
+          type: "action_done",
+          additional_data: {
+            message: actionDone,
+          },
         },
-      });
+      };
     }
 
     // Get the user from the current session
@@ -44,20 +50,23 @@ export const handler: Handlers<FormType> = {
     if (error) {
       switch (error.status) {
         case 403:
-          return ctx.render({
-            type: "default",
-            error: { message: "Votre session a expiré, merci de vous ré-authentifier." },
-          });
+          return {
+            data: {
+              type: "default",
+              error: { message: "Votre session a expiré, merci de vous ré-authentifier." },
+            },
+          };
         case 500:
         default:
-          return ctx.render({ type: "default" });
+          return { data: { type: "default" } };
       }
     }
 
     // If no error, render the default page (login form)
-    return ctx.render({ type: "default" });
+    return { data: { type: "default" } };
   },
-  async POST(req: Request, ctx: FreshContext) {
+  POST: async (ctx) => {
+    const req = ctx.req;
     const form = await req.formData();
     const url = new URL(req.url);
     const redirectURL = url.searchParams.get("redirect");
@@ -86,10 +95,7 @@ export const handler: Handlers<FormType> = {
     // }, 5000);
 
     if (!formData.email || verifyEmailIntegrity(formData.email) !== "") {
-      const render = await ctx.render({ type: "default", error: "Invalid email" });
-      return new Response(render.body, {
-        headers: res.headers,
-      });
+      return { data: { type: "default", error: "Invalid email" } };
     }
 
     const supa = supabaseSSR(req, res);
@@ -98,56 +104,33 @@ export const handler: Handlers<FormType> = {
     if (authType === "signin") {
       // If a password is not provided, it means the user is trying to sign in with OTP
       if (!formData.password) {
-        const render = await handleSignInOTP(supa, redirectURL, formData.email, url.origin, res, ctx);
-        return render;
+        return await handleSignInOTP(supa, redirectURL, formData.email, url.origin);
       } else {
         // If a password is provided, it means the user is trying to sign in with password
-        const render = await handleSignInPassword(
-          supa,
-          redirectURL,
-          formData.email,
-          formData.password,
-          url.origin,
-          res,
-          ctx,
-        );
-        return render;
+        return await handleSignInPassword(supa, redirectURL, formData.email, formData.password);
       }
     }
 
     // Signup
     if (authType === "signup") {
-      const render = await handleSignUp(
-        supa,
-        formData.email,
-        formData.password,
-        formData.confirmpassword,
-        url.origin,
-        res,
-        ctx,
-      );
-      return render;
+      return await handleSignUp(supa, formData.email, formData.password, formData.confirmpassword, url.origin);
     }
 
     // Default
-    const render = await ctx.render({ type: "default" });
-    return new Response(render.body, {
-      headers: res.headers,
-    });
+    return { data: { type: "default" } };
   },
-};
+});
 
-export default function AuthPage({ data }: PageProps<FormType>) {
+// TODO: was here. render
+
+export default define.page<typeof handler>(({ data }) => {
   return (
     <>
-      <AuthForm {...data} />
+      <AuthForm data={data as FormType} />
 
-      <a
-        className={"text-text_grey text-sm absolute bottom-2 right-2 transition-all hover:text-text"}
-        href="/auth/resetpassword"
-      >
+      <a className={"text-text_grey text-sm absolute bottom-2 right-2 transition-all hover:text-text"} href="/auth/resetpassword">
         Mot de passe oublié ?
       </a>
     </>
   );
-}
+});

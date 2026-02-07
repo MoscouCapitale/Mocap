@@ -29,7 +29,9 @@ export default function Single({ content }: SingleProps) {
             additionnalConfig={{
               delay: (content.controls as VideoControls)?.autoplay ? 2000 : undefined,
               controlsTrigger: "bottom",
-              disableSomeControls: content.controls ? getPlayerControlsFromMediaControls(content.controls as VideoControls) : ["volumeIcon", "duration"],
+              disableSomeControls: content.controls
+                ? getPlayerControlsFromMediaControls(content.controls as VideoControls)
+                : ["volumeIcon", "duration"],
             }}
             loopVideo
             muted

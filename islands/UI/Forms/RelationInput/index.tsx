@@ -1,15 +1,14 @@
-import { AvailableFormRelation, FormField, FormFieldOptions, FormFieldValue } from "@models/Form.ts";
-import { MediaSettingsAttributes } from "@models/Medias.ts";
-import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
-import { AvailableAttributes, getAttributes } from "@islands/UI/Forms/RelationInput/relationManager.ts";
-import { AllMocapObjectsTypes } from "@models/forms/bricks.tsx";
+import { Button, ContextualDots, Modal, ObjectRenderer, Select } from "@islands/UI";
+import { AvailableAttributes, getAttributes } from "./relationManager.ts";
 import { DatabaseAttributes } from "@models/App.ts";
-import { Button, ContextualDots, ObjectRenderer, Select, Modal } from "@islands/UI";
+import { AvailableFormRelation, FormField, FormFieldOptions, FormFieldValue } from "@models/Form.ts";
+import { AllMocapObjectsTypes } from "@models/forms/bricks.tsx";
 import { IconPlus, IconTrash } from "@utils/icons.ts";
 import ky from "ky";
+import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 
 type RelationInputProps = {
-    field: FormField;
+  field: FormField;
   onChange: (value: FormFieldValue) => void;
 };
 
@@ -17,7 +16,6 @@ export default function RelationInput(
   { field, onChange }: RelationInputProps,
 ) {
   // We need the config to correctly render the elements
-  if (!field.relation) return null;
   const attributeTable = useMemo(() => getAttributeFromKey(field.relation?.type ?? "artist"), [field.relation]);
 
   /** The formatted field, with all the correct options */
@@ -107,7 +105,6 @@ export default function RelationInput(
     const sendedBody = { ...upsertedItem };
     // Replace the full value of objects with the id, to correctly be saved in db.
     Object.keys(upsertedItem).forEach((key) => {
-      // @ts-expect-error - The typing here is not great.
       if (typeof sendedBody[key] === "object" && sendedBody[key]?.id) sendedBody[key] = sendedBody[key].id;
     });
 
@@ -132,8 +129,11 @@ export default function RelationInput(
   const isUpsertedItemNew = useMemo(() => upsertedItem === true, [upsertedItem]);
 
   /** Set the default content of the ObjectRenderer. It onlmy changes when the id changes, to avoid re-rendering on each event */
-  // @ts-expect-error - Id does not exist on 'true', this is why I use the nullish operator
-  const defaultObjectContent = useMemo(() => upsertedItem === true ? undefined : upsertedItem, [JSON.stringify(upsertedItem?.id ?? "")]);
+  const defaultObjectContent = useMemo(() => upsertedItem === true ? undefined : upsertedItem, [
+    JSON.stringify(upsertedItem?.id ?? ""),
+  ]);
+
+  if (!field.relation) return null;
 
   return (
     <>
@@ -164,7 +164,9 @@ export default function RelationInput(
               <Button
                 onClick={upsertAttribute}
                 className={{ wrapper: "grow justify-center" }}
-              >{updating ? "Enregistrement..." : `${isUpsertedItemNew ? "Créer" : "Modifier"}`}</Button>
+              >
+                {updating ? "Enregistrement..." : `${isUpsertedItemNew ? "Créer" : "Modifier"}`}
+              </Button>
               {!isUpsertedItemNew &&
                 <IconTrash className={"text-error cursor-pointer"} onClick={deleteAttribute} />}
             </div>

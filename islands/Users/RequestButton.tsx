@@ -14,7 +14,11 @@ export default function RequestButton(props: { user: User; text: string; accept:
   };
 
   return (
-    <div class={`px-2.5 py-[5px] ${accept ? "bg-success" : "bg-error"} rounded-[5px] flex-col justify-center items-start gap-2 inline-flex`}>
+    <div
+      class={`px-2.5 py-[5px] ${
+        accept ? "bg-success" : "bg-error"
+      } rounded-[5px] flex-col justify-center items-start gap-2 inline-flex`}
+    >
       <button onClick={handleRequest} class={`text-text text-base font-semibold`}>
         {loading ? <div class="animate-spin rounded-full h-3 w-3 border-b-2 border-text_grey"></div> : text}
       </button>

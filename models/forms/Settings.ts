@@ -115,7 +115,7 @@ export const MainSettingsFormFields: FormField[] = [
     type: "file",
     inputConfig: {
       variant: "inline",
-      filetype: ["Images"]
+      filetype: ["Images"],
     },
     placeholder: "Website Icon",
   },
@@ -210,9 +210,9 @@ export const MiscSettingsFormFields: FormField[] = [
     type: "file",
     inputConfig: {
       variant: "inline",
-      filetype: ["Misc"]
+      filetype: ["Misc"],
     },
-  }
+  },
 ];
 
 export const MiscSettingsDBObject: {
@@ -231,4 +231,4 @@ export const getSettingsFieldsFromName = (type: FetchableSettingsKeys) => {
     case "misc":
       return MiscSettingsFormFields;
   }
-}
+};

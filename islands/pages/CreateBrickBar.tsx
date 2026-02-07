@@ -54,14 +54,18 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
   const saveBrick = useCallback(
     (withCanvaInsert?: boolean) => {
       if (!brick) return;
-      const brickDatas = ({ ...brick, type: brickType } as availBricks);  
-      if (withCanvaInsert && brickState === "addIncanvas" && MCNodes.find((n) => n.type === BricksType.HeroSection) && brickDatas.type === BricksType.HeroSection) {
+      const brickDatas = { ...brick, type: brickType } as availBricks;
+      if (
+        withCanvaInsert && brickState === "addIncanvas" && MCNodes.find((n) => n.type === BricksType.HeroSection) &&
+        brickDatas.type === BricksType.HeroSection
+      ) {
         toast({
           title: "Error lors de la sauvegarde",
-          description: `Vous ne pouvez avoir qu'une seule "Hero Section" par page. Cette brique ne peut pas être insérée au canva.`,
+          description:
+            `Vous ne pouvez avoir qu'une seule "Hero Section" par page. Cette brique ne peut pas être insérée au canva.`,
         });
         return;
-      };
+      }
       ky.put("/api/brick", {
         json: {
           type: brickType,
@@ -96,14 +100,18 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
           }
         });
     },
-    [brick]
+    [brick],
   );
 
   const deleteBrick = useCallback(async () => {
     if (
       brickData &&
       brick &&
-      globalThis.confirm(`Are you sure ? The will NOT be recoverable.${brickData.nodeId ? " The brick will also be removed from the canvas." : ""}`)
+      globalThis.confirm(
+        `Are you sure ? The will NOT be recoverable.${
+          brickData.nodeId ? " The brick will also be removed from the canvas." : ""
+        }`,
+      )
     ) {
       try {
         ky.delete("/api/brick", {
@@ -157,12 +165,21 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
           </Button>
         )}
         {brickState && brickState !== "modifyingIncanvas" && (
-          <Button variant="secondary" onClick={() => saveBrick()} className={{ wrapper: "grow justify-center" }}>
+          <Button
+            variant="secondary"
+            onClick={() => saveBrick()}
+            className={{ wrapper: "grow justify-center" }}
+          >
             {brickState === "modifying" ? "Modifier" : "Enregistrer"} la brique
           </Button>
         )}
         {brickData && (
-          <Button variant="danger" onClick={deleteBrick} className={{ wrapper: "grow justify-center" }} icon={<IconTrash size={20} color="#EA5959" />}>
+          <Button
+            variant="danger"
+            onClick={deleteBrick}
+            className={{ wrapper: "grow justify-center" }}
+            icon={<IconTrash size={20} color="#EA5959" />}
+          >
             Supprimer la brique
           </Button>
         )}

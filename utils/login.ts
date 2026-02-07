@@ -30,11 +30,15 @@ function verifyPasswordIntegrity(password: string): string {
   };
 
   if (password.length < passwordFormat.minLength) return "Password must be at least 10 char.";
-  if (passwordFormat.hasCase && (!/[A-Z]/.test(password) || !/[a-z]/.test(password))) return "Password must contain at least one uppercase/lowercase";
+  if (passwordFormat.hasCase && (!/[A-Z]/.test(password) || !/[a-z]/.test(password))) {
+    return "Password must contain at least one uppercase/lowercase";
+  }
   if (passwordFormat.hasNumber && !/[0-9]/.test(password)) return "Password must contain at least one number";
-  if (passwordFormat.hasSpecialCharacter && !passwordFormat.authorizedCharacters.test(password)) return "Password must contain at least one special character";
+  if (passwordFormat.hasSpecialCharacter && !passwordFormat.authorizedCharacters.test(password)) {
+    return "Password must contain at least one special character";
+  }
 
   return "";
 }
 
-export { verifyEmailIntegrity, verifySamePassword, verifyPasswordIntegrity };
+export { verifyEmailIntegrity, verifyPasswordIntegrity, verifySamePassword };

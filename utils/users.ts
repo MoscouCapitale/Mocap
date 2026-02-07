@@ -1,6 +1,5 @@
 import { supabase as supa } from "@services/supabase.ts";
 import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
-import { sendEMail } from "@services/emailer.ts";
 
 export const sendUserRequestNotification = async (userId: string) => {
   const { data, error } = await supa.auth.admin.getUserById(userId);
@@ -24,7 +23,7 @@ export const sendUserRequestNotification = async (userId: string) => {
   //   at async Object.connect (ext:deno_net/01_net.js:587:55)
   //   at async SMTPConnection.#connect (https://deno.land/x/denomailer@1.4.0/client/basic/connection.ts:48:19)
   //   at async https://deno.land/x/denomailer@1.4.0/client/basic/client.ts:54:7
-  
+
   // await sendEMail({
   //   from: emailData.sender,
   //   to: emailData.recipient,

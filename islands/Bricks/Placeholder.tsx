@@ -10,7 +10,8 @@ type PlaceholderProps = {
   nodeId: string;
 };
 
-const disabledStyle = "pointer-events-none brightness-50 grayscale [&_*]:pointer-events-none [&_*]:brightness-50 [&_*]:grayscale";
+const disabledStyle =
+  "pointer-events-none brightness-50 grayscale [&_*]:pointer-events-none [&_*]:brightness-50 [&_*]:grayscale";
 
 export default function Placeholder({ type, content, nodeId }: PlaceholderProps) {
   const renderedContent = () => {
@@ -25,7 +26,10 @@ export default function Placeholder({ type, content, nodeId }: PlaceholderProps)
       case BricksType.Platform_Link:
         return (
           <div
-            className={cn("w-full h-full rounded-[20px] flex justify-center items-center text-[24px] text-text bg-background overflow-hidden", disabledStyle)}
+            className={cn(
+              "w-full h-full rounded-[20px] flex justify-center items-center text-[24px] text-text bg-background overflow-hidden",
+              disabledStyle,
+            )}
           >
             <p className={"blur-[2px]"}>
               {/* @ts-ignore - this is a PlatformLink brick */}
@@ -61,7 +65,9 @@ export default function Placeholder({ type, content, nodeId }: PlaceholderProps)
     }
 
     return (
-      <div className={"w-full h-full rounded-[20px] flex justify-center items-center text-text overflow-hidden relative"}>
+      <div
+        className={"w-full h-full rounded-[20px] flex justify-center items-center text-text overflow-hidden relative"}
+      >
         <img className={"absolute pos-center w-full h-full object-cover"} src="/assets/gradients/001.webp" />
         {content.type === BricksType.Highlight && getEmbedTargetFromLink(content.link ?? "") && (
           <LabeledToolTip
@@ -75,7 +81,12 @@ export default function Placeholder({ type, content, nodeId }: PlaceholderProps)
   };
 
   return (
-    <div id={"mcanva-article-placeholder"} data-node-id={nodeId} data-hover-card className={cn("group/main w-full h-full rounded-[20px]")}>
+    <div
+      id={"mcanva-article-placeholder"}
+      data-node-id={nodeId}
+      data-hover-card
+      className={cn("group/main w-full h-full rounded-[20px]")}
+    >
       {/* <div className={"absolute inset-0 w-full h-full pointer-events-none"}></div> */}
       {renderedContent()}
     </div>

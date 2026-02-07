@@ -71,7 +71,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
   /** Calculate the scale of the content. On mobile, we want to "dezoom" the content to fit the screen width */
   const contentScale = useMemo(
     () => (isMobile ? globalThis.innerWidth / (canvaSize.x2 - canvaSize.x1 + CONTENT_MARGIN * 2) : 1),
-    [globalThis.innerWidth, canvaSize]
+    [globalThis.innerWidth, canvaSize],
   );
 
   /** Calculate the full width and height of the content, to center it on the screen. The width is the screen width, and the height is the height of the canva */
@@ -135,7 +135,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
             y: node.y + topOffset,
           };
         })
-        .filter(Boolean) as MNode[]
+        .filter(Boolean) as MNode[],
     );
   }, [globalThis?.innerHeight, globalThis?.innerWidth, isMobile]);
 
@@ -180,7 +180,7 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
         return x >= rect.x && x <= rect.x + rect.width && y >= rect.y && y <= rect.y + rect.height;
       });
     },
-    [renderedNodes]
+    [renderedNodes],
   );
 
   /** Hover card effect on desktop */
@@ -213,7 +213,9 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
       const realHeight = focusedBrick.height * contentScale;
 
       // Calculate the scaling factor to fit the brick in the screen. Width by default, or height if the brick is too tall
-      const scaling = currentDeviceRatio < realWidth / realHeight ? globalThis.innerWidth / realWidth : globalThis.innerHeight / realHeight;
+      const scaling = currentDeviceRatio < realWidth / realHeight
+        ? globalThis.innerWidth / realWidth
+        : globalThis.innerHeight / realHeight;
 
       const xPos = 0;
       // Get the Y position to center the brick on the screen.
@@ -243,79 +245,86 @@ export default function BrickLayout({ nodes }: BrickLayoutProps) {
     setFocusedBrick(undefined);
   }, [focusedBrick?.id]);
 
-  return renderedNodes ? (
-    <>
-      {/** Hero section */}
-      {!isMobile && <div className={`h-screen w-full`}>{HeroSection}</div>}
+  return renderedNodes
+    ? (
+      <>
+        {/** Hero section */}
+        {!isMobile && <div className={`h-screen w-full`}>{HeroSection}</div>}
 
-      {/* Overlay on mobile, to intercept the user interaction */}
-      {isMobile && (
+        {/* Overlay on mobile, to intercept the user interaction */}
+        {isMobile && (
+          <div
+            ref={mobileOverlayRef}
+            className={cn(
+              "absolute top-0 left-0 w-full z-[90] transition-opacity duration-300",
+              focusedBrick ? "pointer-events-none" : "pointer-events-auto",
+            )}
+            style={{
+              height: `${fullHeight}px`,
+            }}
+            // Intercept the "clicks" on the overlay
+            onPointerDown={handleTouchEvent}
+            onClick={handleTouchEvent}
+            onTouchStart={handleTouchEvent}
+            onTouchMove={handleTouchEvent}
+            onTouchEnd={handleTouchEvent}
+          >
+          </div>
+        )}
+
+        {/** Actual bricks layout */}
         <div
-          ref={mobileOverlayRef}
-          className={cn("absolute top-0 left-0 w-full z-[90] transition-opacity duration-300", focusedBrick ? "pointer-events-none" : "pointer-events-auto")}
+          className={cn(`w-full origin-top-left`, focusedBrick ? "z-[91]" : "z-[initial]")}
           style={{
             height: `${fullHeight}px`,
+            marginTop: `${CONTENT_MARGIN}px`,
+            marginBottom: `${CONTENT_MARGIN}px`,
+            transform: `scale(${contentScale})`,
           }}
-          // Intercept the "clicks" on the overlay
-          onPointerDown={handleTouchEvent}
-          onClick={handleTouchEvent}
-          onTouchStart={handleTouchEvent}
-          onTouchMove={handleTouchEvent}
-          onTouchEnd={handleTouchEvent}
-        ></div>
-      )}
-
-      {/** Actual bricks layout */}
-      <div
-        className={cn(`w-full origin-top-left`, focusedBrick ? "z-[91]" : "z-[initial]")}
-        style={{
-          height: `${fullHeight}px`,
-          marginTop: `${CONTENT_MARGIN}px`,
-          marginBottom: `${CONTENT_MARGIN}px`,
-          transform: `scale(${contentScale})`,
-        }}
-      >
-        {/* Background when a brick is focused, to make the other bricks less visible and intercept the clicks */}
-        {focusedBrick && (
-          <div
-            className={"absolute left-0 bg-black bg-opacity-80 z-10"}
-            style={{
-              // Divide by the content scale to get the real size of the overlay (scaled by his parent)
-              width: `${fullWidth / contentScale}px`,
-              height: `${fullHeight / contentScale}px`,
-              top: `${-(CONTENT_MARGIN * 2)}px`, 
-            }}
-            onClick={removeFocus}
-          ></div>
-        )}
-        {renderedNodes.map((node) => {
-          return (
-            <article
-              data-node-id={node.id}
-              className={"absolute transition-transform origin-top-left ease-in-out duration-300"}
+        >
+          {/* Background when a brick is focused, to make the other bricks less visible and intercept the clicks */}
+          {focusedBrick && (
+            <div
+              className={"absolute left-0 bg-black/80 z-10"}
               style={{
-                "--focus-x": `initial`,
-                "--focus-y": `initial`,
-                "--focus-scale": `initial`,
-                width: `${node.width}px`,
-                height: `${node.height}px`,
-                "--offset-x": `var(--focus-x, ${node.x}px)`,
-                "--offset-y": `var(--focus-y, ${node.y}px)`,
-                transform: `translate3d(var(--offset-x), var(--offset-y), 0) scale(var(--focus-scale, 1))`,
+                // Divide by the content scale to get the real size of the overlay (scaled by his parent)
+                width: `${fullWidth / contentScale}px`,
+                height: `${fullHeight / contentScale}px`,
+                top: `${-(CONTENT_MARGIN * 2)}px`,
               }}
+              onClick={removeFocus}
             >
-              {getBrickFromCanvaNode(node, { brickSize: { width: node.width, height: node.height } })}
-            </article>
-          );
-        })}
-      </div>
-
-      {/* Close button when a brick is focused */}
-      {focusedBrick && (
-        <div class={"z-[92] absolute top-2 right-2 p-1 rounded-full bg-black"} onClick={removeFocus}>
-          <IconX class="text-text w-8 h-8" />
+            </div>
+          )}
+          {renderedNodes.map((node) => {
+            return (
+              <article
+                data-node-id={node.id}
+                className={"absolute transition-transform origin-top-left ease-in-out duration-300"}
+                style={{
+                  "--focus-x": `initial`,
+                  "--focus-y": `initial`,
+                  "--focus-scale": `initial`,
+                  width: `${node.width}px`,
+                  height: `${node.height}px`,
+                  "--offset-x": `var(--focus-x, ${node.x}px)`,
+                  "--offset-y": `var(--focus-y, ${node.y}px)`,
+                  transform: `translate3d(var(--offset-x), var(--offset-y), 0) scale(var(--focus-scale, 1))`,
+                }}
+              >
+                {getBrickFromCanvaNode(node, { brickSize: { width: node.width, height: node.height } })}
+              </article>
+            );
+          })}
         </div>
-      )}
-    </>
-  ) : null;
+
+        {/* Close button when a brick is focused */}
+        {focusedBrick && (
+          <div class={"z-[92] absolute top-2 right-2 p-1 rounded-full bg-black"} onClick={removeFocus}>
+            <IconX class="text-text w-8 h-8" />
+          </div>
+        )}
+      </>
+    )
+    : null;
 }

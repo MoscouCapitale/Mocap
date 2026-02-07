@@ -89,14 +89,14 @@ export default function Audio({ src, disabled, additionnalConfig, disableControl
     (time: number) => {
       if (playerRef?.current) playerRef.current.seekTo(time, "seconds");
     },
-    [audioState.duration]
+    [audioState.duration],
   );
 
   const canDisplayControl = useCallback(
     (el: AvailableControls) => {
       return !(additionnalConfig?.disableSomeControls ?? []).includes(el);
     },
-    [additionnalConfig]
+    [additionnalConfig],
   );
 
   return (
@@ -151,14 +151,11 @@ export default function Audio({ src, disabled, additionnalConfig, disableControl
                     setAudioState((p) => ({
                       ...p,
                       playing: !p.playing,
-                    }))
-                  }
+                    }))}
                 >
-                  {audioState.playing ? (
-                    <IconPlayerPauseFilled className={"text-text cursor-pointer"} size={ICONS_SIZE} />
-                  ) : (
-                    <IconPlayerPlayFilled className={"text-text cursor-pointer"} size={ICONS_SIZE} />
-                  )}
+                  {audioState.playing
+                    ? <IconPlayerPauseFilled className={"text-text cursor-pointer"} size={ICONS_SIZE} />
+                    : <IconPlayerPlayFilled className={"text-text cursor-pointer"} size={ICONS_SIZE} />}
                 </div>
               )}
               {/* Timeline */}
@@ -174,12 +171,17 @@ export default function Audio({ src, disabled, additionnalConfig, disableControl
                     <Slider.Track className="relative h-[3px] grow rounded-full bg-text_grey cursor-pointer">
                       <Slider.Range className="absolute h-full rounded-full bg-text" />
                     </Slider.Track>
-                    <Slider.Thumb className="block h-1 w-1 rounded-[10px] bg-text focus:outline-none cursor-pointer" aria-label="Volume" />
+                    <Slider.Thumb
+                      className="block h-1 w-1 rounded-[10px] bg-text focus:outline-hidden cursor-pointer"
+                      aria-label="Volume"
+                    />
                   </Slider.Root>
                 )}
                 {canDisplayControl("duration") && (
                   <div>
-                    <p className={"text-text font-semibold"}>{formatTime(audioState.duration - audioState.currentTime)}</p>
+                    <p className={"text-text font-semibold"}>
+                      {formatTime(audioState.duration - audioState.currentTime)}
+                    </p>
                   </div>
                 )}
               </div>
@@ -187,7 +189,8 @@ export default function Audio({ src, disabled, additionnalConfig, disableControl
               <Volume
                 volume={audioState.volume}
                 muted={audioState.muted}
-                setVolume={(volume: number) => setAudioState((p) => ({ ...p, volume }))}
+                setVolume={(volume: number) =>
+                  setAudioState((p) => ({ ...p, volume }))}
                 setMuted={(muted: boolean) => setAudioState((p) => ({ ...p, muted }))}
                 disabledIcon={!canDisplayControl("volumeIcon")}
                 disabledSlider={!canDisplayControl("volumeBar")}

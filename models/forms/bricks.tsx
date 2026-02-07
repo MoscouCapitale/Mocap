@@ -1,5 +1,16 @@
 import { LabeledToolTip } from "@islands/UI";
-import { Album, Artist, AudioBrick, HeroSection, Highlight, Platform, PlatformLink, Single, Text, Track } from "@models/Bricks.ts";
+import {
+  Album,
+  Artist,
+  AudioBrick,
+  HeroSection,
+  Highlight,
+  Platform,
+  PlatformLink,
+  Single,
+  Text,
+  Track,
+} from "@models/Bricks.ts";
 import { AvailableFormRelation, FormField, ObjFormField } from "@models/Form.ts";
 import { MediaCTA } from "@models/Medias.ts";
 import { MediaControlsFormField } from "@models/forms/media.ts";
@@ -231,7 +242,7 @@ const HighlightFormFields: ObjFormField<Highlight>[] = [
     trigger: {
       fieldName: ["link"],
       condition: (v) => !!getEmbedTargetFromLink(v ?? ""),
-    }
+    },
   },
   ...MediaControlsFormField,
 ];
@@ -322,7 +333,12 @@ export const AudioFormFields: ObjFormField<AudioBrick>[] = [
   {
     name: "media",
     type: "file",
-    label: <LabeledToolTip label="Média" text="Cover du son. Si aucun média n'est renseigné, la couleur du site sera utilisée." />,
+    label: (
+      <LabeledToolTip
+        label="Média"
+        text="Cover du son. Si aucun média n'est renseigné, la couleur du site sera utilisée."
+      />
+    ),
     inputConfig: {
       filetype: ["Images", "Videos"],
       onClickInput: () => {},
@@ -418,5 +434,5 @@ export const PlatformLinkFormFields: ObjFormField<PlatformLink>[] = [
     type: "checkbox",
     defaultValue: false,
     label: <LabeledToolTip label="Dans le footer" text="Si coché, le lien sera affiché dans le footer du site." />,
-  }
+  },
 ];

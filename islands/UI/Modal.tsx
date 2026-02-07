@@ -1,11 +1,11 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { cn } from "@utils/cn.ts";
 import { IconX } from "@utils/icons.ts";
-import { VNode } from "preact";
+import { ComponentChildren } from "preact";
 import { useState } from "preact/hooks";
 
 interface ModalProps {
-  children: VNode;
+  children: ComponentChildren;
   /** Whether the modal is open by default */
   defaultOpen?: boolean;
   /** Manually control the modal state */
@@ -28,13 +28,13 @@ export default function Modal({ children, defaultOpen, openState, sx }: ModalPro
       }}
     >
       <Dialog.Portal>
-        <Dialog.Overlay className="bg-black bg-opacity-60 backdrop-blur-sm fixed inset-0 z-30" />
+        <Dialog.Overlay className="bg-black/60 backdrop-blur-xs fixed inset-0 z-30" />
         <Dialog.Content
           className={cn(
             "z-30 fixed pos-center max-h-[85vh] w-fit max-w-[800px] min-w-[100px] min-h-[100px]", // Pos & size
             "bg-background p-5 rounded-xl",
             "border-2 border-[#101010]",
-            sx
+            sx,
           )}
         >
           {children}

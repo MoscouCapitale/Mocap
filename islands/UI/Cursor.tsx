@@ -24,9 +24,9 @@ type cursorState =
 const getCursorsState = (element: HTMLElement): cursorState => {
   /** We need to hide the cursor on iframes because the pointer events are not passed to the parent (document)
    * from the iframe that we cannot control (ex. youtube/spotify embeds). For now the solution is to hide the cursor */
-  if (element.attributes.getNamedItem("data-hover-card-embed")?.value === 'true') return "hidden";
-  if (element.attributes.getNamedItem("data-hover")?.value === 'true') return "hover";
-  if (element.attributes.getNamedItem("data-hover-card")?.value === 'true') return "hover-card";
+  if (element.attributes.getNamedItem("data-hover-card-embed")?.value === "true") return "hidden";
+  if (element.attributes.getNamedItem("data-hover")?.value === "true") return "hover";
+  if (element.attributes.getNamedItem("data-hover-card")?.value === "true") return "hover-card";
   const tag = element.tagName.toLowerCase();
   switch (tag) {
     case "input":
@@ -56,10 +56,10 @@ const getCursorsState = (element: HTMLElement): cursorState => {
 };
 
 /** For now disable the custom cursor
- * 
- * Maybe checkout https://cursify.vercel.app/ 
- * 
- * @returns 
+ *
+ * Maybe checkout https://cursify.vercel.app/
+ *
+ * @returns
  */
 export default function Cursor() {
   const isMobile = useIsMobile();

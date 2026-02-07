@@ -1,7 +1,7 @@
 type SimpleMessageProps = {
   message?: string;
   error?: string;
-  link?: any; 
+  link?: any;
 };
 
 export default function SimpleMessage({ message, error, link }: SimpleMessageProps) {
@@ -19,7 +19,10 @@ export default function SimpleMessage({ message, error, link }: SimpleMessagePro
           </div>
         )}
         {link && (
-          <a className="w-fit px-4 py-3 bg-main rounded justify-start items-center gap-2.5 inline-flex text-text text-lg" href={link.href}>
+          <a
+            className="w-fit px-4 py-3 bg-main rounded justify-start items-center gap-2.5 inline-flex text-text text-lg"
+            href={link.href}
+          >
             {link.text}
           </a>
         )}

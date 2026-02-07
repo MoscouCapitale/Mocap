@@ -1,4 +1,3 @@
-import { PostgrestError } from "https://esm.sh/v135/@supabase/postgrest-js@1.15.2/dist/module/index.js";
 import { DatabaseAttributes } from "@models/App.ts";
 
 /**
@@ -12,7 +11,7 @@ import { DatabaseAttributes } from "@models/App.ts";
  */
 export const evaluateSupabaseResponse = (
   data: any,
-  error: Error | PostgrestError | null,
+  error: Error | null,
 ): boolean => {
   if (error === null && data === null) return false;
   if (error || (!data || data.length === 0)) return true;
@@ -22,7 +21,7 @@ export const evaluateSupabaseResponse = (
 // TODO: detail more the response message
 export const returnErrorReponse = (
   data: any,
-  error: Error | PostgrestError | null,
+  error: Error | null,
 ): Response => {
   console.error(
     "=========Error while fetching data=========\n",
@@ -54,17 +53,13 @@ export const createQueryFromAttributesTables = (
 
   let query = !isChild || attrMapEntry.linkedTables ? "*," : "";
   if (!isChild && getAttribute) {
-    query = `${attribute}:${attrMapEntry.table} (*${
-      attrMapEntry.linkedTables ? "," : ""
-    }`;
+    query = `${attribute}:${attrMapEntry.table} (*${attrMapEntry.linkedTables ? "," : ""}`;
   }
 
   if (attrMapEntry.linkedTables) {
     query += attrMapEntry.linkedTables.map((lkTable) => {
       const fetchedChild = createQueryFromAttributesTables(lkTable, true);
-      return fetchedChild
-        ? ` ${lkTable}:${fetchedChild.table} (${fetchedChild.query})`
-        : "";
+      return fetchedChild ? ` ${lkTable}:${fetchedChild.table} (${fetchedChild.query})` : "";
     }).filter(Boolean);
   }
 

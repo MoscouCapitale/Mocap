@@ -1,6 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+@config "../tailwind.config.ts";
+
+@utility pos-center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@utility node-highlight {
+  box-shadow: 0px 0px 30px 10px #FFFFFF33;
+}
 
 @layer {
   h1,

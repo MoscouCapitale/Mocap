@@ -1,21 +1,24 @@
-import { Handlers, RouteContext } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 
 import { Toast } from "@hooks/toast.tsx";
 import { Button, LabeledToolTip, ToasterWrapper } from "@islands/UI";
 import { getSettingsInput, settingPostHandler } from "@utils/settings.tsx";
+import { define } from "@utils/app.ts";
 
 type HandlerType = {
   toast: Toast | null;
 };
 
-export const handler: Handlers<HandlerType | null> = {
-  async POST(req, ctx) {
+export const handler = define.handlers<HandlerType | null>({
+  async POST(ctx) {
+    const req = ctx.req;
     const toast = await settingPostHandler(req, "main");
-    return ctx.render({ toast });
+    return { data: { toast } };
   },
-};
+});
 
-export default async function MainSettings(req: Request, ctx: RouteContext) {
+export default define.page<typeof handler>(async (ctx) => {
+  const req = ctx.req;
   const Input = await getSettingsInput("main");
 
   const toast = ctx.data?.toast;
@@ -24,7 +27,8 @@ export default async function MainSettings(req: Request, ctx: RouteContext) {
     <>
       <form className="flex flex-col gap-14 justify-start" method="POST" enctype="multipart/form-data">
         {/* Emails TODO: support it */}
-        {/* <table className="table-auto border-collapse w-full settings-table">
+        {
+          /* <table className="table-auto border-collapse w-full settings-table">
         <thead>
           <tr>
             <th className="underline text-left">Email sending</th>
@@ -77,10 +81,12 @@ export default async function MainSettings(req: Request, ctx: RouteContext) {
             <td></td>
           </tr>
         </tbody>
-      </table> */}
+      </table> */
+        }
 
         {/* APIs keys  TODO: support it */}
-        {/* <table className="table-auto border-collapse settings-table">
+        {
+          /* <table className="table-auto border-collapse settings-table">
         <thead>
           <tr>
             <th className="underline text-left" colSpan={2}>
@@ -126,7 +132,8 @@ export default async function MainSettings(req: Request, ctx: RouteContext) {
             </td>
           </tr>
         </tbody>
-      </table> */}
+      </table> */
+        }
 
         {/* Misc */}
         <table className="table-auto border-collapse settings-table">
@@ -174,4 +181,4 @@ export default async function MainSettings(req: Request, ctx: RouteContext) {
       <ToasterWrapper content={toast} />
     </>
   );
-}
+});

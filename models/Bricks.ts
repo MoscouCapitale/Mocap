@@ -1,4 +1,4 @@
-import { Image, MediaCTA, Video, Audio  , MediaControls, MediaObjectFit } from "@models/Medias.ts";
+import { Audio, Image, MediaControls, MediaCTA, MediaObjectFit, Video } from "@models/Medias.ts";
 import { TableNames } from "@models/database.ts";
 
 /** The default base brick interface. */
@@ -12,7 +12,7 @@ interface Brick {
 }
 
 /** The HeroSection brick interface.
- * 
+ *
  * Its a brick positionned at the top of a page, used a the main brick. It is animated and can have a scrolling effect. */
 export interface HeroSection extends Brick {
   type: BricksType.HeroSection;
@@ -24,7 +24,7 @@ export interface HeroSection extends Brick {
 }
 
 /** The Single brick interface.
- * 
+ *
  * It is a brick that represents a single music track. */
 export interface Single extends Brick {
   type: BricksType.Single;
@@ -39,7 +39,7 @@ export interface Single extends Brick {
 }
 
 /** The Album brick interface.
- * 
+ *
  * It is a brick that represents a music album. Contains multiple tracks, each with artists and links to platforms. */
 export interface Album extends Brick {
   type: BricksType.Album;
@@ -54,7 +54,7 @@ export interface Album extends Brick {
 }
 
 /** The Text brick interface.
- * 
+ *
  * Represents a simple text section. */
 export interface Text extends Brick {
   type: BricksType.Text;
@@ -64,17 +64,17 @@ export interface Text extends Brick {
 }
 
 /** The PlatformLink brick interface.
- * 
+ *
  * Represents a simple link to a platform. */
 export interface PlatformLink extends Brick {
   type: BricksType.Platform_Link;
   platform: Platform;
   url: string;
   in_footer: boolean;
-};
+}
 
 /** The Highlight brick interface.
- * 
+ *
  * A simple brick with a media, optionnaly title/subtitle and a link. */
 export interface Highlight extends Brick {
   type: BricksType.Highlight;
@@ -88,7 +88,7 @@ export interface Highlight extends Brick {
 }
 
 /** The AudioBrick interface.
- * 
+ *
  * A brick that can hold an audio file.
  */
 export interface AudioBrick extends Brick {
@@ -117,7 +117,6 @@ export type Artist = {
   created_at: string;
   updated_at: string;
 };
-
 
 export type Platform = {
   id: number;
@@ -159,7 +158,7 @@ const getBrickTypeLabel = (type: BricksType): string => {
       console.error(`Unsupported label brick type: ${type}`);
       return "";
   }
-}
+};
 
 const getBrickTypeTableName = (type: BricksType): TableNames => {
   switch (type) {
@@ -180,12 +179,8 @@ const getBrickTypeTableName = (type: BricksType): TableNames => {
     default:
       throw new Error(`Unsupported brick type: ${type}`);
   }
-}
+};
 
 export type availBricks = HeroSection | Single | Album | Text | PlatformLink | Highlight | AudioBrick;
 
-export { 
-  BricksType, 
-  getBrickTypeLabel,
-   getBrickTypeTableName,  
-};
+export { BricksType, getBrickTypeLabel, getBrickTypeTableName };

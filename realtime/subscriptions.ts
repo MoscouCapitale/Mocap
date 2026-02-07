@@ -13,8 +13,6 @@ import { sendUserRequestNotification } from "@utils/users.ts";
 //   })
 //   .subscribe();
 
-
-
 export default function declareSubscription() {
   // return channel;
 }

@@ -1,4 +1,4 @@
-import { RouteContext } from "$fresh/server.ts";
+import { FreshContext } from "fresh";
 import Button from "../../../islands/UI/Button.tsx";
 import { Tooltip } from "@islands/UI";
 import UsersList from "@islands/Users/UsersList.tsx";
@@ -6,6 +6,7 @@ import { User, UserStatus } from "@models/Authentication.ts";
 import { supabase as supa } from "@services/supabase.ts";
 import { cn } from "@utils/cn.ts";
 import { IconChevronLeft, IconChevronRight } from "@utils/icons.ts";
+import { RouteContext } from "fresh/compat";
 
 const displayUserStatuses = [
   UserStatus.ACTV,
@@ -13,7 +14,9 @@ const displayUserStatuses = [
   UserStatus.BANN,
 ];
 
-export default async function Users(req: Request, ctx: RouteContext) {
+export default async function Users(ctx: FreshContext) {
+  const req = ctx.req;
+
   // Current user cannot be null, because it is checked in the middleware
   const currentUser = ctx.state.user;
 

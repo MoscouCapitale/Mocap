@@ -1,8 +1,9 @@
-import { FreshContext, type PageProps } from "$fresh/server.ts";
-import { Partial } from "$fresh/runtime.ts";
+import { FreshContext, type PageProps } from "fresh";
+import { Partial } from "fresh/runtime";
 import { getCachedSettings } from "../stores/settings.ts";
 
-export default async function App(req: Request, ctx: FreshContext) {
+export default async function App(ctx: FreshContext) {
+  const req = ctx.req;
   const mainSettings = await getCachedSettings("main") ?? {};
 
   const website_title = mainSettings.website_title || "Moscoucap";
@@ -21,9 +22,9 @@ export default async function App(req: Request, ctx: FreshContext) {
         <meta name="description" content={website_description} />
         <meta name="keywords" content={website_keywords.split(",").join(" ")} />
         <link rel="icon" href={website_icon.public_src} />
-        <link rel="stylesheet" href="/styles.css" />
+        {/* <link rel="stylesheet" href="/styles.css" /> */}
         <script src="/loader.js" defer></script>
-        
+
         {/* Its here that we declare our global styles */}
         <style>
           {`

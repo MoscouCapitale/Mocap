@@ -1,8 +1,8 @@
-import {
-  Session as SupaSession,
-  User as SupaUser,
-} from "https://esm.sh/v116/@supabase/gotrue-js@2.23.0/dist/module/index.js";
 import { Error } from "@models/Error.ts";
+
+//FIXME: "https://esm.sh/v116/@supabase/gotrue-js@2.23.0/dist/module/index.js";
+type SupaSession = any;
+type SupaUser = any;
 
 export type FormType = {
   type: "default" | "signup" | "action_done";
@@ -14,18 +14,24 @@ export type FormType = {
   error?: Error;
 };
 
+export type FormResponse = {
+  data: FormType;
+} | Response;
+
 export type User = SupaUser & {
   user_metadata: UserMetadatas;
 };
 
-export type UserMetadatas = {
-  isInit: undefined;
-} | {
-  isInit: true;
-  status: UserStatus;
-  role: UserRole;
-  preferences: UserPreferences;
-};
+export type UserMetadatas =
+  | {
+      isInit: undefined;
+    }
+  | {
+      isInit: true;
+      status: UserStatus;
+      role: UserRole;
+      preferences: UserPreferences;
+    };
 
 export enum UserRole {
   /** Super Admin. Can do anything. */
@@ -56,7 +62,6 @@ export enum UserStatus {
 }
 
 type UserPreferences = {};
-
 
 export type Session = SupaSession;
 

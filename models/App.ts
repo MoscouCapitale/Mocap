@@ -1,6 +1,6 @@
 import { Database } from "@models/database.ts";
-import { JSX } from "https://esm.sh/v128/preact@10.19.6/src/index.js";
 import { BricksType } from "@models/Bricks.ts";
+import { JSX } from "preact/jsx-runtime";
 
 interface AppStorage {
   navbarExpanded?: boolean;
@@ -25,8 +25,7 @@ type DropdownItem = {
 
 type Modify<T, R> = Omit<T, keyof R> & R;
 
-type Default_SettingsMain =
-  Database["public"]["Tables"]["Website_Settings_Main_Emails"]["Row"];
+type Default_SettingsMain = Database["public"]["Tables"]["Website_Settings_Main_Emails"]["Row"];
 type SettingsMain = Modify<
   Default_SettingsMain,
   {
@@ -48,10 +47,8 @@ type SettingsMain = Modify<
     };
   }
 >;
-type SettingsAPIs =
-  Database["public"]["Tables"]["Website_Settings_Main_APIs"]["Row"];
-type Default_SettingsMisc =
-  Database["public"]["Tables"]["Website_Settings_Main_Misc"]["Row"];
+type SettingsAPIs = Database["public"]["Tables"]["Website_Settings_Main_APIs"]["Row"];
+type Default_SettingsMisc = Database["public"]["Tables"]["Website_Settings_Main_Misc"]["Row"];
 type SettingsMisc = Modify<
   Default_SettingsMisc,
   {
@@ -61,14 +58,11 @@ type SettingsMisc = Modify<
 
 type mainSettings = [SettingsMain, SettingsAPIs, SettingsMisc];
 
-type mediasSettings =
-  Database["public"]["Tables"]["Website_Settings_Medias"]["Row"];
+type mediasSettings = Database["public"]["Tables"]["Website_Settings_Medias"]["Row"];
 
-type stylesSettings =
-  Database["public"]["Tables"]["Website_Settings_Styles"]["Row"];
+type stylesSettings = Database["public"]["Tables"]["Website_Settings_Styles"]["Row"];
 
-type miscSettings =
-  Database["public"]["Tables"]["Website_Settings_Misc"]["Row"];
+type miscSettings = Database["public"]["Tables"]["Website_Settings_Misc"]["Row"];
 
 type DatabaseAttributesType = {
   [key: string]: {
@@ -85,7 +79,14 @@ const DatabaseAttributes: DatabaseAttributesType = {
   media: {
     name: "Média",
     table: "Medias",
-    parentTables: ["Bricks_Single", "Bricks_Album", "Bricks_HeroSection", "Bricks_Text", "Bricks_Highlight", "Bricks_Audio"],
+    parentTables: [
+      "Bricks_Single",
+      "Bricks_Album",
+      "Bricks_HeroSection",
+      "Bricks_Text",
+      "Bricks_Highlight",
+      "Bricks_Audio",
+    ],
   },
   audio: {
     name: "Audio",
@@ -105,7 +106,7 @@ const DatabaseAttributes: DatabaseAttributesType = {
     name: "Lien",
     table: "CTA_Link",
     modifiable: true,
-    parentTables: ["Bricks_Single", "Bricks_Album", "Bricks_HeroSection"]
+    parentTables: ["Bricks_Single", "Bricks_Album", "Bricks_HeroSection"],
   },
   platforms: {
     name: "Liens vers plateformes",
@@ -113,29 +114,29 @@ const DatabaseAttributes: DatabaseAttributesType = {
     modifiable: true,
     linkedTables: ["platform"],
     multiple: true,
-    parentTables: ["Bricks_Single", "Bricks_Album", "Bricks_Track"]
+    parentTables: ["Bricks_Single", "Bricks_Album", "Bricks_Track"],
   },
   platform: {
     name: "Plateforme",
     table: "Platform",
     modifiable: true,
-    parentTables: ["Platform_Link"]
+    parentTables: ["Platform_Link"],
   },
   track: {
     name: "Track",
     table: "Track",
     modifiable: true,
     linkedTables: ["platforms", "artist"],
-    parentTables: ["Bricks_Single", "Bricks_Audio"]
-  }, 
+    parentTables: ["Bricks_Single", "Bricks_Audio"],
+  },
   tracklist: {
     name: "Track",
     table: "Track",
     modifiable: true,
     multiple: true,
     linkedTables: ["platforms", "artist"],
-    parentTables: ["Bricks_Album"]
-  }, 
+    parentTables: ["Bricks_Album"],
+  },
   artist: {
     name: "Artistes",
     table: "Artist",
@@ -144,16 +145,14 @@ const DatabaseAttributes: DatabaseAttributesType = {
   },
 };
 
-const DatabaseAttributesKeys = Object.keys(DatabaseAttributes)
+const DatabaseAttributesKeys = Object.keys(DatabaseAttributes);
 
 type Join<
   Key,
   Previous,
-  TKey extends number | string = string
-> = Key extends TKey
-  ? Previous extends TKey
-    ? `${Key}${'' extends Previous ? '' : '.'}${Previous}`
-    : never
+  TKey extends number | string = string,
+> = Key extends TKey ? Previous extends TKey ? `${Key}${"" extends Previous ? "" : "."}${Previous}`
+  : never
   : never;
 
 type Previous = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...0[]];
@@ -162,16 +161,13 @@ type Previous = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...0[]];
 export type Paths<
   TEntity,
   TDepth extends number = 3,
-  TKey extends number | string = string
-> = [TDepth] extends [never]
-  ? never
-  : TEntity extends object
-  ? {
-      [Key in keyof TEntity]-?: Key extends TKey
-        ? `${Key}` | Join<Key, Paths<TEntity[Key], Previous[TDepth]>>
+  TKey extends number | string = string,
+> = [TDepth] extends [never] ? never
+  : TEntity extends object ? {
+      [Key in keyof TEntity]-?: Key extends TKey ? `${Key}` | Join<Key, Paths<TEntity[Key], Previous[TDepth]>>
         : never;
     }[keyof TEntity]
-  : '';
+  : "";
 
 export type {
   AppStorage,

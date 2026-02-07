@@ -1,18 +1,15 @@
-import * as React from "preact/compat"
-import { ElementRef, PrimitiveForwardRefComponent, ComponentPropsWithoutRef } from "@models/type-utils.ts"
+import * as React from "preact/compat";
+import { ComponentPropsWithoutRef, ElementRef, PrimitiveForwardRefComponent } from "@models/type-utils.ts";
 import { DismissableLayerProps } from "@models/type-utils-DismissableLayer.d.ts";
-
 
 /**
  * Following type-definitions are based on "https://esm.sh/v133/@radix-ui/react-toast@1.1.5/X-YS9AdHlwZXMvcmVhY3Q6cHJlYWN0L2NvbXBhdCxyZWFjdC1kb206cHJlYWN0L2NvbXBhdCxyZWFjdDpwcmVhY3QvY29tcGF0CmUvKg/dist/index.d.mts"
- */ 
-
+ */
 
 type PrimitiveDivProps = ComponentPropsWithoutRef<PrimitiveForwardRefComponent<"div">>;
 type PrimitiveButtonProps = ComponentPropsWithoutRef<PrimitiveForwardRefComponent<"button">>;
 type PrimitiveOrderedListProps = ComponentPropsWithoutRef<PrimitiveForwardRefComponent<"ol">>;
 type PrimitiveListItemProps = ComponentPropsWithoutRef<PrimitiveForwardRefComponent<"li">>;
-
 
 interface ToastViewportProps extends PrimitiveOrderedListProps {
   /**
@@ -29,30 +26,34 @@ interface ToastViewportProps extends PrimitiveOrderedListProps {
 }
 export const Viewport: React.ForwardRefExoticComponent<ToastViewportProps & React.RefAttributes<HTMLOListElement>>;
 
-
 type ToastImplPrivateProps = {
   open: boolean;
   onClose(): void;
 };
 type ToastImplElement = ElementRef<PrimitiveForwardRefComponent<"li">>;
 type ToastElement = ToastImplElement;
-type SwipeEvent = {
-  currentTarget: EventTarget & ToastElement;
-} & Omit<CustomEvent<{
-  originalEvent: React.JSX.TargetedPointerEvent<HTMLElement>;
-  delta: {
-      x: number;
-      y: number;
-  };
-}>, 'currentTarget'>;
-interface ToastImplProps extends ToastImplPrivateProps, Omit<PrimitiveListItemProps, "open"|"onClose"> {
-  type?: 'foreground' | 'background';
+type SwipeEvent =
+  & {
+    currentTarget: EventTarget & ToastElement;
+  }
+  & Omit<
+    CustomEvent<{
+      originalEvent: React.JSX.TargetedPointerEvent<HTMLElement>;
+      delta: {
+        x: number;
+        y: number;
+      };
+    }>,
+    "currentTarget"
+  >;
+interface ToastImplProps extends ToastImplPrivateProps, Omit<PrimitiveListItemProps, "open" | "onClose"> {
+  type?: "foreground" | "background";
   /**
    * Time in milliseconds that toast should remain visible for. Overrides value
    * given to `ToastProvider`.
    */
   duration?: number;
-  onEscapeKeyDown?: DismissableLayerProps['onEscapeKeyDown'];
+  onEscapeKeyDown?: DismissableLayerProps["onEscapeKeyDown"];
   onPause?(): void;
   onResume?(): void;
   onSwipeStart?(event: SwipeEvent): void;
@@ -72,7 +73,6 @@ interface ToastProps extends Omit<ToastImplProps, keyof ToastImplPrivateProps> {
 }
 export const Root: React.ForwardRefExoticComponent<ToastProps & React.RefAttributes<HTMLLIElement>>;
 
-
 // deno-lint-ignore no-empty-interface
 interface ToastCloseProps extends PrimitiveButtonProps {
 }
@@ -87,15 +87,12 @@ interface ToastActionProps extends ToastCloseProps {
 }
 export const Action: React.ForwardRefExoticComponent<ToastActionProps & React.RefAttributes<HTMLButtonElement>>;
 
-
 export const Close: React.ForwardRefExoticComponent<ToastCloseProps & React.RefAttributes<HTMLButtonElement>>;
-
 
 // deno-lint-ignore no-empty-interface
 interface ToastTitleProps extends PrimitiveDivProps {
 }
 export const Title: React.ForwardRefExoticComponent<ToastTitleProps & React.RefAttributes<HTMLDivElement>>;
-
 
 // deno-lint-ignore no-empty-interface
 interface ToastDescriptionProps extends PrimitiveDivProps {
