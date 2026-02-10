@@ -47,8 +47,20 @@ export const getHashedCode = async (code: string) => {
   return encodeHex(hex);
 };
 
-import { User } from "@models/Authentication.ts";
+import { FormType, User } from "@models/Authentication.ts";
 import { createDefine } from "fresh";
 
+type AppState = FormType & {
+  pb: PocketBase;
+}
+
+type AuthenticatedAppState = AppState & {
+  user?: User;
+}
+
+//TODO: doc
 // Setup, do this once in a file and import it everywhere else.
-export const define = createDefine<User>();
+const define = createDefine<AppState>();
+// export const authDefine = createDefine<AuthenticatedAppState>();
+const authDefine = createDefine<AuthenticatedAppState>();
+export { define, authDefine }

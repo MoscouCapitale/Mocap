@@ -22,20 +22,21 @@ import declareSubscription from "./realtime/subscriptions.ts";
 
 declareSubscription();
 
+// FIXME: pocketbase
 // Check that the local Supabase instance is running (by querying the http://localhost:54321)
-try {
-  await fetch(
-    Deno.env.get("SUPABASE_URL") || "http://localhost:54321",
-    { method: "HEAD" },
-  );
-} catch (error) {
-    console.error(error)
-  console.error(
-    `%cERROR: Failed to connect to the local Supabase instance. Please ensure it is running using \`deno task supa-start\` and accessible.`,
-    "color: red",
-  );
-  Deno.exit(1);
-}
+// try {
+//   await fetch(
+//     Deno.env.get("SUPABASE_URL") || "http://localhost:54321",
+//     { method: "HEAD" },
+//   );
+// } catch (error) {
+//     console.error(error)
+//   console.error(
+//     `%cERROR: Failed to connect to the local Supabase instance. Please ensure it is running using \`deno task supa-start\` and accessible.`,
+//     "color: red",
+//   );
+//   Deno.exit(1);
+// }
 
 export const app = new App()
   .use(staticFiles())

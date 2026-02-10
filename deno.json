@@ -3,22 +3,32 @@
     "check": "deno fmt --check && deno lint && deno check",
     "start": "deno run -A --env=.env.local --watch=static/,routes/ dev.ts --allow-write --allow-read",
     "start-prod": "deno run -A --env=.env.production --watch=static/,routes/ dev.ts",
-    "supa-start": "supabase start || npx supabase start || echo 'Cannot run supabase. Please install it globally.'",
-    "supa-stop": "supabase stop || npx supabase stop || echo 'Cannot stop supabase. Please install it globally.'",
-    "supa-restart": "supabase stop && supabase start || npx supabase stop && npx supabase start || echo 'Cannot restart supabase. Please install it globally.'",
-    "supabase": "supabase",
+    "pb-serve": "./pocketbase/pocketbase.exe serve",
     "update": "deno run -A -r jsr:@fresh/update .",
     "dev": "deno run -A --env=.env.local npm:vite",
     "dev-debug": "deno run -A --inspect --env=.env.local npm:vite --debug",
     "build": "vite build",
     "preview": "deno serve -A _fresh/server.js"
   },
-  "lint": { "rules": { "tags": ["fresh", "recommended"] } },
-  "exclude": ["**/_fresh/*"],
+  "lint": {
+    "rules": {
+      "tags": [
+        "fresh",
+        "recommended"
+      ]
+    },
+    "exclude": [
+      "pocketbase/pb_data/types.d.ts"
+    ]
+  },
+  "exclude": [
+    "**/_fresh/*"
+  ],
   "nodeModulesDir": "auto",
   "imports": {
     "@fresh/plugin-vite": "jsr:@fresh/plugin-vite@^1.0.8",
     "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.18",
+    "pocketbase": "npm:pocketbase@^0.26.8",
     "preact": "npm:preact@^10.27.2",
     "@preact/signals": "npm:@preact/signals@^2.5.0",
     "$std/": "https://deno.land/std@0.210.0/",
@@ -99,12 +109,22 @@
     "fresh": "jsr:@fresh/core@^2.2.0",
     "vite": "npm:vite@^7.3.1"
   },
-  "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "types": ["./pocketbase/pb_data/types.d.ts"]
+  },
   "deploy": {
     "project": "9922ab92-ef16-4f9c-be6c-cb236795046f",
-    "exclude": ["**/node_modules"],
+    "exclude": [
+      "**/node_modules"
+    ],
     "include": [],
     "entrypoint": "main.ts"
   },
-  "fmt": { "options": { "lineWidth": 120 } }
+  "fmt": {
+    "options": {
+      "lineWidth": 120
+    }
+  }
 }

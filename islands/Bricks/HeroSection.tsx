@@ -5,7 +5,7 @@ import { IconArrowUpRight } from "@utils/icons.ts";
 import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
 
 import { AnimationConfig } from "@utils/bricks.tsx";
-import gsap/ from "gsap/";
+import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 

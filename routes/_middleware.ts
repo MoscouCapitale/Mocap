@@ -1,7 +1,8 @@
-import { FreshContext } from "fresh";
+import { define } from "@utils/app.ts";
+import { getPB } from "@utils/db.ts";
 
-export async function handler(ctx: FreshContext) {
-  const req = ctx.req;
-  const resp = await ctx.next();
-  return resp;
-}
+export default define.middleware((ctx) => {
+  // https://github.com/pocketbase/js-sdk#ssr-integration
+  ctx.state.pb = getPB();
+  return ctx.next();
+});

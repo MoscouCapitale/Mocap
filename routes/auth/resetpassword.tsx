@@ -7,6 +7,9 @@ import { verifyPasswordIntegrity } from "@utils/login.ts";
 
 export const handler = define.handlers({
   async POST(ctx) {
+    const {
+      state: { pb },
+    } = ctx;
     const req = ctx.req;
     const form = await req.formData();
     const email = form.get("email")?.toString() || "";
@@ -15,11 +18,23 @@ export const handler = define.handlers({
 
     // If no access_token, it means we send a reset password email
     if (!access_token) {
-      const { data, error } = await supa.auth.resetPasswordForEmail(email, {
-        redirectTo: `${new URL(req.url).origin}/auth/resetpassword?email=${email}`,
-      });
-
-      if (error) {
+      try {
+        // TODO: was here
+        /** là je dois reset le mdp (envoyer mail avec token qui renvoi sur cette page et permet de changer mdp avec token)
+         * requestPasswordReset envoi un mail qui envoi vers la page pocketbase.
+         * est ce que je peux utiliser https://pocketbase.io/jsvm/interfaces/core.Collection.html#passwordResetToken, et envoi moi meme
+         * email modifié avec https://pocketbase.io/jsvm/interfaces/core.Collection.html#resetPasswordTemplate ?
+         * Ou alors appeler route custom dans le back qui envoi email custom.
+         */
+        await pb.collection("users").requestPasswordReset(email);
+        return {
+          data: {
+            toast: {
+              description: "Si cet email est associé à un compte, un email de réinitialisation de mot de passe vous a été envoyé.",
+            },
+          },
+        };
+      } catch (error) {
         console.error("Error while sending reset password email", error);
         return {
           data: {
@@ -30,14 +45,6 @@ export const handler = define.handlers({
           },
         };
       }
-
-      return {
-        data: {
-          toast: {
-            description: "Si cet email est associé à un compte, un email de réinitialisation de mot de passe vous a été envoyé.",
-          },
-        },
-      };
     }
 
     // Checks if the password is valid

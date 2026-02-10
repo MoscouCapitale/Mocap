@@ -3,7 +3,7 @@ import Player from "../Player/index.tsx";
 import { Album as AlbumType, Track } from "@models/Bricks.ts";
 import { getPlayerControlsFromMediaControls, getStyleFit, VideoControls } from "@models/Medias.ts";
 import { cn } from "@utils/cn.ts";
-import gsap/ from "gsap/";
+import gsap from "gsap";
 import { TextPlugin } from "gsap/TextPlugin";
 import { useCallback, useMemo, useState } from "preact/hooks";
 gsap.registerPlugin(TextPlugin);
