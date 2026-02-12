@@ -26,7 +26,7 @@ export type FormResponse =
     }
   | Response;
 
-export interface User {
+export interface IUser {
   id: string;
   password?: string;
   tokenKey: string;
@@ -40,7 +40,7 @@ export interface User {
   updated: Date;
 }
 
-export interface NewUser extends PartialBy<User, "id" | "tokenKey" | "verified" | "created" | "updated"> {
+export interface NewUser extends PartialBy<IUser, "id" | "tokenKey" | "verified" | "created" | "updated"> {
   passwordConfirm: string;
 }
 

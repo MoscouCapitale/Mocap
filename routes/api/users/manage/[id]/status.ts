@@ -1,4 +1,4 @@
-import { User, UserRole, UserStatus } from "@models/Authentication.ts";
+import { IUser, UserRole, UserStatus } from "@models/Authentication.ts";
 import { supabase as supa, updateUserMetadata } from "@services/supabase.ts";
 import { define } from "@utils/app.ts";
 
@@ -13,7 +13,7 @@ export const handler = define.handlers({
    */
   PUT: async ctx => {
     const req = ctx.req;
-    const currentUser = ctx.state.user as User;
+    const currentUser = ctx.state.user as IUser;
 
     // If no user is currently logged in or the user is not an admin, return a 401
     if (!currentUser || !adminRoles.includes(currentUser.user_metadata.role) || currentUser.id === ctx.params.id) {

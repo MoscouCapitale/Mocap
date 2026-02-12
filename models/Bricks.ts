@@ -1,5 +1,87 @@
+import { IUser } from "./Authentication.ts";
 import { Audio, Image, MediaControls, MediaCTA, MediaObjectFit, Video } from "./Medias.ts";
 import { TableNames } from "./database.ts";
+import { RequiredBy } from "./type-utils.ts";
+
+/** Base interface of a content in the db */
+interface Content {
+  /** String id of the content */
+  id: string;
+  //TODO: check types
+  created: Date;
+  updated: Date;
+}
+
+export enum EAlbumType {
+  single,
+  album,
+  EP,
+}
+
+
+type RelationContent<T extends { id: string } | { id: string }[]> =
+  T extends (infer U)[]
+    ? U extends { id: string }
+      ? RequiredBy<Partial<U>, 'id'>[]
+      : never
+    : T extends { id: string }
+      ? RequiredBy<Partial<T>, 'id'>
+      : never;
+
+type UserRelation = RelationContent<IUser>;
+
+export interface IAlbum extends Content {
+  name: string;
+  type: EAlbumType;
+  user: UserRelation;
+  tracks?: RelationContent<ITrack[]>
+}
+
+export interface IArtist extends Content {
+  name: string;
+  user: UserRelation
+}
+
+export interface ILink extends Content {
+  name: string;
+  url: string;
+  icon_url?: string;
+  title?: string;
+  user: UserRelation
+}
+
+export interface ITrack extends Content {
+  name: string;
+  user: UserRelation;
+  artists?: RelationContent<IArtist>;
+}
+
+export enum EBrickType {
+  album,
+  audio,
+  hero,
+  highlight,
+  track,
+  text
+}
+
+// TODO: extend IBRicks for each type to get the correct model
+export interface IBricks extends Content {
+  title: string;
+  type: EBrickType;
+  user: UserRelation;
+  media?: any //TODO:
+  controls: Object //TODO:
+  settings: Object //TODO:
+}
+
+// TODO: INodes
+
+//TODO: settings
+
+// ============ OLD - TO RM ============
+//
+// ============ OLD - TO RM ============
 
 /** The default base brick interface. */
 interface Brick {

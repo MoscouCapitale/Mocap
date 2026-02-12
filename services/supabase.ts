@@ -1,6 +1,6 @@
 import { decodeBase64 as decode, encodeBase64 as encode } from "$std/encoding/base64.ts";
 import { getCookies, setCookie } from "$std/http/cookie.ts";
-import { User, UserMetadatas } from "@models/Authentication.ts";
+import { IUser, UserMetadatas } from "@models/Authentication.ts";
 import { Database } from "@models/database.ts";
 import { AuthError, createClient } from "supabase";
 
@@ -54,7 +54,7 @@ export const supabaseSSR = (req: Request, res: Response) =>
   );
 
 export const getUserFromSession = async (request: Request): Promise<{
-  user: User | null;
+  user: IUser | null;
   error: AuthError | null;
 }> => {
   const cookies = getCookies(request.headers);
@@ -67,7 +67,7 @@ export const getUserFromSession = async (request: Request): Promise<{
       // Generaly, the error is because the token is expired
       return { user: null, error: error };
     }
-    return { user: data.user as User, error: null };
+    return { user: data.user as IUser, error: null };
   }
 
   // If no access, it means first connexion. Return nothing
@@ -123,9 +123,9 @@ export const setAuthCookie = (
 };
 
 export const updateUserMetadata = async (
-  user_id: User["id"],
+  user_id: IUser["id"],
   metadata: Partial<UserMetadatas>,
-): Promise<User | null> => {
+): Promise<IUser | null> => {
   try {
     const { data, error } = await supabase.auth.admin.getUserById(user_id);
 
@@ -134,7 +134,7 @@ export const updateUserMetadata = async (
         user_metadata: { ...data.user.user_metadata, ...metadata },
       });
       // @ts-ignore - return a user, or null if not found
-      return newUser.user as User ?? null;
+      return newUser.user as IUser ?? null;
     }
     throw new Error(error.message);
   } catch (e) {

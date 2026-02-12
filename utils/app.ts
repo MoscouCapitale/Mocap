@@ -47,7 +47,7 @@ export const getHashedCode = async (code: string) => {
   return encodeHex(hex);
 };
 
-import { FormType, User } from "@models/Authentication.ts";
+import { FormType, IUser } from "@models/Authentication.ts";
 import { createDefine } from "fresh";
 
 type AppState = FormType & {
@@ -55,7 +55,7 @@ type AppState = FormType & {
 }
 
 type AuthenticatedAppState = AppState & {
-  user?: User;
+  user?: IUser;
 }
 
 //TODO: doc

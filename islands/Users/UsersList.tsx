@@ -1,7 +1,7 @@
 import { Toaster } from "@components/UI/Toast/Toaster.tsx";
 import { toast } from "@hooks/toast.tsx";
 import { ContextualDots, Select, Tooltip } from "@islands/UI";
-import { User, UserRole, UserStatus } from "@models/Authentication.ts";
+import { IUser, UserRole, UserStatus } from "@models/Authentication.ts";
 import { FormField } from "@models/Form.ts";
 import { cn } from "@utils/cn.ts";
 import ky from "ky";
@@ -9,8 +9,8 @@ import { useEffect, useMemo, useState } from "preact/hooks";
 import UserActions from "../Settings/Users/UsersList/UserActions.tsx";
 
 type UsersListProps = {
-  currentUser: User;
-  usersList: User[];
+  currentUser: IUser;
+  usersList: IUser[];
 };
 
 export default function UsersList({
@@ -20,7 +20,7 @@ export default function UsersList({
   // TODO: better user management, with a select to change the status exaclty like the role
 
   // Set the users list from the props, because when we update a user, we want to update the list accordingly
-  const [usersList, setUsersList] = useState<User[] | null>(null);
+  const [usersList, setUsersList] = useState<IUser[] | null>(null);
   useEffect(() => setUsersList(propsUsersList), [propsUsersList]);
 
   const selectField: FormField = useMemo(() => ({
@@ -43,11 +43,11 @@ export default function UsersList({
   /**
    * Update the user status
    *
-   * @param {User} user - The user to update
+   * @param {IUser} user - The user to update
    * @param {UserStatus} status - The new status to apply
    * @throws {Error} If the request fails, display a toast with the error message. If 401, user doesn't have the rights.
    */
-  const updateUserAccess = (user: User, status: UserStatus) => {
+  const updateUserAccess = (user: IUser, status: UserStatus) => {
     ky.put(`/api/users/manage/${user.id}/status`, {
       json: {
         status,
@@ -81,7 +81,7 @@ export default function UsersList({
     );
   };
 
-  const updateUserRole = (user: User, role: string) => {
+  const updateUserRole = (user: IUser, role: string) => {
     ky.put(`/api/users/manage/${user.id}/role`, {
       json: {
         role,

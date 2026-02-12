@@ -1,8 +1,8 @@
-import { User } from "@models/Authentication.ts";
+import { IUser } from "@models/Authentication.ts";
 import ky from "ky";
 import { useState } from "preact/hooks";
 
-export default function RequestButton(props: { user: User; text: string; accept: boolean }) {
+export default function RequestButton(props: { user: IUser; text: string; accept: boolean }) {
   const { user, text, accept } = props;
 
   const [loading, setLoading] = useState(false);

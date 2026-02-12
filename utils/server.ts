@@ -1,4 +1,4 @@
-import { User, UserRole, UserStatus } from "@models/Authentication.ts";
+import { IUser, UserRole, UserStatus } from "@models/Authentication.ts";
 import { authDefine } from "./app.ts";
 
 const publicRoutes: string[] = [];
@@ -16,7 +16,7 @@ export const authMiddleware = authDefine.middleware(async (ctx) => {
   try {
     // get an up-to-date auth store state by verifying and refreshing the loaded auth model (if any)
     ctx.state.pb.authStore.isValid && (await ctx.state.pb.collection("users").authRefresh());
-    const user = ctx.state.pb.authStore.record as User | null;
+    const user = ctx.state.pb.authStore.record as IUser | null;
     if (!user) throw new Error();
     ctx.state.user = structuredClone(user);
   } catch (_) {

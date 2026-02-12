@@ -4,7 +4,7 @@ import UserRevokeAccount from "@components/settings/UserRevokeAccount.tsx";
 
 import { ToasterToast } from "@hooks/toast.tsx";
 import { ToasterWrapper } from "@islands/UI";
-import { User } from "@models/Authentication.ts";
+import { IUser } from "@models/Authentication.ts";
 import { define } from "@utils/app.ts";
 import { verifyEmailIntegrity } from "@utils/login.ts";
 
@@ -16,7 +16,7 @@ export const handler = define.handlers({
   async POST(ctx) {
     const req = ctx.req;
     const url = new URL(req.url);
-    const user = ctx.state.user as User;
+    const user = ctx.state.user as IUser;
 
     if (!user) return { data: {} };
 
@@ -96,7 +96,7 @@ export const handler = define.handlers({
 });
 
 export default define.page<typeof handler>((ctx) => {
-  const user = ctx.state.user as User;
+  const user = ctx.state.user as IUser;
   const toast = ctx.data?.toast;
 
   if (!user) return <div className="text-text">Not logged in</div>;
