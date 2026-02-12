@@ -22,7 +22,7 @@ function verifySamePassword(password: string, confirmPassword: string): string {
 
 function verifyPasswordIntegrity(password: string): string {
   const passwordFormat = {
-    minLength: 10,
+    minLength: 8,
     hasCase: true,
     hasNumber: true,
     hasSpecialCharacter: true,

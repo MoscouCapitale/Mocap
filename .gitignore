@@ -8,3 +8,6 @@ _fresh/
 node_modules/
 fresh.gen.ts
 .vscode/
+
+# pocketbase
+pocketbase/pb_data/*

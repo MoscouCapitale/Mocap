@@ -1,13 +1,13 @@
 import AuthForm from "@islands/AuthForm.tsx";
-import { FormType } from "@models/Authentication.ts";
-import { handleSignInOTP, handleSignInPassword, handleSignUp } from "@services/authentication.ts";
-import { getUserFromSession, supabaseSSR } from "@services/supabase.ts";
-import { define } from "@utils/app.ts";
+import { FormType, NewUser, UserRole, UserStatus } from "@models/Authentication.ts";
+import { authDefine } from "@utils/app.ts";
 import { verifyEmailIntegrity } from "@utils/login.ts";
+import { ClientResponseError } from "pocketbase";
+import { isEmailAvailable } from "@utils/auth.ts";
 
-export const handler = define.handlers({
+export const handler = authDefine.handlers({
   // When accessing the /auth route
-  GET: async (ctx) => {
+  GET: (ctx) => {
     const req = ctx.req;
     const params = new URL(req.url).searchParams;
 
@@ -34,93 +34,122 @@ export const handler = define.handlers({
     }
 
     // Get the user from the current session
-    const { user, error } = await getUserFromSession(req);
-    if (user) {
-      return new Response("", {
-        status: 303,
-        headers: {
-          Location: "/admin/pages",
-        },
-      });
-    }
+    if (ctx.state.user) return ctx.redirect("/admin/pages", 303);
 
-    if (error) {
-      switch (error.status) {
-        case 403:
-          return {
-            data: {
-              type: "default",
-              error: { message: "Votre session a expiré, merci de vous ré-authentifier." },
-            },
-          };
-        case 500:
-        default:
-          return { data: { type: "default" } };
-      }
-    }
+    // if (error) {
+    //   switch (error.status) {
+    //     case 403:
+    //       return {
+    //         data: {
+    //           type: "default",
+    //           error: { message: "Votre session a expiré, merci de vous ré-authentifier." },
+    //         },
+    //       };
+    //     case 500:
+    //     default:
+    //       return { data: { type: "default" } };
+    //   }
+    // }
 
     // If no error, render the default page (login form)
     return { data: { type: "default" } };
   },
   POST: async (ctx) => {
-    const req = ctx.req;
+    const { req, state: { pb } } = ctx;
     const form = await req.formData();
     const url = new URL(req.url);
-    const redirectURL = url.searchParams.get("redirect");
+    const redirectURL = url.searchParams.get("redirect") ?? "/admin/pages";
 
     const authType = form.get("authtype")?.toString() || "signin";
 
-    const formData = {
+    const { email, password, confirmpassword } = {
       email: form.get("email")?.toString() || "",
       password: form.get("password")?.toString() || "",
       confirmpassword: form.get("confirmpassword")?.toString() || "",
     };
 
-    const res = new Response();
-
-    // FIXME: What is this ???
-    // setTimeout(async () => {
-    //   const render = await ctx.render({
-    //     type: "default",
-    //     additional_data: {
-    //       email: formData.email,
-    //     },
-    //   });
-    //   return new Response(render.body, {
-    //     headers: res.headers,
-    //   });
-    // }, 5000);
-
-    if (!formData.email || verifyEmailIntegrity(formData.email) !== "") {
+    if (!email || verifyEmailIntegrity(email) !== "") {
       return { data: { type: "default", error: "Invalid email" } };
     }
 
-    const supa = supabaseSSR(req, res);
+    const emailAvailable = await isEmailAvailable(email);
 
-    // Signin
-    if (authType === "signin") {
-      // If a password is not provided, it means the user is trying to sign in with OTP
-      if (!formData.password) {
-        return await handleSignInOTP(supa, redirectURL, formData.email, url.origin);
-      } else {
-        // If a password is provided, it means the user is trying to sign in with password
-        return await handleSignInPassword(supa, redirectURL, formData.email, formData.password);
+    const returnError = (message: string) => ({
+      data: {
+        type: authType,
+        additional_data: { email },
+        error: { message },
+      },
+    });
+
+    console.log("Authing", {
+      authType,
+      emailAvailable
+    })
+
+    if (authType === "signin" && emailAvailable) {
+      const resp = returnError("Cette adresse email n'est pas enregistrée, veuillez vous inscrire.");
+      resp.data.type = "signup";
+      return resp;
+    }
+
+    if (authType === "signup") {
+      // Validate infos
+      if (!emailAvailable) return returnError("This email is not available");
+      if (!password) return returnError("This field must be set");
+      if (password !== confirmpassword) return returnError("The password does not match");
+
+      const userObject: NewUser = {
+        email,
+        password,
+        passwordConfirm: confirmpassword,
+        // TODO: manage status
+        status: UserStatus.RQST,
+        role: UserRole.ADMIN,
+        // TODO: check following fields
+        emailVisibility: true,
+        // verified: true, // TODO: use verified or rqst status ? validation_values_mismatch error
+      };
+
+      console.log("userObject", userObject);
+
+      try {
+        const newUser = await pb.collection("users").create(userObject);
+        console.log("newUser");
+        console.dir(newUser, { depth: null, color: true });
+        if (!newUser.id) throw new Error('internal error');
+      } catch (e) {
+        if (e instanceof ClientResponseError) {
+          console.log(e.response);
+          //TODO: frontend check for this & better manage all possible errors
+          return returnError("Password must be at least 8 characters");
+        }
+        return returnError("An unexpected error occured");
       }
     }
 
-    // Signup
-    if (authType === "signup") {
-      return await handleSignUp(supa, formData.email, formData.password, formData.confirmpassword, url.origin);
+    try {
+      const { token, record } = await pb.collection("users").authWithPassword(email, password);
+      pb.authStore.save(token, record)
+      return new Response(null, {
+        status: 303,
+        headers: {
+          "set-cookie": pb.authStore.exportToCookie(),
+          location: redirectURL,
+        },
+      });
+    } catch (e) {
+      if (e instanceof ClientResponseError) {
+        console.error(e.response);
+      }
+      if (e instanceof ClientResponseError && e.status === 400) return returnError("Email or password is invalid");
+      return returnError("An unexpected error occured");
     }
 
-    // Default
-    return { data: { type: "default" } };
   },
 });
 
-// TODO: was here. render
-
-export default define.page<typeof handler>(({ data }) => {
+export default authDefine.page(({ data }) => {
   return (
     <>
       <AuthForm data={data as FormType} />

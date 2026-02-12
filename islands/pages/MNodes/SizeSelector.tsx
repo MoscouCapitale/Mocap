@@ -7,7 +7,7 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { Portal } from "@radix-ui/react-portal";
 import { cn } from "@utils/cn.ts";
 import { IconGripHorizontal, IconGripVertical, IconResize } from "@utils/icons.ts";
-import gsap/ from "gsap/";
+import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
 import Button from "../../UI/Button.tsx";

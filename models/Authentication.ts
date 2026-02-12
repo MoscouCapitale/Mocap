@@ -1,11 +1,17 @@
 import { Error } from "@models/Error.ts";
+import { PartialBy } from "./type-utils.ts";
 
 //FIXME: "https://esm.sh/v116/@supabase/gotrue-js@2.23.0/dist/module/index.js";
 type SupaSession = any;
-type SupaUser = any;
 
 export type FormType = {
-  type: "default" | "signup" | "action_done";
+  type: "default" | "signin" | "signup" | "action_done";
+  toast?: {
+    title?: string,
+    message: string
+    // TODO: add toast types
+  },
+  //TODO: remove message and use generic for custom datas
   additional_data?: {
     email?: string;
     password?: string;
@@ -14,13 +20,29 @@ export type FormType = {
   error?: Error;
 };
 
-export type FormResponse = {
-  data: FormType;
-} | Response;
+export type FormResponse =
+  | {
+      data: FormType;
+    }
+  | Response;
 
-export type User = SupaUser & {
-  user_metadata: UserMetadatas;
-};
+export interface User {
+  id: string;
+  password?: string;
+  tokenKey: string;
+  email: string;
+  emailVisibility: boolean;
+  verified: boolean;
+  role: UserRole;
+  status: UserStatus;
+  preferences?: UserPreferences;
+  created: Date;
+  updated: Date;
+}
+
+export interface NewUser extends PartialBy<User, "id" | "tokenKey" | "verified" | "created" | "updated"> {
+  passwordConfirm: string;
+}
 
 export type UserMetadatas =
   | {

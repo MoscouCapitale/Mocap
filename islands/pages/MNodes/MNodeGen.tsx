@@ -2,7 +2,7 @@ import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { useGSAP } from "@gsap/react";
 import { CANVA_GUTTER, getAvailableSizes, MNode } from "@models/Canva.ts";
 import { signal } from "@preact/signals";
-import gsap/ from "gsap/";
+import gsap from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { Ref, useCallback, useEffect, useMemo, useState } from "preact/hooks";
 
