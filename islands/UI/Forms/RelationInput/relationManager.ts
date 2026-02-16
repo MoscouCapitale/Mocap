@@ -1,9 +1,8 @@
-import { Artist, Platform, PlatformLink, Track } from "@models/Bricks.ts";
+import { IAlbum, IArtist, ILink, ITrack } from "@models/Bricks.ts";
 import { AvailableFormRelation } from "@models/Form.ts";
-import { MediaControls, MediaCTA } from "@models/Medias.ts";
 import ky from "ky";
 
-export type AvailableAttributes = MediaControls | MediaCTA | PlatformLink | Platform | Track | Artist;
+export type AvailableAttributes = IAlbum | IArtist | ITrack | ILink;
 
 // Prefix for local storage
 const LOCAL_PREFIX = "moc_attr_";

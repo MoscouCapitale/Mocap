@@ -85,13 +85,10 @@ export type FormFieldRelation = {
 };
 
 export type AvailableFormRelation =
-  | "cta"
-  | "controls"
-  | "platforms"
-  | "platform"
-  | "tracklist"
-  | "track"
-  | "artist";
+  | "tracks"
+  | "links"
+  | "albums"
+  | "artists";
 
 export const baseInputStyle = cn(
   "min-w-[180px] bg-background text-[15px] rounded-sm px-[5px] py-[3px] border-2 border-text text-text mx-0",

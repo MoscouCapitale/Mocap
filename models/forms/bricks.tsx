@@ -1,64 +1,52 @@
-import { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
 import { LabeledToolTip } from "@islands/UI";
 import {
-    Album,
-    Artist,
-    AudioBrick,
-    HeroSection,
-    Highlight,
-    Platform,
-    PlatformLink,
-    Single,
-    Text,
-    Track,
+  EBrickType,
+  IAlbum,
+  IArtist,
+  IBrickAlbum,
+  IBrickHighlight,
+  IBrickText,
+  ILink,
+  ITrack
 } from "../Bricks.ts";
-import { AvailableFormRelation, FormField, ObjFormField } from "../Form.ts";
-import { MediaCTA } from "../Medias.ts";
-import { MediaControlsFormField } from "./media.ts";
+import { FormField, ObjFormField } from "../Form.ts";
 
-export type AllMocapObjectsTypes =
-  | "HeroSection"
-  | "Single"
-  | "Highlight"
-  | "Album"
-  | "Track"
-  | "Artist"
-  | "Platform"
-  | "Audio"
-  | "Text"
-  | "Platform_Link"
-  | "CTA_Link"
-  | "Controls";
+export enum ETableNames {
+  albums = "albums",
+  artists = "artists",
+  links = "links",
+  // nodes = "nodes",
+  settings = "settings",
+  tracks = "tracks",
+  // users = "users",
+}
 
 /**
  * Export all the form fields for the different types of objects that can be created, and saved in the database.
  *
  * Include the bricks, but also the secondary objects like cta, controls, object_fit, etc. */
 
-export const getObjectFormFromType = (type: AllMocapObjectsTypes): FormField[] | null => {
+export const getObjectFormFromType = (type: ETableNames | EBrickType): FormField[] | null => {
   switch (type) {
-    case "HeroSection":
-      return HeroSectionFormFields;
-    case "Highlight":
-      return HighlightFormFields;
-    case "Single":
-      return SingleFormFields;
-    case "Album":
+    case ETableNames.albums:
       return AlbumFormFields;
-    case "Track":
-      return TrackFormFields;
-    case "Artist":
+    case ETableNames.artists:
       return ArtistFormFields;
-    case "Platform":
-      return PlatformFormFields;
-    case "Audio":
-      return AudioFormFields;
-    case "Text":
-      return TextFormFields;
-    case "Platform_Link":
-      return PlatformLinkFormFields;
-    case "CTA_Link":
-      return CTAFormFields;
+    case ETableNames.links:
+      return LinkFormFields;
+    // case ETableNames.nodes:
+    case ETableNames.settings:
+      return []; //FIXME:
+    case ETableNames.tracks:
+      return TrackFormFields;
+    // case ETableNames.users:
+    /** Bricks */
+    case EBrickType.album:
+      return BrickAlbumFormFields;
+    case EBrickType.highlight:
+      return BrickHighlightFormFields;
+    case EBrickType.text:
+      return BrickTextFormFields;
     default:
       return null;
   }
@@ -73,100 +61,74 @@ const DefaultBricksFormValues: ObjFormField<{ name: "name" }>[] = [
   },
 ];
 
-export const ObjectRelations: Record<AvailableFormRelation, FormField> = {
-  cta: {
-    name: "cta",
+export const ObjectRelations: Record<string, FormField> = {
+  link: {
+    name: "link",
     type: "relation",
     label: "Lien",
     placeholder: " ",
     relation: {
-      type: "cta",
+      type: "links",
       configurable: true,
       multiple: false,
       allowEmpty: true,
       allowInsert: true,
     },
   },
-  track: {
+  links: {
+    name: "link",
+    type: "relation",
+    label: "Lien",
+    placeholder: " ",
+    relation: {
+      type: "links",
+      configurable: true,
+      multiple: false,
+      allowEmpty: true,
+      allowInsert: true,
+    },
+  },
+  tracks: {
     name: "track",
     type: "relation",
     label: "Track",
     placeholder: " ",
     required: true,
     relation: {
-      type: "track",
+      type: "tracks",
       configurable: true,
       multiple: false,
       allowEmpty: true,
       allowInsert: true,
     },
   },
-  tracklist: {
-    name: "tracklist",
+  albums: {
+    name: "album",
     type: "relation",
-    label: "Tracklist",
+    label: "Album",
     relation: {
-      type: "tracklist",
+      type: "albums",
       configurable: true,
       multiple: true,
       allowEmpty: true,
       allowInsert: true,
     },
   },
-  artist: {
+  artists: {
     name: "artist",
     type: "relation",
     label: "Artiste",
     relation: {
-      type: "artist",
+      type: "artists",
       configurable: true,
       multiple: true,
-      allowEmpty: true,
-      allowInsert: true,
-    },
-  },
-  platforms: {
-    name: "platforms",
-    type: "relation",
-    label: "Plateformes",
-    relation: {
-      type: "platforms",
-      configurable: true,
-      multiple: true,
-      allowEmpty: true,
-      allowInsert: true,
-    },
-  },
-  platform: {
-    name: "platform",
-    type: "relation",
-    label: "Icone",
-    placeholder: " ",
-    relation: {
-      type: "platform",
-      configurable: true,
-      multiple: false,
-      allowEmpty: true,
-      allowInsert: true,
-    },
-  },
-  controls: {
-    name: "controls",
-    type: "relation",
-    label: "Contrôles",
-    placeholder: " ",
-    relation: {
-      type: "controls",
-      configurable: true,
-      multiple: false,
       allowEmpty: true,
       allowInsert: true,
     },
   },
 };
 
-const HeroSectionFormFields: ObjFormField<HeroSection>[] = [
-  ...DefaultBricksFormValues,
+const BrickHighlightFormFields: ObjFormField<IBrickHighlight>[] = [
   {
     name: "title",
     type: "string",
@@ -188,7 +150,21 @@ const HeroSectionFormFields: ObjFormField<HeroSection>[] = [
       customLabel: "Parcourir la médiathèque",
     },
   },
-  ObjectRelations.cta as ObjFormField<HeroSection>,
+  {
+    name: "variant",
+    type: "select",
+    label: "Variant",
+    options: [
+      {
+        label: "default",
+        value: "Default",
+      },
+      {
+        label: "hero",
+        value: "Hero-section",
+      },
+    ],
+  },
   {
     name: "style",
     type: "select",
@@ -200,20 +176,42 @@ const HeroSectionFormFields: ObjFormField<HeroSection>[] = [
       },
     ],
   },
+  {
+    name: "link",
+    type: "relation",
+    label: "Lien",
+    placeholder: " ",
+    relation: {
+      type: "links",
+      configurable: true,
+      multiple: false,
+      allowEmpty: true,
+      allowInsert: true,
+    },
+  },
+  // {
+  //   name: "is_embed",
+  //   type: "checkbox",
+  //   label: (
+  //     <LabeledToolTip
+  //       label="Intégration"
+  //       text="Le 'média' sera remplacé par une intégration spécifiée dans le 'Lien' (Spotify, SoundCloud, etc)."
+  //     />
+  //   ),
+  //   trigger: {
+  //     fieldName: ["link"],
+  //     condition: (v) => !!getEmbedTargetFromLink(v ?? ""),
+  //   },
+  // },
+  // ...MediaControlsFormField,
 ];
 
-const HighlightFormFields: ObjFormField<Highlight>[] = [
-  ...DefaultBricksFormValues,
+const BrickAlbumFormFields: ObjFormField<IBrickAlbum>[] = [
   {
     name: "title",
     type: "string",
     label: "Titre",
     required: true,
-  },
-  {
-    name: "subtitle",
-    type: "string",
-    label: "Sous-titre",
   },
   {
     name: "media",
@@ -227,85 +225,32 @@ const HighlightFormFields: ObjFormField<Highlight>[] = [
   },
   {
     name: "link",
-    type: "string",
+    type: "relation",
     label: "Lien",
-  },
-  {
-    name: "is_embed",
-    type: "checkbox",
-    label: (
-      <LabeledToolTip
-        label="Intégration"
-        text="Le 'média' sera remplacé par une intégration spécifiée dans le 'Lien' (Spotify, SoundCloud, etc)."
-      />
-    ),
-    trigger: {
-      fieldName: ["link"],
-      condition: (v) => !!getEmbedTargetFromLink(v ?? ""),
+    placeholder: " ",
+    relation: {
+      type: "links",
+      configurable: true,
+      multiple: false,
+      allowEmpty: true,
+      allowInsert: true,
     },
   },
-  ...MediaControlsFormField,
-];
-
-const SingleFormFields: ObjFormField<Single>[] = [
-  ...DefaultBricksFormValues,
   {
-    name: "title",
-    type: "string",
-    label: "Titre",
-    required: true,
-  },
-  {
-    name: "media",
-    type: "file",
-    label: "Média",
-    inputConfig: {
-      filetype: ["Images", "Videos"],
-      onClickInput: () => {},
-      customLabel: "Parcourir la médiathèque",
+    name: "album",
+    type: "relation",
+    label: "Album",
+    relation: {
+      type: "albums",
+      configurable: true,
+      multiple: false,
+      allowEmpty: false,
+      allowInsert: true,
     },
   },
-  ObjectRelations.track as ObjFormField<Single>,
-  {
-    name: "hoverable",
-    type: "checkbox",
-    label: "Effet au survol",
-  },
-  ObjectRelations.cta as ObjFormField<Single>,
-  ObjectRelations.platforms as ObjFormField<Single>,
-  ...MediaControlsFormField,
 ];
 
-const AlbumFormFields: ObjFormField<Album>[] = [
-  ...DefaultBricksFormValues,
-  {
-    name: "title",
-    type: "string",
-    label: "Titre",
-    required: true,
-  },
-  {
-    name: "media",
-    type: "file",
-    label: "Média",
-    inputConfig: {
-      filetype: ["Images", "Videos"],
-      onClickInput: () => {},
-      customLabel: "Parcourir la médiathèque",
-    },
-  },
-  ObjectRelations.tracklist as ObjFormField<Album>,
-  ObjectRelations.cta as ObjFormField<Album>,
-  {
-    name: "hoverable",
-    type: "checkbox",
-    label: "Effet au survol",
-  },
-  ...MediaControlsFormField,
-];
-
-const TextFormFields: ObjFormField<Text>[] = [
-  ...DefaultBricksFormValues,
+const BrickTextFormFields: ObjFormField<IBrickText>[] = [
   {
     name: "text",
     type: "markdown",
@@ -328,111 +273,62 @@ const TextFormFields: ObjFormField<Text>[] = [
   },
 ];
 
-export const AudioFormFields: ObjFormField<AudioBrick>[] = [
+const ArtistFormFields: ObjFormField<IArtist> = [...DefaultBricksFormValues];
+
+const LinkFormFields: ObjFormField<ILink> = [
   ...DefaultBricksFormValues,
   {
-    name: "media",
-    type: "file",
-    label: (
-      <LabeledToolTip
-        label="Média"
-        text="Cover du son. Si aucun média n'est renseigné, la couleur du site sera utilisée."
-      />
-    ),
-    inputConfig: {
-      filetype: ["Images", "Videos"],
-      onClickInput: () => {},
-      customLabel: "Parcourir la médiathèque",
+    name: "url",
+    type: "string",
+    label: "Link",
+    required: true,
+  },
+  {
+    name: "icon_url",
+    type: "string",
+    label: "Icon link",
+  },
+  {
+    name: "title",
+    type: "string",
+    label: "Title",
+  },
+];
+
+const TrackFormFields: ObjFormField<ITrack> = [
+  ...DefaultBricksFormValues,
+  {
+    name: "artists",
+    type: "relation",
+    label: "Artiste",
+    relation: {
+      type: "artists",
+      configurable: true,
+      multiple: true,
+      allowEmpty: true,
+      allowInsert: true,
     },
   },
+];
+
+const AlbumFormFields: ObjFormField<IAlbum> = [
+  ...DefaultBricksFormValues,
   {
-    name: "audio",
-    type: "file",
-    label: "Audio",
-    inputConfig: {
-      filetype: ["Audios"],
-      onClickInput: () => {},
-      customLabel: "Parcourir la médiathèque",
+    name: "type",
+    type: "select",
+    label: "Type",
+    options: Object.entries(EBrickType).map(([value, label]) => ({ value, label })),
+  },
+  {
+    name: "tracks",
+    type: "relation",
+    label: "Tracks",
+    relation: {
+      type: "tracks",
+      configurable: true,
+      multiple: true,
+      allowEmpty: true,
+      allowInsert: true,
     },
-  },
-  ObjectRelations.track as ObjFormField<AudioBrick>,
-  ...MediaControlsFormField,
-];
-
-const CTAFormFields: ObjFormField<MediaCTA>[] = [
-  {
-    name: "label",
-    type: "string",
-    label: "Label",
-    required: true,
-  },
-  {
-    name: "url",
-    type: "string",
-    label: "URL",
-    required: true,
-  },
-];
-
-export const ArtistFormFields: ObjFormField<Artist>[] = [
-  {
-    name: "name",
-    type: "string",
-    label: "Nom",
-    required: true,
-  },
-  {
-    name: "url",
-    type: "string",
-    label: "URL",
-    required: true,
-  },
-];
-
-export const PlatformFormFields: ObjFormField<Platform>[] = [
-  {
-    name: "name",
-    type: "string",
-    label: "Nom",
-    required: true,
-  },
-  {
-    name: "icon",
-    type: "string",
-    label: "Icone",
-    required: true,
-  },
-];
-
-export const TrackFormFields: ObjFormField<Track>[] = [
-  {
-    name: "name",
-    type: "string",
-    label: "Nom",
-    required: true,
-  },
-  ObjectRelations.artist as ObjFormField<Track>,
-  ObjectRelations.platforms as ObjFormField<Track>,
-];
-
-export const PlatformLinkFormFields: ObjFormField<PlatformLink>[] = [
-  {
-    name: "name",
-    type: "string",
-    label: "Nom",
-    required: true,
-  },
-  {
-    name: "url",
-    type: "string",
-    label: "URL",
-    required: true,
-  },
-  ObjectRelations.platform as ObjFormField<PlatformLink>,
-  {
-    name: "in_footer",
-    type: "checkbox",
-    defaultValue: false,
-    label: <LabeledToolTip label="Dans le footer" text="Si coché, le lien sera affiché dans le footer du site." />,
   },
 ];

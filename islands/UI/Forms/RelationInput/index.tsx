@@ -1,7 +1,6 @@
 import { Button, ContextualDots, Modal, ObjectRenderer, Select } from "@islands/UI";
 import { DatabaseAttributes } from "@models/App.ts";
 import { AvailableFormRelation, FormField, FormFieldOptions, FormFieldValue } from "@models/Form.ts";
-import { AllMocapObjectsTypes } from "@models/forms/bricks.tsx";
 import { IconPlus, IconTrash } from "@utils/icons.ts";
 import ky from "ky";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
@@ -16,7 +15,7 @@ export default function RelationInput(
   { field, onChange }: RelationInputProps,
 ) {
   // We need the config to correctly render the elements
-  const attributeTable = useMemo(() => getAttributeFromKey(field.relation?.type ?? "artist"), [field.relation]);
+  const attributeTable = useMemo(() => field.relation?.type, [field.relation]);
 
   /** The formatted field, with all the correct options */
   const [formattedField, setFormattedField] = useState<FormField | null>(null);
@@ -133,6 +132,8 @@ export default function RelationInput(
     JSON.stringify(upsertedItem?.id ?? ""),
   ]);
 
+  useEffect(() => console.log('DEBUG - upsertedItem: ', upsertedItem), [upsertedItem]);
+
   if (!field.relation) return null;
 
   return (
@@ -157,7 +158,7 @@ export default function RelationInput(
               <ObjectRenderer
                 type={attributeTable}
                 content={defaultObjectContent}
-                onChange={(v) => setUpsertedItem(v as AvailableAttributes)}
+                onChange={(v) => setUpsertedItem(v)}
               />
             </div>
             <div class="text-text flex align-center gap-4">
@@ -176,6 +177,3 @@ export default function RelationInput(
     </>
   );
 }
-
-const getAttributeFromKey = (key: AvailableFormRelation): AllMocapObjectsTypes | null =>
-  Object.keys(DatabaseAttributes).includes(key) ? DatabaseAttributes[key].table as AllMocapObjectsTypes : null;
