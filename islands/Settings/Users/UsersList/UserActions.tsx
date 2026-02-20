@@ -1,4 +1,4 @@
-import { User, UserStatus } from "@models/Authentication.ts";
+import { IUser, UserStatus } from "@models/Authentication.ts";
 
 type ConfirmationModalProps = {
   message: string;
@@ -7,7 +7,7 @@ type ConfirmationModalProps = {
 };
 
 type UserActionsProps = {
-  user: User;
+  user: IUser;
   onChangeStatus: (status: UserStatus) => void;
 };
 

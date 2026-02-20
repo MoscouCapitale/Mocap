@@ -18,11 +18,12 @@
       ]
     },
     "exclude": [
-      "pocketbase/pb_data/types.d.ts"
     ]
   },
   "exclude": [
-    "**/_fresh/*"
+    "**/_fresh/*",
+    "pocketbase",
+    "pocketbase/**"
   ],
   "nodeModulesDir": "auto",
   "imports": {

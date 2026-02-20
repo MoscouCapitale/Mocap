@@ -16,16 +16,10 @@ export const handler = define.handlers({
     const password = form.get("password")?.toString() || "";
     const access_token = form.get("access_token")?.toString() || "";
 
+    //TODO: maybe we should redirect to another page, like resetpassword/[:token]
     // If no access_token, it means we send a reset password email
     if (!access_token) {
       try {
-        // TODO: was here
-        /** là je dois reset le mdp (envoyer mail avec token qui renvoi sur cette page et permet de changer mdp avec token)
-         * requestPasswordReset envoi un mail qui envoi vers la page pocketbase.
-         * est ce que je peux utiliser https://pocketbase.io/jsvm/interfaces/core.Collection.html#passwordResetToken, et envoi moi meme
-         * email modifié avec https://pocketbase.io/jsvm/interfaces/core.Collection.html#resetPasswordTemplate ?
-         * Ou alors appeler route custom dans le back qui envoi email custom.
-         */
         await pb.collection("users").requestPasswordReset(email);
         return {
           data: {
@@ -47,36 +41,17 @@ export const handler = define.handlers({
       }
     }
 
-    // Checks if the password is valid
-    if (verifyPasswordIntegrity(password) !== "") {
-      return {
-        data: {
-          toast: {
-            title: "Erreur lors de la réinitialisation du mot de passe",
-            description: "Le mot de passe doit contenir au moins 10 caractères, une majuscule, un chiffre et un caractère spécial.",
-          },
-        },
-      };
-    }
-
-    // If no user, it means either the token is invalid or the user does not exist.
-    const { data: user } = await supa.auth.getUser(access_token);
-    if (!user.user) {
-      console.error("Error while getting user from access token", user);
-      return {
-        data: {
-          toast: {
-            title: "Erreur lors de la réinitialisation du mot de passe",
-            description: "Une erreur est survenue lors de la réinitialisation de votre mot de passe. Merci de réessayer ultérieurement.",
-          },
-        },
-      };
-    }
-
-    // If password is set, we reset the password. Uses the updateUsersById because its simpler on server side.
-    const { error } = await supa.auth.admin.updateUserById(user.user.id as string, { password });
-
-    if (error) {
+    try {
+      const data = await pb.collection('users').confirmPasswordReset(
+        access_token,
+        password,
+        password,
+      );
+      console.dir(data)
+      return ctx.redirect(
+        `/auth?action_done=${encodeURIComponent("Votre mot de passe a été réinitialisé. Vous pouvez désormais quitter cette page et vous reconnecter.")}`,
+      );
+    } catch (error) {
       console.error("Error while updating user password", error);
       return {
         data: {
@@ -87,15 +62,6 @@ export const handler = define.handlers({
         },
       };
     }
-
-    return new Response("", {
-      status: 303,
-      headers: {
-        Location: `/auth?action_done=${encodeURIComponent(
-          "Votre mot de passe a été réinitialisé. Vous pouvez désormais quitter cette page et vous reconnecter.",
-        )}`,
-      },
-    });
   },
 });
 

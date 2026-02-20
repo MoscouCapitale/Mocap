@@ -1,7 +1,7 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { toast } from "@hooks/toast.tsx";
 import { Button, Modal, ObjectRenderer } from "@islands/UI";
-import { availBricks, BricksType } from "@models/Bricks.ts";
+import { availBricks, BricksType, EBrickType } from "@models/Bricks.ts";
 import { MNode } from "@models/Canva.ts";
 import { Media, MediaType } from "@models/Medias.ts";
 import { IconTrash } from "@utils/icons.ts";
@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from "preact/hooks";
 import CollectionGrid from "../collection/CollectionGrid.tsx";
 
 type CreateBrickBarProps = {
-  brickType: BricksType; // The general type of the brick to create
+  brickType: EBrickType; // The general type of the brick to create
   brickData?: availBricks;
   returnBrick: (brick: number | availBricks) => void; // Callback function to pass data to the parent
 };
@@ -53,18 +53,18 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
   const saveBrick = useCallback(
     (withCanvaInsert?: boolean) => {
       if (!brick) return;
-      const brickDatas = { ...brick, type: brickType } as availBricks;
-      if (
-        withCanvaInsert && brickState === "addIncanvas" && MCNodes.find((n) => n.type === BricksType.HeroSection) &&
-        brickDatas.type === BricksType.HeroSection
-      ) {
-        toast({
-          title: "Error lors de la sauvegarde",
-          description:
-            `Vous ne pouvez avoir qu'une seule "Hero Section" par page. Cette brique ne peut pas être insérée au canva.`,
-        });
-        return;
-      }
+      const brickDatas = { ...brick, type: brickType };
+      // if (
+      //   withCanvaInsert && brickState === "addIncanvas" && MCNodes.find((n) => n.type === BricksType.HeroSection) &&
+      //   brickDatas.type === BricksType.HeroSection
+      // ) {
+      //   toast({
+      //     title: "Error lors de la sauvegarde",
+      //     description:
+      //       `Vous ne pouvez avoir qu'une seule "Hero Section" par page. Cette brique ne peut pas être insérée au canva.`,
+      //   });
+      //   return;
+      // }
       ky.put("/api/brick", {
         json: {
           type: brickType,

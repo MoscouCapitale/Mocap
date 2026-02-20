@@ -1,5 +1,162 @@
+import { IUser } from "./Authentication.ts";
 import { Audio, Image, MediaControls, MediaCTA, MediaObjectFit, Video } from "./Medias.ts";
 import { TableNames } from "./database.ts";
+import { RequiredBy } from "./type-utils.ts";
+
+/** Base interface of a content in the db */
+interface Content {
+  /** String id of the content */
+  id: string;
+  //TODO: check types
+  created: string;
+  updated: string;
+  collectionId: string;
+  collectionName: string;
+}
+
+export enum EAlbumType {
+  single = "Single",
+  album = "Album",
+  EP = "EP",
+}
+
+type RelationContent<T extends { id: string } | { id: string }[]> = T extends (infer U)[]
+  ? U extends { id: string }
+    ? RequiredBy<Partial<U>, "id">[]
+    : never
+  : T extends { id: string }
+    ? RequiredBy<Partial<T>, "id">
+    : never;
+
+type UserRelation = RelationContent<IUser>;
+
+export interface IAlbum extends Content {
+  name: string;
+  type: EAlbumType;
+  user: UserRelation;
+  tracks?: RelationContent<ITrack[]>;
+}
+
+export interface IArtist extends Content {
+  name: string;
+  user: UserRelation;
+}
+
+export interface ILink extends Content {
+  name: string;
+  url: string;
+  icon_url?: string;
+  title?: string;
+  user: UserRelation;
+}
+
+export interface ITrack extends Content {
+  name: string;
+  user: UserRelation;
+  artists?: RelationContent<IArtist>;
+}
+
+export enum EBrickType {
+  album = "Album",
+  highlight = "Media",
+  text = "Text",
+}
+
+interface IBaseBrick extends Content {
+  title: string;
+  user: UserRelation;
+  settings: {
+    hoverable: boolean;
+    // Le 'média' sera remplacé par une intégration spécifiée dans le 'Lien' (Spotify, SoundCloud, etc).
+    is_embed?: boolean;
+  };
+}
+
+/** A brick representing an album, single, ep */
+export interface IBrickAlbum extends IBaseBrick {
+  type: EBrickType.album;
+  album: IAlbum;
+  link?: ILink;
+  media?: IMedia;
+  controls?: MediaControls;
+}
+
+/** A brick containing a media. Has a variant for hero section  */
+export interface IBrickHighlight extends IBaseBrick {
+  type: EBrickType.highlight;
+  subtitle?: string;
+  media: IMedia;
+  controls: MediaControls;
+  link?: RelationContent<ILink>;
+  variant: "default" | "hero";
+  style: "scrolling-hero";
+}
+
+/** A brick containng a simple text */
+export interface IBrickText extends IBaseBrick {
+  type: EBrickType.text;
+  text: string;
+  media?: IMedia;
+}
+
+export type IBrick = IBrickAlbum | IBrickHighlight | IBrickText;
+
+// FIXME: use media table
+export type IMedia = string;
+
+export interface INode extends Content {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  locked: boolean;
+  brick: RelationContent<IBrick>;
+  user: UserRelation;
+}
+
+export interface ISettings extends Content {
+  user: UserRelation;
+  main: {
+    api_tidal: string;
+    api_deezer: string;
+    api_spotify: string;
+    website_url: string;
+    website_icon: string;
+    website_title: string;
+    api_soundcloud: string;
+    api_amazon_music: string;
+    website_keywords: string[];
+    api_youtube_music: string;
+    email_admin_sender: string;
+    email_contact_sender: string;
+    email_default_sender: string;
+    email_logging_sender: string;
+    email_admin_recipient: string;
+    email_contact_recipient: string;
+    email_logging_recipient: string;
+    email_usercreate_sender: string;
+    email_usercreate_recipient: string;
+  };
+  media: {
+    media_lazyload: string;
+    media_max_size_mb: string;
+    media_auto_optimize: string;
+    media_max_size_height: string;
+  };
+  style: {
+    style_font_main: string;
+    style_color_auto: string;
+    style_color_main: string;
+    style_theme_toggle: string;
+    style_font_secondary: string;
+    style_color_secondary: string;
+  };
+  misc: {};
+}
+
+// ============ OLD - TO RM ============
+//
+// ============ OLD - TO RM ============
 
 /** The default base brick interface. */
 interface Brick {

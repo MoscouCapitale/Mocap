@@ -1,7 +1,7 @@
 import { Tooltip } from "@islands/UI";
 import Button from "@islands/UI/Button.tsx";
 import UsersList from "@islands/Users/UsersList.tsx";
-import { User, UserStatus } from "@models/Authentication.ts";
+import { IUser, UserStatus } from "@models/Authentication.ts";
 import { supabase as supa } from "@services/supabase.ts";
 import { cn } from "@utils/cn.ts";
 import { IconChevronLeft, IconChevronRight } from "@utils/icons.ts";
@@ -37,12 +37,12 @@ export default async function Users(ctx: FreshContext) {
 
   // Get only the users with the statuses we want to display (for the requested users, check the request page)
   const usersList = displayAllUsers
-    ? data?.users as User[]
-    : (data?.users as User[]).filter((user) => displayUserStatuses.includes(user.user_metadata.status));
+    ? data?.users as IUser[]
+    : (data?.users as IUser[]).filter((user) => displayUserStatuses.includes(user.user_metadata.status));
 
   return (
     <>
-      <UsersList currentUser={currentUser as User} usersList={usersList as User[]} />;
+      <UsersList currentUser={currentUser as IUser} usersList={usersList as IUser[]} />;
 
       <footer class="w-full flex align-center justify-end -mt-7 gap-3">
         {/* Display all users or only active users */}

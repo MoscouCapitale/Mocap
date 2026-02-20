@@ -1,6 +1,6 @@
-import { User } from "@models/Authentication.ts";
+import { IUser } from "@models/Authentication.ts";
 
-export default function UserChangePassword(user: User) {
+export default function UserChangePassword(user: IUser) {
   return (
     <form class="flex-col justify-center items-start gap-5 inline-flex">
       <div class="text-text_grey text-xs ">Changer de mot de passe</div>

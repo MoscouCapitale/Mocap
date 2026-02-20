@@ -1,13 +1,13 @@
 import { Toaster } from "@components/UI/Toast/Toaster.tsx";
 import { toast } from "@hooks/toast.tsx";
 import { Select } from "@islands/UI";
-import { User, UserRole, UserStatus } from "@models/Authentication.ts";
+import { IUser, UserRole, UserStatus } from "@models/Authentication.ts";
 import { FormField } from "@models/Form.ts";
 import ky from "ky";
 import { useMemo, useState } from "preact/hooks";
 
-export default function RequestSingle(user: User) {
-  const [currentUser, setCurrentUser] = useState<User | null>(user);
+export default function RequestSingle(user: IUser) {
+  const [currentUser, setCurrentUser] = useState<IUser | null>(user);
   const [loading, setLoading] = useState(false);
 
   const selectField: FormField = useMemo(() => ({

@@ -4,10 +4,15 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [
-    fresh(),
+    fresh({
+      ignore: [/pocketbase/]
+    }),
     tailwindcss(),
   ],
   server: {
-    port: 8000
+    port: 8000,
+    watch: {
+      ignored: [/[/\\]pocketbase([/\\]|$)/],
+    },
   }
 });

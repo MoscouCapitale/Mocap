@@ -228,12 +228,12 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   useEffect(() => {
     let isMounted = true;
 
-    ky.get("/api/node/getAll")
-      .json<MNode[]>()
-      .then((data) => {
-        if (isMounted && MCNodes.length === 0) setMCNodes(data);
-      })
-      .catch((e) => console.error(e));
+    // ky.get("/api/node/getAll")
+    //   .json<MNode[]>()
+    //   .then((data) => {
+    //     if (isMounted && MCNodes.length === 0) setMCNodes(data);
+    //   })
+    //   .catch((e) => console.error(e));
 
     return () => {
       isMounted = false;
@@ -241,10 +241,10 @@ export const MNodeProvider = ({ children }: { children: VNode }) => {
   }, []);
 
   const refetchNodes = () => {
-    ky.get("/api/node/getAll")
-      .json<MNode[]>()
-      .then((data) => setMCNodes(data))
-      .catch((e) => console.error(e));
+    // ky.get("/api/node/getAll")
+    //   .json<MNode[]>()
+    //   .then((data) => setMCNodes(data))
+    //   .catch((e) => console.error(e));
   };
 
   /**

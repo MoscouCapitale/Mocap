@@ -1,6 +1,6 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { useToast } from "@hooks/toast.tsx";
-import { availBricks, BricksType, getBrickTypeLabel } from "@models/Bricks.ts";
+import { availBricks, BricksType, EBrickType, getBrickTypeLabel } from "@models/Bricks.ts";
 import { cn } from "@utils/cn.ts";
 import ky from "ky";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
@@ -8,7 +8,7 @@ import Select, { SelectField } from "../UI/Forms/Select.tsx";
 import CreateBrickBar from "./CreateBrickBar.tsx";
 
 // Default is the value of the key of BricksType.Single
-const defaultBrick = BricksType.Album;
+const defaultBrick = EBrickType.album;
 
 type BrickSideBarSelects = Record<BricksType, availBricks[] | undefined>;
 
@@ -23,18 +23,18 @@ export default function BrickSidebar() {
     [BricksType.Audio]: undefined,
   });
 
-  const [selectedBrickType, setSelectedBrickType] = useState<BricksType>(defaultBrick);
+  const [selectedBrickType, setSelectedBrickType] = useState(defaultBrick);
   const [selectedUserBrick, setSelectedUserBrick] = useState<availBricks | undefined>();
 
   /** UseEffect triggered when you select a type of brick to manage */
   useEffect(() => {
-    if (!allBricksMap[selectedBrickType]) {
-      ky.get(`/api/brick/getUserBricks/${selectedBrickType}`)
-        .json<availBricks[]>()
-        .then((data) => {
-          setAllBricksMap((p) => ({ ...p, [selectedBrickType]: data }));
-        });
-    }
+    // if (!allBricksMap[selectedBrickType]) {
+    //   ky.get(`/api/brick/getUserBricks/${selectedBrickType}`)
+    //     .json<availBricks[]>()
+    //     .then((data) => {
+    //       setAllBricksMap((p) => ({ ...p, [selectedBrickType]: data }));
+    //     });
+    // }
   }, [selectedBrickType]);
 
   /** Select field, to choose the brick type */
@@ -43,9 +43,9 @@ export default function BrickSidebar() {
       name: "bricktype",
       defaultValue: defaultBrick,
       type: "select",
-      options: Object.entries(BricksType).map(([_, value]: [string, BricksType]) => ({
+      options: Object.entries(EBrickType).map(([value, label]) => ({
         value,
-        label: getBrickTypeLabel(value),
+        label,
       })),
     }),
     [],
@@ -58,30 +58,6 @@ export default function BrickSidebar() {
         (allBricksMap[selectedBrickType] ?? []).map((b) => ({ id: b.id, name: b.name, nodeId: b.nodeId })),
       ),
     [selectedBrickType, allBricksMap],
-  );
-
-  /** Select field, to choose the brick to manage */
-  const userBrickOptions = useMemo<SelectField>(
-    () => ({
-      name: "userbricks",
-      type: "select",
-      defaultValue: "create",
-      options: [
-        ...(allBricksMap[selectedBrickType]?.map((b) => ({
-          value: b.id.toString(),
-          label: b.name,
-          ...(b.nodeId && {
-            onMouseEnter: () => onItemHover("enter", b.nodeId as string),
-            onMouseLeave: () => onItemHover("leave", b.nodeId as string),
-          }),
-        })) ?? []),
-        {
-          value: "create",
-          label: "Créer une nouvelle brique",
-        },
-      ],
-    }),
-    [ubOptionsTrigger],
   );
 
   useEffect(() => {
@@ -110,15 +86,6 @@ export default function BrickSidebar() {
       };
     });
   }, [canvaModifTrigger]);
-
-  /** Highlight the node in the canvas when hovering over the brick in the sidebar */
-  const onItemHover = (action: "enter" | "leave", id: string | number) => {
-    const el = document.querySelector("#mcanva-article-placeholder[data-node-id='" + id + "']");
-    if (el) {
-      if (action === "enter") el.classList.add("node-highlight");
-      if (action === "leave") el.classList.remove("node-highlight");
-    }
-  };
 
   /** Handle the returned brick by CreateBrickBar
    *
@@ -163,14 +130,9 @@ export default function BrickSidebar() {
         {/* Brick type Dropdown */}
         <Select field={brickTypeOptions} onChange={setSelectedBrickType} min={1} error={null} sx="max-w-full" />
 
-        {/* User-created bricks of the chosen type */}
-        <Select
-          field={userBrickOptions}
-          onChange={(v) => setSelectedUserBrick(allBricksMap[selectedBrickType]?.find((b) => b.id === Number(v)))}
-          min={1}
-          error={null}
-          sx="max-w-full"
-        />
+        <button type="button">
+          Create new
+        </button>
       </div>
       <CreateBrickBar brickType={selectedBrickType} brickData={selectedUserBrick} returnBrick={handleBrickAction} />
     </div>

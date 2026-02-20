@@ -2,7 +2,7 @@ import RequestSingle from "@islands/Users/RequestSingle.tsx";
 import { supabase as supa } from "@services/supabase.ts";
 import { FreshContext } from "fresh";
 
-import { User, UserStatus } from "@models/Authentication.ts";
+import { IUser, UserStatus } from "@models/Authentication.ts";
 
 export default async function Requests(ctx: FreshContext) {
   const req = ctx.req;
@@ -11,16 +11,16 @@ export default async function Requests(ctx: FreshContext) {
     perPage: 100,
   });
 
-  const userRequests = (data.users as User[]).filter((user) =>
+  const userRequests = (data.users as IUser[]).filter((user) =>
     user.user_metadata.status === UserStatus.RQST &&
-    user.id !== (ctx.state.user as User).id
+    user.id !== (ctx.state.user as IUser).id
   );
 
   return (
     <main className="w-full min-h-full justify-center items-center gap-[150px] inline-flex">
       {userRequests.length === 0
         ? <div class="text-text text-base font-bold">Aucune demande d'inscription</div>
-        : userRequests.map((user: User) => <RequestSingle {...user} />)}
+        : userRequests.map((user: IUser) => <RequestSingle {...user} />)}
     </main>
   );
 }

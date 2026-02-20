@@ -6,6 +6,12 @@ type SupaSession = any;
 
 export type FormType = {
   type: "default" | "signin" | "signup" | "action_done";
+  toast?: {
+    title?: string,
+    message: string
+    // TODO: add toast types
+  },
+  //TODO: remove message and use generic for custom datas
   additional_data?: {
     email?: string;
     password?: string;
@@ -20,7 +26,7 @@ export type FormResponse =
     }
   | Response;
 
-export interface User {
+export interface IUser {
   id: string;
   password?: string;
   tokenKey: string;
@@ -34,7 +40,7 @@ export interface User {
   updated: Date;
 }
 
-export interface NewUser extends PartialBy<User, "id" | "tokenKey" | "verified" | "created" | "updated"> {
+export interface NewUser extends PartialBy<IUser, "id" | "tokenKey" | "verified" | "created" | "updated"> {
   passwordConfirm: string;
 }
 

@@ -1,20 +1,20 @@
 import { Artist, AudioBrick, availBricks, Platform, Track } from "@models/Bricks.ts";
 import { FormField } from "@models/Form.ts";
 import { MediaControls, MediaCTA } from "@models/Medias.ts";
-import { AllMocapObjectsTypes, getObjectFormFromType } from "@models/forms/bricks.tsx";
+import { getObjectFormFromType } from "@models/forms/bricks.tsx";
 import { set } from "lodash";
 import { useEffect, useMemo, useState } from "preact/hooks";
 import ContentForm, { ContentFormValue } from "./ContentForm.tsx";
 
 type SupportedObjects = availBricks | Track | Platform | MediaCTA | MediaControls | Artist | AudioBrick;
 
-type ObjectRendererProps = {
+type ObjectRendererProps<T> = {
   /** The type of the element to the form be rendered */
-  type: AllMocapObjectsTypes;
+  type: Parameters<typeof getObjectFormFromType>[0]
   /** The current content of the object. It NEEDS to have all fields, even empty. */
-  content?: SupportedObjects;
+  content?: T;
   /** Function returned with the new object when a field changes */
-  onChange?: (obj: SupportedObjects) => void;
+  onChange?: (obj: T) => void;
 };
 
 // TODO: for perf change on blur ?
@@ -27,7 +27,7 @@ type ObjectRendererProps = {
  * @param param0
  * @returns
  */
-export default function ObjectRenderer({ type, content, onChange }: ObjectRendererProps) {
+export default function ObjectRenderer({ type, content, onChange }: ObjectRendererProps<any>) {
   const form = useMemo(() => getObjectFormFromType(type), [type]);
   // Do no set content as a dependency, as it will cause a re-render on each event (if content is set)
   const initialData = useMemo(() => content ?? createEmptyObject(form), [form, content]);

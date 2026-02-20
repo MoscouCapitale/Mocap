@@ -17,8 +17,7 @@ export default function ResetPassword() {
     if (typeof globalThis !== "undefined") {
       const fragment = globalThis.location.hash.substring(1);
       const params = new URLSearchParams(fragment);
-      const token = params.get("access_token");
-      setAccessToken(token);
+      setAccessToken(params.get("access_token"));
     }
   }, []);
 
