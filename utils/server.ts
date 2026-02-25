@@ -46,7 +46,7 @@ export const authMiddleware = authDefine.middleware(async (ctx) => {
     }
 
     const user = ctx.state.user;
-
+    
     // If the user is not an admin, or is not active, redirect to auth page with an error message.
     if ((user.verified && !authorizedRoles.includes(user.role)) || user.status !== UserStatus.ACTV) {
       let errorMessage = "Votre compte n'est pas encore validé. Merci de patienter le temps qu'un administrateur valide votre compte.";

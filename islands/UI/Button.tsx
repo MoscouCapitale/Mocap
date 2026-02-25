@@ -16,17 +16,8 @@ type ButtonProps = {
   type?: "button" | "submit" | "reset";
 };
 
-export default function Button({
-  href,
-  onClick,
-  children,
-  variant = "primary",
-  className,
-  icon,
-  disabled = false,
-  type = "button",
-}: ButtonProps) {
-  const ButtonVariants = cva("rounded-[3px] justify-start items-center gap-2.5 inline-flex cursor-pointer", {
+export default function Button({ href, onClick, children, variant = "primary", className, icon, disabled = false, type = "button" }: ButtonProps) {
+  const ButtonVariants = cva("rounded-[3px] justify-start items-center gap-2.5 inline-flex cursor-pointer text-text font-normal", {
     variants: {
       variant: {
         primary: "px-[5px] py-[3px] bg-main",
@@ -40,21 +31,17 @@ export default function Button({
   });
 
   return (
-    <div
+    <button
       className={cn(ButtonVariants({ variant }), className?.wrapper, disabled && "filter grayscale opacity-50")}
-      onClick={(e) => {
+      disabled={disabled}
+      type={type}
+      onClick={() => {
         if (onClick) onClick();
         if (href) globalThis.location.href = href;
       }}
     >
       {icon}
-      <button
-        className={cn("text-text font-normal", className?.button)}
-        disabled={disabled}
-        type={type}
-      >
-        {children}
-      </button>
-    </div>
+      {children}
+    </button>
   );
 }

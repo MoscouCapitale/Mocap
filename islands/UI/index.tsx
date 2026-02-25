@@ -12,7 +12,7 @@ export { default as ConfirmationModal } from "./ConfirmationModal.tsx";
 export { default as ContentForm } from "./Forms/ContentForm.tsx";
 export { default as ObjectRenderer } from "./Forms/ObjectRenderer.tsx";
 export { default as Input } from "./Forms/Input.tsx";
-export { default as Select } from "./Forms/Select.tsx";
+export { default as Select } from "./Select.tsx";
 
 export { default as FileInput } from "./Forms/FileInput/index.tsx";
 export { default as PreviewImage } from "./Forms/FileInput/PreviewImage.tsx";

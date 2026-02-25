@@ -4,7 +4,7 @@ import { TableNames } from "./database.ts";
 import { RequiredBy } from "./type-utils.ts";
 
 /** Base interface of a content in the db */
-interface Content {
+export interface Content {
   /** String id of the content */
   id: string;
   //TODO: check types
@@ -57,10 +57,12 @@ export interface ITrack extends Content {
 }
 
 export enum EBrickType {
-  album = "Album",
-  highlight = "Media",
-  text = "Text",
+  Album = "album",
+  Highlight = "highlight",
+  Text = "text",
 }
+
+export const getBrickTypeLabel = (t: EBrickType) => Object.entries(EBrickType).find(([_, v]) => v === t)?.[0] ?? '';
 
 interface IBaseBrick extends Content {
   title: string;
@@ -74,7 +76,7 @@ interface IBaseBrick extends Content {
 
 /** A brick representing an album, single, ep */
 export interface IBrickAlbum extends IBaseBrick {
-  type: EBrickType.album;
+  type: EBrickType.Album;
   album: IAlbum;
   link?: ILink;
   media?: IMedia;
@@ -83,7 +85,7 @@ export interface IBrickAlbum extends IBaseBrick {
 
 /** A brick containing a media. Has a variant for hero section  */
 export interface IBrickHighlight extends IBaseBrick {
-  type: EBrickType.highlight;
+  type: EBrickType.Highlight;
   subtitle?: string;
   media: IMedia;
   controls: MediaControls;
@@ -94,12 +96,18 @@ export interface IBrickHighlight extends IBaseBrick {
 
 /** A brick containng a simple text */
 export interface IBrickText extends IBaseBrick {
-  type: EBrickType.text;
+  type: EBrickType.Text;
   text: string;
   media?: IMedia;
 }
 
-export type IBrick = IBrickAlbum | IBrickHighlight | IBrickText;
+export type IBrick<T extends EBrickType | null = null> = T extends EBrickType.Album
+  ? EBrickType.Album
+  : T extends EBrickType.Highlight
+    ? EBrickType.Highlight
+    : T extends EBrickType.Text
+      ? EBrickType.Text
+      : IBrickAlbum | IBrickHighlight | IBrickText;
 
 // FIXME: use media table
 export type IMedia = string;
@@ -295,28 +303,6 @@ enum BricksType {
 
 type HeroSectionStyle = "scrolling-hero";
 
-const getBrickTypeLabel = (type: BricksType): string => {
-  switch (type) {
-    case BricksType.HeroSection:
-      return "Principale";
-    case BricksType.Single:
-      return "Single";
-    case BricksType.Album:
-      return "Album";
-    case BricksType.Text:
-      return "Texte";
-    case BricksType.Platform_Link:
-      return "Réseaux sociaux";
-    case BricksType.Highlight:
-      return "Média";
-    case BricksType.Audio:
-      return "Son";
-    default:
-      console.error(`Unsupported label brick type: ${type}`);
-      return "";
-  }
-};
-
 const getBrickTypeTableName = (type: BricksType): TableNames => {
   switch (type) {
     case BricksType.HeroSection:
@@ -340,4 +326,4 @@ const getBrickTypeTableName = (type: BricksType): TableNames => {
 
 export type availBricks = HeroSection | Single | Album | Text | PlatformLink | Highlight | AudioBrick;
 
-export { BricksType, getBrickTypeLabel, getBrickTypeTableName };
+export { BricksType, getBrickTypeTableName };

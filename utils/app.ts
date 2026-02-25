@@ -2,6 +2,7 @@ import { DatabaseAttributes } from "@models/App.ts";
 import { PlatformLink } from "@models/Bricks.ts";
 import { supabase as supa } from "@services/supabase.ts";
 import { encodeHex } from "jsr:@std/encoding/hex";
+import PocketBase from "pocketbase";
 import { createQueryFromAttributesTables, evaluateSupabaseResponse } from "./api.ts";
 
 export const getFooterLinks = async (): Promise<PlatformLink[] | null> => {
@@ -54,7 +55,7 @@ type AppState = FormType & {
   pb: PocketBase;
 }
 
-type AuthenticatedAppState = AppState & {
+export type AuthenticatedAppState = AppState & {
   user?: IUser;
 }
 
@@ -63,4 +64,4 @@ type AuthenticatedAppState = AppState & {
 const define = createDefine<AppState>();
 // export const authDefine = createDefine<AuthenticatedAppState>();
 const authDefine = createDefine<AuthenticatedAppState>();
-export { define, authDefine }
+export { authDefine, define };

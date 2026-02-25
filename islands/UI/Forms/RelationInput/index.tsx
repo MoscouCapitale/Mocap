@@ -1,9 +1,8 @@
 import { Button, ContextualDots, Modal, ObjectRenderer, Select } from "@islands/UI";
-import { DatabaseAttributes } from "@models/App.ts";
-import { AvailableFormRelation, FormField, FormFieldOptions, FormFieldValue } from "@models/Form.ts";
+import { FormField, FormFieldOptions, FormFieldValue, SelectField } from "@models/Form.ts";
 import { IconPlus, IconTrash } from "@utils/icons.ts";
 import ky from "ky";
-import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useMemo, useState } from "preact/hooks";
 import { AvailableAttributes, getAttributes } from "./relationManager.ts";
 
 type RelationInputProps = {
@@ -11,91 +10,76 @@ type RelationInputProps = {
   onChange: (value: FormFieldValue) => void;
 };
 
-export default function RelationInput(
-  { field, onChange }: RelationInputProps,
-) {
+export default function RelationInput({ field, onChange }: RelationInputProps) {
   // We need the config to correctly render the elements
-  const attributeTable = useMemo(() => field.relation?.type, [field.relation]);
+  const attributeTable = field.relation?.type;
 
-  /** The formatted field, with all the correct options */
-  const [formattedField, setFormattedField] = useState<FormField | null>(null);
-
-  const [allAttributes, setAllAttributes] = useState<AvailableAttributes[] | null>(null);
   const [updating, setUpdating] = useState<boolean>(false);
   const [upsertedItem, setUpsertedItem] = useState<AvailableAttributes | true>();
 
-  const handleSelectChange = useCallback((v: FormFieldOptions["value"][]) => {
-    if (!allAttributes) return;
-    const elements = v ? allAttributes.filter((att) => v.includes(String(att.id))) : [];
-    onChange(elements);
-  }, [allAttributes]);
+  const formattedField = useMemo<SelectField | null>(() => {
 
-  const convertRelationToSelecItem = useCallback((attributes: AvailableAttributes[]): FormField => {
-    let options: FormFieldOptions[] = attributes.map((a) => {
-      // @ts-expect-error - Yes there is no attribute, this is why I use the nullish operator
-      const label = a.label ?? a.name ?? String(a.id);
-      return ({
-        value: String(a.id),
-        label: field.relation?.configurable
-          ? (
-            <div className="flex gap-4 justify-between items-center w-full">
-              <p>{label}</p>
-              <ContextualDots
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setUpsertedItem(a);
-                }}
-              />
-            </div>
-          )
-          : label,
-      });
-    });
-
-    if (field.relation?.allowInsert) {
-      options = [...options, {
-        value: "-1",
-        label: (
-          <div
-            className="flex gap-4 justify-between items-center w-full"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setUpsertedItem(true);
-            }}
-          >
-            <p>Ajouter un élément</p>
-            <IconPlus className="text-text" size={20} />
-          </div>
-        ),
-      }];
-    }
+    if (!field.relation) return null;
 
     let defaultValue = field.defaultValue ?? "";
     // On a select field (with options), we need to convert the value to string to match the options in the select
-    if (field.relation && Array.isArray(defaultValue)) defaultValue = defaultValue.map((v) => String(v.id));
-    if (field.relation && defaultValue.id) defaultValue = [String(defaultValue.id)];
+    if (Array.isArray(defaultValue)) defaultValue = defaultValue.map((v) => String(v.id));
+    if (defaultValue.id) defaultValue = [String(defaultValue.id)];
 
-    return (
-      {
-        ...field,
-        options,
-        defaultValue,
-      }
-    );
+    return {
+      ...field,
+      type: "select",
+      multiple: Boolean(field.relation?.multiple),
+      // defaultValue,
+      options: async () => {
+        const attributes = await getAttributes(field.relation.type, true);
+        let options: FormFieldOptions[] = attributes.map((a) => {
+          const label = a.name ?? String(a.id);
+          return {
+            value: a,
+            label: field.relation?.configurable ? (
+              <div className="flex gap-4 justify-between items-center w-full">
+                <p>{label}</p>
+                <ContextualDots
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setUpsertedItem(a);
+                  }}
+                />
+              </div>
+            ) : (
+              label
+            ),
+            chipLabel: label,
+          };
+        });
+
+        if (field.relation?.allowInsert) {
+          options = [
+            ...options,
+            {
+              value: "-1",
+              label: (
+                <div
+                  className="flex gap-4 justify-between items-center w-full"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setUpsertedItem(true);
+                  }}
+                >
+                  <p>Ajouter un élément</p>
+                  <IconPlus className="text-text" size={20} />
+                </div>
+              ),
+            },
+          ];
+        }
+        return options;
+      },
+    };
   }, [field]);
-
-  const fetchAttr = useCallback(async (type?: "auto" | true) => {
-    if (!field.relation) return [];
-    const attr = await getAttributes(field.relation.type, type);
-    setAllAttributes(attr);
-    setFormattedField(convertRelationToSelecItem(attr));
-  }, [field.relation]);
-
-  useEffect(() => {
-    fetchAttr("auto");
-  }, []);
 
   const upsertAttribute = () => {
     if (!upsertedItem || upsertedItem === true) return;
@@ -107,20 +91,18 @@ export default function RelationInput(
       if (typeof sendedBody[key] === "object" && sendedBody[key]?.id) sendedBody[key] = sendedBody[key].id;
     });
 
-    ky.put(`/api/content/attributes/${field.relation?.type}`, { json: sendedBody })
-      .then(() => {
-        setUpdating(false);
-        fetchAttr(true);
-      });
+    ky.put(`/api/content/attributes/${field.relation?.type}`, { json: sendedBody }).then(() => {
+      setUpdating(false);
+      // fetchAttr(true);
+    });
   };
 
   const deleteAttribute = () => {
     if (upsertedItem !== true && upsertedItem?.id) {
-      ky.delete(`/api/content/attributes/${field.relation?.type}`, { json: upsertedItem })
-        .then(() => {
-          setUpsertedItem(undefined);
-          fetchAttr(true);
-        });
+      ky.delete(`/api/content/attributes/${field.relation?.type}`, { json: upsertedItem }).then(() => {
+        setUpsertedItem(undefined);
+        // fetchAttr(true);
+      });
     }
   };
 
@@ -128,48 +110,26 @@ export default function RelationInput(
   const isUpsertedItemNew = useMemo(() => upsertedItem === true, [upsertedItem]);
 
   /** Set the default content of the ObjectRenderer. It onlmy changes when the id changes, to avoid re-rendering on each event */
-  const defaultObjectContent = useMemo(() => upsertedItem === true ? undefined : upsertedItem, [
-    JSON.stringify(upsertedItem?.id ?? ""),
-  ]);
+  const defaultObjectContent = useMemo(() => (upsertedItem === true ? undefined : upsertedItem), [JSON.stringify(upsertedItem?.id ?? "")]);
 
-  useEffect(() => console.log('DEBUG - upsertedItem: ', upsertedItem), [upsertedItem]);
+  useEffect(() => console.log("DEBUG - upsertedItem: ", upsertedItem), [upsertedItem]);
 
   if (!field.relation) return null;
 
   return (
     <>
-      {formattedField && (
-        <Select
-          field={formattedField}
-          multiSelect={!!formattedField.relation?.multiple}
-          onChange={handleSelectChange}
-          min={formattedField.relation?.allowEmpty ? 0 : 1}
-          error={null}
-          customLabels={(vals) => vals.length ? `${vals.length} sélectionnés` : " "}
-          sx="w-full"
-        />
-      )}
+      {formattedField && <Select field={formattedField} onChange={(v) => onChange(v)} />}
       {attributeTable && upsertedItem && (
-        <Modal
-          openState={{ isOpen: !!upsertedItem, setIsOpen: (state) => setUpsertedItem(state ? true : undefined) }}
-        >
+        <Modal openState={{ isOpen: !!upsertedItem, setIsOpen: (state) => setUpsertedItem(state ? true : undefined) }}>
           <div class="w-full flex flex-col gap-5">
             <div className="flex flex-col w-full gap-4">
-              <ObjectRenderer
-                type={attributeTable}
-                content={defaultObjectContent}
-                onChange={(v) => setUpsertedItem(v)}
-              />
+              <ObjectRenderer type={attributeTable} content={defaultObjectContent} onChange={(v) => setUpsertedItem(v)} />
             </div>
             <div class="text-text flex align-center gap-4">
-              <Button
-                onClick={upsertAttribute}
-                className={{ wrapper: "grow justify-center" }}
-              >
+              <Button onClick={upsertAttribute} className={{ wrapper: "grow justify-center" }}>
                 {updating ? "Enregistrement..." : `${isUpsertedItemNew ? "Créer" : "Modifier"}`}
               </Button>
-              {!isUpsertedItemNew &&
-                <IconTrash className="text-error cursor-pointer" onClick={deleteAttribute} />}
+              {!isUpsertedItemNew && <IconTrash className="text-error cursor-pointer" onClick={deleteAttribute} />}
             </div>
           </div>
         </Modal>

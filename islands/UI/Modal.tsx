@@ -17,7 +17,7 @@ interface ModalProps {
 export default function Modal({ children, defaultOpen, openState, sx }: ModalProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
-  // TODO: check that the modal feature are finished, and replaced everywhere in code
+  //TODO: was here. work on redo modals
 
   return (
     <Dialog.Root
@@ -30,6 +30,7 @@ export default function Modal({ children, defaultOpen, openState, sx }: ModalPro
       <Dialog.Portal>
         <Dialog.Overlay className="bg-black/60 backdrop-blur-xs fixed inset-0 z-30" />
         <Dialog.Content
+          onInteractOutside={e => e.preventDefault()}
           className={cn(
             "z-30 fixed pos-center max-h-[85vh] w-fit max-w-[800px] min-w-[100px] min-h-[100px]", // Pos & size
             "bg-background p-5 rounded-xl",

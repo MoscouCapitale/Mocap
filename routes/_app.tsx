@@ -22,7 +22,7 @@ export default async function App(ctx: FreshContext) {
         <meta name="keywords" content={website_keywords.split(",").join(" ")} />
         <link rel="icon" href={website_icon.public_src} />
         {/* <link rel="stylesheet" href="/styles.css" /> */}
-        <script src="/loader.js" defer></script>
+        {/* <script src="/loader.js" defer></script> */}
 
         {/* Its here that we declare our global styles */}
         <style>

@@ -28,11 +28,13 @@
   "nodeModulesDir": "auto",
   "imports": {
     "@fresh/plugin-vite": "jsr:@fresh/plugin-vite@^1.0.8",
+    "@rc-component/dialog": "npm:@rc-component/dialog@^1.8.4",
     "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.18",
     "pocketbase": "npm:pocketbase@^0.26.8",
     "preact": "npm:preact@^10.27.2",
     "@preact/signals": "npm:@preact/signals@^2.5.0",
     "$std/": "https://deno.land/std@0.210.0/",
+    "react-tiny-popover": "npm:react-tiny-popover@^8.1.6",
     "supabase": "https://esm.sh/@supabase/supabase-js@2",
     "supabase/": "https://esm.sh/@supabase/supabase-js@2/",
     "@supabase/ssr": "https://esm.sh/@supabase/ssr",

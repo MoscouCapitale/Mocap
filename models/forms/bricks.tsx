@@ -10,6 +10,7 @@ import {
   ITrack
 } from "../Bricks.ts";
 import { FormField, ObjFormField } from "../Form.ts";
+import { getEmbedTargetFromLink } from "@islands/Bricks/Embed/index.tsx";
 
 export enum ETableNames {
   albums = "albums",
@@ -20,6 +21,8 @@ export enum ETableNames {
   tracks = "tracks",
   // users = "users",
 }
+
+
 
 /**
  * Export all the form fields for the different types of objects that can be created, and saved in the database.
@@ -41,11 +44,11 @@ export const getObjectFormFromType = (type: ETableNames | EBrickType): FormField
       return TrackFormFields;
     // case ETableNames.users:
     /** Bricks */
-    case EBrickType.album:
+    case EBrickType.Album:
       return BrickAlbumFormFields;
-    case EBrickType.highlight:
+    case EBrickType.Highlight:
       return BrickHighlightFormFields;
-    case EBrickType.text:
+    case EBrickType.Text:
       return BrickTextFormFields;
     default:
       return null;
@@ -189,20 +192,20 @@ const BrickHighlightFormFields: ObjFormField<IBrickHighlight>[] = [
       allowInsert: true,
     },
   },
-  // {
-  //   name: "is_embed",
-  //   type: "checkbox",
-  //   label: (
-  //     <LabeledToolTip
-  //       label="Intégration"
-  //       text="Le 'média' sera remplacé par une intégration spécifiée dans le 'Lien' (Spotify, SoundCloud, etc)."
-  //     />
-  //   ),
-  //   trigger: {
-  //     fieldName: ["link"],
-  //     condition: (v) => !!getEmbedTargetFromLink(v ?? ""),
-  //   },
-  // },
+  {
+    name: "settings.is_embed",
+    type: "checkbox",
+    label: (
+      <LabeledToolTip
+        label="Intégration"
+        text="Le 'média' sera remplacé par une intégration spécifiée dans le 'Lien' (Spotify, SoundCloud, etc)."
+      />
+    ),
+    trigger: {
+      fieldName: ["link"],
+      condition: (v) => !!getEmbedTargetFromLink(v ?? ""),
+    },
+  },
   // ...MediaControlsFormField,
 ];
 
@@ -247,6 +250,11 @@ const BrickAlbumFormFields: ObjFormField<IBrickAlbum>[] = [
       allowEmpty: false,
       allowInsert: true,
     },
+  },
+  {
+    name: "settings.hoverable",
+    type: "checkbox",
+    label: "Brique active",
   },
 ];
 
@@ -317,7 +325,7 @@ const AlbumFormFields: ObjFormField<IAlbum> = [
     name: "type",
     type: "select",
     label: "Type",
-    options: Object.entries(EBrickType).map(([value, label]) => ({ value, label })),
+    options: () => Object.entries(EBrickType).map(([value, label]) => ({ value, label })),
   },
   {
     name: "tracks",

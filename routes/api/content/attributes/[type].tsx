@@ -1,8 +1,5 @@
-import { DatabaseAttributes } from "@models/App.ts";
-import { TableNames } from "@models/database.ts";
-import { supabase as supa } from "@services/supabase.ts";
-import { createQueryFromAttributesTables, evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
 import { authDefine } from "@utils/app.ts";
+import { deleteContent, populateUser, returnPBApiResponse, upsertContent } from "@utils/db.ts";
 
 // TODO: any is not a good type
 export const handler = authDefine.handlers({
@@ -15,31 +12,21 @@ export const handler = authDefine.handlers({
   async GET(ctx) {
     const type: string = ctx.params.type;
     const { pb } = ctx.state;
-    
+
     const data = await pb.collection(type).getFullList();
-        
+
     return ctx.json(data);
   },
-  
-  //TODO: was here
-  /**
-   * trying to create an attribute record. getting 400 error. now is time to
-   * - fix pb typing
-   * - handle pb errors to return correcty errors
-   */
+
   async PUT(ctx) {
     const { pb } = ctx.state;
     const type: string = ctx.params.type;
-    
-    let attribute = await ctx.req.json();
-    
-    if (attribute?.id) {
-      attribute = await pb.collection(type).update(attribute?.id, attribute);
-    } else {
-      attribute = await pb.collection(type).create(attribute);
-    }
-    
-    return ctx.json(attribute);
+
+    const attribute = populateUser(await ctx.req.json(), ctx);
+
+    const res = await upsertContent(pb.collection(type), attribute);
+
+    return returnPBApiResponse(ctx, res);
   },
 
   async DELETE(ctx) {
@@ -48,8 +35,8 @@ export const handler = authDefine.handlers({
 
     const body = await ctx.req.json();
 
-    await pb.collection(type).delete(body?.id);
+    const res = await deleteContent(pb.collection(type), body);
 
-    return ctx.json({})
+    return returnPBApiResponse(ctx, res);
   },
 });

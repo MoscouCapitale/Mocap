@@ -1,15 +1,16 @@
-import { BricksType } from "@models/Bricks.ts";
-import { getBrickFromType } from "@services/bricks.ts";
-import { define } from "@utils/app.ts";
+import { EBrickType, IBrick } from "@models/Bricks.ts";
+import { authDefine } from "@utils/app.ts";
 
-export const handler = define.handlers({
+export const handler = authDefine.handlers({
   async GET(ctx) {
-    const type = ctx.params.type;
-    const res = await getBrickFromType(type as keyof typeof BricksType, undefined, true);
+    const { pb } = ctx.state;
+    const type = ctx.params.type as EBrickType;
+    // const res = await getBrickFromType(type as keyof typeof BricksType, undefined, true);
 
-    // @ts-ignore - If error is set it means that res is not a MNode
-    if (res.error) return new Response(res.error, { status: res.status });
+    const data = await pb.collection<IBrick<typeof type>>('bricks').getFullList({
+      filter: `type="${type}"`,
+    });
 
-    return new Response(JSON.stringify(res.data), { status: 200 });
+    return ctx.json(data);
   },
 });

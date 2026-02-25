@@ -1,12 +1,8 @@
-import { Artist, AudioBrick, availBricks, Platform, Track } from "@models/Bricks.ts";
-import { FormField } from "@models/Form.ts";
-import { MediaControls, MediaCTA } from "@models/Medias.ts";
+import { FormField, SelectField } from "@models/Form.ts";
 import { getObjectFormFromType } from "@models/forms/bricks.tsx";
 import { set } from "lodash";
 import { useEffect, useMemo, useState } from "preact/hooks";
 import ContentForm, { ContentFormValue } from "./ContentForm.tsx";
-
-type SupportedObjects = availBricks | Track | Platform | MediaCTA | MediaControls | Artist | AudioBrick;
 
 type ObjectRendererProps<T> = {
   /** The type of the element to the form be rendered */
@@ -32,7 +28,7 @@ export default function ObjectRenderer({ type, content, onChange }: ObjectRender
   // Do no set content as a dependency, as it will cause a re-render on each event (if content is set)
   const initialData = useMemo(() => content ?? createEmptyObject(form), [form, content]);
 
-  const [data, setDatas] = useState<SupportedObjects | null>();
+  const [data, setDatas] = useState<object | null>();
 
   if (!form || !initialData) {
     console.error("Error while trying to rendering object for ", type);
@@ -55,25 +51,23 @@ export default function ObjectRenderer({ type, content, onChange }: ObjectRender
 }
 
 /** Create an empty object from the given type */
-function createEmptyObject(form: FormField[] | null): Omit<SupportedObjects, "id"> | null {
+function createEmptyObject(form: FormField[] | null): Omit<object, "id"> | null {
   if (!form) return null;
   const res = {};
 
   // Get the default value for each field. Either get the default value or create an empty one
-  const getFieldValue = (field: FormField) => {
+  const getFieldValue = (field: FormField | SelectField) => {
     switch (field.type) {
       case "number":
         return field.defaultValue ?? 0;
       case "checkbox":
         return field.defaultValue ?? false;
       case "select":
-        return field.defaultValue ?? "";
-      case "multiselect":
-        return field.defaultValue ?? [];
+        return field.defaultValue ?? ((field as SelectField).multiple ? [] : undefined);
       case "file":
         return field.defaultValue ?? null;
       case "relation":
-        return field.relation?.multiple ? [] : {};
+        return field.relation?.multiple ? [] : undefined;
       case "markdown":
       case "date":
       case "color":

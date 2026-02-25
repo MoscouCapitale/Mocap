@@ -6,6 +6,7 @@ import InstagramEmbed from "./Instagram.tsx";
 import SoundcloudEmbed from "./Soundcloud.tsx";
 import SpotifyEmbed from "./Spotify.tsx";
 import YoutubeEmbed from "./Youtube.tsx";
+import { ILink } from "@models/Bricks.ts";
 
 type EmbedProps = {
   link: string;
@@ -45,7 +46,10 @@ export default function MediaEmbed({ link, config }: EmbedProps) {
 }
 
 // FIXME: better way to detect the embed target
-export const getEmbedTargetFromLink = (link: string): EmbedTargets | null => {
+export const getEmbedTargetFromLink = (defaultLink: string | ILink): EmbedTargets | null => {
+
+  const link = (defaultLink as ILink).url ?? defaultLink;
+
   if (link.includes("music.apple")) return "apple-music";
   if (link.includes("youtube")) return "youtube";
   if (link.includes("spotify")) return "spotify";

@@ -1,7 +1,7 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { toast } from "@hooks/toast.tsx";
 import { Button, Modal, ObjectRenderer } from "@islands/UI";
-import { availBricks, BricksType, EBrickType } from "@models/Bricks.ts";
+import { availBricks, BricksType, EBrickType, IBrick } from "@models/Bricks.ts";
 import { MNode } from "@models/Canva.ts";
 import { Media, MediaType } from "@models/Medias.ts";
 import { IconTrash } from "@utils/icons.ts";
@@ -12,8 +12,8 @@ import CollectionGrid from "../collection/CollectionGrid.tsx";
 
 type CreateBrickBarProps = {
   brickType: EBrickType; // The general type of the brick to create
-  brickData?: availBricks;
-  returnBrick: (brick: number | availBricks) => void; // Callback function to pass data to the parent
+  brickData?: IBrick;
+  returnBrick: (brick: string | IBrick) => void; // Callback function to pass data to the parent
 };
 
 type brickState = "creating" | "modifying" | "modifyingIncanvas" | "addIncanvas";
@@ -23,7 +23,7 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
 
   const [displayMedias, setDisplayMedias] = useState<boolean>(false);
   const [brickState, setBrickState] = useState<brickState>();
-  const [brick, setBrick] = useState<availBricks | undefined>();
+  const [brick, setBrick] = useState<IBrick | undefined>();
 
   useEffect(() => {
     setBrick(brickData);
@@ -72,13 +72,13 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
           withCanvaInsert: Boolean(withCanvaInsert),
         },
       })
-        .json<availBricks & { newNode?: MNode }>()
+        .json<IBrick & { newNode?: MNode }>()
         .then((res) => {
           if (res) {
             const { newNode, ...result } = res;
             toast({
               title: "Brick saved",
-              description: `The brick ${brickDatas.name} has been saved.`,
+              description: `The brick ${brickDatas.title} has been saved.`,
             });
             if (withCanvaInsert && newNode) saveNode({ node: newNode, rerender: true });
             returnBrick({ ...result, nodeId: newNode?.id ?? result.nodeId });
@@ -155,7 +155,7 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
   return (
     <>
       <div className="flex flex-col w-full gap-4 min-h-0 overflow-scroll pr-4">
-        <ObjectRenderer type={brickType} content={brickData} onChange={(v) => setBrick(v as availBricks)} />
+        <ObjectRenderer type={brickType} content={brickData} onChange={(v) => setBrick(v as IBrick)} />
       </div>
       <div class="w-full gap-4 flex flex-col justify-center align-middle">
         {brickState && (
@@ -184,8 +184,8 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
         )}
       </div>
       <Modal openState={{ isOpen: displayMedias, setIsOpen: setDisplayMedias }}>
-        <div class="w-full overflow-auto min-h-[0] flex-col justify-start items-start gap-10 inline-flex">
-          {Object.entries(MediaType)?.map(([key, val]: [string, MediaType]) => (
+        <div class="w-full overflow-auto min-h-0 flex-col justify-start items-start gap-10 inline-flex">
+          {Object.entries(MediaType)?.map(([_, val]: [string, MediaType]) => (
             <div class="w-full flex-col justify-start items-start gap-2.5 inline-flex">
               <div class="text-text font-bold">{val}</div>
               <CollectionGrid onMediaClick={mediaClickHandler} fetchingRoute={val as MediaType} mediaSize={150} />

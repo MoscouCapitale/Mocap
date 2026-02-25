@@ -23,7 +23,8 @@ export default function Error404(props: PageProps) {
     );
   }
 
-  console.trace(error.stack)
+  console.error(error)
+  // console.trace(error.stack)
 
   return <p>big error</p>
 }

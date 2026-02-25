@@ -2,6 +2,8 @@ import { cn } from "@utils/cn.ts";
 import { JSX } from "preact/jsx-runtime";
 import { Paths } from "./App.ts";
 import { Media } from "./Medias.ts";
+import { ComponentChildren, VNode } from "preact";
+import { ETableNames } from "./forms/bricks.tsx";
 
 export type InputError = {
   error: boolean;
@@ -11,6 +13,7 @@ export type InputError = {
 
 // TODO: Support for all of these fields
 export interface FormField {
+  /** Field unique name. Supports object path */
   name: string;
   defaultValue?: FormFieldValue;
   label?: string | JSX.Element;
@@ -21,8 +24,6 @@ export interface FormField {
   required?: boolean;
   disabled?: boolean;
   readOnly?: boolean;
-  /** Options of the select */
-  options?: FormFieldOptions[];
   validation?: (value: any) => string | null; // TODO: the validation should need to prevent the form from being submitted
   /** Some base style variant. Default is inline */
   variant?: "inline" | "compact"; // TODO: support variant
@@ -43,9 +44,26 @@ export interface FormField {
   trigger?: FormTrigger;
 }
 
+export type SelectValue<M extends boolean> = M extends true ? FormFieldOptions[] : FormFieldOptions | undefined;
+export interface SelectField<M extends boolean = false> extends FormField {
+  type: 'select';
+  // TODO: support one or 
+  defaultValue?: SelectValue<M>;
+  multiple?: M;
+  /** Max chip on the select before showing `+X`. Defaults to 3. */
+  maxElementShown?: number;
+  clearable?: boolean;
+  options: (field: SelectField<M>) => Promise<FormFieldOptions[]>;
+  validation?: (value: SelectValue<M>) => string | null;
+}
+
 export interface FormFieldOptions {
-  value: string;
-  label: string | JSX.Element;
+  value: string | object;  
+  label: ComponentChildren;
+  chipLabel?: ComponentChildren;
+  onSelect?: (e: MouseEvent, value: FormFieldOptions) => void;
+  onMouseEnter?: (e: MouseEvent, value: FormFieldOptions) => void;
+  onMouseLeave?: (e: MouseEvent, value: FormFieldOptions) => void;
 }
 
 export type FormFieldType =
@@ -84,11 +102,7 @@ export type FormFieldRelation = {
   allowInsert?: boolean;
 };
 
-export type AvailableFormRelation =
-  | "tracks"
-  | "links"
-  | "albums"
-  | "artists";
+export type AvailableFormRelation = ETableNames.tracks | ETableNames.links | ETableNames.albums | ETableNames.artists;
 
 export const baseInputStyle = cn(
   "min-w-[180px] bg-background text-[15px] rounded-sm px-[5px] py-[3px] border-2 border-text text-text mx-0",
@@ -99,7 +113,7 @@ export const baseInputStyle = cn(
  *
  * This way, the name will always be a key of the object, making it easier to use in forms
  */
-export type ObjFormField<T> = Omit<FormField, "name"> & { name: Paths<T> };
+export type ObjFormField<T> = Omit<FormField | SelectField, "name"> & { name: Paths<T> };
 
 /** This type is used to make interactive forms, by displaying forms fields
  * depending on the value of another field.

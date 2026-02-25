@@ -1,5 +1,5 @@
 import { FileInput, PreviewImage, RelationInput, Select } from "@islands/UI";
-import { baseInputStyle, FormField, FormFieldValue } from "@models/Form.ts";
+import { baseInputStyle, FormField, FormFieldValue, SelectField } from "@models/Form.ts";
 import { cn } from "@utils/cn.ts";
 import { IconEye, IconEyeClosed, IconInfoSquareRounded } from "@utils/icons.ts";
 import { isEmpty } from "lodash";
@@ -7,17 +7,17 @@ import { VNode } from "preact";
 import { useEffect, useState } from "preact/hooks";
 
 type InputFromTypeProps = {
-  field: FormField;
+  field: FormField | SelectField;
   onChange: (value: FormFieldValue) => void;
-  error: string | null;
   /** This attribute is used when rendering this input on SSR.
    *
    * For some reason, on SSR, the defaultValue will not be set, resulting in the input
    * containing the correct value, but being visually empty. To know if the input is controlled
    * or not, we use the `onChange` prop to determine it.
    * TODO: Open an issue on Fresh to track down this bug
-   */
-  isControlled: boolean;
+  */
+ isControlled: boolean;
+ error?: string;
 };
 
 const InputFromType = (
@@ -78,16 +78,11 @@ const InputFromType = (
         />
       );
     case "select":
-    case "multiselect":
       return (
         <Select
-          field={field}
+          field={{ ...field, sx: field.sx + " w-full"} as SelectField}
           error={error}
           onChange={onChange}
-          multiSelect={field.type === "multiselect"}
-          min={field.required ? 1 : 0}
-          sx="max-w-[200px]"
-          inputName={field.name}
         />
       );
     case "file":
@@ -152,25 +147,24 @@ type InputProps = {
 };
 
 export default function Input({ field, onChange }: InputProps) {
-  const [fieldError, setFieldError] = useState<string | null>(null);
+  const [fieldError, setFieldError] = useState<string>();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   // On field mount, check errors that needs to be displayed
   useEffect(() => {
     if (field.relation && (field.validation || field.required)) {
-      let error = field.validation ? field.validation(field.defaultValue) : null;
+      let error = field.validation?.(field.defaultValue) ?? undefined;
       if (field.required && (!field.defaultValue || isEmpty(field.defaultValue))) error = "Ce champ est requis";
-      if (!error) setFieldError(null);
-      else setFieldError(error);
+      setFieldError(error);
     }
   }, [field.name]);
 
   const onValueChange = (value: FormFieldValue) => {
     if (field.validation || field.required) {
-      let error = field.validation ? field.validation(value) : null;
+      let error = field.validation?.(field.defaultValue) ?? undefined;
       if (field.required && (!value || isEmpty(value))) error = "Ce champ est requis";
       if (!error) {
-        setFieldError(null);
+        setFieldError(undefined);
         return onChange ? onChange(value) : null;
       }
       setFieldError(error);
