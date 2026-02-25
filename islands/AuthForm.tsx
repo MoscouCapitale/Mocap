@@ -21,6 +21,9 @@ export default function AuthForm({ data: { type, additional_data, error } }: { d
   const [confirmpassword, setConfirmPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  useEffect(() => console.log('DEBUG - email: ', email), [email]);
+  useEffect(() => console.log('DEBUG - password: ', password), [password]);
+
   const formsInputs: Record<AuthFormFields, FormField> = useMemo(
     () => ({
       email: {

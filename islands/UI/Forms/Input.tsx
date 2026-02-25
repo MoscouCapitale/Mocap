@@ -161,7 +161,7 @@ export default function Input({ field, onChange }: InputProps) {
 
   const onValueChange = (value: FormFieldValue) => {
     if (field.validation || field.required) {
-      let error = field.validation?.(field.defaultValue) ?? undefined;
+      let error = field.validation?.(value) ?? undefined;
       if (field.required && (!value || isEmpty(value))) error = "Ce champ est requis";
       if (!error) {
         setFieldError(undefined);

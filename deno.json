@@ -28,7 +28,6 @@
   "nodeModulesDir": "auto",
   "imports": {
     "@fresh/plugin-vite": "jsr:@fresh/plugin-vite@^1.0.8",
-    "@rc-component/dialog": "npm:@rc-component/dialog@^1.8.4",
     "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.18",
     "pocketbase": "npm:pocketbase@^0.26.8",
     "preact": "npm:preact@^10.27.2",

@@ -15,7 +15,8 @@ export default function RelationInput({ field, onChange }: RelationInputProps) {
   const attributeTable = field.relation?.type;
 
   const [updating, setUpdating] = useState<boolean>(false);
-  const [upsertedItem, setUpsertedItem] = useState<AvailableAttributes | true>();
+  //FIXME: rm "true". used to debug modals
+  const [upsertedItem, setUpsertedItem] = useState<AvailableAttributes | true>(field.name === "link");
 
   const formattedField = useMemo<SelectField | null>(() => {
 
