@@ -1,10 +1,11 @@
+import { RecordModel } from "pocketbase";
 import { IUser } from "./Authentication.ts";
 import { Audio, Image, MediaControls, MediaCTA, MediaObjectFit, Video } from "./Medias.ts";
 import { TableNames } from "./database.ts";
 import { RequiredBy } from "./type-utils.ts";
 
 /** Base interface of a content in the db */
-export interface Content {
+export interface Content extends RecordModel {
   /** String id of the content */
   id: string;
   //TODO: check types
@@ -15,9 +16,9 @@ export interface Content {
 }
 
 export enum EAlbumType {
-  single = "Single",
-  album = "Album",
-  EP = "EP",
+  Single = "single",
+  Album = "album",
+  EP = "ep",
 }
 
 type RelationContent<T extends { id: string } | { id: string }[]> = T extends (infer U)[]
@@ -77,8 +78,8 @@ interface IBaseBrick extends Content {
 /** A brick representing an album, single, ep */
 export interface IBrickAlbum extends IBaseBrick {
   type: EBrickType.Album;
-  album: IAlbum;
-  link?: ILink;
+  album: RelationContent<IAlbum>;
+  link?: RelationContent<ILink>;
   media?: IMedia;
   controls?: MediaControls;
 }
@@ -86,7 +87,7 @@ export interface IBrickAlbum extends IBaseBrick {
 /** A brick containing a media. Has a variant for hero section  */
 export interface IBrickHighlight extends IBaseBrick {
   type: EBrickType.Highlight;
-  subtitle?: string;
+  text?: string;
   media: IMedia;
   controls: MediaControls;
   link?: RelationContent<ILink>;
@@ -111,6 +112,18 @@ export type IBrick<T extends EBrickType | null = null> = T extends EBrickType.Al
 
 // FIXME: use media table
 export type IMedia = string;
+
+/** A brick exactly as saved in the db, with STI fields */
+export interface IDBBrick extends IBaseBrick {
+  type: EBrickType;
+  album?: RelationContent<IAlbum>;
+  link?: RelationContent<ILink>;
+  media?: IMedia;
+  controls?: MediaControls;
+  text?: string;
+  highlight_variant?: "default" | "hero";
+  highlight_style?: "scrolling-hero";
+} 
 
 export interface INode extends Content {
   x: number;

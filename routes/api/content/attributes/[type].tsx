@@ -1,5 +1,5 @@
 import { authDefine } from "@utils/app.ts";
-import { deleteContent, populateUser, returnPBApiResponse, upsertContent } from "@utils/db.ts";
+import { deleteContent, getContent, prepareContentObject, returnPBApiResponse, upsertContent } from "@utils/db.ts";
 
 // TODO: any is not a good type
 export const handler = authDefine.handlers({
@@ -13,7 +13,7 @@ export const handler = authDefine.handlers({
     const type: string = ctx.params.type;
     const { pb } = ctx.state;
 
-    const data = await pb.collection(type).getFullList();
+    const data = await getContent(pb.collection(type), -1, { expand: 'tracks' });
 
     return ctx.json(data);
   },
@@ -22,7 +22,7 @@ export const handler = authDefine.handlers({
     const { pb } = ctx.state;
     const type: string = ctx.params.type;
 
-    const attribute = populateUser(await ctx.req.json(), ctx);
+    const attribute = prepareContentObject(await ctx.req.json(), ctx);
 
     const res = await upsertContent(pb.collection(type), attribute);
 

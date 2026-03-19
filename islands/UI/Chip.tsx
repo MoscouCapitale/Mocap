@@ -4,13 +4,14 @@ import { IconX } from "@utils/icons.ts";
 
 export default function Chip({ children, onDelete, sx }: { children: ComponentChildren; onDelete?: (e: MouseEvent) => void; sx?: string }) {
   return (
-    <div className={cn("flex gap-1 max-w-20 rounded-full p-1 bg-black/30 text-text", sx)}>
-      <div className="grow truncate">{children}</div>
+    <div className={cn("flex min-w-0 gap-1 max-w-20 rounded-full p-1 bg-black/30 text-text", sx)}>
+      <div className="grow min-w-0 truncate">{children}</div>
       {onDelete && (
         <button
           type="button"
           onClick={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             onDelete(e);
           }}
         >

@@ -1,4 +1,6 @@
-function verifyEmailIntegrity(email: string): string {
+function verifyEmailIntegrity(email?: string): string {
+  if (!email) return "";
+
   const emailFormat = {
     minLength: 5,
     maxLength: 254,
@@ -20,7 +22,9 @@ function verifySamePassword(password: string, confirmPassword: string): string {
   return password === confirmPassword ? "" : "Passwords do not match";
 }
 
-function verifyPasswordIntegrity(password: string): string {
+function verifyPasswordIntegrity(password?: string): string {
+  if (!password) return '';
+  
   const passwordFormat = {
     minLength: 8,
     hasCase: true,

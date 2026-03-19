@@ -7,17 +7,18 @@ import ky from "ky";
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import CreateBrickBar from "./CreateBrickBar.tsx";
 import { Select } from "@islands/UI";
+import { IconPlus } from "@utils/icons.ts";
 
 // Default is the value of the key of BricksType.Single
 const defaultBrick = EBrickType.Album;
 
-const BrickTypeSelectField: SelectField = {
+const BrickTypeSelectField: SelectField<false> = {
   name: "bricktype",
   type: "select",
   defaultValue: { value: EBrickType.Album, label: getBrickTypeLabel(EBrickType.Album) },
   options: async () =>
-    Object.entries(EBrickType).map(([label, value]) => ({
-      value: String(value),
+    await Object.entries(EBrickType).map(([label, value]) => ({
+      value,
       label,
     })),
 };
@@ -25,57 +26,45 @@ const BrickTypeSelectField: SelectField = {
 type BrickSideBarSelects = Record<EBrickType, IBrick[] | undefined>;
 
 export default function BrickSidebar() {
-  const [allBricksMap, setAllBricksMap] = useState<BrickSideBarSelects>({
-    [EBrickType.Album]: undefined,
-    [EBrickType.Highlight]: undefined,
-    [EBrickType.Text]: undefined,
-  });
-
   const [selectedBrickType, setSelectedBrickType] = useState(defaultBrick);
   const [selectedUserBrick, setSelectedUserBrick] = useState<IBrick>();
 
-  /** UseEffect triggered when you select a type of brick to manage */
-  useEffect(() => {
-    if (!allBricksMap[selectedBrickType]) {
-      ky.get(`/api/brick/getUserBricks/${selectedBrickType}`)
-        .json<IBrick<typeof selectedBrickType>[]>()
-        .then((data) => {
-          setAllBricksMap((p) => ({ ...p, [selectedBrickType]: data }));
-        });
-    }
-  }, [selectedBrickType]);
-
-  // Custom dependency state trigger value, to re-calculate the userBrickOptions when some of the title changes (so on create/update/delete)
-  const ubOptionsTrigger = useMemo(
-    () => JSON.stringify((allBricksMap[selectedBrickType] ?? []).map((b) => ({ id: b.id, name: b.title, nodeId: b.nodeId }))),
-    [selectedBrickType, allBricksMap],
-  );
-
   /** Select field, to choose the brick to manage */
-  const userBrickOptions = useMemo<SelectField>(
+  const userBrickOptions = useMemo<SelectField<false>>(
     () => ({
       name: "userbricks",
       type: "select",
-      defaultValue: {
-        value: "create",
-        label: "Créer une nouvelle brique",
+      options: async () => {
+        const data = await ky.get(`/api/brick/getUserBricks/${selectedBrickType}`).json<IBrick<typeof selectedBrickType>[]>();
+
+        return [
+          ...(data ?? []).map((b) => ({
+            value: b,
+            label: b.name ?? b.title,
+            ...(b.nodeId && {
+              onMouseEnter: () => onItemHover("enter", b.nodeId as string),
+              onMouseLeave: () => onItemHover("leave", b.nodeId as string),
+            }),
+          })),
+          {
+            value: {},
+            label: (
+              <div className="flex gap-4 justify-between items-center w-full">
+                <p>Ajouter un élément</p>
+                <IconPlus className="text-text" size={20} />
+              </div>
+            ),
+            onSelect: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setSelectedUserBrick(undefined);
+              return null;
+            },
+          },
+        ];
       },
-      options: async () => [
-        ...(allBricksMap[selectedBrickType]?.map((b) => ({
-          value: b.id,
-          label: b.title,
-          ...(b.nodeId && {
-            onMouseEnter: () => onItemHover("enter", b.nodeId as string),
-            onMouseLeave: () => onItemHover("leave", b.nodeId as string),
-          }),
-        })) ?? []),
-        {
-          value: "create",
-          label: "Créer une nouvelle brique",
-        },
-      ],
     }),
-    [ubOptionsTrigger],
+    [selectedBrickType],
   );
 
   /** Highlight the node in the canvas when hovering over the brick in the sidebar */
@@ -86,10 +75,6 @@ export default function BrickSidebar() {
       if (action === "leave") el.classList.remove("node-highlight");
     }
   };
-
-  useEffect(() => {
-    setSelectedUserBrick(undefined);
-  }, [ubOptionsTrigger]);
 
   const { MCNodes, isPreview } = useMNodeContext();
   const { toast } = useToast();
@@ -120,26 +105,27 @@ export default function BrickSidebar() {
    */
   const handleBrickAction = useCallback(
     (brick: string | IBrick) => {
-      if (typeof brick === "string") {
-        setAllBricksMap((p) => ({
-          ...p,
-          [selectedBrickType]: (p[selectedBrickType] ?? []).map((b) => (b.id === brick ? null : b)).filter(Boolean),
-        }));
-      } else {
-        setAllBricksMap((p) => {
-          const isIn = p[selectedBrickType]?.find((b) => b.id === brick.id);
-          return {
-            ...p,
-            [selectedBrickType]: isIn ? p[selectedBrickType]?.map((b) => (b.id === brick.id ? brick : b)) : [...(p[selectedBrickType] ?? []), brick],
-          };
-        });
-      }
+      userBrickOptions.updateOptions!().then(() => userBrickOptions.selectOptions!(typeof brick === "string" ? undefined : { value: brick, label: "" }));
+      // if (typeof brick === "string") {
+      //   setAllBricksMap((p) => ({
+      //     ...p,
+      //     [selectedBrickType]: (p[selectedBrickType] ?? []).map((b) => (b.id === brick ? null : b)).filter(Boolean),
+      //   }));
+      // } else {
+      //   setAllBricksMap((p) => {
+      //     const isIn = p[selectedBrickType]?.find((b) => b.id === brick.id);
+      //     return {
+      //       ...p,
+      //       [selectedBrickType]: isIn ? p[selectedBrickType]?.map((b) => (b.id === brick.id ? brick : b)) : [...(p[selectedBrickType] ?? []), brick],
+      //     };
+      //   });
+      // }
     },
     [selectedBrickType],
   );
 
   return (
-    <div class={cn("w-[calc(200px+1rem)] h-full flex-col justify-start items-start gap-6 inline-flex relative")}>
+    <div class={cn("w-54 h-full flex-col justify-start items-start gap-6 inline-flex relative")}>
       {isPreview && (
         <div
           className="absolute inset-0 bg-background opacity-60"
@@ -156,7 +142,7 @@ export default function BrickSidebar() {
         <Select field={BrickTypeSelectField} onChange={(v) => setSelectedBrickType(v?.value as EBrickType)} />
 
         {/* User-created bricks of the chosen type */}
-        <Select field={userBrickOptions} onChange={(v) => setSelectedUserBrick(allBricksMap[selectedBrickType]?.find((b) => b.id === v?.value))} />
+        <Select field={userBrickOptions} onChange={(v) => setSelectedUserBrick(v?.value as IBrick)} />
       </div>
       <CreateBrickBar brickType={selectedBrickType} brickData={selectedUserBrick} returnBrick={handleBrickAction} />
     </div>

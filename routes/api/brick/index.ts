@@ -1,18 +1,15 @@
-import { BricksType, getBrickTypeTableName, IBrick } from "@models/Bricks.ts";
-import { supabase as supa } from "@services/supabase.ts";
-import { evaluateSupabaseResponse, returnErrorReponse } from "@utils/api.ts";
+import { IBrick } from "@models/Bricks.ts";
 import { authDefine } from "@utils/app.ts";
-import { isCollectionError, populateUser, returnPBApiResponse, upsertContent } from "@utils/db.ts";
+import { deleteContent, isCollectionError, prepareContentObject, returnPBApiResponse, upsertContent } from "@utils/db.ts";
 
 export const handler = authDefine.handlers({
   async PUT(ctx) {
     const { pb } = ctx.state;
     const req = ctx.req;
 
-    const body = (await req.json()) as { data: IBrick, type: IBrick['type'], withCanvaInsert: boolean };
-    console.log("Body", body);
+    const body = (await req.json()) as { data: IBrick; withCanvaInsert: boolean };
 
-    const brick = await upsertContent(pb.collection("bricks"), populateUser(body.data, ctx));
+    const brick = await upsertContent(pb.collection("bricks"), prepareContentObject(body.data, ctx));
 
     console.log("Body", brick);
 
@@ -142,30 +139,13 @@ export const handler = authDefine.handlers({
   },
 
   async DELETE(ctx) {
+    const { pb } = ctx.state;
     const req = ctx.req;
-    const body = await req.json();
+    const body = (await req.json()) as { data: IBrick };
 
-    const type = body.type;
+    console.log("infos", { body });
+    const res = await deleteContent(pb.collection("bricks"), body.data);
 
-    if (!Object.keys(BricksType).includes(type)) {
-      return new Response(`${type} is not a valid type`, { status: 400 });
-    }
-
-    const brick = body.data;
-
-    const tableName = getBrickTypeTableName(type);
-
-    const { data, error } = await supa.from(tableName).delete().eq("id", brick.id);
-
-    if (evaluateSupabaseResponse(data, error)) {
-      return returnErrorReponse(data, error);
-    }
-
-    return new Response(JSON.stringify(data), {
-      status: 200,
-      headers: {
-        "content-type": "application/json",
-      },
-    });
+    return returnPBApiResponse(ctx, res);
   },
 });

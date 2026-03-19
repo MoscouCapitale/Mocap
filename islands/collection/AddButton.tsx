@@ -1,4 +1,4 @@
-import { Button, Modal } from "@islands/UI";
+import { Button, useModal } from "@islands/UI";
 import ky from "ky";
 import { useEffect, useState } from "preact/hooks";
 import UploadMediaPopup from "./UploadMediaPopup.tsx";
@@ -8,7 +8,7 @@ type AddButtonProps = {
 };
 
 export default function AddButton({ position }: AddButtonProps) {
-  const [openAddMediaInterface, setOpenAddMediaInterface] = useState<boolean>(false);
+  const { setIsOpen: setOpenAddMediaInterface, Modal } = useModal();
 
   useEffect(() => {
     if (typeof localStorage !== "undefined" && !localStorage.getItem("media_settings")) {
@@ -30,7 +30,7 @@ export default function AddButton({ position }: AddButtonProps) {
       >
         Ajouter un média
       </Button>
-      <Modal openState={{ isOpen: openAddMediaInterface, setIsOpen: setOpenAddMediaInterface }}>
+      <Modal>
         <UploadMediaPopup />
       </Modal>
     </>

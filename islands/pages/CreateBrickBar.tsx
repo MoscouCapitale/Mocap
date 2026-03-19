@@ -1,13 +1,13 @@
 import { useMNodeContext } from "@contexts/MNodeContext.tsx";
 import { toast } from "@hooks/toast.tsx";
-import { Button, Modal, ObjectRenderer } from "@islands/UI";
+import { Button, ObjectRenderer, useModal } from "@islands/UI";
 import { availBricks, BricksType, EBrickType, IBrick } from "@models/Bricks.ts";
 import { MNode } from "@models/Canva.ts";
 import { Media, MediaType } from "@models/Medias.ts";
 import { IconTrash } from "@utils/icons.ts";
 import ky, { HTTPError } from "ky";
 import { isEqual } from "lodash";
-import { useCallback, useEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 import CollectionGrid from "../collection/CollectionGrid.tsx";
 
 type CreateBrickBarProps = {
@@ -21,14 +21,15 @@ type brickState = "creating" | "modifying" | "modifyingIncanvas" | "addIncanvas"
 export default function CreateBrickBar({ brickType, brickData, returnBrick }: CreateBrickBarProps) {
   const { MCNodes, saveNode, deleteNode } = useMNodeContext();
 
-  const [displayMedias, setDisplayMedias] = useState<boolean>(false);
+  const { isOpen: displayMedias, setIsOpen: setDisplayMedias, Modal } = useModal();
   const [brickState, setBrickState] = useState<brickState>();
   const [brick, setBrick] = useState<IBrick | undefined>();
+  const validateForm = useRef<() => boolean>(() => true);
 
   useEffect(() => {
     setBrick(brickData);
     setBrickState(undefined);
-  }, [brickData]);
+  }, [brickData?.id]);
 
   useEffect(() => {
     if (!brickState && !isEqual(brickData, brick)) {
@@ -53,6 +54,15 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
   const saveBrick = useCallback(
     (withCanvaInsert?: boolean) => {
       if (!brick) return;
+
+      if (!validateForm.current()) {
+        toast({
+          title: "Error",
+          description: "Le formulaire n'est pas valide. Veuillez vérifier les champs et réessayer.",
+        });
+        return;
+      }
+
       const brickDatas = { ...brick, type: brickType };
       // if (
       //   withCanvaInsert && brickState === "addIncanvas" && MCNodes.find((n) => n.type === BricksType.HeroSection) &&
@@ -67,7 +77,6 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
       // }
       ky.put("/api/brick", {
         json: {
-          type: brickType,
           data: brickDatas,
           withCanvaInsert: Boolean(withCanvaInsert),
         },
@@ -106,17 +115,12 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
     if (
       brickData &&
       brick &&
-      globalThis.confirm(
-        `Are you sure ? The will NOT be recoverable.${
-          brickData.nodeId ? " The brick will also be removed from the canvas." : ""
-        }`,
-      )
+      globalThis.confirm(`Are you sure ? The will NOT be recoverable.${brickData.nodeId ? " The brick will also be removed from the canvas." : ""}`)
     ) {
       try {
-        ky.delete("/api/brick", {
+        await ky.delete("/api/brick", {
           json: {
             data: brick,
-            type: brickType,
           },
         });
         if (brickData?.nodeId) await deleteNode(brickData.nodeId);
@@ -154,8 +158,13 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
 
   return (
     <>
-      <div className="flex flex-col w-full gap-4 min-h-0 overflow-scroll pr-4">
-        <ObjectRenderer type={brickType} content={brickData} onChange={(v) => setBrick(v as IBrick)} />
+      <div className="flex flex-col w-full gap-4 min-h-0 overflow-scroll">
+        <ObjectRenderer
+          type={brickType}
+          content={brick}
+          onChange={(v) => setBrick(v as IBrick)}
+          validateForm={validateForm.current}
+        />
       </div>
       <div class="w-full gap-4 flex flex-col justify-center align-middle">
         {brickState && (
@@ -164,35 +173,17 @@ export default function CreateBrickBar({ brickType, brickData, returnBrick }: Cr
           </Button>
         )}
         {brickState && brickState !== "modifyingIncanvas" && (
-          <Button
-            variant="secondary"
-            onClick={() => saveBrick()}
-            className={{ wrapper: "grow justify-center" }}
-          >
+          <Button variant="secondary" onClick={() => saveBrick()} className={{ wrapper: "grow justify-center" }}>
             {brickState === "modifying" ? "Modifier" : "Enregistrer"} la brique
           </Button>
         )}
         {brickData && (
-          <Button
-            variant="danger"
-            onClick={deleteBrick}
-            className={{ wrapper: "grow justify-center" }}
-            icon={<IconTrash size={20} color="#EA5959" />}
-          >
+          <Button variant="danger" onClick={deleteBrick} className={{ wrapper: "grow justify-center" }} icon={<IconTrash size={20} color="#EA5959" />}>
             Supprimer la brique
           </Button>
         )}
       </div>
-      <Modal openState={{ isOpen: displayMedias, setIsOpen: setDisplayMedias }}>
-        <div class="w-full overflow-auto min-h-0 flex-col justify-start items-start gap-10 inline-flex">
-          {Object.entries(MediaType)?.map(([_, val]: [string, MediaType]) => (
-            <div class="w-full flex-col justify-start items-start gap-2.5 inline-flex">
-              <div class="text-text font-bold">{val}</div>
-              <CollectionGrid onMediaClick={mediaClickHandler} fetchingRoute={val as MediaType} mediaSize={150} />
-            </div>
-          ))}
-        </div>
-      </Modal>
+      {/* TODO: support medias */}
       {/* <Toaster /> */}
     </>
   );

@@ -3,7 +3,7 @@
     "check": "deno fmt --check && deno lint && deno check",
     "start": "deno run -A --env=.env.local --watch=static/,routes/ dev.ts --allow-write --allow-read",
     "start-prod": "deno run -A --env=.env.production --watch=static/,routes/ dev.ts",
-    "pb-serve": "./pocketbase/pocketbase.exe serve",
+    "pb-serve": "./pocketbase/pocketbase.exe serve --dev",
     "update": "deno run -A -r jsr:@fresh/update .",
     "dev": "deno run -A --env=.env.local npm:vite",
     "dev-debug": "deno run -A --inspect --env=.env.local npm:vite --debug",

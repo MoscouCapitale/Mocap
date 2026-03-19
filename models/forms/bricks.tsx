@@ -1,5 +1,6 @@
 import { LabeledToolTip } from "@islands/UI";
 import {
+EAlbumType,
   EBrickType,
   IAlbum,
   IArtist,
@@ -29,7 +30,7 @@ export enum ETableNames {
  *
  * Include the bricks, but also the secondary objects like cta, controls, object_fit, etc. */
 
-export const getObjectFormFromType = (type: ETableNames | EBrickType): FormField[] | null => {
+export const getObjectFormFromType = (type: ETableNames | EBrickType): FormField[] => {
   switch (type) {
     case ETableNames.albums:
       return AlbumFormFields;
@@ -51,7 +52,7 @@ export const getObjectFormFromType = (type: ETableNames | EBrickType): FormField
     case EBrickType.Text:
       return BrickTextFormFields;
     default:
-      return null;
+      throw new Error("Type not supported: " + type);
   }
 };
 
@@ -243,6 +244,7 @@ const BrickAlbumFormFields: ObjFormField<IBrickAlbum>[] = [
     name: "album",
     type: "relation",
     label: "Album",
+    required: true,
     relation: {
       type: "albums",
       configurable: true,
@@ -255,6 +257,7 @@ const BrickAlbumFormFields: ObjFormField<IBrickAlbum>[] = [
     name: "settings.hoverable",
     type: "checkbox",
     label: "Brique active",
+    required: true
   },
 ];
 
@@ -325,12 +328,14 @@ const AlbumFormFields: ObjFormField<IAlbum> = [
     name: "type",
     type: "select",
     label: "Type",
-    options: () => Object.entries(EBrickType).map(([value, label]) => ({ value, label })),
+    required: true,
+    options: () => Object.entries(EAlbumType).map(([label, value]) => ({ value, label })),
   },
   {
     name: "tracks",
     type: "relation",
     label: "Tracks",
+    required: true,
     relation: {
       type: "tracks",
       configurable: true,

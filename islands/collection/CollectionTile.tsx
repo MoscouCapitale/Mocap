@@ -1,6 +1,5 @@
-import { ContextualDots, Modal } from "@islands/UI";
+import { ContextualDots, useModal } from "@islands/UI";
 import { Audio, Image, MediaType, Misc, Video } from "@models/Medias.ts";
-import { useState } from "preact/hooks";
 import Button from "../UI/Button.tsx";
 import MediaDetail from "./MediaDetail.tsx";
 import MediaPreview from "./MediaPreview.tsx";
@@ -12,7 +11,7 @@ export default function CollectionTile({
   media: Image | Video | Audio | Misc;
   mediaClick?: (media: Image | Video | Audio | Misc) => void;
 }) {
-  const [active, setActive] = useState(false);
+  const { setIsOpen: setActive, Modal } = useModal();
 
   const specialType = media.type === MediaType.Misc ||
     media.type === MediaType.Audios;
@@ -37,7 +36,7 @@ export default function CollectionTile({
           )
           : <ContextualDots onClick={() => setActive(true)} />}
       </div>
-      <Modal openState={{ isOpen: active, setIsOpen: setActive }}>
+      <Modal>
         <MediaDetail media={media} />
       </Modal>
     </>

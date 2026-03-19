@@ -1,5 +1,5 @@
 import { FileInput, PreviewImage, RelationInput, Select } from "@islands/UI";
-import { baseInputStyle, FormField, FormFieldValue, SelectField } from "@models/Form.ts";
+import { baseInputStyle, FormField, FormFieldValue, RelationFormField } from "@models/Form.ts";
 import { cn } from "@utils/cn.ts";
 import { IconEye, IconEyeClosed, IconInfoSquareRounded } from "@utils/icons.ts";
 import { isEmpty } from "lodash";
@@ -7,7 +7,7 @@ import { VNode } from "preact";
 import { useEffect, useState } from "preact/hooks";
 
 type InputFromTypeProps = {
-  field: FormField | SelectField;
+  field: FormField;
   onChange: (value: FormFieldValue) => void;
   /** This attribute is used when rendering this input on SSR.
    *
@@ -15,23 +15,13 @@ type InputFromTypeProps = {
    * containing the correct value, but being visually empty. To know if the input is controlled
    * or not, we use the `onChange` prop to determine it.
    * TODO: Open an issue on Fresh to track down this bug
-  */
- isControlled: boolean;
- error?: string;
+   */
+  isControlled: boolean;
+  error?: string;
 };
 
-const InputFromType = (
-  { field, onChange, error, isControlled }: InputFromTypeProps,
-): VNode => {
-  const defaultField = (
-    <input
-      name={field.name}
-      value=""
-      className={cn(baseInputStyle, "border-text_grey")}
-      placeholder="Not implemented yet"
-      disabled
-    />
-  );
+const InputFromType = ({ field, onChange, error, isControlled }: InputFromTypeProps): VNode => {
+  const defaultField = <input name={field.name} value="" className={cn(baseInputStyle, "border-text_grey")} placeholder="Not implemented yet" disabled />;
 
   switch (field.type) {
     case "string":
@@ -47,7 +37,7 @@ const InputFromType = (
             baseInputStyle,
             ...(field.type === "checkbox" ? ["min-w-auto", "ml-0"] : []),
             error && "border-error",
-            field.label && (field.type !== "checkbox") && "mt-2",
+            field.label && field.type !== "checkbox" && "mt-2",
             error && !field.tooltipError && "mb-1",
             field.sx,
           )}
@@ -74,16 +64,12 @@ const InputFromType = (
           readOnly={field.readOnly}
           disabled={field.disabled}
           title={error && field.tooltipError ? error : undefined}
-          autoComplete="on"
+          autoComplete={isControlled ? "off" : "on"} // Make sure the browser doesnt fill the controlled input
         />
       );
     case "select":
       return (
-        <Select
-          field={{ ...field, sx: field.sx + " w-full"} as SelectField}
-          error={error}
-          onChange={onChange}
-        />
+        <Select field={{ ...field, sx: field.sx + " w-full" }} error={error} onChange={(v) => onChange(Array.isArray(v) ? v.map((v) => v.value) : v?.value)} />
       );
     case "file":
       return (
@@ -91,16 +77,16 @@ const InputFromType = (
           // TODO: This way of bubbling up the click event is not ideal, I should find a better more elegant way
           overwriteOnFileZoneClick={field.inputConfig?.onClickInput ? field.inputConfig?.onClickInput : undefined}
           overwriteOnFileDeleteClick={field.inputConfig?.onClickInput ? () => onChange(null) : undefined}
-          bgElement={field.defaultValue?.public_src
-            ? (
+          bgElement={
+            field.defaultValue?.public_src ? (
               <PreviewImage
                 src={field.defaultValue.public_src}
                 filetype={field.defaultValue.type}
                 filename={field.defaultValue.name}
                 variant={field.inputConfig?.variant ?? "full-size"}
               />
-            )
-            : undefined}
+            ) : undefined
+          }
           label={field.inputConfig?.customLabel}
           filetype={field.inputConfig?.filetype}
           hasFile={Boolean(field.defaultValue)}
@@ -110,7 +96,7 @@ const InputFromType = (
       );
     case "relation":
       // Because the Select component always returns an array, we need to 'parse' the value to match the relation type (single or multiple)
-      return <RelationInput field={field} onChange={(e) => onChange(field.relation?.multiple ? e : (e[0] ?? null))} />;
+      return <RelationInput field={field} onChange={(e) => onChange(e)} />;
     case "markdown":
       // For now, markdown will just be a textarea (I do not think a markdown input is really needed)
       return (
@@ -132,8 +118,7 @@ const InputFromType = (
           disabled={field.disabled}
           title={error && field.tooltipError ? error : undefined}
           autoComplete="on"
-        >
-        </textarea>
+        ></textarea>
       );
     case "NI":
     default:
@@ -146,97 +131,87 @@ type InputProps = {
   onChange?: (value: FormFieldValue) => void;
 };
 
+// TODO: Input should be part of a form system. This way I can manage validation, errors, state, etc.
 export default function Input({ field, onChange }: InputProps) {
   const [fieldError, setFieldError] = useState<string>();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  // On field mount, check errors that needs to be displayed
-  useEffect(() => {
-    if (field.relation && (field.validation || field.required)) {
-      let error = field.validation?.(field.defaultValue) ?? undefined;
-      if (field.required && (!field.defaultValue || isEmpty(field.defaultValue))) error = "Ce champ est requis";
-      setFieldError(error);
+  const validateField = (newValue?: FormFieldValue): string | undefined => {
+    const value = newValue ?? field.defaultValue;
+
+    if (field.required) {
+      switch (field.type) {
+        case "string":
+        case "email":
+        case "password":
+        case "markdown":
+          if (value === "") return "Ce champ est requis";
+          break;
+        case "checkbox":
+          if (value === undefined || value === null) return "Ce champ est requis";
+          break;
+        default:
+          if (value === undefined || value === null || isEmpty(value)) {
+            return "Ce champ est requis";
+          }
+      }
     }
-  }, [field.name]);
+
+    return field.validation?.(value) || undefined;
+  };
+
+  // On field mount, check errors that needs to be displayed
+  useEffect(() => setFieldError(validateField()), [field.name]);
 
   const onValueChange = (value: FormFieldValue) => {
-    if (field.validation || field.required) {
-      let error = field.validation?.(value) ?? undefined;
-      if (field.required && (!value || isEmpty(value))) error = "Ce champ est requis";
-      if (!error) {
-        setFieldError(undefined);
-        return onChange ? onChange(value) : null;
-      }
-      setFieldError(error);
-      if (onChange) onChange(null);
-    } else {
-      if (onChange) onChange(value);
-    }
+    const error = validateField(value);
+    setFieldError(error);
+    onChange?.(value);
   };
 
   return (
-    <>
-      <label className="flex flex-col w-full">
-        {/* Set the style as inline for checkboxes */}
-        {field.type === "checkbox" &&
-          (
-            <div className="w-full flex items-center gap-2 justify-between">
-              {field.label}
-              <InputFromType
-                field={field}
-                onChange={onValueChange}
-                error={fieldError}
-                isControlled={!!onChange}
-              />
-            </div>
-          )}
-        {field.type === "password" && (
-          <>
-            {field.label}
-            <div className="w-full relative">
-              <InputFromType
-                field={{ ...field, type: isPasswordVisible ? "string" : field.type }}
-                onChange={onValueChange}
-                error={fieldError}
-                isControlled={!!onChange}
-              />
-              <div
-                className={cn("absolute top-0 bottom-0 right-0 -translate-x-2 flex items-center gap-2 cursor-pointer")}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsPasswordVisible(!isPasswordVisible);
-                }}
-              >
-                {isPasswordVisible ? <IconEye color="#FFF" /> : <IconEyeClosed color="#FFF" />}
-              </div>
-            </div>
-          </>
-        )}
-        {field.type !== "checkbox" && field.type !== "password" && (
-          (
-            <>
-              {field.label}
-              <InputFromType
-                field={field}
-                onChange={onValueChange}
-                error={fieldError}
-                isControlled={!!onChange}
-              />
-            </>
-          )
-        )}
-        {fieldError && !field.tooltipError &&
-          (
+    <div className="flex flex-col w-full" onClick={(e) => field.type !== "checkbox" && e.preventDefault()}>
+      {/* Set the style as inline for checkboxes */}
+      {field.type === "checkbox" && (
+        <div className="w-full flex items-center gap-2 justify-between">
+          <label className="text-text">{field.label}</label>
+          <InputFromType field={field} onChange={onValueChange} error={fieldError} isControlled={!!onChange} />
+        </div>
+      )}
+      {field.type === "password" && (
+        <>
+          <label className="text-text">{field.label}</label>
+          <div className="w-full relative">
+            <InputFromType
+              field={{ ...field, type: isPasswordVisible ? "string" : field.type }}
+              onChange={onValueChange}
+              error={fieldError}
+              isControlled={!!onChange}
+            />
             <div
-              className={cn(
-                "flex justify-start items-center gap-2",
-              )}
+              className={cn("absolute top-0 bottom-0 right-0 -translate-x-2 flex items-center gap-2 cursor-pointer")}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsPasswordVisible(!isPasswordVisible);
+              }}
             >
-              <IconInfoSquareRounded color="#EA5959" size={14} />
-              <p className="text-error text-xs">{fieldError}</p>
+              {isPasswordVisible ? <IconEye color="#FFF" /> : <IconEyeClosed color="#FFF" />}
             </div>
-          )}
-      </label>
-    </>
+          </div>
+        </>
+      )}
+      {field.type !== "checkbox" && field.type !== "password" && (
+        <>
+          <label className="text-text">{field.label}</label>
+          <InputFromType field={field} onChange={onValueChange} error={fieldError} isControlled={!!onChange} />
+        </>
+      )}
+      {fieldError && !field.tooltipError && (
+        <div className={cn("flex justify-start items-center gap-2")}>
+          <IconInfoSquareRounded color="#EA5959" size={14} />
+          <p className="text-error text-xs">{fieldError}</p>
+        </div>
+      )}
+    </div>
   );
 }

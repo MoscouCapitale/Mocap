@@ -5,7 +5,7 @@ import { getAppStorage, saveAppStorage } from "@utils/localStorage.ts";
 import LogoutButton from "../Misc/LogoutButton.tsx";
 
 import { useIsMobile } from "@hooks/useIsMobile.ts";
-import { Modal } from "@islands/UI";
+import { useModal } from "@islands/UI";
 import { cn } from "@utils/cn.ts";
 import {
     IconChevronLeft,
@@ -18,9 +18,8 @@ import {
 
 export default function Navbar(path: { path: string }) {
   const isMobile = useIsMobile();
-  const [acknowledgedMobileWarning, setAcknowledgedMobileWarning] = useState(
-    getAppStorage()?.acknowledgedMobileWarning || false,
-  );
+
+  const { setIsOpen: setMobileWarningOpen, Modal } = useModal({ open: isMobile && !(getAppStorage()?.acknowledgedMobileWarning || false) });
 
   const [isExpanded, setIsExpanded] = useState<boolean>(getAppStorage()?.navbarExpanded || false);
 
@@ -112,26 +111,25 @@ export default function Navbar(path: { path: string }) {
           <span class={cn("text-base text-text", isExpanded ? "visible" : "hidden")}>Fermer</span>
         </a>
       </div>
-      {isMobile && (
-        <Modal
-          openState={{
-            isOpen: !acknowledgedMobileWarning,
-            setIsOpen: (state) => {
-              if (!state) {
-                saveAppStorage({ acknowledgedMobileWarning: true });
-                setAcknowledgedMobileWarning(true);
-              }
-            },
-          }}
-          sx="w-[80%]"
-        >
-          <div class="flex-col justify-start items-start gap-5 inline-flex text-text">
-            <p>Attention !</p>
-            <p>Le panel admin n'est pas optimisé pour les mobiles.</p>
-            <p>Utilisez un ordinateur pour une meilleure expérience.</p>
-          </div>
-        </Modal>
-      )}
+      <Modal
+        sx={{ content: "w-[80%]" }}
+      >
+        <div class="flex-col justify-start items-start gap-5 inline-flex text-text">
+          <p>Attention !</p>
+          <p>Le panel admin n'est pas optimisé pour les mobiles.</p>
+          <p>Utilisez un ordinateur pour une meilleure expérience.</p>
+          <button
+            type="button"
+            class="bg-primary text-white px-4 py-2 rounded hover:bg-primary_dark transition-colors"
+            onClick={() => {
+              saveAppStorage({ acknowledgedMobileWarning: true });
+              setMobileWarningOpen(false);
+            }}
+          >
+            J'ai compris
+          </button>
+        </div>
+      </Modal>
     </nav>
   );
 }
